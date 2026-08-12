@@ -2,118 +2,111 @@
 
 ## Purpose
 
-The market-assessment layer is designed to create a scheduled daily research assessment for the tracked instrument universe and persist both the assessment output and supporting evidence.
+The market-assessment layer creates a recurring research assessment for the tracked instrument universe and persists both the assessment output and supporting evidence.
 
-The database model is substantially built, but the current end-to-end automation is incomplete.
+The primary orchestration model is now a **ChatGPT Scheduled Task with access to the connected Trading Supabase project**.
 
 ## Current architecture
 
 ```text
-pg_cron
+Supabase pg_cron
    |
-   v
-queue_daily_market_assessment()
-   |
-   +--> market_assessment_queue
-   +--> market_assessment_schedule_log
+   +--> full-twelve-data-load every 15 minutes
+           |
+           +--> market_observations
+           +--> sync_runs
 
-market_assessment_queue
+ChatGPT Scheduled Task
    |
-   v
-[analysis consumer / worker not yet connected end-to-end]
+   +--> check current New York date and market-data freshness
    |
-   v
-gpt_market_runs
+   +--> prepare_chatgpt_market_assessment()
+   |       |
+   |       +--> market_assessment_queue
+   |       +--> gpt_market_runs
+   |
+   +--> read instruments / observations / available research context
+   |
+   +--> perform assessment/research
    |
    +--> gpt_market_assessments
-             |
-             +--> gpt_market_evidence
+   |       |
+   |       +--> gpt_market_evidence
+   |
+   +--> finalize_chatgpt_market_assessment()
+           |
+           +--> finalise gpt_market_runs
+           +--> finalise market_assessment_queue
 ```
 
-## Daily scheduler
+## Scheduling ownership
 
-pg_cron job:
+The old Supabase pg_cron job `daily_market_assessment` has been removed from the live scheduler.
 
-- name: `daily_market_assessment`
-- schedule: `0 22,23 * * 1-5`
-- active: true
+Daily assessment scheduling is owned by ChatGPT Scheduled Tasks instead.
 
-The two UTC trigger hours exist to cover New York daylight-saving and standard-time changes.
+This avoids two independent schedulers trying to create or consume the same work.
 
-The scheduled command is:
+The Twelve Data market-data schedule remains in Supabase and continues to operate independently.
 
-```sql
-SELECT queue_daily_market_assessment();
+## Recommended schedule
+
+Run the ChatGPT task on weekdays after US market close, preferably around **6:15 pm `America/New_York`**.
+
+The task should check the latest Supabase market observations before creating an assessment run. If the data is stale or there is clearly no valid market session to assess, it should stop and report the reason rather than manufacture a completed run.
+
+## Queue and run lifecycle
+
+The queue exists as an audit/control ledger rather than as the scheduler itself.
+
+Lifecycle:
+
+```text
+pending -> processing -> succeeded
+                      -> partial
+                      -> failed
 ```
 
-## Function: `queue_daily_market_assessment()`
+`market_assessment_queue` tracks:
 
-Purpose: create one daily assessment request at 6:00 pm New York time.
+- run date
+- process name
+- attempt count
+- started/updated/processed timestamps
+- error message
+- linked GPT run ID
+
+## Function: `prepare_chatgpt_market_assessment()`
+
+Purpose: safely create or resume the current assessment run.
 
 Behaviour:
 
-1. Converts the current time to `America/New_York`.
-2. Returns immediately unless the New York hour is 18.
-3. Inserts a row into `market_assessment_queue` for the New York business date.
-4. Uses `(run_date, process_name)` conflict protection to prevent duplicate daily queue rows.
-5. Adds an audit row to `market_assessment_schedule_log`.
+1. Defaults to the current date in `America/New_York`.
+2. Creates the queue row if one does not exist.
+3. Reuses the existing queue/run on retries.
+4. Creates one `gpt_market_runs` record when needed.
+5. Sets `tickers_requested` from the current active-instrument count.
+6. Returns `already_complete = true` when that date has already succeeded.
+7. Otherwise moves the queue to `processing` and increments the attempt count.
 
-The queue record uses:
+This is the main idempotency control for the scheduled task.
 
-- `status = 'pending'`
-- `process_name = 'daily_market_assessment'`
+## Assessment writes
 
-## Function: `process_market_assessment_queue()`
+The scheduled task should assess only instruments that do not yet have a row for the current `run_id`.
 
-Purpose: move the current day's pending queue request to an analysis-ready state.
+The database already enforces:
 
-Behaviour:
+```text
+UNIQUE (run_id, instrument_id)
+```
 
-- changes today's `pending` queue rows to `ready_for_analysis`;
-- writes a `ready` audit record to `market_assessment_schedule_log`.
-
-Important: no active pg_cron job currently calls this function, and the live queue rows remain `pending`.
-
-## Current queue state
-
-As reviewed on 12 August 2026, seven scheduled requests existed for business dates from 3 August through 11 August 2026.
-
-All seven remained:
-
-- `status = 'pending'`
-- `processed_at = null`
-
-This confirms that queue creation is working but downstream queue consumption is not operating.
-
-## GPT run model
-
-### `gpt_market_runs`
-
-One current test run exists.
-
-Observed values:
-
-- analysis mode: `test`
-- prompt version: `v1.0`
-- model name: `gpt-5.4-thinking-mini`
-- tickers requested: 30
-- status: `running`
-- tickers completed: 0
-- completed_at: null
-
-The notes identify this as a test run intended to validate the independent GPT market-assessment pipeline.
-
-## GPT assessment model
-
-### `gpt_market_assessments`
-
-There are 30 current assessment rows, matching the 30 active instruments.
-
-Each assessment can store:
+Assessment rows contain:
 
 - rating
-- score
 - confidence
+- score
 - summary
 - bull case
 - bear case
@@ -123,17 +116,9 @@ Each assessment can store:
 - catalysts
 - risks
 - evidence summary
-- model version
+- model/version label
 
-These rows are currently used by the Assessments dashboard and by Markets instrument drill-through.
-
-## Evidence model
-
-### `gpt_market_evidence`
-
-There are 30 current evidence rows.
-
-Evidence records support an assessment with:
+Evidence rows can capture:
 
 - evidence type
 - source name
@@ -142,66 +127,64 @@ Evidence records support an assessment with:
 - relevance score
 - confidence
 
-The frontend assessment detail page queries these rows by `assessment_id`.
+Where current external information is needed, the ChatGPT task can use web research and should persist concise supporting evidence rather than unsupported conclusions.
 
-## Current inconsistency
+## Function: `finalize_chatgpt_market_assessment()`
 
-The database currently contains:
+Purpose: finish the run from the rows actually written.
 
-- 30 assessment rows;
-- 30 evidence rows;
-- one GPT run still marked `running`;
-- `tickers_completed = 0`;
-- no `completed_at` value.
+Behaviour:
 
-This means the assessment records were successfully created, but run-finalisation metadata was not updated.
+- counts assessment rows for the `run_id`;
+- updates `tickers_completed`;
+- sets `completed_at`;
+- derives final status:
+  - all requested completed -> `succeeded`
+  - some completed -> `partial`
+  - none completed -> `failed`
+- applies the same final status to the linked queue row.
 
-The frontend deliberately surfaces this as a data-quality warning instead of silently treating the run as complete.
+## Retry behaviour
 
-## Missing end-to-end pieces
+A retry must not create another run for the same date.
 
-The following linkages are not currently operational:
+The task should:
 
-1. A scheduled process that calls `process_market_assessment_queue()` or otherwise claims pending queue work.
-2. An analysis worker or Edge Function that converts a queue item into a `gpt_market_runs` record and executes the assessment process.
-3. Finalisation logic that updates `tickers_completed`, `completed_at` and the run status.
-4. Queue completion logic that updates `market_assessment_queue.processed_at` and final status.
-5. Error/retry handling for partial assessment runs.
+1. call `prepare_chatgpt_market_assessment()`;
+2. reuse the returned `run_id`;
+3. query which active instruments are still missing from that run;
+4. assess only the missing instruments;
+5. finalise again when finished.
 
-## Recommended future state
+This lets an interrupted scheduled run resume safely.
 
-```text
-6:00 pm New York
-      |
-      v
-queue_daily_market_assessment()
-      |
-      v
-pending queue row
-      |
-      v
-assessment worker claims row
-      |
-      +--> queue status = processing
-      +--> create gpt_market_run
-      |
-      v
-analyse active instrument universe
-      |
-      +--> gpt_market_assessments
-      +--> gpt_market_evidence
-      |
-      v
-finalise run
-      |
-      +--> tickers_completed
-      +--> completed_at
-      +--> succeeded / partial / failed
-      |
-      v
-finalise queue row
-```
+## Historical queue rows
 
-## Documentation rule
+Seven legacy queue requests from 3–11 August 2026 remain in the database.
 
-The current 30 assessment records should be described as a successful **test dataset**, not as proof that the daily scheduled assessment pipeline is fully automated.
+The new ChatGPT task should use the **current New York date**, not the older helper that claims the oldest pending row. Those historical requests should not be replayed automatically.
+
+## Existing test dataset
+
+The database contains one earlier test GPT run with 30 assessment rows and 30 evidence rows, but the historical run metadata was not fully finalised (`running`, `tickers_completed = 0`, `completed_at = null`).
+
+Those rows are useful as a validation dataset but should not be treated as proof of a previously complete unattended scheduler.
+
+## Inactive fallback/prototype
+
+The Supabase Edge Function `daily-market-assessment-worker` remains deployed but is not scheduled and has no OpenAI API credential configured.
+
+It is retained as a fallback/prototype only. The primary architecture does not require an OpenAI API key because ChatGPT Scheduled Tasks provide the reasoning layer directly.
+
+## Operational definition of done
+
+This pipeline is considered operational when one real scheduled task run:
+
+- executes without the user being online;
+- reads current Supabase market data;
+- prepares the correct date/run;
+- assesses all active instruments;
+- writes assessment/evidence rows;
+- finalises both run and queue correctly;
+- can be retried without duplicates;
+- reports its final status to the user.
