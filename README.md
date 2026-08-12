@@ -1,37 +1,77 @@
 # Discover Boulders Markets
 
-Trading dashboard application backed by Supabase and deployed to Vercel.
+Trading dashboard application backed by the existing Supabase Trading project.
 
 ## Canonical deployment
 
-Use only the following Vercel project for this repository:
+Use only:
 
 - Vercel project: `discoverbouldersmarkets`
 - Public URL: `https://discoverbouldersmarkets.vercel.app`
 
-Do not use the historical duplicate Vercel projects `trading` or `trading-admin-monitor` for this application.
+Do not use the historical duplicate Vercel projects `trading` or `trading-admin-monitor`.
 
 ## Architecture
 
 - GitHub: `ClimbingBuddies/Trading`
 - Supabase project: `Trading`
 - Supabase project ref: `glvbqcplgjdfgjyknzsa`
-- Frontend: Next.js App Router with TypeScript
+- Frontend: Next.js App Router + TypeScript
 - Deployment: Vercel project `discoverbouldersmarkets`
 
-Supabase owns scheduled market-data loading, persistence and Edge Functions. The Next.js application is the dashboard and drill-through presentation layer.
+Supabase remains responsible for persistence, scheduled market-data loading and Edge Functions. The Next.js application is the monitoring, research and drill-through presentation layer.
 
-## Current dashboard
+The application uses only the Supabase publishable key. Never add the service-role key or Twelve Data API key to the frontend.
 
-The first implemented area is Admin — Data Load Monitoring.
+## Dashboard areas
 
-Routes:
+### Admin
 
-- `/admin` — loading health, KPIs, daily observation volumes and recent sync history
-- `/admin/loads/[id]` — drill-through to a specific sync run and observations loaded around that run
+- `/admin` — loader health, load KPIs, observation volumes, freshness and recent sync history
+- `/admin/loads/[id]` — individual sync-run drill-through
 
-Future areas may include Markets, Assessments and Strategies, but they should remain within the same `discoverbouldersmarkets` Vercel application.
+### Markets
 
-## Deployment rule
+- `/markets` — active instrument overview, asset filters, search and freshness
+- `/markets/[symbol]` — instrument price/history drill-through
 
-All future production dashboard changes from this repository should be deployed to `discoverbouldersmarkets`. Do not create a new Vercel project for individual pages or features unless this architecture is deliberately changed and documented here first.
+### Assessments
+
+- `/assessments` — assessment distribution, conviction and recent assessment rows
+- `/assessments/[symbol]` — analyst-style assessment detail and supporting evidence
+
+### Strategies
+
+- `/strategies` — strategy laboratory, test state and decision framework
+- `/strategies/[id]` — strategy detail when strategy rows exist
+- `/strategies/[id]/tests/[runId]` — test-run detail when test rows exist
+
+## Empty-state rule
+
+Blank data is a supported application state, not a build failure.
+
+Every dashboard should retain its layout when a dataset has no rows and show an intentional empty state such as `No strategies created yet`, `No assessments loaded yet`, or `Price history will appear after more observations are loaded`.
+
+Never create fabricated production rows or metrics simply to populate the interface. Values must come from Supabase, a clearly defined calculation over Supabase data, or a deliberate empty state.
+
+## Visual direction
+
+The four dashboards share one application shell:
+
+- persistent dark navy navigation
+- light main content surface
+- compact KPI strip
+- restrained blue accents
+- green/amber/red only for meaningful state
+- dense, readable operational tables
+- desktop-first responsive layout
+
+The visual reference is the agreed Admin / Markets / Assessments / Strategies four-panel concept, but conceptual numbers in that image are not data sources.
+
+## Vercel configuration
+
+`vercel.json` explicitly configures the project as Next.js and uses `.next` as the deployment output. This overrides the historical Vercel project setting that previously expected a static `public` output directory.
+
+## Data access
+
+The app is read-only for this stage. Supabase RLS and Data API policy still determine which rows are visible through the publishable key. If a protected table has no read policy, the correct UI behaviour is an empty state until an appropriate read policy is deliberately approved and added.
