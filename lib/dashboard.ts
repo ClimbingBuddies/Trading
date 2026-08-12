@@ -2,6 +2,7 @@ import { getSupabase } from './supabase'
 
 export type SyncRun = {
   id: string
+  provider_id?: string
   started_at: string
   finished_at: string | null
   requested_count: number
@@ -12,65 +13,150 @@ export type SyncRun = {
   metadata: Record<string, unknown> | null
 }
 
+export type MarketRow = {
+  id: string
+  symbol: string
+  instrument_name: string
+  asset_type: string
+  exchange_code: string
+  currency_code: string
+  latest_price: number | null
+  observed_at: string | null
+  loaded_at: string | null
+  provider_name: string | null
+  provider_code: string | null
+  age_minutes: number | null
+}
+
+export type AssessmentRow = {
+  assessment_id: string
+  instrument_id: string
+  symbol: string
+  instrument_name: string
+  assessment_date: string
+  rating: string
+  confidence: number | null
+  score: number | null
+  summary: string | null
+  bull_case: string | null
+  bear_case: string | null
+  technical_view: string | null
+  macro_view: string | null
+  valuation_view: string | null
+  key_catalysts: string | null
+  key_risks: string | null
+  evidence_summary: string | null
+  created_at: string
+}
+
+const PAGE_SIZE = 1000
+
+async function fetchSyncRunsSince(sinceIso: string) {
+  const supabase = getSupabase()
+  const rows: SyncRun[] = []
+
+  for (let page = 0; page < 6; page += 1) {
+    const from = page * PAGE_SIZE
+    const to = from + PAGE_SIZE - 1
+    const result = await supabase
+      .from('sync_runs')
+      .select('id,provider_id,started_at,finished_at,requested_count,received_count,inserted_count,status,error_message,metadata')
+      .gte('started_at', sinceIso)
+      .order('started_at', { ascending: false })
+      .range(from, to)
+
+    if (result.error) throw result.error
+    const pageRows = (result.data ?? []) as SyncRun[]
+    rows.push(...pageRows)
+    if (pageRows.length < PAGE_SIZE) break
+  }
+
+  return rows
+}
+
+async function fetchObservationTimesSince(sinceIso: string) {
+  const supabase = getSupabase()
+  const rows: { loaded_at: string }[] = []
+
+  for (let page = 0; page < 8; page += 1) {
+    const from = page * PAGE_SIZE
+    const to = from + PAGE_SIZE - 1
+    const result = await supabase
+      .from('market_observations')
+      .select('loaded_at')
+      .gte('loaded_at', sinceIso)
+      .order('loaded_at', { ascending: false })
+      .range(from, to)
+
+    if (result.error) throw result.error
+    const pageRows = (result.data ?? []) as { loaded_at: string }[]
+    rows.push(...pageRows)
+    if (pageRows.length < PAGE_SIZE) break
+  }
+
+  return rows
+}
+
 export async function getAdminDashboardData() {
   const supabase = getSupabase()
   const now = new Date()
   const today = new Date(now)
   today.setUTCHours(0, 0, 0, 0)
-  const since30 = new Date(now.getTime() - 29 * 24 * 60 * 60 * 1000)
+  const since14 = new Date(now.getTime() - 13 * 24 * 60 * 60 * 1000)
+  since14.setUTCHours(0, 0, 0, 0)
 
-  const [runsRes, obsRes, activeRes, latestObsRes] = await Promise.all([
-    supabase
-      .from('sync_runs')
-      .select('id,started_at,finished_at,requested_count,received_count,inserted_count,status,error_message,metadata')
-      .gte('started_at', since30.toISOString())
-      .order('started_at', { ascending: false }),
-    supabase
-      .from('market_observations')
-      .select('loaded_at')
-      .gte('loaded_at', since30.toISOString())
-      .order('loaded_at', { ascending: false }),
-    supabase
-      .from('instruments')
-      .select('id', { count: 'exact', head: true })
-      .eq('is_active', true),
+  const [runs, observations, activeRes, latestObsRes, latestInstrumentObsRes] = await Promise.all([
+    fetchSyncRunsSince(since14.toISOString()),
+    fetchObservationTimesSince(since14.toISOString()),
+    supabase.from('instruments').select('id', { count: 'exact', head: true }).eq('is_active', true),
+    supabase.from('market_observations').select('loaded_at').order('loaded_at', { ascending: false }).limit(1).maybeSingle(),
     supabase
       .from('market_observations')
-      .select('loaded_at')
+      .select('instrument_id,loaded_at')
       .order('loaded_at', { ascending: false })
-      .limit(1)
-      .maybeSingle(),
+      .limit(1000),
   ])
 
-  if (runsRes.error) throw runsRes.error
-  if (obsRes.error) throw obsRes.error
   if (activeRes.error) throw activeRes.error
   if (latestObsRes.error) throw latestObsRes.error
+  if (latestInstrumentObsRes.error) throw latestInstrumentObsRes.error
 
-  const runs = (runsRes.data ?? []) as SyncRun[]
-  const observations = obsRes.data ?? []
   const todayIso = today.toISOString()
   const runsToday = runs.filter((r) => r.started_at >= todayIso)
   const observationsToday = observations.filter((o) => o.loaded_at >= todayIso).length
-
   const lastRun = runs[0] ?? null
   const lastSuccessful = runs.find((r) => r.status === 'succeeded') ?? null
   const failuresToday = runsToday.filter((r) => r.status === 'failed' || r.status === 'partial').length
 
   const dailyMap = new Map<string, { date: string; runs: number; inserted: number }>()
-  for (let i = 0; i < 30; i++) {
-    const d = new Date(since30.getTime() + i * 24 * 60 * 60 * 1000)
+  for (let i = 0; i < 14; i += 1) {
+    const d = new Date(since14.getTime() + i * 24 * 60 * 60 * 1000)
     const key = d.toISOString().slice(0, 10)
     dailyMap.set(key, { date: key, runs: 0, inserted: 0 })
   }
   for (const run of runs) {
-    const key = run.started_at.slice(0, 10)
-    const item = dailyMap.get(key)
-    if (item) {
-      item.runs += 1
-      item.inserted += run.inserted_count ?? 0
-    }
+    const item = dailyMap.get(run.started_at.slice(0, 10))
+    if (item) item.runs += 1
   }
+  for (const obs of observations) {
+    const item = dailyMap.get(obs.loaded_at.slice(0, 10))
+    if (item) item.inserted += 1
+  }
+
+  const latestByInstrument = new Map<string, string>()
+  for (const row of (latestInstrumentObsRes.data ?? []) as { instrument_id: string; loaded_at: string }[]) {
+    if (!latestByInstrument.has(row.instrument_id)) latestByInstrument.set(row.instrument_id, row.loaded_at)
+  }
+
+  const freshness = { under15: 0, under60: 0, under240: 0, over240: 0, noObservation: 0 }
+  for (const loadedAt of latestByInstrument.values()) {
+    const age = Math.max(0, (now.getTime() - new Date(loadedAt).getTime()) / 60000)
+    if (age < 15) freshness.under15 += 1
+    else if (age < 60) freshness.under60 += 1
+    else if (age < 240) freshness.under240 += 1
+    else freshness.over240 += 1
+  }
+  freshness.noObservation = Math.max(0, (activeRes.count ?? 0) - latestByInstrument.size)
 
   return {
     lastRun,
@@ -82,6 +168,7 @@ export async function getAdminDashboardData() {
     latestObservationAt: latestObsRes.data?.loaded_at ?? null,
     recentRuns: runs.slice(0, 40),
     daily: [...dailyMap.values()],
+    freshness,
   }
 }
 
@@ -107,4 +194,260 @@ export async function getLoadDetail(id: string) {
 
   if (obsRes.error) throw obsRes.error
   return { run, observations: obsRes.data ?? [] }
+}
+
+export async function getMarketsData() {
+  const supabase = getSupabase()
+  const [instrumentsRes, providersRes, observationsRes] = await Promise.all([
+    supabase
+      .from('instruments')
+      .select('id,symbol,instrument_name,exchange_code,asset_type,currency_code,is_active')
+      .eq('is_active', true)
+      .order('asset_type')
+      .order('symbol'),
+    supabase
+      .from('provider_instruments')
+      .select('instrument_id,is_active,data_providers(provider_name,provider_code)')
+      .eq('is_active', true),
+    supabase
+      .from('market_observations')
+      .select('instrument_id,close,observed_at,loaded_at,currency_code')
+      .order('loaded_at', { ascending: false })
+      .limit(1000),
+  ])
+
+  if (instrumentsRes.error) throw instrumentsRes.error
+  if (providersRes.error) throw providersRes.error
+  if (observationsRes.error) throw observationsRes.error
+
+  const providerMap = new Map<string, { provider_name: string | null; provider_code: string | null }>()
+  for (const row of providersRes.data ?? []) {
+    const provider = (row as unknown as { data_providers: { provider_name: string; provider_code: string } | null }).data_providers
+    providerMap.set(row.instrument_id, {
+      provider_name: provider?.provider_name ?? null,
+      provider_code: provider?.provider_code ?? null,
+    })
+  }
+
+  const latestMap = new Map<string, { close: number; observed_at: string; loaded_at: string; currency_code: string | null }>()
+  for (const row of observationsRes.data ?? []) {
+    if (!latestMap.has(row.instrument_id)) latestMap.set(row.instrument_id, row)
+  }
+
+  const now = Date.now()
+  const rows: MarketRow[] = (instrumentsRes.data ?? []).map((instrument) => {
+    const latest = latestMap.get(instrument.id)
+    const provider = providerMap.get(instrument.id)
+    return {
+      id: instrument.id,
+      symbol: instrument.symbol,
+      instrument_name: instrument.instrument_name,
+      asset_type: instrument.asset_type,
+      exchange_code: instrument.exchange_code,
+      currency_code: instrument.currency_code.trim(),
+      latest_price: latest?.close ?? null,
+      observed_at: latest?.observed_at ?? null,
+      loaded_at: latest?.loaded_at ?? null,
+      provider_name: provider?.provider_name ?? null,
+      provider_code: provider?.provider_code ?? null,
+      age_minutes: latest?.loaded_at ? Math.max(0, Math.round((now - new Date(latest.loaded_at).getTime()) / 60000)) : null,
+    }
+  })
+
+  const counts = rows.reduce(
+    (acc, row) => {
+      acc.total += 1
+      if (row.asset_type === 'equity') acc.equity += 1
+      else if (row.asset_type === 'etf') acc.etf += 1
+      else if (row.asset_type === 'forex') acc.forex += 1
+      else if (row.asset_type === 'crypto') acc.crypto += 1
+      return acc
+    },
+    { total: 0, equity: 0, etf: 0, forex: 0, crypto: 0 },
+  )
+
+  const freshness = { under15: 0, under60: 0, under240: 0, over240: 0, noObservation: 0 }
+  for (const row of rows) {
+    if (row.age_minutes === null) freshness.noObservation += 1
+    else if (row.age_minutes < 15) freshness.under15 += 1
+    else if (row.age_minutes < 60) freshness.under60 += 1
+    else if (row.age_minutes < 240) freshness.under240 += 1
+    else freshness.over240 += 1
+  }
+
+  const latestObservationAt = rows
+    .map((row) => row.loaded_at)
+    .filter((value): value is string => Boolean(value))
+    .sort()
+    .at(-1) ?? null
+
+  return { rows, counts, freshness, latestObservationAt }
+}
+
+export async function getMarketDetail(symbol: string) {
+  const supabase = getSupabase()
+  const instrumentRes = await supabase
+    .from('instruments')
+    .select('id,symbol,instrument_name,exchange_code,asset_type,currency_code,is_active')
+    .eq('symbol', symbol)
+    .maybeSingle()
+
+  if (instrumentRes.error) throw instrumentRes.error
+  if (!instrumentRes.data) return null
+
+  const [observationsRes, assessmentRes] = await Promise.all([
+    supabase
+      .from('market_observations')
+      .select('id,open,high,low,close,volume,currency_code,observed_at,loaded_at')
+      .eq('instrument_id', instrumentRes.data.id)
+      .order('loaded_at', { ascending: false })
+      .limit(200),
+    supabase
+      .from('gpt_market_assessments')
+      .select('assessment_id,assessment_date,rating,confidence,score,summary')
+      .eq('instrument_id', instrumentRes.data.id)
+      .order('assessment_date', { ascending: false })
+      .limit(1)
+      .maybeSingle(),
+  ])
+
+  if (observationsRes.error) throw observationsRes.error
+  if (assessmentRes.error) throw assessmentRes.error
+
+  return {
+    instrument: instrumentRes.data,
+    observations: observationsRes.data ?? [],
+    latestAssessment: assessmentRes.data ?? null,
+  }
+}
+
+export async function getAssessmentsData() {
+  const supabase = getSupabase()
+  const [assessmentsRes, runRes] = await Promise.all([
+    supabase
+      .from('gpt_market_assessments')
+      .select('assessment_id,instrument_id,assessment_date,rating,confidence,score,summary,bull_case,bear_case,technical_view,macro_view,valuation_view,key_catalysts,key_risks,evidence_summary,created_at,instruments(symbol,instrument_name)')
+      .order('assessment_date', { ascending: false })
+      .order('confidence', { ascending: false })
+      .limit(500),
+    supabase
+      .from('gpt_market_runs')
+      .select('run_id,started_at,completed_at,status,analysis_cutoff_time,model_name,prompt_version,analysis_mode,tickers_requested,tickers_completed,notes')
+      .order('started_at', { ascending: false })
+      .limit(1)
+      .maybeSingle(),
+  ])
+
+  if (assessmentsRes.error) throw assessmentsRes.error
+  if (runRes.error) throw runRes.error
+
+  const allRows: AssessmentRow[] = (assessmentsRes.data ?? []).map((row) => {
+    const instrument = (row as unknown as { instruments: { symbol: string; instrument_name: string } | null }).instruments
+    return {
+      assessment_id: row.assessment_id,
+      instrument_id: row.instrument_id,
+      symbol: instrument?.symbol ?? 'Unknown',
+      instrument_name: instrument?.instrument_name ?? 'Unknown instrument',
+      assessment_date: row.assessment_date,
+      rating: row.rating,
+      confidence: row.confidence,
+      score: row.score,
+      summary: row.summary,
+      bull_case: row.bull_case,
+      bear_case: row.bear_case,
+      technical_view: row.technical_view,
+      macro_view: row.macro_view,
+      valuation_view: row.valuation_view,
+      key_catalysts: row.key_catalysts,
+      key_risks: row.key_risks,
+      evidence_summary: row.evidence_summary,
+      created_at: row.created_at,
+    }
+  })
+
+  const latestDate = allRows[0]?.assessment_date ?? null
+  const rows = latestDate ? allRows.filter((row) => row.assessment_date === latestDate) : []
+  const ratingMap = new Map<string, { rating: string; count: number; totalConfidence: number; confidenceCount: number }>()
+  for (const row of rows) {
+    const item = ratingMap.get(row.rating) ?? { rating: row.rating, count: 0, totalConfidence: 0, confidenceCount: 0 }
+    item.count += 1
+    if (row.confidence !== null) {
+      item.totalConfidence += row.confidence
+      item.confidenceCount += 1
+    }
+    ratingMap.set(row.rating, item)
+  }
+  const distribution = [...ratingMap.values()].map((item) => ({
+    rating: item.rating,
+    count: item.count,
+    avgConfidence: item.confidenceCount ? item.totalConfidence / item.confidenceCount : null,
+  }))
+
+  const confidences = rows.map((row) => row.confidence).filter((value): value is number => value !== null)
+  const averageConfidence = confidences.length ? confidences.reduce((a, b) => a + b, 0) / confidences.length : null
+  const highest = [...rows].sort((a, b) => (b.confidence ?? -1) - (a.confidence ?? -1) || (b.score ?? -1) - (a.score ?? -1)).slice(0, 5)
+  const lowest = [...rows].sort((a, b) => (a.confidence ?? 101) - (b.confidence ?? 101) || (a.score ?? 101) - (b.score ?? 101)).slice(0, 5)
+
+  return { rows, latestDate, distribution, averageConfidence, highest, lowest, latestRun: runRes.data ?? null }
+}
+
+export async function getAssessmentDetail(symbol: string) {
+  const supabase = getSupabase()
+  const instrumentRes = await supabase.from('instruments').select('id,symbol,instrument_name,asset_type,exchange_code').eq('symbol', symbol).maybeSingle()
+  if (instrumentRes.error) throw instrumentRes.error
+  if (!instrumentRes.data) return null
+
+  const assessmentRes = await supabase
+    .from('gpt_market_assessments')
+    .select('assessment_id,instrument_id,assessment_date,rating,confidence,score,summary,bull_case,bear_case,technical_view,macro_view,valuation_view,key_catalysts,key_risks,evidence_summary,created_at')
+    .eq('instrument_id', instrumentRes.data.id)
+    .order('assessment_date', { ascending: false })
+    .limit(1)
+    .maybeSingle()
+
+  if (assessmentRes.error) throw assessmentRes.error
+  if (!assessmentRes.data) return { instrument: instrumentRes.data, assessment: null, evidence: [] }
+
+  const evidenceRes = await supabase
+    .from('gpt_market_evidence')
+    .select('evidence_id,evidence_type,source_name,source_url,evidence_text,relevance_score,confidence,created_at')
+    .eq('assessment_id', assessmentRes.data.assessment_id)
+    .order('relevance_score', { ascending: false })
+
+  if (evidenceRes.error) throw evidenceRes.error
+  return { instrument: instrumentRes.data, assessment: assessmentRes.data, evidence: evidenceRes.data ?? [] }
+}
+
+export async function getStrategiesData() {
+  const supabase = getSupabase()
+  const [strategiesRes, testsRes, treeRes] = await Promise.all([
+    supabase.from('trading_strategies').select('id,strategy_code,strategy_name,description,status,created_at,updated_at').order('updated_at', { ascending: false }),
+    supabase.from('trading_test_runs').select('id,strategy_id,run_name,test_type,period_start,period_end,instrument_count,trade_count,net_profit,return_pct,win_rate_pct,profit_factor,expectancy,max_drawdown_pct,sharpe_ratio,out_of_sample_return_pct,completed_at,created_at').order('created_at', { ascending: false }),
+    supabase.from('trading_decision_trees').select('id,tree_code,tree_name,description,version,is_system_template,is_active').eq('is_active', true).order('updated_at', { ascending: false }).limit(1).maybeSingle(),
+  ])
+
+  if (strategiesRes.error) throw strategiesRes.error
+  if (testsRes.error) throw testsRes.error
+  if (treeRes.error) throw treeRes.error
+
+  let nodes: Record<string, unknown>[] = []
+  let edges: Record<string, unknown>[] = []
+  if (treeRes.data) {
+    const [nodesRes, edgesRes] = await Promise.all([
+      supabase.from('trading_decision_nodes').select('id,tree_id,node_code,node_type,title,description,metric_code,comparison_operator,threshold_value,outcome_code,outcome_status,sort_order').eq('tree_id', treeRes.data.id).order('sort_order'),
+      supabase.from('trading_decision_edges').select('id,tree_id,from_node_id,to_node_id,result_value,edge_label,sort_order').eq('tree_id', treeRes.data.id).order('sort_order'),
+    ])
+    if (nodesRes.error) throw nodesRes.error
+    if (edgesRes.error) throw edgesRes.error
+    nodes = (nodesRes.data ?? []) as Record<string, unknown>[]
+    edges = (edgesRes.data ?? []) as Record<string, unknown>[]
+  }
+
+  return {
+    strategies: strategiesRes.data ?? [],
+    tests: testsRes.data ?? [],
+    tree: treeRes.data ?? null,
+    nodes,
+    edges,
+  }
 }
