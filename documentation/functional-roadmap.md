@@ -1,153 +1,75 @@
 # Trading Platform Functional Roadmap
 
-This roadmap classifies the Discover Boulders Markets platform by **what is actually working in Supabase today**, what should be completed next, and what is future platform capability.
+This roadmap classifies Discover Boulders Markets by what is working now, what should be finished next, and what remains future capability.
 
-It is intentionally based on the live Supabase structure and current GitHub application rather than historical chat assumptions.
+The roadmap is based on the live Supabase structure and current GitHub application.
 
 ## Roadmap principles
 
-1. **Supabase is the source of truth for platform capability.**
-2. A table existing does not mean a feature is operational.
-3. Complete partially connected pipelines before adding new product surface area.
-4. Do not fabricate data to make dashboards appear complete.
-5. Keep the public dashboard read-only unless a feature explicitly requires authenticated write access.
-6. Resolve security/RLS deliberately as each feature becomes operational.
+1. Supabase is the source of truth for persisted platform state.
+2. A table existing does not mean the feature is operational.
+3. Complete partially connected operating loops before expanding the UI.
+4. Do not fabricate production data.
+5. Keep public dashboard access read-only unless a feature explicitly needs authenticated writes.
+6. Make scheduling ownership explicit so two schedulers cannot process the same workflow.
 
 ---
 
 # Phase 1 — Working Now
 
-Phase 1 represents capabilities that are already materially operational and can be relied on as the current platform foundation.
+## Market-data ingestion — Operational
 
-## 1. Market-data ingestion
+Current foundation:
 
-**Status: Operational**
-
-Current flow:
-
-```text
-pg_cron
-   |
-   v
-full-twelve-data-load Edge Function
-   |
-   +--> Twelve Data quote API
-   |
-   +--> market_observations
-   +--> sync_runs
-```
-
-Working components:
-
-- Twelve Data provider configuration.
-- 30 active instruments.
-- Current asset mix:
+- Twelve Data provider integration.
+- 30 active instruments:
   - 15 equities
   - 5 ETFs
   - 5 forex
   - 5 crypto
-- Provider-to-instrument mappings.
+- provider/instrument mappings.
 - `full-twelve-data-load` Edge Function.
-- `test-twelve-data-load` Edge Function for single-symbol testing.
-- 15-minute pg_cron schedule.
-- Rolling 60-minute load exclusion per instrument.
-- US market-hours logic for equities and ETFs.
-- Continuous eligibility for forex and crypto.
-- Sync-run logging and error capture.
-- Market observation history.
+- `test-twelve-data-load` single-symbol test function.
+- 15-minute Supabase pg_cron schedule.
+- US-market-hours rules for equities/ETFs.
+- continuous forex/crypto eligibility.
+- `market_observations` history.
+- `sync_runs` operational monitoring.
 
-### Phase 1 outcome
+## Admin dashboard — Operational
 
-The platform already has a functioning market-data foundation suitable for monitoring, history and downstream analysis.
+- loader health and freshness.
+- loads/observations today.
+- active instruments.
+- failed/partial run counts.
+- daily observation chart.
+- sync history and drill-through.
 
----
+## Markets dashboard — Operational
 
-## 2. Admin monitoring dashboard
+- active universe.
+- asset-class filters and search.
+- latest observations/prices.
+- provider and freshness information.
+- price-history drill-through.
+- latest assessment cross-link where available.
 
-**Status: Operational**
+## GPT assessment data model — Operational as a data model/test dataset
 
-Current capability:
-
-- loader health;
-- latest load;
-- last successful load;
-- loads today;
-- observations today;
-- failed/partial run count;
-- active-instrument count;
-- observation-volume chart;
-- freshness/coverage summary;
-- recent sync-run history;
-- load-run drill-through.
-
-Primary Supabase dependencies:
-
-- `sync_runs`
-- `market_observations`
-- `instruments`
-- `data_providers`
-
----
-
-## 3. Markets dashboard
-
-**Status: Operational**
-
-Current capability:
-
-- active instrument universe;
-- asset-class filters;
-- instrument search;
-- latest price;
-- observation/load freshness;
-- provider information;
-- instrument drill-through;
-- price-history chart;
-- cross-link to latest assessment where available.
-
-Primary Supabase dependencies:
-
-- `instruments`
-- `provider_instruments`
-- `data_providers`
-- `market_observations`
-
----
-
-## 4. GPT assessment data model and current test dataset
-
-**Status: Data model operational; automation not yet operational**
-
-Working components:
+Working structures:
 
 - `gpt_market_runs`
 - `gpt_market_assessments`
 - `gpt_market_evidence`
-- 30 current assessment rows.
+- 30 current test assessments.
 - 30 current evidence rows.
-- assessment fields for rating, confidence, score, summary, bull/bear case, technical, macro, valuation, catalysts and risks.
-- Assessments dashboard.
-- instrument assessment drill-through.
-- Market ↔ Assessment cross-linking.
+- Assessments dashboard and detail pages.
 
-### Important limitation
+The historical 30-row test dataset is not evidence that the previous daily scheduler was fully unattended.
 
-The current assessment records are a successful **test dataset**. They do not prove that the daily scheduled assessment pipeline is complete.
+## Strategy decision framework — Operational as a framework
 
----
-
-## 5. Strategy decision framework
-
-**Status: Framework operational; strategy execution data not yet populated**
-
-Working components:
-
-- `trading_decision_trees`
-- `trading_decision_nodes`
-- `trading_decision_edges`
-- one active system template: `STANDARD_STRATEGY_REVIEW`
-
-Current review gates:
+The active `STANDARD_STRATEGY_REVIEW` system template currently evaluates:
 
 1. trade count >= 30
 2. expectancy > 0
@@ -155,130 +77,83 @@ Current review gates:
 4. maximum drawdown <= 20%
 5. out-of-sample return > 0
 
-Possible outcomes:
-
-- Continue testing
-- Revise entry or exit rules
-- Revise trade efficiency
-- Reduce risk or pause
-- Validate robustness
-- Promote to next testing stage
-
-The Strategies dashboard correctly presents this framework while strategy/test tables are empty.
+Possible outcomes include continue testing, revise, reduce risk/pause, validate robustness, and promote.
 
 ---
 
 # Phase 2 — Finish Next
 
-Phase 2 should focus on completing the partially built operating loops before expanding into additional features.
-
 ## Priority 1 — Complete daily market-assessment automation
 
-**Status: Highest priority**
+**Status: In progress.**
 
-### What already works
+### Architecture decision
 
-The scheduler creates one assessment request at 6:00 pm New York time:
+The daily reasoning/assessment layer will run as a **ChatGPT Scheduled Task** with access to the connected Trading Supabase project.
 
-```text
-pg_cron
-   |
-   v
-queue_daily_market_assessment()
-   |
-   +--> market_assessment_queue
-   +--> market_assessment_schedule_log
-```
+Supabase continues to own market-data loading and persistence. ChatGPT owns the assessment schedule and research/analysis step.
 
-Current queue rows are being created successfully.
+The old Supabase pg_cron job `daily_market_assessment` has been unscheduled so there is only one assessment scheduler.
 
-### What is missing
-
-There is no end-to-end consumer connected to those queue rows.
-
-The existing function:
-
-`process_market_assessment_queue()`
-
-only changes today's rows from `pending` to `ready_for_analysis`.
-
-It does **not**:
-
-- claim a queue row;
-- create a GPT run;
-- execute analysis;
-- write assessment/evidence rows;
-- update ticker completion counts;
-- finalise the GPT run;
-- mark the queue row complete;
-- retry failures.
-
-### Current evidence of the incomplete hand-off
-
-The database contains:
-
-- 30 assessment rows;
-- 30 evidence rows;
-- one GPT run still marked `running`;
-- `tickers_completed = 0`;
-- `completed_at = null`;
-- seven scheduled queue rows still `pending`.
-
-This strongly indicates that assessment generation has been tested independently, while the scheduler → worker → finalisation chain has not been connected.
-
-### Target Phase 2 flow
+### Target flow
 
 ```text
-6:00 pm New York
+ChatGPT Scheduled Task
       |
       v
-queue_daily_market_assessment()
+check current New York date + market-data freshness
       |
       v
-pending queue row
+prepare_chatgpt_market_assessment()
+      |
+      +--> create/resume queue row
+      +--> create/resume gpt_market_run
       |
       v
-assessment worker claims row
-      |
-      +--> queue = processing
-      +--> create gpt_market_run
+read active instruments + observations + available research context
       |
       v
-analyse active instrument universe
+ChatGPT assessment/research
       |
       +--> gpt_market_assessments
       +--> gpt_market_evidence
       |
       v
-finalise run
+finalize_chatgpt_market_assessment()
       |
       +--> tickers_completed
       +--> completed_at
       +--> succeeded / partial / failed
       |
       v
-finalise queue row
+notify user
 ```
+
+### Completed foundations
+
+- explicit queue lifecycle and attempt tracking.
+- queue-to-run linking.
+- idempotent prepare/resume helper.
+- finalisation helper based on actual assessment rows.
+- unique `(run_id, instrument_id)` constraint prevents duplicate assessment rows.
+- historical queue backlog is isolated from the current-date task path.
+- inactive OpenAI-API Edge Function retained only as a fallback/prototype.
 
 ### Definition of done
 
-- one scheduled request per business day;
-- idempotent queue claiming;
-- clear `pending → processing → succeeded/partial/failed` lifecycle;
-- GPT run created and finalised automatically;
-- `tickers_completed` accurately updated;
-- `completed_at` populated;
-- evidence persisted;
-- failed instruments recorded without losing successful results;
-- queue row finalised;
-- retry strategy documented;
-- Admin/Assessments can surface pipeline health.
+Priority 1 moves to Phase 1 when:
 
----
+- one recurring ChatGPT task runs unattended;
+- it can read/write the connected Supabase project;
+- the current date/run is created or resumed safely;
+- all active instruments are assessed;
+- evidence is persisted;
+- retrying does not duplicate results;
+- run and queue statuses finalise correctly;
+- the user receives the run summary;
+- at least one complete scheduled production-style run is verified.
 
 ## Priority 2 — Resolve assessment security model
-
-**Status: Required before production hardening**
 
 RLS is currently disabled on:
 
@@ -288,228 +163,98 @@ RLS is currently disabled on:
 - `gpt_market_assessments`
 - `gpt_market_evidence`
 
-A deliberate product decision is needed:
+Recommended direction:
 
-### Option A — Public research dashboard
-
-- public read-only assessment results;
-- internal queue/run-control data protected;
-- no anonymous writes.
-
-### Option B — Authenticated research workspace
-
-- assessments visible only after login;
-- user-specific research features can be added later.
-
-### Recommended direction
-
-Keep published assessment outputs readable by the dashboard, but protect scheduler/queue internals and all writes.
-
-Do not simply enable RLS without policies, because that would break the current Assessments UI.
-
----
+- published assessment outputs may remain read-only to the dashboard;
+- internal queue/run-control data should be protected;
+- anonymous writes should not be allowed;
+- enable RLS only with deliberate policies so the dashboard is not accidentally broken.
 
 ## Priority 3 — Complete external opinion/research pipeline
 
-**Status: Partial**
-
-Existing structure:
+Existing partial structures:
 
 - `opinion_sources`
 - `opinion_reviews`
 - `instrument_opinions`
 - `instrument_opinion_consensus`
 
-Current data proves the concept has been tested:
-
-- 5 opinion sources;
-- 1 completed opinion review;
-- 2 opinion records;
-- 1 consensus record.
-
 Next work:
 
-- define how opinion reviews are triggered;
-- define approved source types;
+- define approved sources and trigger mechanism;
 - automate collection/normalisation;
-- calculate/update consensus;
-- decide whether external opinions feed GPT assessments directly or remain a separate evidence layer;
-- add deliberate RLS policies when the feature becomes active.
+- update consensus;
+- decide how this evidence feeds daily assessments;
+- add RLS when the feature becomes active.
 
----
-
-## Priority 4 — Turn the strategy schema into an executable workflow
-
-**Status: Partial/scaffolded**
+## Priority 4 — Turn strategy schema into an executable workflow
 
 Existing schema is ready for:
 
 - strategy definitions;
-- test runs;
-- test metrics;
+- backtest/paper/live test runs;
+- performance metrics;
 - decision-tree evaluation;
-- decision outcomes.
+- persisted outcomes.
 
-But currently:
+Still empty:
 
-- `trading_strategies` = 0 rows;
-- `trading_test_runs` = 0 rows;
-- `trading_decision_evaluations` = 0 rows.
+- `trading_strategies`
+- `trading_test_runs`
+- `trading_decision_evaluations`
 
 Next work:
 
-1. create first real strategy definition;
+1. create the first real strategy;
 2. define test-run ingestion format;
-3. load real backtest/paper-test results;
-4. implement evaluation of test metrics against the system decision tree;
-5. persist the decision path and outcome;
-6. update the Strategies dashboard from empty-state to live strategy/test results.
+3. load real test results;
+4. evaluate results against the system decision tree;
+5. persist decision path/outcome;
+6. expose the real results in the Strategies dashboard.
 
 ---
 
 # Phase 3 — Future Platform Capability
 
-Phase 3 should build on stable market-data, assessment and strategy pipelines rather than bypassing unfinished Phase 2 work.
+## Technical indicators
 
-## 1. Technical indicator engine
+Use the existing `technical_indicators` scaffold for server-side, versioned measures such as moving averages, RSI, MACD, ATR, volatility, volume and trend state.
 
-Existing scaffold:
+## Market scoring
 
-- `technical_indicators`
+Use `market_scores` for momentum, trend, volatility, volume and overall rankings once the indicator layer is reliable.
 
-Potential capability:
+## Watchlists
 
-- moving averages;
-- RSI;
-- MACD;
-- ATR;
-- volatility measures;
-- volume indicators;
-- trend-state calculations.
+Use `watchlists` and `watchlist_items` for authenticated personal or strategy-specific instrument groups.
 
-These should be calculated server-side and versioned using `calculation_version`.
+## Alerts
 
----
+Use `alerts` and `alert_events` for price, assessment, data-freshness, strategy and indicator conditions.
 
-## 2. Market scoring model
+## Authenticated multi-user workspace
 
-Existing scaffold:
+Owner-aware tables already support a future model for private strategies, test runs, watchlists and user-specific decision trees.
 
-- `market_scores`
+## Additional market-data providers
 
-Available fields include:
+The provider abstraction through `data_providers` and `provider_instruments` can support fallback providers, broader asset coverage and cross-provider validation.
 
-- momentum score;
-- trend score;
-- volatility score;
-- volume score;
-- overall score.
+## Broader strategy laboratory
 
-Future use:
+Future strategy capability can include templates, parameters, instrument universes, backtests, paper/live stages, version comparisons, promotion/retirement and richer decision trees.
 
-- ranking instruments;
-- screening candidates;
-- supporting assessments;
-- feeding strategy selection rules.
-
----
-
-## 3. Watchlists
-
-Existing scaffold:
-
-- `watchlists`
-- `watchlist_items`
-
-Potential capability:
-
-- personal instrument groups;
-- themed watchlists;
-- ordering/notes;
-- watchlist-specific dashboard views;
-- strategy universes.
-
-Because the model already includes `owner_user_id`, this should be implemented alongside authentication rather than opened anonymously.
-
----
-
-## 4. Alerts
-
-Existing scaffold:
-
-- `alerts`
-- `alert_events`
-
-Potential capability:
-
-- price thresholds;
-- assessment/rating changes;
-- freshness/data-load issues;
-- strategy decision outcomes;
-- technical indicator conditions;
-- notification lifecycle.
-
----
-
-## 5. Authenticated multi-user workspace
-
-Several tables already contain `owner_user_id`, including strategy and watchlist structures.
-
-Future capability could include:
-
-- individual watchlists;
-- private strategies;
-- private test runs;
-- user-specific decision trees;
-- shared/team research later if required.
-
-Authentication should be added only when a product feature genuinely needs user ownership.
-
----
-
-## 6. Expanded market-data providers
-
-The provider abstraction already supports multiple providers through:
-
-- `data_providers`
-- `provider_instruments`
-
-Future capability:
-
-- secondary/fallback provider;
-- provider-specific asset coverage;
-- cross-provider validation;
-- provider latency/quality comparison.
-
----
-
-## 7. Broader strategy laboratory
-
-Future strategy capability could include:
-
-- reusable strategy templates;
-- parameter sets;
-- strategy-to-instrument mappings;
-- backtest import;
-- paper-trading results;
-- live test stages;
-- parameter/version comparison;
-- promotion/retirement workflow;
-- richer decision trees.
-
-Do not build performance dashboards before real test-run data exists.
+Do not build performance dashboards before real strategy test data exists.
 
 ---
 
 # Recommended delivery order
 
-The recommended sequence from the current state is:
-
 ```text
-1. Keep market-data ingestion stable
+1. Keep Twelve Data ingestion stable
         |
         v
-2. Complete daily assessment automation
+2. Prove ChatGPT Scheduled Task assessment end-to-end
         |
         v
 3. Harden assessment RLS/security
@@ -530,26 +275,16 @@ The recommended sequence from the current state is:
 8. Add watchlists / alerts / authenticated user features
 ```
 
-## Why this order
-
-The platform already has a reliable market-data layer. The highest-value next step is to make the existing assessment schema genuinely automatic rather than building another disconnected feature.
-
-Once assessment generation is dependable, the opinion/research layer can become an input to assessments, and real strategy test data can then use both market and assessment information.
-
----
-
 # Working definition of platform maturity
 
-A feature should only move into **Phase 1 — Working Now** when all of the following are true:
+A feature should only move into **Phase 1 — Working Now** when:
 
-- database schema exists;
-- required loader/worker exists;
-- scheduled/manual trigger exists;
-- lifecycle status is finalised correctly;
+- schema exists;
+- the worker/process exists;
+- scheduling/manual triggering is explicit;
+- lifecycle status finalises correctly;
 - errors are recorded;
-- access/RLS model is deliberate;
-- frontend can read the feature without privileged secrets;
-- empty/error states are handled;
-- documentation explains the flow.
-
-This prevents partially built schema from being mistaken for completed platform functionality.
+- access/RLS is deliberate;
+- frontend access does not require privileged secrets;
+- retries and empty/error states are handled;
+- documentation explains the complete flow.
