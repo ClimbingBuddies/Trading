@@ -18,6 +18,7 @@ Use the following order when resolving uncertainty:
 - [Platform Architecture](platform-architecture.md) — major platform layers and how they connect.
 - [Supabase Data Model](supabase-data-model.md) — tables, relationships and current implementation status.
 - [Functional Roadmap](functional-roadmap.md) — Phase 1 working now, Phase 2 finish next, and Phase 3 future capability.
+- [Phase 2 Progress](phase2-progress.md) — implementation status, completed work, activation gates and next actions.
 - [Market Data Pipeline](pipelines/market-data-pipeline.md) — Twelve Data ingestion, scheduling and load monitoring.
 - [Market Assessment Pipeline](pipelines/market-assessment-pipeline.md) — scheduled assessment queue, GPT assessment records and current gaps.
 - [Strategy Framework](strategy-framework.md) — strategy/test tables and the standard decision tree.
@@ -40,7 +41,7 @@ Use the following order when resolving uncertainty:
 
 ### Partially implemented
 
-- Daily market-assessment scheduling and queue creation.
+- Daily market-assessment automation: queue lifecycle and worker are now deployed; OpenAI configuration, backlog handling and recurring worker activation remain outstanding.
 - External opinion/research capture.
 - Watchlists and alerts.
 - Strategy testing and evaluation workflow.
