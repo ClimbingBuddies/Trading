@@ -1,10 +1,10 @@
 import './globals.css'
-import Link from 'next/link'
 import type { Metadata } from 'next'
+import AppNav from '@/components/AppNav'
 
 export const metadata: Metadata = {
-  title: 'Trading Admin',
-  description: 'Trading data load monitoring dashboard',
+  title: 'Discover Boulders Markets',
+  description: 'Market monitoring, assessments and strategy development dashboard',
 }
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -12,15 +12,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en">
       <body>
         <div className="appShell">
-          <aside className="sideNav">
-            <div className="brand">Trading</div>
-            <nav>
-              <Link className="navActive" href="/admin">Admin</Link>
-              <span className="navFuture">Markets</span>
-              <span className="navFuture">Assessments</span>
-              <span className="navFuture">Strategies</span>
-            </nav>
-          </aside>
+          <AppNav />
           <main className="mainContent">{children}</main>
         </div>
       </body>
