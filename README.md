@@ -7,9 +7,17 @@ Trading dashboard application backed by the existing Supabase Trading project.
 Use only:
 
 - Vercel project: `discoverbouldersmarkets`
-- Public URL: `https://discoverbouldersmarkets.vercel.app`
+- Intended public URL: `https://discoverbouldersmarkets.vercel.app`
 
-Do not use the historical duplicate Vercel projects `trading` or `trading-admin-monitor`.
+Do not use the historical duplicate Vercel projects `trading` or `trading-admin-monitor` for application development or deployment.
+
+### Current alias state
+
+The Next.js dashboard is deployed successfully to the canonical Vercel project `discoverbouldersmarkets`.
+
+However, the clean alias `discoverbouldersmarkets.vercel.app` is still owned by the legacy Vercel project `trading-admin-monitor`. The alias must be removed from that legacy project and attached to `discoverbouldersmarkets` before the intended clean URL can serve this dashboard.
+
+This is an alias-routing issue only; the dashboard build itself compiles and deploys successfully.
 
 ## Architecture
 
