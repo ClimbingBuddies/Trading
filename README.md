@@ -22,17 +22,9 @@ The documentation distinguishes between operational features, partially implemen
 Use only:
 
 - Vercel project: `discoverbouldersmarkets`
-- Intended public URL: `https://discoverbouldersmarkets.vercel.app`
+- Public URL: `https://discoverbouldersmarkets.vercel.app`
 
-Do not use the historical duplicate Vercel projects `trading` or `trading-admin-monitor` for application development or deployment.
-
-### Current alias state
-
-The Next.js dashboard is deployed successfully to the canonical Vercel project `discoverbouldersmarkets`.
-
-However, the clean alias `discoverbouldersmarkets.vercel.app` is still owned by the legacy Vercel project `trading-admin-monitor`. The alias must be removed from that legacy project and attached to `discoverbouldersmarkets` before the intended clean URL can serve this dashboard.
-
-This is an alias-routing issue only; the dashboard build itself compiles and deploys successfully.
+Do not create or use duplicate Trading deployment projects for application development. If Vercel project/alias ownership needs to be audited, treat that as a deployment task and verify the current Vercel state rather than relying on historical README notes.
 
 ## Architecture
 
@@ -40,7 +32,7 @@ This is an alias-routing issue only; the dashboard build itself compiles and dep
 - Supabase project: `Trading`
 - Supabase project ref: `glvbqcplgjdfgjyknzsa`
 - Frontend: Next.js App Router + TypeScript
-- Deployment: Vercel project `discoverbouldersmarkets`
+- Deployment target: Vercel project `discoverbouldersmarkets`
 
 Supabase remains responsible for persistence, scheduled market-data loading and Edge Functions. The Next.js application is the monitoring, research and drill-through presentation layer.
 
@@ -93,8 +85,8 @@ The visual reference is the agreed Admin / Markets / Assessments / Strategies fo
 
 ## Vercel configuration
 
-`vercel.json` explicitly configures the project as Next.js and uses `.next` as the deployment output. This overrides the historical Vercel project setting that previously expected a static `public` output directory.
+`vercel.json` explicitly configures the project as Next.js and uses `.next` as the deployment output.
 
 ## Data access
 
-The app is read-only for this stage. Supabase RLS and Data API policy still determine which rows are visible through the publishable key. If a protected table has no read policy, the correct UI behaviour is an empty state until an appropriate read policy is deliberately approved and added.
+The app is read-only for this stage. Supabase RLS and Data API policy determine which rows are visible through the publishable key. If a protected table has no read policy, the correct UI behaviour is an empty state until an appropriate read policy is deliberately approved and added.
