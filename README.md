@@ -2,6 +2,21 @@
 
 Trading dashboard application backed by the existing Supabase Trading project.
 
+## Documentation
+
+The platform is documented from the live Supabase structure outward. Start here:
+
+- [Trading Platform Documentation](documentation/README.md)
+- [Platform Architecture](documentation/platform-architecture.md)
+- [Supabase Data Model](documentation/supabase-data-model.md)
+- [Market Data Pipeline](documentation/pipelines/market-data-pipeline.md)
+- [Market Assessment Pipeline](documentation/pipelines/market-assessment-pipeline.md)
+- [Strategy Framework](documentation/strategy-framework.md)
+- [Frontend Route Map](documentation/frontend-route-map.md)
+- [Security and Operational Notes](documentation/security-and-operational-notes.md)
+
+The documentation distinguishes between operational features, partially implemented pipelines and schema that is currently only scaffolded.
+
 ## Canonical deployment
 
 Use only:
