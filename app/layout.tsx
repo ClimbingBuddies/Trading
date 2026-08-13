@@ -1,6 +1,7 @@
 import './globals.css'
 import './theme.css'
 import './theme-v2.css'
+import './theme-light.css'
 import type { Metadata } from 'next'
 import AppNav from '@/components/AppNav'
 import ThemePaletteSelector from '@/components/ThemePaletteSelector'
@@ -14,7 +15,7 @@ const paletteBootScript = `
 (function () {
   try {
     var key = 'discover-boulders-market-palette';
-    var allowed = ['midnight-blue', 'original-green', 'copper-ember', 'plum-night'];
+    var allowed = ['midnight-blue', 'original-green', 'copper-ember', 'plum-night', 'alpine-light'];
     var saved = window.localStorage.getItem(key);
     var resolved = allowed.indexOf(saved) >= 0 ? saved : 'midnight-blue';
     document.documentElement.dataset.theme = resolved;
