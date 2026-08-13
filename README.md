@@ -6,6 +6,7 @@ Trading dashboard application backed by the existing Supabase Trading project.
 
 The platform is documented from the live Supabase structure outward. Start here:
 
+- [Canonical Project Plan](documentation/project-plan.md)
 - [Trading Platform Documentation](documentation/README.md)
 - [Platform Architecture](documentation/platform-architecture.md)
 - [Supabase Data Model](documentation/supabase-data-model.md)
