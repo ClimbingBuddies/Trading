@@ -54,17 +54,6 @@ html[data-theme='alpine-light'] {
   --chart-grid: #d5deea;
 }
 
-/* Safe defaults during initial hydration. */
-html[data-theme] {
-  --chart-1: var(--chart-1, var(--theme-accent));
-  --chart-2: var(--chart-2, var(--theme-cyan));
-  --chart-3: var(--chart-3, var(--theme-success));
-  --chart-4: var(--chart-4, var(--theme-warning));
-  --chart-5: var(--chart-5, var(--theme-purple));
-  --chart-6: var(--chart-6, var(--theme-danger));
-  --chart-grid: var(--chart-grid, var(--theme-border));
-}
-
 /* Shared legacy elements that still carried the original light-blue styling. */
 html[data-theme] .healthBadge,
 html[data-theme] .status {
