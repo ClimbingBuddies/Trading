@@ -1,7 +1,9 @@
 import './globals.css'
 import './theme.css'
+import './theme-v2.css'
 import type { Metadata } from 'next'
 import AppNav from '@/components/AppNav'
+import ThemePaletteSelector from '@/components/ThemePaletteSelector'
 
 export const metadata: Metadata = {
   title: 'Discover Boulders Markets',
@@ -12,25 +14,34 @@ const paletteBootScript = `
 (function () {
   try {
     var key = 'discover-boulders-market-palette';
-    var allowed = ['opportunity-blue', 'midnight-blue', 'original-green', 'aurora-slate'];
+    var allowed = ['midnight-blue', 'original-green', 'copper-ember', 'plum-night'];
     var saved = window.localStorage.getItem(key);
-    document.documentElement.dataset.theme = allowed.indexOf(saved) >= 0 ? saved : 'opportunity-blue';
+    var resolved = allowed.indexOf(saved) >= 0 ? saved : 'midnight-blue';
+    document.documentElement.dataset.theme = resolved;
+    if (saved !== resolved) window.localStorage.setItem(key, resolved);
   } catch (error) {
-    document.documentElement.dataset.theme = 'opportunity-blue';
+    document.documentElement.dataset.theme = 'midnight-blue';
   }
 })();
 `
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" data-theme="opportunity-blue" suppressHydrationWarning>
+    <html lang="en" data-theme="midnight-blue" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: paletteBootScript }} />
       </head>
       <body>
         <div className="appShell">
           <AppNav />
-          <main className="mainContent">{children}</main>
+          <div className="contentShell">
+            <div className="globalTopBar">
+              <div className="globalPaletteDock">
+                <ThemePaletteSelector />
+              </div>
+            </div>
+            <main className="mainContent">{children}</main>
+          </div>
         </div>
       </body>
     </html>
