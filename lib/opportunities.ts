@@ -33,12 +33,6 @@ export type OpportunityAssessment = {
   updated_at: string
 }
 
-export type OpportunityOverviewRow = {
-  theme: OpportunityTheme
-  latest: OpportunityAssessment | null
-  exposureCount: number
-}
-
 export type StructuralSignal = {
   id: string
   theme_id: string
@@ -106,6 +100,23 @@ export type ThemeExposure = {
   } | null
 }
 
+export type OpportunityOverviewRow = {
+  theme: OpportunityTheme
+  latest: OpportunityAssessment | null
+  exposureCount: number
+  exposures: ThemeExposure[]
+}
+
+export type RelatedOpportunityTheme = {
+  theme: OpportunityTheme
+  latest: OpportunityAssessment | null
+  sharedExposures: Array<{
+    symbol: string
+    currentExposureScore: number | null
+    relatedExposureScore: number | null
+  }>
+}
+
 export type ResearchDocument = {
   id: string
   document_scope: string
@@ -161,6 +172,10 @@ function latestByTheme(rows: OpportunityAssessment[]) {
   return map
 }
 
+function normalizeThemeCode(value: string) {
+  return decodeURIComponent(value).trim().toLowerCase()
+}
+
 export async function getOpportunityOverview() {
   const supabase = getSupabase()
   const [themesRes, assessmentsRes, exposuresRes] = await Promise.all([
@@ -177,8 +192,9 @@ export async function getOpportunityOverview() {
       .limit(2000),
     supabase
       .from('opportunity_theme_instruments')
-      .select('theme_id,instrument_id')
-      .eq('is_active', true),
+      .select('theme_id,instrument_id,exposure_type,exposure_score,rationale,is_active,instruments(symbol,instrument_name,asset_type,exchange_code)')
+      .eq('is_active', true)
+      .order('exposure_score', { ascending: false }),
   ])
 
   if (themesRes.error) throw themesRes.error
@@ -187,17 +203,25 @@ export async function getOpportunityOverview() {
 
   const themes = (themesRes.data ?? []) as OpportunityTheme[]
   const assessments = (assessmentsRes.data ?? []) as OpportunityAssessment[]
+  const exposures = (exposuresRes.data ?? []) as unknown as ThemeExposure[]
   const latestMap = latestByTheme(assessments)
-  const exposureCounts = new Map<string, number>()
-  for (const row of exposuresRes.data ?? []) {
-    exposureCounts.set(row.theme_id, (exposureCounts.get(row.theme_id) ?? 0) + 1)
+  const exposureMap = new Map<string, ThemeExposure[]>()
+
+  for (const row of exposures) {
+    const rows = exposureMap.get(row.theme_id) ?? []
+    rows.push(row)
+    exposureMap.set(row.theme_id, rows)
   }
 
-  const rows: OpportunityOverviewRow[] = themes.map((theme) => ({
-    theme,
-    latest: latestMap.get(theme.id) ?? null,
-    exposureCount: exposureCounts.get(theme.id) ?? 0,
-  }))
+  const rows: OpportunityOverviewRow[] = themes.map((theme) => {
+    const themeExposures = exposureMap.get(theme.id) ?? []
+    return {
+      theme,
+      latest: latestMap.get(theme.id) ?? null,
+      exposureCount: themeExposures.length,
+      exposures: themeExposures,
+    }
+  })
 
   rows.sort((a, b) => (b.latest?.opportunity_score ?? -1) - (a.latest?.opportunity_score ?? -1) || a.theme.theme_name.localeCompare(b.theme.theme_name))
 
@@ -210,27 +234,22 @@ export async function getOpportunityOverview() {
   return { rows, averageScore, highest, majorCount, latestDate }
 }
 
-function normalizeThemeCode(value: string) {
-  return decodeURIComponent(value).trim().toLowerCase()
-}
-
 export async function getOpportunityDetail(themeCode: string) {
+  const overview = await getOpportunityOverview()
+  const overviewRow = overview.rows.find((item) => normalizeThemeCode(item.theme.theme_code) === normalizeThemeCode(themeCode))
+  if (!overviewRow) return null
+
   const supabase = getSupabase()
-  const themesRes = await supabase
-    .from('opportunity_themes')
-    .select('id,theme_code,theme_name,description,horizon_years_min,horizon_years_max,status,created_at,updated_at')
-    .order('theme_name')
+  const theme = overviewRow.theme
+  const exposures = overviewRow.exposures
 
-  if (themesRes.error) throw themesRes.error
-  const theme = ((themesRes.data ?? []) as OpportunityTheme[]).find((item) => normalizeThemeCode(item.theme_code) === normalizeThemeCode(themeCode))
-  if (!theme) return null
-
-  const [assessmentsRes, structuralRes, techRes, exposuresRes] = await Promise.all([
+  const [assessmentsRes, structuralRes, techRes] = await Promise.all([
     supabase
       .from('opportunity_assessments')
       .select('id,theme_id,assessment_date,structural_signal_id,technology_inflection_signal_id,structural_score,structural_confidence,technology_inflection_score,technology_inflection_confidence,opportunity_score,opportunity_confidence,opportunity_level,commercial_readiness,time_horizon,summary,methodology_version,created_at,updated_at')
       .eq('theme_id', theme.id)
       .order('assessment_date', { ascending: false })
+      .order('updated_at', { ascending: false })
       .limit(365),
     supabase
       .from('structural_opportunity_signals')
@@ -244,23 +263,15 @@ export async function getOpportunityDetail(themeCode: string) {
       .eq('theme_id', theme.id)
       .order('signal_date', { ascending: false })
       .limit(30),
-    supabase
-      .from('opportunity_theme_instruments')
-      .select('theme_id,instrument_id,exposure_type,exposure_score,rationale,is_active,instruments(symbol,instrument_name,asset_type,exchange_code)')
-      .eq('theme_id', theme.id)
-      .eq('is_active', true)
-      .order('exposure_score', { ascending: false }),
   ])
 
   if (assessmentsRes.error) throw assessmentsRes.error
   if (structuralRes.error) throw structuralRes.error
   if (techRes.error) throw techRes.error
-  if (exposuresRes.error) throw exposuresRes.error
 
   const assessments = (assessmentsRes.data ?? []) as OpportunityAssessment[]
   const structuralSignals = (structuralRes.data ?? []) as StructuralSignal[]
   const technologySignals = (techRes.data ?? []) as TechnologySignal[]
-  const exposures = (exposuresRes.data ?? []) as unknown as ThemeExposure[]
   const latest = assessments[0] ?? null
   const latestStructural = structuralSignals[0] ?? null
   const latestTechnology = technologySignals[0] ?? null
@@ -303,8 +314,34 @@ export async function getOpportunityDetail(themeCode: string) {
     }
   }
 
+  const currentBySymbol = new Map<string, ThemeExposure>()
+  for (const exposure of exposures) {
+    const symbol = exposure.instruments?.symbol
+    if (symbol) currentBySymbol.set(symbol, exposure)
+  }
+
+  const relatedThemes: RelatedOpportunityTheme[] = overview.rows
+    .filter((row) => row.theme.id !== theme.id)
+    .map((row) => {
+      const sharedExposures = row.exposures.flatMap((exposure) => {
+        const symbol = exposure.instruments?.symbol
+        if (!symbol) return []
+        const current = currentBySymbol.get(symbol)
+        if (!current) return []
+        return [{
+          symbol,
+          currentExposureScore: current.exposure_score,
+          relatedExposureScore: exposure.exposure_score,
+        }]
+      })
+      return { theme: row.theme, latest: row.latest, sharedExposures }
+    })
+    .filter((row) => row.sharedExposures.length > 0)
+    .sort((a, b) => b.sharedExposures.length - a.sharedExposures.length || (b.latest?.opportunity_score ?? -1) - (a.latest?.opportunity_score ?? -1))
+
   return {
     theme,
+    themeOptions: overview.rows.map((row) => row.theme),
     assessments,
     latest,
     structuralSignals,
@@ -313,6 +350,7 @@ export async function getOpportunityDetail(themeCode: string) {
     latestTechnology,
     events,
     exposures,
+    relatedThemes,
     researchDocument,
     researchEmbeds,
   }
