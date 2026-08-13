@@ -1,91 +1,91 @@
-/* Alpine Light: a bright, high-contrast companion to the four dark palettes. */
-html[data-theme='alpine-light'] {
+/* Stone Paper: warm light research workspace with dark structural navigation. */
+html[data-theme='stone-paper'] {
   color-scheme: light;
-  --theme-bg: #f3f6fa;
-  --theme-bg-alt: #eef3f8;
-  --theme-panel: #ffffff;
-  --theme-panel-2: #f8fafc;
-  --theme-panel-3: #edf3f9;
-  --theme-border: #d5deea;
-  --theme-border-soft: #e3e9f0;
-  --theme-text: #172238;
-  --theme-text-secondary: #33445c;
-  --theme-muted: #66778d;
-  --theme-muted-2: #8796a8;
-  --theme-accent: #2563eb;
-  --theme-accent-strong: #1d4ed8;
-  --theme-accent-soft: #e8f0ff;
-  --theme-success: #218a4b;
-  --theme-success-soft: #e9f7ef;
-  --theme-warning: #b86b12;
-  --theme-warning-soft: #fff4df;
-  --theme-danger: #c83d48;
-  --theme-danger-soft: #fdebed;
-  --theme-purple: #7654c7;
-  --theme-cyan: #167f94;
-  --theme-nav: #10233d;
-  --theme-nav-2: #0b192c;
-  --theme-nav-active: #245a9f;
-  --theme-row-hover: #f0f5fb;
-  --theme-input: #ffffff;
-  --theme-table-head: #edf3f8;
+  --theme-bg: #f3f0ea;
+  --theme-bg-alt: #ece8e0;
+  --theme-panel: #fffdf9;
+  --theme-panel-2: #f8f5ef;
+  --theme-panel-3: #efeae2;
+  --theme-border: #d5cec3;
+  --theme-border-soft: #e3ddd3;
+  --theme-text: #1b2530;
+  --theme-text-secondary: #465463;
+  --theme-muted: #75818c;
+  --theme-muted-2: #929ba4;
+  --theme-accent: #3b7182;
+  --theme-accent-strong: #295a69;
+  --theme-accent-soft: #e3eef0;
+  --theme-success: #3f7e58;
+  --theme-success-soft: #e8f2eb;
+  --theme-warning: #b57827;
+  --theme-warning-soft: #f8eedc;
+  --theme-danger: #b94f4f;
+  --theme-danger-soft: #f7e7e5;
+  --theme-purple: #7567a6;
+  --theme-cyan: #438c91;
+  --theme-nav: #12253a;
+  --theme-nav-2: #0d1d2e;
+  --theme-nav-active: #316a7c;
+  --theme-row-hover: #eee9e1;
+  --theme-input: #fffdf9;
+  --theme-table-head: #ebe6de;
 }
 
-/* Keep the navigation deliberately dark so the light workspace still has structure. */
-html[data-theme='alpine-light'] .sideNav {
-  color: #f7fbff;
-  border-right-color: #173552;
+/* Keep navigation dark so the warm paper workspace retains a strong frame. */
+html[data-theme='stone-paper'] .sideNav {
+  color: #f8fbfd;
+  border-right-color: #203c56;
 }
-html[data-theme='alpine-light'] .brandWords strong,
-html[data-theme='alpine-light'] .brandWords strong:last-child { color: #eef6ff; }
-html[data-theme='alpine-light'] .navItem { color: #dbe7f5; }
-html[data-theme='alpine-light'] .navActive { color: #ffffff; }
+html[data-theme='stone-paper'] .brandWords strong,
+html[data-theme='stone-paper'] .brandWords strong:last-child { color: #eef4f7; }
+html[data-theme='stone-paper'] .navItem { color: #dbe5eb; }
+html[data-theme='stone-paper'] .navActive { color: #ffffff; }
 
 /* Light-mode contrast corrections for shared controls and dashboard copy. */
-html[data-theme='alpine-light'] .healthBadge,
-html[data-theme='alpine-light'] .status,
-html[data-theme='alpine-light'] .assetTag,
-html[data-theme='alpine-light'] .ratingTag,
-html[data-theme='alpine-light'] .freshnessState,
-html[data-theme='alpine-light'] .rankBadge {
+html[data-theme='stone-paper'] .healthBadge,
+html[data-theme='stone-paper'] .status,
+html[data-theme='stone-paper'] .assetTag,
+html[data-theme='stone-paper'] .ratingTag,
+html[data-theme='stone-paper'] .freshnessState,
+html[data-theme='stone-paper'] .rankBadge {
   border-color: var(--theme-border-soft);
 }
 
-html[data-theme='alpine-light'] .primaryLinkButton,
-html[data-theme='alpine-light'] .filterTabActive { color: #ffffff; }
+html[data-theme='stone-paper'] .primaryLinkButton,
+html[data-theme='stone-paper'] .filterTabActive { color: #ffffff; }
 
-/* Opportunities was designed dark-first; normalise its remaining fixed light text. */
-html[data-theme='alpine-light'] main [class*='opportunityPage'] {
+/* Opportunities was designed dark-first; normalise remaining fixed light text. */
+html[data-theme='stone-paper'] main [class*='opportunityPage'] {
   color: var(--theme-text) !important;
 }
-html[data-theme='alpine-light'] main [class*='opportunityPage'] small,
-html[data-theme='alpine-light'] main [class*='opportunityPage'] [class*='crumbs'] {
+html[data-theme='stone-paper'] main [class*='opportunityPage'] small,
+html[data-theme='stone-paper'] main [class*='opportunityPage'] [class*='crumbs'] {
   color: var(--theme-muted) !important;
 }
-html[data-theme='alpine-light'] main [class*='opportunityPage'] [class*='crumbs'] a,
-html[data-theme='alpine-light'] main [class*='opportunityPage'] [class*='crumbs'] strong {
-  color: var(--theme-accent) !important;
+html[data-theme='stone-paper'] main [class*='opportunityPage'] [class*='crumbs'] a,
+html[data-theme='stone-paper'] main [class*='opportunityPage'] [class*='crumbs'] strong {
+  color: var(--theme-accent-strong) !important;
 }
-html[data-theme='alpine-light'] main [class*='opportunityPage'] [class*='detailTab'],
-html[data-theme='alpine-light'] main [class*='opportunityPage'] [class*='themeSelect'] label {
+html[data-theme='stone-paper'] main [class*='opportunityPage'] [class*='detailTab'],
+html[data-theme='stone-paper'] main [class*='opportunityPage'] [class*='themeSelect'] label {
   color: var(--theme-text-secondary) !important;
 }
-html[data-theme='alpine-light'] main [class*='opportunityPage'] [class*='detailTabActive'] {
+html[data-theme='stone-paper'] main [class*='opportunityPage'] [class*='detailTabActive'] {
   color: var(--theme-text) !important;
 }
-html[data-theme='alpine-light'] main [class*='opportunityPage'] [class*='viewButton'],
-html[data-theme='alpine-light'] main [class*='opportunityPage'] [class*='inlineAction'],
-html[data-theme='alpine-light'] main [class*='opportunityPage'] [class*='tickerChip'] {
+html[data-theme='stone-paper'] main [class*='opportunityPage'] [class*='viewButton'],
+html[data-theme='stone-paper'] main [class*='opportunityPage'] [class*='inlineAction'],
+html[data-theme='stone-paper'] main [class*='opportunityPage'] [class*='tickerChip'] {
   color: var(--theme-accent-strong) !important;
   background: var(--theme-panel-2) !important;
 }
-html[data-theme='alpine-light'] main [class*='opportunityPage'] [class*='sourceChip'] {
+html[data-theme='stone-paper'] main [class*='opportunityPage'] [class*='sourceChip'] {
   color: var(--theme-accent-strong) !important;
   background: var(--theme-accent-soft) !important;
-  border-color: #c8d9fa !important;
+  border-color: color-mix(in srgb, var(--theme-accent) 28%, var(--theme-border)) !important;
 }
 
-/* Palette control itself follows the light workspace. */
-html[data-theme='alpine-light'] .globalPaletteDock .themePaletteControl select {
-  box-shadow: 0 1px 2px rgba(23, 34, 56, .06);
+/* Palette control itself follows the warm light workspace. */
+html[data-theme='stone-paper'] .globalPaletteDock .themePaletteControl select {
+  box-shadow: 0 1px 2px rgba(27, 37, 48, .08);
 }
