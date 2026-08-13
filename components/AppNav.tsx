@@ -2,7 +2,6 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import ThemePaletteSelector from '@/components/ThemePaletteSelector'
 
 const items = [
   { href: '/admin', label: 'Admin', icon: '◫' },
@@ -37,10 +36,6 @@ export default function AppNav() {
           )
         })}
       </nav>
-
-      <div className="themePaletteNav">
-        <ThemePaletteSelector />
-      </div>
 
       <div className="navFooter">
         <span>Discover Boulders Markets</span>
