@@ -65,24 +65,36 @@ html[data-theme='plum-night'] {
 }
 
 .contentShell {
+  position: relative;
   min-width: 0;
   min-height: 100vh;
   background: var(--theme-bg);
   color: var(--theme-text);
 }
 
+/*
+ * The palette selector is a header action, not a separate page row.
+ * It is absolutely positioned over the top-right of the content shell so it
+ * aligns with the first breadcrumb/header line and does not push dashboards down.
+ */
 .globalTopBar {
-  min-height: 38px;
+  position: absolute;
+  top: 18px;
+  right: 28px;
+  z-index: 30;
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  padding: 7px 24px 0;
-  background: var(--theme-bg);
+  min-height: 0;
+  padding: 0;
+  background: transparent;
+  pointer-events: none;
 }
 
 .globalPaletteDock {
   display: flex;
   align-items: center;
+  pointer-events: auto;
 }
 
 .globalPaletteDock .themePaletteControl {
@@ -129,12 +141,30 @@ html[data-theme='plum-night'] {
 
 .themePaletteNav { display: none !important; }
 
+/* Reserve horizontal room only where a page header could extend under the selector. */
+.pageHeader { padding-right: 210px; }
+main [class*='opportunityPage'] [class*='crumbs'] { padding-right: 210px; }
+
 @media (max-width: 900px) {
   .globalTopBar {
-    min-height: 36px;
-    padding: 6px 12px 0;
+    top: 12px;
+    right: 12px;
   }
   .globalPaletteDock .themePaletteLabel { display: none; }
-  .globalPaletteDock .themePaletteSelectRow { grid-template-columns: 9px minmax(122px, auto); }
+  .globalPaletteDock .themePaletteSelectRow { grid-template-columns: 9px minmax(118px, auto); }
   .globalPaletteDock .themePaletteControl select { min-height: 30px; }
+  .pageHeader { padding-right: 150px; }
+  main [class*='opportunityPage'] [class*='crumbs'] { padding-right: 150px; }
+}
+
+@media (max-width: 560px) {
+  .globalTopBar { top: 10px; right: 10px; }
+  .globalPaletteDock .themePaletteSwatch { display: none; }
+  .globalPaletteDock .themePaletteSelectRow { grid-template-columns: minmax(112px, auto); }
+  .globalPaletteDock .themePaletteControl select {
+    min-height: 30px;
+    max-width: 128px;
+  }
+  .pageHeader { padding-right: 135px; }
+  main [class*='opportunityPage'] [class*='crumbs'] { padding-right: 135px; }
 }
