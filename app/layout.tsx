@@ -16,11 +16,12 @@ const paletteBootScript = `
 (function () {
   try {
     var key = 'discover-boulders-market-palette';
-    var allowed = ['midnight-blue', 'original-green', 'copper-ember', 'plum-night', 'alpine-light'];
+    var allowed = ['midnight-blue', 'original-green', 'copper-ember', 'plum-night', 'stone-paper'];
     var saved = window.localStorage.getItem(key);
+    if (saved === 'alpine-light') saved = 'stone-paper';
     var resolved = allowed.indexOf(saved) >= 0 ? saved : 'midnight-blue';
     document.documentElement.dataset.theme = resolved;
-    if (saved !== resolved) window.localStorage.setItem(key, resolved);
+    if (window.localStorage.getItem(key) !== resolved) window.localStorage.setItem(key, resolved);
   } catch (error) {
     document.documentElement.dataset.theme = 'midnight-blue';
   }
