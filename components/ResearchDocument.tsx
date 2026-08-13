@@ -66,23 +66,31 @@ function ChartEmbed({ embed }: { embed: ResearchEmbed }) {
     )
   }
 
-  const Chart = chartType === 'bar' ? BarChart : LineChart
   return (
     <div className="researchEmbed researchChart">
       <div className="researchEmbedTop"><span>Chart</span><strong>{embed.title ?? 'Research chart'}</strong></div>
       {embed.description && <p>{embed.description}</p>}
       <div style={{ width: '100%', height: 300 }}>
         <ResponsiveContainer>
-          <Chart data={rows} margin={{ top: 10, right: 18, bottom: 10, left: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} />
-            <XAxis dataKey={xKey} tick={{ fontSize: 12 }} />
-            <YAxis tick={{ fontSize: 12 }} width={40} />
-            <Tooltip />
-            <Legend />
-            {series.map((item) => chartType === 'bar'
-              ? <Bar key={item.dataKey} dataKey={item.dataKey} name={item.label ?? item.dataKey} />
-              : <Line key={item.dataKey} type="monotone" dataKey={item.dataKey} name={item.label ?? item.dataKey} strokeWidth={2.5} dot={false} connectNulls />)}
-          </Chart>
+          {chartType === 'bar' ? (
+            <BarChart data={rows} margin={{ top: 10, right: 18, bottom: 10, left: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} />
+              <XAxis dataKey={xKey} tick={{ fontSize: 12 }} />
+              <YAxis tick={{ fontSize: 12 }} width={40} />
+              <Tooltip />
+              <Legend />
+              {series.map((item) => <Bar key={item.dataKey} dataKey={item.dataKey} name={item.label ?? item.dataKey} />)}
+            </BarChart>
+          ) : (
+            <LineChart data={rows} margin={{ top: 10, right: 18, bottom: 10, left: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} />
+              <XAxis dataKey={xKey} tick={{ fontSize: 12 }} />
+              <YAxis tick={{ fontSize: 12 }} width={40} />
+              <Tooltip />
+              <Legend />
+              {series.map((item) => <Line key={item.dataKey} type="monotone" dataKey={item.dataKey} name={item.label ?? item.dataKey} strokeWidth={2.5} dot={false} connectNulls />)}
+            </LineChart>
+          )}
         </ResponsiveContainer>
       </div>
     </div>
@@ -102,7 +110,7 @@ function EmbedCard({ embed }: { embed: ResearchEmbed }) {
     )
   }
 
-  const linked = embed.source_url && ['article', 'external_link', 'evidence'].includes(embed.embed_type)
+  const linked = Boolean(embed.source_url) && ['article', 'external_link', 'evidence'].includes(embed.embed_type)
   return (
     <div className={`researchEmbed research-${embed.embed_type}`}>
       <div className="researchEmbedTop">
