@@ -9,6 +9,7 @@ const PALETTES = [
   { value: 'original-green', label: 'Original Green' },
   { value: 'copper-ember', label: 'Copper Ember' },
   { value: 'plum-night', label: 'Plum Night' },
+  { value: 'alpine-light', label: 'Alpine Light' },
 ] as const
 
 type PaletteId = (typeof PALETTES)[number]['value']
