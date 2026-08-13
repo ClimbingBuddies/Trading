@@ -30,6 +30,8 @@ The intended production path is:
 
 `ClimbingBuddies/Trading` → `main` → Vercel project `boulders-market` → `https://discoverbouldersmarkets.vercel.app`
 
+Git integration for `boulders-market` was connected to `ClimbingBuddies/Trading` on 13 August 2026 so new commits to `main` can trigger production deployments automatically.
+
 Do not create or use duplicate Trading deployment projects for application development. Vercel project/repository linkage is configured in Vercel rather than by repository name alone, so deployment ownership should be verified in Vercel when troubleshooting automatic deployments.
 
 ## Architecture
