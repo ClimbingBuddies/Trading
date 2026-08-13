@@ -1,0 +1,383 @@
+/*
+ * Discover Boulders Markets global colour system.
+ *
+ * All dashboard surfaces should consume semantic variables rather than page-specific
+ * hard-coded colours. Opportunity Blue is the default palette.
+ */
+
+html,
+html[data-theme='opportunity-blue'] {
+  color-scheme: dark;
+  --theme-bg: #06172b;
+  --theme-bg-alt: #081d33;
+  --theme-panel: #0a2038;
+  --theme-panel-2: #0d2743;
+  --theme-panel-3: #102d4d;
+  --theme-border: #24415f;
+  --theme-border-soft: #1b3652;
+  --theme-text: #f5f9ff;
+  --theme-text-secondary: #c3d0df;
+  --theme-muted: #a9bad0;
+  --theme-muted-2: #7f95ad;
+  --theme-accent: #5aa3ff;
+  --theme-accent-strong: #2d7fdf;
+  --theme-accent-soft: #112f50;
+  --theme-success: #7bdc57;
+  --theme-success-soft: #14351f;
+  --theme-warning: #f3a63a;
+  --theme-warning-soft: #3a2b13;
+  --theme-danger: #ff6b6b;
+  --theme-danger-soft: #3a1c24;
+  --theme-purple: #b181ff;
+  --theme-cyan: #53c8d8;
+  --theme-nav: #041425;
+  --theme-nav-2: #071d35;
+  --theme-nav-active: #104887;
+  --theme-row-hover: #0e2b49;
+  --theme-input: #081d33;
+  --theme-table-head: #081c32;
+}
+
+html[data-theme='midnight-blue'] {
+  color-scheme: dark;
+  --theme-bg: #050f1c;
+  --theme-bg-alt: #091827;
+  --theme-panel: #0d2033;
+  --theme-panel-2: #112941;
+  --theme-panel-3: #17344f;
+  --theme-border: #2a425b;
+  --theme-border-soft: #1e344a;
+  --theme-text: #f4f7fb;
+  --theme-text-secondary: #c7d2df;
+  --theme-muted: #9eb0c2;
+  --theme-muted-2: #778ba0;
+  --theme-accent: #78b9ff;
+  --theme-accent-strong: #4a91de;
+  --theme-accent-soft: #142f4b;
+  --theme-success: #72d578;
+  --theme-success-soft: #15321f;
+  --theme-warning: #eeb25d;
+  --theme-warning-soft: #352914;
+  --theme-danger: #f17a7a;
+  --theme-danger-soft: #351c22;
+  --theme-purple: #a595ff;
+  --theme-cyan: #6ac9d6;
+  --theme-nav: #030b14;
+  --theme-nav-2: #071321;
+  --theme-nav-active: #163b63;
+  --theme-row-hover: #112a42;
+  --theme-input: #091827;
+  --theme-table-head: #0a1a2a;
+}
+
+html[data-theme='original-green'] {
+  color-scheme: dark;
+  --theme-bg: #071510;
+  --theme-bg-alt: #0b1e16;
+  --theme-panel: #10271d;
+  --theme-panel-2: #153326;
+  --theme-panel-3: #1a402f;
+  --theme-border: #315744;
+  --theme-border-soft: #244736;
+  --theme-text: #f5faf6;
+  --theme-text-secondary: #ceddcf;
+  --theme-muted: #a2b8a8;
+  --theme-muted-2: #7f9d89;
+  --theme-accent: #9acd32;
+  --theme-accent-strong: #78aa1e;
+  --theme-accent-soft: #233b16;
+  --theme-success: #79d98d;
+  --theme-success-soft: #18351f;
+  --theme-warning: #e2ba5e;
+  --theme-warning-soft: #372e16;
+  --theme-danger: #ef7777;
+  --theme-danger-soft: #371d20;
+  --theme-purple: #a98fe5;
+  --theme-cyan: #51c6b4;
+  --theme-nav: #04100b;
+  --theme-nav-2: #081a12;
+  --theme-nav-active: #285b27;
+  --theme-row-hover: #173a2a;
+  --theme-input: #0b1e16;
+  --theme-table-head: #0d241a;
+}
+
+html[data-theme='aurora-slate'] {
+  color-scheme: dark;
+  --theme-bg: #0a1118;
+  --theme-bg-alt: #101923;
+  --theme-panel: #141f2b;
+  --theme-panel-2: #192837;
+  --theme-panel-3: #203344;
+  --theme-border: #314454;
+  --theme-border-soft: #263847;
+  --theme-text: #f5f8fb;
+  --theme-text-secondary: #cbd6df;
+  --theme-muted: #a2b1bf;
+  --theme-muted-2: #7f91a2;
+  --theme-accent: #4fd1c5;
+  --theme-accent-strong: #2fa99f;
+  --theme-accent-soft: #16383a;
+  --theme-success: #68d783;
+  --theme-success-soft: #153320;
+  --theme-warning: #f0b45f;
+  --theme-warning-soft: #382b16;
+  --theme-danger: #f17b7b;
+  --theme-danger-soft: #381d23;
+  --theme-purple: #a58bf5;
+  --theme-cyan: #6dcbe5;
+  --theme-nav: #070d13;
+  --theme-nav-2: #0b141d;
+  --theme-nav-active: #15525a;
+  --theme-row-hover: #182c39;
+  --theme-input: #101923;
+  --theme-table-head: #111d28;
+}
+
+/* Backward-compatible aliases used throughout the current dashboards. */
+html[data-theme] {
+  --bg: var(--theme-bg);
+  --panel: var(--theme-panel);
+  --text: var(--theme-text);
+  --muted: var(--theme-muted);
+  --line: var(--theme-border);
+  --nav: var(--theme-nav);
+  --nav-2: var(--theme-nav-2);
+  --accent: var(--theme-accent);
+  --accent-soft: var(--theme-accent-soft);
+  --ok: var(--theme-success);
+  --ok-soft: var(--theme-success-soft);
+  --warn: var(--theme-warning);
+  --warn-soft: var(--theme-warning-soft);
+  --bad: var(--theme-danger);
+  --bad-soft: var(--theme-danger-soft);
+  --purple: var(--theme-purple);
+}
+
+html[data-theme] body,
+html[data-theme] .mainContent {
+  background: var(--theme-bg);
+  color: var(--theme-text);
+}
+
+html[data-theme] .sideNav {
+  background: linear-gradient(180deg, var(--theme-nav), var(--theme-nav-2) 78%);
+  border-right: 1px solid var(--theme-border-soft);
+}
+
+html[data-theme] .brandMark { color: var(--theme-accent); }
+html[data-theme] .brandWords strong:last-child { color: var(--theme-text-secondary); }
+html[data-theme] .navItem { color: var(--theme-text-secondary); }
+html[data-theme] .navItem:hover { background: color-mix(in srgb, var(--theme-accent) 10%, transparent); color: var(--theme-text); }
+html[data-theme] .navActive {
+  background: var(--theme-nav-active);
+  color: var(--theme-text);
+  box-shadow: inset 3px 0 0 var(--theme-accent);
+}
+html[data-theme] .navFooter {
+  border-color: var(--theme-border-soft);
+  color: var(--theme-text-secondary);
+}
+html[data-theme] .navFooter small { color: var(--theme-muted-2); }
+
+/* Shared dashboard surfaces. */
+html[data-theme] .panel,
+html[data-theme] .kpi,
+html[data-theme] .tablePanel,
+html[data-theme] .analyticsPanel,
+html[data-theme] .freshnessPanel,
+html[data-theme] .assessmentPanel,
+html[data-theme] .detailCard,
+html[data-theme] .briefCard,
+html[data-theme] .strategyCard,
+html[data-theme] .decisionCard,
+html[data-theme] .errorState {
+  background: var(--theme-panel);
+  color: var(--theme-text);
+  border-color: var(--theme-border);
+}
+
+html[data-theme] .pageHeader h1,
+html[data-theme] .panelHeader h2,
+html[data-theme] .detailCard h2,
+html[data-theme] .briefCard h2 { color: var(--theme-text); }
+html[data-theme] .subtitle,
+html[data-theme] .contextText,
+html[data-theme] .panelHint,
+html[data-theme] .panelNote,
+html[data-theme] .kpi > span,
+html[data-theme] .kpi small { color: var(--theme-muted); }
+
+html[data-theme] th { background: var(--theme-table-head); color: var(--theme-muted); border-color: var(--theme-border); }
+html[data-theme] td { border-color: var(--theme-border-soft); color: var(--theme-text-secondary); }
+html[data-theme] tbody tr:hover { background: var(--theme-row-hover); }
+html[data-theme] .rowLink { color: var(--theme-accent); }
+html[data-theme] .tableEmpty,
+html[data-theme] .emptyCompact,
+html[data-theme] .chartEmpty {
+  background: var(--theme-bg-alt);
+  border-color: var(--theme-border);
+  color: var(--theme-muted);
+}
+
+html[data-theme] .freshnessBar,
+html[data-theme] .dataQualityCallout {
+  background: var(--theme-bg-alt);
+  border-color: var(--theme-border);
+  color: var(--theme-text-secondary);
+}
+html[data-theme] .freshnessBar > span,
+html[data-theme] .freshnessBar small { color: var(--theme-muted); }
+
+html[data-theme] .filterTab,
+html[data-theme] .secondaryButton,
+html[data-theme] .searchBox input {
+  background: var(--theme-input);
+  color: var(--theme-text-secondary);
+  border-color: var(--theme-border);
+}
+html[data-theme] .filterTabActive,
+html[data-theme] .primaryLinkButton {
+  background: var(--theme-accent-strong);
+  border-color: var(--theme-accent-strong);
+  color: #fff;
+}
+html[data-theme] .searchBox input:focus {
+  border-color: var(--theme-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--theme-accent) 18%, transparent);
+}
+
+html[data-theme] .assetTag,
+html[data-theme] .ratingTag,
+html[data-theme] .freshnessState,
+html[data-theme] .rankBadge {
+  background: var(--theme-bg-alt);
+  color: var(--theme-text-secondary);
+}
+html[data-theme] .ratingTag { color: var(--theme-accent); }
+
+html[data-theme] .status-succeeded,
+html[data-theme] .status-approved,
+html[data-theme] .status-promote,
+html[data-theme] .healthBadge.healthy,
+html[data-theme] .freshnessState.healthy { color: var(--theme-success); background: var(--theme-success-soft); }
+html[data-theme] .status-partial,
+html[data-theme] .status-warning,
+html[data-theme] .status-continue_testing,
+html[data-theme] .status-revise,
+html[data-theme] .status-monitoring,
+html[data-theme] .status-draft,
+html[data-theme] .status-testing,
+html[data-theme] .healthBadge.warning,
+html[data-theme] .freshnessState.warning { color: var(--theme-warning); background: var(--theme-warning-soft); }
+html[data-theme] .status-failed,
+html[data-theme] .status-reject,
+html[data-theme] .status-rejected,
+html[data-theme] .status-pause,
+html[data-theme] .status-paused,
+html[data-theme] .status-retired { color: var(--theme-danger); background: var(--theme-danger-soft); }
+
+/* Opportunity dashboard maps its existing local tokens into the global theme. */
+html[data-theme] main [class*='opportunityPage'] {
+  --opp-bg: var(--theme-bg) !important;
+  --opp-panel: var(--theme-panel) !important;
+  --opp-panel-2: var(--theme-panel-2) !important;
+  --opp-border: var(--theme-border) !important;
+  --opp-border-soft: var(--theme-border-soft) !important;
+  --opp-text: var(--theme-text) !important;
+  --opp-muted: var(--theme-muted) !important;
+  --opp-blue: var(--theme-accent) !important;
+  --opp-green: var(--theme-success) !important;
+  --opp-purple: var(--theme-purple) !important;
+  --opp-cyan: var(--theme-cyan) !important;
+  --opp-orange: var(--theme-warning) !important;
+  --opp-red: var(--theme-danger) !important;
+  background: var(--theme-bg) !important;
+}
+
+html[data-theme] main [class*='opportunityPage'] [class*='overviewThemeCard'],
+html[data-theme] main [class*='opportunityPage'] [class*='darkCard'],
+html[data-theme] main [class*='opportunityPage'] [class*='caseCard'],
+html[data-theme] main [class*='opportunityPage'] [class*='recommendationCard'],
+html[data-theme] main [class*='opportunityPage'] [class*='signalSummaryCard'],
+html[data-theme] main [class*='opportunityPage'] [class*='synergyCard'],
+html[data-theme] main [class*='opportunityPage'] [class*='exposureRow'],
+html[data-theme] main [class*='opportunityPage'] [class*='timelinePanel'],
+html[data-theme] main [class*='opportunityPage'] [class*='timelineCard'],
+html[data-theme] main [class*='opportunityPage'] [class*='metricSideCard'],
+html[data-theme] main [class*='opportunityPage'] [class*='exposureTakeaway'],
+html[data-theme] main [class*='opportunityPage'] [class*='readinessBand'],
+html[data-theme] main [class*='opportunityPage'] [class*='recommendationHero'],
+html[data-theme] main [class*='opportunityPage'] [class*='whyMattersBand'] {
+  background: var(--theme-panel) !important;
+  border-color: var(--theme-border) !important;
+}
+html[data-theme] main [class*='opportunityPage'] [class*='timelineCard'],
+html[data-theme] main [class*='opportunityPage'] [class*='darkEmpty'] { background: var(--theme-bg-alt) !important; }
+html[data-theme] main [class*='opportunityPage'] [class*='themeSelect'] select {
+  background: var(--theme-input) !important;
+  color: var(--theme-text) !important;
+  border-color: var(--theme-border) !important;
+}
+html[data-theme] main [class*='opportunityPage'] [class*='detailTabActive'] { border-color: var(--theme-accent) !important; }
+html[data-theme] main [class*='opportunityPage'] [class*='viewButton'],
+html[data-theme] main [class*='opportunityPage'] [class*='inlineAction'],
+html[data-theme] main [class*='opportunityPage'] [class*='tickerChip'] { border-color: color-mix(in srgb, var(--theme-accent) 55%, var(--theme-border)) !important; }
+
+/* Global palette selector, visible on desktop and mobile navigation. */
+.themePaletteNav {
+  margin-top: auto;
+  padding: 14px 4px 10px;
+  border-top: 1px solid var(--theme-border-soft);
+}
+.themePaletteControl {
+  display: grid;
+  gap: 6px;
+  color: var(--theme-muted);
+  font-size: 9px;
+}
+.themePaletteLabel {
+  text-transform: uppercase;
+  letter-spacing: .055em;
+  font-weight: 800;
+}
+.themePaletteSelectRow {
+  display: grid;
+  grid-template-columns: 11px minmax(0, 1fr);
+  align-items: center;
+  gap: 7px;
+}
+.themePaletteSwatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--theme-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--theme-accent) 16%, transparent);
+}
+.themePaletteControl select {
+  width: 100%;
+  min-width: 0;
+  padding: 7px 26px 7px 8px;
+  border: 1px solid var(--theme-border);
+  border-radius: 6px;
+  background: var(--theme-input);
+  color: var(--theme-text-secondary);
+  font-size: 10px;
+  outline: none;
+}
+.themePaletteControl select:focus { border-color: var(--theme-accent); }
+
+@media (max-width: 900px) {
+  .themePaletteNav {
+    margin-top: 8px;
+    padding: 8px 0 0;
+    border-top-color: var(--theme-border-soft);
+  }
+  .themePaletteControl {
+    grid-template-columns: auto minmax(150px, 220px);
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .themePaletteSelectRow { grid-template-columns: 11px minmax(130px, 1fr); }
+}
