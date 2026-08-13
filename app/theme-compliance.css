@@ -44,14 +44,14 @@ html[data-theme='plum-night'] {
   --chart-grid: #5c3a66;
 }
 
-html[data-theme='alpine-light'] {
-  --chart-1: #2563eb;
-  --chart-2: #167f94;
-  --chart-3: #218a4b;
-  --chart-4: #b86b12;
-  --chart-5: #7654c7;
-  --chart-6: #c83d48;
-  --chart-grid: #d5deea;
+html[data-theme='stone-paper'] {
+  --chart-1: #3b7182;
+  --chart-2: #438c91;
+  --chart-3: #3f7e58;
+  --chart-4: #b57827;
+  --chart-5: #7567a6;
+  --chart-6: #b94f4f;
+  --chart-grid: #d5cec3;
 }
 
 /* Shared legacy elements that still carried the original light-blue styling. */
@@ -148,6 +148,6 @@ html[data-theme] .recharts-tooltip-item { color: var(--theme-text-secondary) !im
 html[data-theme] .positiveBrief { border-top-color: var(--theme-success); }
 html[data-theme] .negativeBrief { border-top-color: var(--theme-danger); }
 
-/* Light mode needs dark axis/legend text, supplied by the same tokens above. */
-html[data-theme='alpine-light'] .decisionStep article,
-html[data-theme='alpine-light'] .alternativeOutcomes article { background: var(--theme-panel); }
+/* Light mode keeps workflow cards paper-like rather than tinted dark surfaces. */
+html[data-theme='stone-paper'] .decisionStep article,
+html[data-theme='stone-paper'] .alternativeOutcomes article { background: var(--theme-panel); }

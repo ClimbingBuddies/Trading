@@ -9,7 +9,7 @@ const PALETTES = [
   { value: 'original-green', label: 'Original Green' },
   { value: 'copper-ember', label: 'Copper Ember' },
   { value: 'plum-night', label: 'Plum Night' },
-  { value: 'alpine-light', label: 'Alpine Light' },
+  { value: 'stone-paper', label: 'Stone Paper' },
 ] as const
 
 type PaletteId = (typeof PALETTES)[number]['value']
@@ -23,7 +23,8 @@ export default function ThemePaletteSelector() {
 
   useEffect(() => {
     const saved = window.localStorage.getItem(STORAGE_KEY)
-    const resolved: PaletteId = isPalette(saved) ? saved : 'midnight-blue'
+    const migrated = saved === 'alpine-light' ? 'stone-paper' : saved
+    const resolved: PaletteId = isPalette(migrated) ? migrated : 'midnight-blue'
     setPalette(resolved)
     document.documentElement.dataset.theme = resolved
     if (saved !== resolved) window.localStorage.setItem(STORAGE_KEY, resolved)
