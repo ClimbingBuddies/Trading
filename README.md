@@ -21,10 +21,16 @@ The documentation distinguishes between operational features, partially implemen
 
 Use only:
 
-- Vercel project: `discoverbouldersmarkets`
+- GitHub repository: `ClimbingBuddies/Trading`
+- Production branch: `main`
+- Vercel project: `boulders-market`
 - Public URL: `https://discoverbouldersmarkets.vercel.app`
 
-Do not create or use duplicate Trading deployment projects for application development. If Vercel project/alias ownership needs to be audited, treat that as a deployment task and verify the current Vercel state rather than relying on historical README notes.
+The intended production path is:
+
+`ClimbingBuddies/Trading` → `main` → Vercel project `boulders-market` → `https://discoverbouldersmarkets.vercel.app`
+
+Do not create or use duplicate Trading deployment projects for application development. Vercel project/repository linkage is configured in Vercel rather than by repository name alone, so deployment ownership should be verified in Vercel when troubleshooting automatic deployments.
 
 ## Architecture
 
@@ -32,9 +38,10 @@ Do not create or use duplicate Trading deployment projects for application devel
 - Supabase project: `Trading`
 - Supabase project ref: `glvbqcplgjdfgjyknzsa`
 - Frontend: Next.js App Router + TypeScript
-- Deployment target: Vercel project `discoverbouldersmarkets`
+- Deployment target: Vercel project `boulders-market`
+- Canonical public URL: `https://discoverbouldersmarkets.vercel.app`
 
-Supabase remains responsible for persistence, scheduled market-data loading and Edge Functions. The Next.js application is the monitoring, research and drill-through presentation layer.
+Supabase remains responsible for persistence, scheduled market-data loading and Edge Functions. ChatGPT Scheduled Tasks perform the independent assessment workflows defined in GitHub specifications. The Next.js application is the monitoring, research and drill-through presentation layer.
 
 The application uses only the Supabase publishable key. Never add the service-role key or Twelve Data API key to the frontend.
 
@@ -52,8 +59,13 @@ The application uses only the Supabase publishable key. Never add the service-ro
 
 ### Assessments
 
-- `/assessments` — assessment distribution, conviction and recent assessment rows
-- `/assessments/[symbol]` — analyst-style assessment detail and supporting evidence
+- `/assessments` — short-term independent ChatGPT Market Assessment distribution, conviction and recent assessment rows
+- `/assessments/[symbol]` — analyst-style market assessment detail and supporting evidence
+
+### Opportunities
+
+- `/opportunities` — long-term Opportunity Assessment overview, Structural Opportunity + Technology Inflection convergence and ranked themes
+- `/opportunities/[theme]` — theme drill-through with component scores, history, technology events, instrument exposure and Research & Evidence / TipTap-compatible content
 
 ### Strategies
 
@@ -65,13 +77,13 @@ The application uses only the Supabase publishable key. Never add the service-ro
 
 Blank data is a supported application state, not a build failure.
 
-Every dashboard should retain its layout when a dataset has no rows and show an intentional empty state such as `No strategies created yet`, `No assessments loaded yet`, or `Price history will appear after more observations are loaded`.
+Every dashboard should retain its layout when a dataset has no rows and show an intentional empty state such as `No strategies created yet`, `No assessments loaded yet`, `No Opportunity Themes exist yet`, or `Price history will appear after more observations are loaded`.
 
 Never create fabricated production rows or metrics simply to populate the interface. Values must come from Supabase, a clearly defined calculation over Supabase data, or a deliberate empty state.
 
 ## Visual direction
 
-The four dashboards share one application shell:
+The dashboard areas share one application shell:
 
 - persistent dark navy navigation
 - light main content surface
@@ -81,11 +93,13 @@ The four dashboards share one application shell:
 - dense, readable operational tables
 - desktop-first responsive layout
 
-The visual reference is the agreed Admin / Markets / Assessments / Strategies four-panel concept, but conceptual numbers in that image are not data sources.
+The visual reference is the agreed Admin / Markets / Assessments / Opportunities / Strategies concept, but conceptual numbers in design references are not data sources.
 
 ## Vercel configuration
 
 `vercel.json` explicitly configures the project as Next.js and uses `.next` as the deployment output.
+
+The repository does not itself choose which Vercel project receives a Git deployment. The Vercel project `boulders-market` must be connected to `ClimbingBuddies/Trading` with `main` as the Production Branch for automatic production deployments.
 
 ## Data access
 
