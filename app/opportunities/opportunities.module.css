@@ -1,0 +1,382 @@
+.heroGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.heroCard,
+.signalCard,
+.themeCard,
+.exposureCard,
+.eventCard {
+  border: 1px solid var(--border, #d9e0ea);
+  border-radius: 14px;
+  background: #fff;
+}
+
+.heroCard {
+  padding: 18px;
+}
+
+.heroCard span,
+.signalCard span,
+.themeMeta span {
+  color: #667085;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+.heroCard strong {
+  display: block;
+  margin-top: 8px;
+  font-size: 28px;
+  line-height: 1;
+}
+
+.heroCard small {
+  display: block;
+  margin-top: 8px;
+  color: #7c8798;
+}
+
+.layoutGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(280px, .7fr);
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+.signalGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.signalCard {
+  padding: 18px;
+}
+
+.signalTop {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.signalScore {
+  font-size: 34px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.signalCard h3 {
+  margin: 8px 0 0;
+  font-size: 18px;
+}
+
+.signalCard p {
+  margin: 12px 0 0;
+  color: #4c586b;
+  line-height: 1.55;
+}
+
+.componentGrid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.componentGrid div {
+  padding: 10px;
+  border-radius: 10px;
+  background: #f6f8fb;
+}
+
+.componentGrid strong {
+  display: block;
+  margin-top: 4px;
+  font-size: 18px;
+}
+
+.themeGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.themeCard {
+  display: block;
+  padding: 18px;
+  text-decoration: none;
+  color: inherit;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+
+.themeCard:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(18, 38, 63, .08);
+}
+
+.themeCardHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.themeCard h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.themeCard p {
+  margin: 10px 0 0;
+  color: #5f6b7d;
+  line-height: 1.5;
+}
+
+.themeScore {
+  min-width: 58px;
+  text-align: right;
+  font-size: 26px;
+  font-weight: 800;
+}
+
+.themeMeta {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+
+.levelPill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 5px 9px;
+  background: #eef3fa;
+  color: #24466f;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+
+.detailHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.detailScore {
+  text-align: right;
+}
+
+.detailScore strong {
+  display: block;
+  font-size: 44px;
+  line-height: 1;
+}
+
+.detailScore span {
+  color: #697586;
+}
+
+.exposureGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.exposureCard {
+  padding: 14px;
+}
+
+.exposureTop {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+}
+
+.exposureCard p {
+  margin: 8px 0 0;
+  color: #657185;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.eventList {
+  display: grid;
+  gap: 10px;
+}
+
+.eventCard {
+  padding: 14px;
+}
+
+.eventCard h4 {
+  margin: 4px 0 0;
+  font-size: 15px;
+}
+
+.eventCard p {
+  margin: 8px 0 0;
+  color: #5c6879;
+  line-height: 1.5;
+}
+
+.eventMeta {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  color: #7a8595;
+  font-size: 12px;
+  margin-top: 10px;
+}
+
+.sourceLink {
+  display: inline-flex;
+  margin-top: 10px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.researchShell {
+  margin-top: 20px;
+}
+
+@media (max-width: 1100px) {
+  .heroGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .layoutGrid { grid-template-columns: 1fr; }
+  .componentGrid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .exposureGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 760px) {
+  .heroGrid,
+  .signalGrid,
+  .themeGrid,
+  .exposureGrid { grid-template-columns: 1fr; }
+  .componentGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .detailHeader { flex-direction: column; }
+  .detailScore { text-align: left; }
+}
+
+:global(.researchDocumentMeta) {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+:global(.researchDocumentMeta span) {
+  border-radius: 999px;
+  padding: 5px 9px;
+  background: #f0f3f8;
+  color: #5c6879;
+  font-size: 11px;
+}
+
+:global(.researchProse) {
+  color: #2d3748;
+  line-height: 1.7;
+}
+
+:global(.researchProse h2),
+:global(.researchProse h3),
+:global(.researchProse h4) {
+  margin: 22px 0 8px;
+  color: #162033;
+}
+
+:global(.researchProse p) { margin: 8px 0 12px; }
+:global(.researchProse ul),
+:global(.researchProse ol) { padding-left: 22px; }
+:global(.researchProse blockquote) {
+  margin: 14px 0;
+  border-left: 3px solid #b9c8dc;
+  padding-left: 14px;
+  color: #556174;
+}
+
+:global(.researchEmbedGrid) {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+:global(.researchEmbed) {
+  border: 1px solid #dce3ec;
+  border-radius: 12px;
+  padding: 14px;
+  background: #fbfcfe;
+  margin: 14px 0;
+}
+
+:global(.researchEmbedTop) {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+:global(.researchEmbedTop span) {
+  border-radius: 999px;
+  padding: 4px 8px;
+  background: #eaf0f7;
+  color: #40546e;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+
+:global(.researchEmbed p) {
+  margin: 10px 0 0;
+  color: #596679;
+  line-height: 1.5;
+}
+
+:global(.researchMeta) {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+  color: #7a8595;
+  font-size: 11px;
+}
+
+:global(.researchSourceLink) {
+  display: inline-flex;
+  margin-top: 10px;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+:global(.researchImage img) {
+  width: 100%;
+  max-height: 420px;
+  object-fit: cover;
+  border-radius: 9px;
+}
+
+:global(.researchImage figcaption) {
+  display: grid;
+  gap: 4px;
+  margin-top: 8px;
+  color: #5b6879;
+}
+
+:global(.researchLibrary) {
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid #e1e6ee;
+}
+
+@media (max-width: 760px) {
+  :global(.researchEmbedGrid) { grid-template-columns: 1fr; }
+}
