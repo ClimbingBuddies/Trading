@@ -1,0 +1,164 @@
+/*
+ * Final palette-compliance layer.
+ * Keeps older dashboard CSS maintainable while ensuring every specialised surface,
+ * chart and workflow consumes semantic theme tokens.
+ */
+
+html[data-theme='midnight-blue'] {
+  --chart-1: #78b9ff;
+  --chart-2: #6ac9d6;
+  --chart-3: #72d578;
+  --chart-4: #eeb25d;
+  --chart-5: #a595ff;
+  --chart-6: #f17a7a;
+  --chart-grid: #29435d;
+}
+
+html[data-theme='original-green'] {
+  --chart-1: #9acd32;
+  --chart-2: #51c6b4;
+  --chart-3: #79d98d;
+  --chart-4: #e2ba5e;
+  --chart-5: #a98fe5;
+  --chart-6: #ef7777;
+  --chart-grid: #315744;
+}
+
+html[data-theme='copper-ember'] {
+  --chart-1: #f29a52;
+  --chart-2: #f2bc59;
+  --chart-3: #78cf83;
+  --chart-4: #74c9c4;
+  --chart-5: #d39ac8;
+  --chart-6: #ef7770;
+  --chart-grid: #5b4030;
+}
+
+html[data-theme='plum-night'] {
+  --chart-1: #e681c2;
+  --chart-2: #c99cff;
+  --chart-3: #70c7d8;
+  --chart-4: #72cf8c;
+  --chart-5: #eeb45f;
+  --chart-6: #f07c86;
+  --chart-grid: #5c3a66;
+}
+
+html[data-theme='alpine-light'] {
+  --chart-1: #2563eb;
+  --chart-2: #167f94;
+  --chart-3: #218a4b;
+  --chart-4: #b86b12;
+  --chart-5: #7654c7;
+  --chart-6: #c83d48;
+  --chart-grid: #d5deea;
+}
+
+/* Safe defaults during initial hydration. */
+html[data-theme] {
+  --chart-1: var(--chart-1, var(--theme-accent));
+  --chart-2: var(--chart-2, var(--theme-cyan));
+  --chart-3: var(--chart-3, var(--theme-success));
+  --chart-4: var(--chart-4, var(--theme-warning));
+  --chart-5: var(--chart-5, var(--theme-purple));
+  --chart-6: var(--chart-6, var(--theme-danger));
+  --chart-grid: var(--chart-grid, var(--theme-border));
+}
+
+/* Shared legacy elements that still carried the original light-blue styling. */
+html[data-theme] .healthBadge,
+html[data-theme] .status {
+  background: var(--theme-bg-alt);
+  color: var(--theme-text-secondary);
+}
+html[data-theme] .status-running {
+  color: var(--theme-accent);
+  background: var(--theme-accent-soft);
+}
+html[data-theme] .freshnessList > div,
+html[data-theme] .convictionRow,
+html[data-theme] .detailCard dl div {
+  border-color: var(--theme-border-soft);
+}
+html[data-theme] .briefLead p,
+html[data-theme] .briefCard p { color: var(--theme-text-secondary); }
+html[data-theme] .evidenceItem,
+html[data-theme] .emptyStateLarge,
+html[data-theme] .alternativeOutcomes article {
+  background: var(--theme-panel);
+  border-color: var(--theme-border);
+  color: var(--theme-text-secondary);
+}
+html[data-theme] .detailTopline a { color: var(--theme-accent); }
+html[data-theme] .lifecycleStrip span {
+  background: var(--theme-bg-alt);
+  color: var(--theme-text-secondary);
+}
+html[data-theme] .lifecycleStrip b,
+html[data-theme] .decisionArrow { color: var(--theme-muted-2); }
+
+/* Strategy decision workflow: fully semantic rather than fixed white/blue islands. */
+html[data-theme] .decisionStart {
+  background: var(--theme-bg-alt);
+  border-color: var(--theme-border);
+  color: var(--theme-text);
+}
+html[data-theme] .decisionStart span { color: var(--theme-muted); }
+html[data-theme] .decisionStep article {
+  background: var(--theme-panel-2);
+  border-color: var(--theme-border);
+  color: var(--theme-text);
+}
+html[data-theme] .stepNumber {
+  background: var(--theme-accent-soft);
+  color: var(--theme-accent);
+}
+html[data-theme] .decisionStep code {
+  background: var(--theme-bg-alt);
+  color: var(--theme-text-secondary);
+}
+html[data-theme] .promoteOutcome {
+  background: var(--theme-success-soft);
+  border-color: color-mix(in srgb, var(--theme-success) 45%, var(--theme-border));
+  color: var(--theme-success);
+}
+html[data-theme] .promoteOutcome span { color: var(--theme-success); }
+html[data-theme] .alternativeOutcomes { border-color: var(--theme-border); }
+html[data-theme] .alternativeOutcomes article { background: var(--theme-panel-2); }
+
+/* Assessment and admin callouts. */
+html[data-theme] .dataQualityCallout {
+  background: var(--theme-warning-soft);
+  border-color: color-mix(in srgb, var(--theme-warning) 40%, var(--theme-border));
+  color: var(--theme-warning);
+}
+html[data-theme] .dataQualityCallout span { color: var(--theme-text-secondary); }
+html[data-theme] .errorState {
+  background: var(--theme-danger-soft);
+  border-color: color-mix(in srgb, var(--theme-danger) 40%, var(--theme-border));
+  color: var(--theme-danger);
+}
+html[data-theme] .errorState span { color: var(--theme-text-secondary); }
+
+/* Recharts should visually belong to the selected palette. */
+html[data-theme] .recharts-cartesian-axis-tick-value { fill: var(--theme-muted); }
+html[data-theme] .recharts-cartesian-axis-line,
+html[data-theme] .recharts-cartesian-axis-tick-line { stroke: var(--theme-border); }
+html[data-theme] .recharts-cartesian-grid line { stroke: var(--chart-grid); }
+html[data-theme] .recharts-legend-item-text { color: var(--theme-text-secondary) !important; }
+html[data-theme] .recharts-default-tooltip {
+  background: var(--theme-panel) !important;
+  border: 1px solid var(--theme-border) !important;
+  border-radius: 7px !important;
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--theme-bg) 35%, transparent);
+}
+html[data-theme] .recharts-tooltip-label,
+html[data-theme] .recharts-tooltip-item { color: var(--theme-text-secondary) !important; }
+
+/* Keep semantic positive/negative accents stable while matching theme intensity. */
+html[data-theme] .positiveBrief { border-top-color: var(--theme-success); }
+html[data-theme] .negativeBrief { border-top-color: var(--theme-danger); }
+
+/* Light mode needs dark axis/legend text, supplied by the same tokens above. */
+html[data-theme='alpine-light'] .decisionStep article,
+html[data-theme='alpine-light'] .alternativeOutcomes article { background: var(--theme-panel); }
