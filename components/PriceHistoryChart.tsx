@@ -23,11 +23,11 @@ export default function PriceHistoryChart({ data }: { data: Point[] }) {
     <div className="chartWrap">
       <ResponsiveContainer width="100%" height={300}>
         <LineChart data={ordered} margin={{ top: 10, right: 12, left: 0, bottom: 0 }}>
-          <CartesianGrid strokeDasharray="3 3" vertical={false} />
+          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--chart-grid)" />
           <XAxis dataKey="observed_at" tickFormatter={tick} minTickGap={28} fontSize={12} />
           <YAxis domain={['auto', 'auto']} fontSize={12} width={62} />
           <Tooltip labelFormatter={(value) => new Intl.DateTimeFormat('en-AU', { timeZone: 'Australia/Perth', dateStyle: 'medium', timeStyle: 'short' }).format(new Date(String(value)))} />
-          <Line type="monotone" dataKey="close" name="Close" stroke="#2563eb" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
+          <Line type="monotone" dataKey="close" name="Close" stroke="var(--chart-1)" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
         </LineChart>
       </ResponsiveContainer>
     </div>

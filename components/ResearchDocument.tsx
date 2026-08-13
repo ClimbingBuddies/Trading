@@ -26,6 +26,15 @@ type TipTapNode = {
 
 type SeriesSpec = { dataKey: string; label?: string }
 
+const chartColours = [
+  'var(--chart-1)',
+  'var(--chart-2)',
+  'var(--chart-3)',
+  'var(--chart-4)',
+  'var(--chart-5)',
+  'var(--chart-6)',
+]
+
 function fmtDate(value: string | null) {
   if (!value) return null
   try {
@@ -74,21 +83,21 @@ function ChartEmbed({ embed }: { embed: ResearchEmbed }) {
         <ResponsiveContainer>
           {chartType === 'bar' ? (
             <BarChart data={rows} margin={{ top: 10, right: 18, bottom: 10, left: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} />
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--chart-grid)" />
               <XAxis dataKey={xKey} tick={{ fontSize: 12 }} />
               <YAxis tick={{ fontSize: 12 }} width={40} />
               <Tooltip />
               <Legend />
-              {series.map((item) => <Bar key={item.dataKey} dataKey={item.dataKey} name={item.label ?? item.dataKey} />)}
+              {series.map((item, index) => <Bar key={item.dataKey} dataKey={item.dataKey} name={item.label ?? item.dataKey} fill={chartColours[index % chartColours.length]} />)}
             </BarChart>
           ) : (
             <LineChart data={rows} margin={{ top: 10, right: 18, bottom: 10, left: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} />
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--chart-grid)" />
               <XAxis dataKey={xKey} tick={{ fontSize: 12 }} />
               <YAxis tick={{ fontSize: 12 }} width={40} />
               <Tooltip />
               <Legend />
-              {series.map((item) => <Line key={item.dataKey} type="monotone" dataKey={item.dataKey} name={item.label ?? item.dataKey} strokeWidth={2.5} dot={false} connectNulls />)}
+              {series.map((item, index) => <Line key={item.dataKey} type="monotone" dataKey={item.dataKey} name={item.label ?? item.dataKey} stroke={chartColours[index % chartColours.length]} strokeWidth={2.5} dot={false} connectNulls />)}
             </LineChart>
           )}
         </ResponsiveContainer>
