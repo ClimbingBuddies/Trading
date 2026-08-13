@@ -7,6 +7,7 @@ const items = [
   { href: '/admin', label: 'Admin', icon: '◫' },
   { href: '/markets', label: 'Markets', icon: '⌁' },
   { href: '/assessments', label: 'Assessments', icon: '◇' },
+  { href: '/opportunities', label: 'Opportunities', icon: '◎' },
   { href: '/strategies', label: 'Strategies', icon: '⬡' },
 ]
 
