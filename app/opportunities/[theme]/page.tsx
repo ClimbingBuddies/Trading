@@ -1,12 +1,12 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import OpportunityThemeSelect from '@/components/OpportunityThemeSelect'
-import { getOpportunityDetail } from '@/lib/opportunities'
+import { getCachedOpportunityDetail } from '@/lib/opportunity-cache'
 import styles from '../opportunities.module.css'
 
 export const dynamic = 'force-dynamic'
 
-type OpportunityDetailData = NonNullable<Awaited<ReturnType<typeof getOpportunityDetail>>>
+type OpportunityDetailData = NonNullable<Awaited<ReturnType<typeof getCachedOpportunityDetail>>>
 type DetailView = 'overview' | 'investment-case' | 'synergies' | 'exposure' | 'events' | 'ai-recommendation'
 
 const DETAIL_TABS: Array<{ key: DetailView; label: string }> = [
@@ -198,8 +198,6 @@ function OverviewView({ data }: { data: OpportunityDetailData }) {
           </div>
         </article>
       </section>
-
-      <TopExposureStrip data={data} />
     </>
   )
 }
@@ -237,15 +235,11 @@ function InvestmentCaseView({ data }: { data: OpportunityDetailData }) {
         <div className={styles.bandDivider} />
         <div><span>Commercial Readiness</span><strong>{titleCase(data.latest.commercial_readiness)}</strong><small>{titleCase(data.latestTechnology?.maturity_stage)}</small></div>
       </section>
-
-      <TopExposureStrip data={data} />
     </>
   )
 }
 
 function SynergiesView({ data }: { data: OpportunityDetailData }) {
-  const linkedSymbols: string[] = Array.from(new Set(data.exposures.map((exposure) => exposure.instruments?.symbol).filter((symbol): symbol is string => Boolean(symbol))))
-
   return (
     <>
       <section className={styles.sectionIntro}>
@@ -274,11 +268,6 @@ function SynergiesView({ data }: { data: OpportunityDetailData }) {
       <section className={styles.whyMattersBand}>
         <span className={`${styles.smallIcon} ${styles.blueIcon}`}>☆</span>
         <div><h3>Why this matters</h3><p>{data.relatedThemes.length ? `${data.theme.theme_name} currently overlaps with ${data.relatedThemes.map((row) => row.theme.theme_name).join(', ')} through shared instrument exposure. Shared beneficiaries can help show where long-term themes reinforce or concentrate portfolio exposure.` : 'As more themes and exposure mappings are added, this view will surface real overlaps and concentration across the Opportunity universe.'}</p></div>
-      </section>
-
-      <section className={styles.linkedTickerBand}>
-        <div><strong>Linked Tickers</strong><span>Current tracked exposure for this theme.</span></div>
-        <div className={styles.tickerRow}>{linkedSymbols.map((symbol) => <Link className={styles.tickerChip} href={`/markets/${symbolSlug(symbol)}`} key={symbol}>{symbol}</Link>)}</div>
       </section>
     </>
   )
@@ -439,7 +428,7 @@ export default async function OpportunityDetailPage({
   const view = normalizeView(query.view)
 
   try {
-    const data = await getOpportunityDetail(themeCode)
+    const data = await getCachedOpportunityDetail(themeCode)
     if (!data) notFound()
 
     return (
