@@ -1,0 +1,91 @@
+/* Alpine Light: a bright, high-contrast companion to the four dark palettes. */
+html[data-theme='alpine-light'] {
+  color-scheme: light;
+  --theme-bg: #f3f6fa;
+  --theme-bg-alt: #eef3f8;
+  --theme-panel: #ffffff;
+  --theme-panel-2: #f8fafc;
+  --theme-panel-3: #edf3f9;
+  --theme-border: #d5deea;
+  --theme-border-soft: #e3e9f0;
+  --theme-text: #172238;
+  --theme-text-secondary: #33445c;
+  --theme-muted: #66778d;
+  --theme-muted-2: #8796a8;
+  --theme-accent: #2563eb;
+  --theme-accent-strong: #1d4ed8;
+  --theme-accent-soft: #e8f0ff;
+  --theme-success: #218a4b;
+  --theme-success-soft: #e9f7ef;
+  --theme-warning: #b86b12;
+  --theme-warning-soft: #fff4df;
+  --theme-danger: #c83d48;
+  --theme-danger-soft: #fdebed;
+  --theme-purple: #7654c7;
+  --theme-cyan: #167f94;
+  --theme-nav: #10233d;
+  --theme-nav-2: #0b192c;
+  --theme-nav-active: #245a9f;
+  --theme-row-hover: #f0f5fb;
+  --theme-input: #ffffff;
+  --theme-table-head: #edf3f8;
+}
+
+/* Keep the navigation deliberately dark so the light workspace still has structure. */
+html[data-theme='alpine-light'] .sideNav {
+  color: #f7fbff;
+  border-right-color: #173552;
+}
+html[data-theme='alpine-light'] .brandWords strong,
+html[data-theme='alpine-light'] .brandWords strong:last-child { color: #eef6ff; }
+html[data-theme='alpine-light'] .navItem { color: #dbe7f5; }
+html[data-theme='alpine-light'] .navActive { color: #ffffff; }
+
+/* Light-mode contrast corrections for shared controls and dashboard copy. */
+html[data-theme='alpine-light'] .healthBadge,
+html[data-theme='alpine-light'] .status,
+html[data-theme='alpine-light'] .assetTag,
+html[data-theme='alpine-light'] .ratingTag,
+html[data-theme='alpine-light'] .freshnessState,
+html[data-theme='alpine-light'] .rankBadge {
+  border-color: var(--theme-border-soft);
+}
+
+html[data-theme='alpine-light'] .primaryLinkButton,
+html[data-theme='alpine-light'] .filterTabActive { color: #ffffff; }
+
+/* Opportunities was designed dark-first; normalise its remaining fixed light text. */
+html[data-theme='alpine-light'] main [class*='opportunityPage'] {
+  color: var(--theme-text) !important;
+}
+html[data-theme='alpine-light'] main [class*='opportunityPage'] small,
+html[data-theme='alpine-light'] main [class*='opportunityPage'] [class*='crumbs'] {
+  color: var(--theme-muted) !important;
+}
+html[data-theme='alpine-light'] main [class*='opportunityPage'] [class*='crumbs'] a,
+html[data-theme='alpine-light'] main [class*='opportunityPage'] [class*='crumbs'] strong {
+  color: var(--theme-accent) !important;
+}
+html[data-theme='alpine-light'] main [class*='opportunityPage'] [class*='detailTab'],
+html[data-theme='alpine-light'] main [class*='opportunityPage'] [class*='themeSelect'] label {
+  color: var(--theme-text-secondary) !important;
+}
+html[data-theme='alpine-light'] main [class*='opportunityPage'] [class*='detailTabActive'] {
+  color: var(--theme-text) !important;
+}
+html[data-theme='alpine-light'] main [class*='opportunityPage'] [class*='viewButton'],
+html[data-theme='alpine-light'] main [class*='opportunityPage'] [class*='inlineAction'],
+html[data-theme='alpine-light'] main [class*='opportunityPage'] [class*='tickerChip'] {
+  color: var(--theme-accent-strong) !important;
+  background: var(--theme-panel-2) !important;
+}
+html[data-theme='alpine-light'] main [class*='opportunityPage'] [class*='sourceChip'] {
+  color: var(--theme-accent-strong) !important;
+  background: var(--theme-accent-soft) !important;
+  border-color: #c8d9fa !important;
+}
+
+/* Palette control itself follows the light workspace. */
+html[data-theme='alpine-light'] .globalPaletteDock .themePaletteControl select {
+  box-shadow: 0 1px 2px rgba(23, 34, 56, .06);
+}
