@@ -1,6 +1,6 @@
 /* Opportunity overview grid.
  * Desktop uses three columns so the first six themes appear as two rows.
- * Remaining themes continue down the page with normal vertical scrolling.
+ * The first two rows fill the visible page height; remaining themes continue below the fold.
  */
 
 .opportunityGrid {
@@ -15,6 +15,17 @@
   min-width: 0;
   min-height: 255px;
   width: 100%;
+}
+
+@media (min-width: 1051px) and (min-height: 700px) {
+  .opportunityGrid {
+    grid-auto-rows: max(255px, calc((100dvh - 250px) / 2));
+  }
+
+  .opportunityGridCard {
+    min-height: 0;
+    height: 100%;
+  }
 }
 
 @media (max-width: 1050px) {
