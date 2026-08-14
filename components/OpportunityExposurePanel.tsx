@@ -96,7 +96,7 @@ export default function OpportunityExposurePanel() {
   const [takeawayHtml, setTakeawayHtml] = useState('')
   const [selected, setSelected] = useState<SelectedExposure | null>(null)
   const [tab, setTab] = useState<'trend' | 'takeaway'>('takeaway')
-  const [range, setRange] = useState<RangeKey>('1D')
+  const [range, setRange] = useState<RangeKey>('1Y')
   const [trend, setTrend] = useState<TrendPayload | null>(null)
   const [loading, setLoading] = useState(false)
 
@@ -137,7 +137,7 @@ export default function OpportunityExposurePanel() {
       const name = identity?.querySelector('span:last-child')?.textContent?.trim() ?? ''
       const score = scoreBlock?.querySelector('strong')?.textContent?.replace('/100', '').trim() ?? '—'
       setSelected({ symbol, name, score })
-      setRange('1D')
+      setRange('1Y')
       setTab('trend')
     }
 
