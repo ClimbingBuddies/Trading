@@ -1,6 +1,6 @@
 # Daily Opportunity Assessment
 
-**Specification version:** 1.2  
+**Specification version:** 1.3  
 **Last updated:** 14 August 2026  
 **System:** Discover Boulders Markets / Trading  
 **Supabase project:** `glvbqcplgjdfgjyknzsa`
@@ -9,9 +9,7 @@
 
 This document is the canonical execution specification for the **Daily Opportunity Assessment**.
 
-A ChatGPT Scheduled Task should retrieve the latest version of this file from GitHub at the beginning of every run, then use the connected Supabase app to perform the database reads and writes described here.
-
-Do not rely on a remembered or cached version of this specification. If this file cannot be retrieved, do not guess, do not fall back to an older remembered methodology, and do not write assessment results to Supabase.
+At the beginning of every run, retrieve this file fresh from the connected GitHub repository. Do not rely on a remembered, cached or previously executed copy. If the file cannot be retrieved, do not guess and do not write Opportunity Assessment results to Supabase.
 
 The Opportunity Assessment is a **long-term opportunity discovery system**, not the short-term Market Assessment and not an automatic trading signal.
 
@@ -24,13 +22,13 @@ The assessment has two independent components:
 1. **Structural Opportunity Signal**
 2. **Technology Inflection Signal**
 
-Only after those two independent assessments have been completed should they be combined into the **Opportunity Assessment / Opportunity Convergence**.
+Only after those two independent assessments are complete should they be combined into the **Opportunity Assessment / Opportunity Convergence**.
 
 ---
 
 ## 1. Independence rule
 
-Do **not** read or use the following when forming the Opportunity Assessment:
+Do **not** read or use the following when forming Opportunity scores, conclusions or exposure scores:
 
 - `public.market_scores`
 - `public.technical_indicators`
@@ -42,57 +40,42 @@ Do **not** read or use the following when forming the Opportunity Assessment:
 
 The Opportunity Assessment must remain independent of the short-term Market Assessment.
 
-You may read `public.instruments` when determining which existing tracked instruments have exposure to an opportunity theme.
+You may read `public.instruments` to determine whether a listed exposure is already tracked by Discover Boulders Markets. That tracked/untracked state must **not** affect how strongly the company is judged to be exposed to an Opportunity Theme.
 
 ---
 
 ## 2. Determine the assessment date
 
-Use the current date in `Australia/Perth` as the daily Opportunity Assessment date.
+Use the current date in `Australia/Perth`.
 
-The process must be idempotent. If today's assessment already exists, update/resume today's records rather than creating duplicate rows.
+The daily signal and assessment records are idempotent. If today's records already exist, update/resume them rather than creating duplicate daily results.
 
 ---
 
 ## 2A. Start the run audit and capture model telemetry
 
-Every invocation of this specification — scheduled, manual or test — should create a distinct execution record in:
+Every invocation — scheduled, manual or test — must create a distinct execution record in:
 
 `public.opportunity_assessment_runs`
 
-This run record is an **audit trail for the execution**, while the Structural, Technology Inflection and final Opportunity Assessment rows remain idempotent for the assessment date.
-
-Before performing assessment research or writing signal results:
+Before research or signal writes:
 
 1. Read all current `active` and `watch` themes and count them as `themes_requested`.
 2. Determine `execution_source`:
-   - `scheduled-task` when this is the actual ChatGPT Scheduled Task execution;
-   - `manual-chat` when a user directly runs the assessment in a normal chat;
-   - `test` when the user explicitly requests a test execution.
-3. Set `task_id` to `6a7d49a185988191a6998cb4e236a28f` **only when this is the production Daily Opportunity Assessment Scheduled Task**. Otherwise leave it null unless another task ID is explicitly known.
-4. Capture `model_reported` from the model/runtime executing this run where that identity is actually available. Use the model's own reported identity, for example `GPT-5.6 Sol`. **Do not infer a model from what the user requested, from the chat UI, or from a previous run.** If the model identity is unavailable or uncertain, store `unknown`.
-5. Capture `reasoning_level_reported` when the runtime exposes a meaningful reasoning mode such as `High` or `Medium`. Otherwise leave it null. Do not guess.
-6. Set `github_spec_version = '1.2'`.
-7. Set `github_spec_sha` to the GitHub blob/content SHA returned when this file was retrieved, where available. If the SHA is not available to the execution environment, leave it null rather than inventing one.
-8. Insert the run with:
-   - `assessment_date = <today Australia/Perth>`
-   - `started_at = now()`
-   - `status = 'running'`
-   - `execution_source`
-   - `task_id`
-   - `model_reported`
-   - `reasoning_level_reported`
-   - `github_spec_version`
-   - `github_spec_sha`
-   - `themes_requested`
-   - `themes_completed = 0`
-9. Capture the returned `run_id` and use it for the entire execution.
+   - `scheduled-task` for the production Scheduled Task;
+   - `manual-chat` for a direct normal-chat run;
+   - `test` when the user explicitly requests a test run.
+3. Set `task_id = '6a7d49a185988191a6998cb4e236a28f'` only for the production Daily Opportunity Assessment Scheduled Task. Otherwise leave it null unless another task ID is actually known.
+4. Capture `model_reported` only from the executing runtime when actually available. Do not infer it from the UI, user request or an earlier run. Store `unknown` when uncertain.
+5. Capture `reasoning_level_reported` only when exposed by the runtime; otherwise null.
+6. Set `github_spec_version = '1.3'`.
+7. Set `github_spec_sha` to the GitHub blob/content SHA returned for this file when available; otherwise null.
+8. Insert the run with today's assessment date, `started_at = now()`, `status = 'running'`, telemetry above, `themes_requested`, and `themes_completed = 0`.
+9. Capture the returned `run_id` and use it throughout the run.
 
-Each new execution gets a new `run_id`, even when it is retrying the same assessment date. The daily assessment rows themselves remain idempotent and should be updated to point to the most recent run that wrote them.
+Each invocation gets a new `run_id`; daily Structural, Technology and Opportunity records remain idempotent and should point to the most recent execution that wrote them.
 
-The model and reasoning fields are **self-reported operational telemetry**, not authoritative OpenAI platform telemetry. They are intended to provide a useful indication of which model/mode produced a run so quality can be compared later.
-
-If Supabase is unavailable before the run audit can be created, do not fabricate a run ID. Report the failure clearly and do not pretend the assessment was audited.
+If Supabase is unavailable before the audit row can be created, report the failure and stop. Do not fabricate a run ID.
 
 ---
 
@@ -102,18 +85,20 @@ Read:
 
 - `public.opportunity_themes`
 - `public.opportunity_theme_instruments`
+- `public.opportunity_theme_external_instruments`
+- `public.opportunity_theme_all_exposures`
 - recent `public.structural_opportunity_signals`
 - recent `public.technology_inflection_signals`
 - recent `public.technology_inflection_events`
 - recent `public.opportunity_assessments`
 
-Review all themes with `status = 'active'` or `status = 'watch'`.
+Review every theme with `status = 'active'` or `status = 'watch'`.
 
-Compare today's evidence with previous assessments so that changes in direction, maturity, score and confidence are identifiable.
+Compare current evidence with previous assessments so changes in direction, maturity, score, confidence, beneficiaries and exposure can be identified.
 
 ### Baseline monitored theme universe
 
-As of specification v1.2, the intended baseline Opportunity Theme universe is:
+As of specification v1.3, the intended baseline is:
 
 | Theme code | Theme | Status | Horizon |
 |---|---|---|---|
@@ -128,9 +113,7 @@ As of specification v1.2, the intended baseline Opportunity Theme universe is:
 | `CYBERSECURITY_CRITICAL_INFRASTRUCTURE` | Cybersecurity & Critical Infrastructure | active | 1–5 years |
 | `WATER_SECURITY_DESALINATION_REUSE` | Water Security, Desalination & Reuse | watch | 2–10 years |
 
-This table documents the intended starting watch universe. **Supabase remains the system of record** for the live set of themes and their current status. The task must assess every current `active` or `watch` theme in `public.opportunity_themes`, including themes added later.
-
-The baseline is **not a hard cap**. The task should continue to discover new themes under Section 4 where evidence supports a distinct multi-year opportunity. Avoid creating overlapping themes unless the economics, bottlenecks, beneficiaries or commercial maturity are sufficiently different to justify separate assessment.
+Supabase remains the system of record for the live theme set. The task must assess all current active/watch themes, including themes added later. This baseline is not a hard cap.
 
 ---
 
@@ -138,235 +121,93 @@ The baseline is **not a hard cap**. The task should continue to discover new the
 
 Search current public information for meaningful **multi-year structural or technological changes**.
 
-Relevant areas may include, but are not limited to:
+Relevant areas may include AI infrastructure, semiconductors, advanced computing, robotics, automation, energy generation, grids, storage, fusion, nuclear/SMRs, advanced materials, cooling and power systems, quantum technologies, biotechnology, medical technology, cybersecurity, water security/desalination/reuse, defence technology, space infrastructure, communications, critical minerals and manufacturing technology.
 
-- artificial intelligence infrastructure
-- semiconductors
-- advanced computing
-- robotics and automation
-- energy generation
-- grid infrastructure
-- energy storage and batteries
-- fusion
-- advanced nuclear and small modular reactors
-- advanced materials
-- cooling and power systems
-- quantum technologies
-- biotechnology
-- healthcare technology
-- medical diagnostics and devices
-- cybersecurity and critical infrastructure
-- water security, desalination and reuse
-- defence technology
-- space infrastructure
-- communications
-- industrial automation
-- critical minerals
-- manufacturing technology
+Do not create a theme merely because it appears in that list. Create a new `public.opportunity_themes` row only where credible evidence supports a distinct potentially important multi-year structural change, bottleneck or unlock.
 
-Do not automatically create a theme merely because it appears in this list.
-
-Create a new `public.opportunity_themes` row only where credible evidence suggests a potentially important structural change or technological bottleneck/unlock.
-
-Normally create **no more than 3 new themes per daily run**.
-
-If the theme already exists, reuse/update it rather than creating a similar duplicate theme.
-
-Use a stable `theme_code` and do not casually rename an existing code.
+Normally create no more than **3 new themes per daily run**. Reuse/update an existing theme rather than creating an overlapping duplicate. Keep `theme_code` stable.
 
 ---
 
 # Assessment A — Structural Opportunity Signal
 
-For every active/watch opportunity theme, independently assess the real-world structural environment.
+For every active/watch theme, independently assess the real-world structural environment. Score each component **0–100**:
 
-Score each component from **0–100**.
-
-## `demand_score`
-
-Is underlying demand genuinely expanding?
-
-Consider evidence such as:
-
-- customer demand
-- consumption
-- orders
-- market growth
-- backlog
-- infrastructure requirements
-
-## `adoption_score`
-
-Is adoption moving from experimental/niche toward mainstream use?
-
-Consider:
-
-- deployment numbers
-- enterprise adoption
-- customer penetration
-- geographic expansion
-- industry standardisation
-
-## `capital_investment_score`
-
-Is meaningful capital being committed?
-
-Consider:
-
-- corporate capex
-- government investment
-- infrastructure projects
-- venture/private investment
-- manufacturing capacity
-
-## `capacity_constraint_score`
-
-Are shortages, bottlenecks or limited capacity creating economic value for new suppliers/technology?
-
-Consider:
-
-- supply shortages
-- power constraints
-- manufacturing bottlenecks
-- labour constraints
-- scarce materials
-- network/grid constraints
-
-Higher scores mean the constraint creates a stronger opportunity.
-
-## `economics_score`
-
-Are the economics improving enough to support widespread deployment?
-
-Consider:
-
-- falling cost curves
-- improving margins
-- lower unit costs
-- improving efficiency
-- payback periods
-- total cost of ownership
-
-## Structural calculation
+- `demand_score` — genuine underlying demand expansion
+- `adoption_score` — movement from experimental/niche toward mainstream use
+- `capital_investment_score` — meaningful corporate, government, infrastructure or private capital commitment
+- `capacity_constraint_score` — shortages/bottlenecks creating economic value for solutions; higher means stronger opportunity
+- `economics_score` — improving cost, efficiency, margin, payback or total-cost economics
 
 Calculate:
 
 `overall_score = average(demand_score, adoption_score, capital_investment_score, capacity_constraint_score, economics_score)`
 
-Store the result in:
-
-`public.structural_opportunity_signals`
-
-Use:
+Store in `public.structural_opportunity_signals` with:
 
 - `signal_date = <today Australia/Perth>`
 - `methodology_version = 'structural-signal-v1'`
 - `assessment_run_id = <current run_id>`
 
-Because `(theme_id, signal_date, methodology_version)` is unique, **update today's row if the task is retried rather than creating a duplicate**. When updating today's row, also update `assessment_run_id` to the current run.
+Update today's existing row on retry and update `assessment_run_id` to the current run.
 
 Assign `signal_label`:
 
-- 0–29 = `weak`
-- 30–49 = `developing`
-- 50–69 = `moderate`
-- 70–84 = `strong`
-- 85–100 = `very_strong`
+- 0–29 `weak`
+- 30–49 `developing`
+- 50–69 `moderate`
+- 70–84 `strong`
+- 85–100 `very_strong`
 
-`confidence` must reflect evidence quality, breadth, freshness and agreement — not simply repeat `overall_score`.
+Confidence reflects evidence quality, breadth, freshness and agreement, not merely the score. Store a concise `summary` and structured `evidence_summary`.
 
-Store a concise explanation in `summary`.
-
-Store the main evidence used in `evidence_summary` as structured JSON.
-
-Prefer:
-
-- official company announcements
-- regulatory/government information
-- reputable industry data
-- credible research institutions
-- reputable financial/technical reporting
-
-Do not invent evidence.
+Prefer official company announcements, regulatory/government sources, reputable industry data, credible research institutions and reputable financial/technical reporting. Do not invent evidence.
 
 ---
 
 # Assessment B — Technology Inflection Signal
 
-Perform this independently from the Structural Opportunity Signal.
+Perform this independently from the Structural Signal.
 
 The central question is:
 
 > **Is an important technological bottleneck becoming materially easier to solve?**
 
-Identify the theme's principal:
+Identify:
 
 - `bottleneck`
 - `unlock_description`
 
-Examples of the type of reasoning required:
+Score each component **0–100**:
 
-- a heat-resistant material improving fusion reactor practicality
-- a battery chemistry materially improving energy density, cycle life or cost
-- new cooling technology allowing much denser AI infrastructure
-- improved actuators changing humanoid robotics economics
-- improved error correction changing quantum computing feasibility
+- `bottleneck_unlock_score`
+- `evidence_quality_score`
+- `commercialisation_score`
+- `impact_score`
 
-Score each component from **0–100**.
-
-## `bottleneck_unlock_score`
-
-How substantially could the development remove a genuine limiting constraint?
-
-## `evidence_quality_score`
-
-How strong is the underlying evidence?
-
-Distinguish carefully between:
-
-- claim
-- scientific result
-- independent replication
-- engineering demonstration
-- manufacturing feasibility
-- commercial validation
-- scaled deployment
-
-## `commercialisation_score`
-
-How close is the technology to practical, economically viable deployment?
-
-## `impact_score`
-
-If successful, how large could the economic or industrial impact be?
-
-## Technology Inflection calculation
+Distinguish claim, scientific result, independent replication, engineering demonstration, manufacturing feasibility, commercial validation and scaled deployment.
 
 Calculate:
 
 `overall_score = average(bottleneck_unlock_score, evidence_quality_score, commercialisation_score, impact_score)`
 
-Store the assessment in:
-
-`public.technology_inflection_signals`
-
-Use:
+Store in `public.technology_inflection_signals` with:
 
 - `signal_date = <today Australia/Perth>`
 - `methodology_version = 'technology-inflection-v1'`
 - `assessment_run_id = <current run_id>`
 
-Update today's existing row on retry rather than inserting duplicates. When updating today's row, also update `assessment_run_id` to the current run.
+Update today's existing row on retry.
 
 Assign `signal_label`:
 
-- 0–24 = `weak`
-- 25–44 = `emerging`
-- 45–64 = `developing`
-- 65–84 = `strong`
-- 85–100 = `major`
+- 0–24 `weak`
+- 25–44 `emerging`
+- 45–64 `developing`
+- 65–84 `strong`
+- 85–100 `major`
 
-Assign `maturity_stage` using only:
+Use only these `maturity_stage` values:
 
 - `scientific_result`
 - `replicated`
@@ -375,17 +216,13 @@ Assign `maturity_stage` using only:
 - `commercial_validation`
 - `scaled_deployment`
 
-Confidence must reflect the reliability and independence of the evidence.
+Confidence must reflect reliability and independence of the evidence.
 
 ---
 
 ## 5. Technology Inflection Events
 
-When material supporting evidence is found, record it in:
-
-`public.technology_inflection_events`
-
-Include where available:
+When material supporting evidence is found, record it in `public.technology_inflection_events` with available fields including:
 
 - `technology_signal_id`
 - `event_date`
@@ -396,83 +233,39 @@ Include where available:
 - `source_url`
 - `evidence_strength`
 
-Examples include:
+Examples include scientific results, replication, prototypes, manufacturing breakthroughs, cost reductions, regulatory approvals, contracts, first deployments and scaled deployments.
 
-- major scientific result
-- independent replication
-- engineering prototype
-- manufacturing breakthrough
-- cost reduction
-- regulatory approval
-- commercial contract
-- first deployment
-- scaled deployment
-
-Before inserting an event, check existing recent events for the same theme, title, source URL and event date.
-
-**Do not create duplicate evidence events.**
-
-Do not treat a press release claiming a breakthrough as equivalent to independent validation.
+Before inserting, check recent events for the same theme/title/source URL/date. Do not duplicate events. Do not treat a company press-release claim as equivalent to independent validation.
 
 ---
 
 # Opportunity Convergence
 
-Only calculate the final Opportunity Assessment **after the Structural Signal and Technology Inflection Signal have been independently completed**.
+Only calculate the final Opportunity Assessment after the independent Structural and Technology assessments are complete.
 
-Write the result into:
-
-`public.opportunity_assessments`
-
-Use:
+Write to `public.opportunity_assessments` with:
 
 - `methodology_version = 'opportunity-convergence-v1'`
 - `assessment_date = <today Australia/Perth>`
 - `assessment_run_id = <current run_id>`
+- linked `structural_signal_id` and `technology_inflection_signal_id`
+- structural/technology scores and confidences
 
-Link:
-
-- `structural_signal_id`
-- `technology_inflection_signal_id`
-
-Store:
-
-- `structural_score`
-- `structural_confidence`
-- `technology_inflection_score`
-- `technology_inflection_confidence`
-
-When both independent signals are available:
+When both signals are available:
 
 `opportunity_score = (structural_score + technology_inflection_score) / 2`
 
 Assign `opportunity_level`:
 
-- 0–34 = `emerging`
-- 35–54 = `watch`
-- 55–69 = `high`
-- 70–84 = `major`
-- 85–100 = `transformational`
+- 0–34 `emerging`
+- 35–54 `watch`
+- 55–69 `high`
+- 70–84 `major`
+- 85–100 `transformational`
 
-Opportunity confidence must consider:
+Opportunity confidence must consider both signal confidences, disagreement between signals, evidence freshness and evidence independence. Do not mechanically average confidence where signals strongly disagree. Explicitly mention meaningful divergence in `summary`.
 
-- Structural Signal confidence
-- Technology Inflection confidence
-- agreement/disagreement between the two scores
-- evidence freshness
-- evidence independence
-
-Do not simply average the two confidence values when the underlying signals strongly disagree.
-
-Explicitly mention divergence in `summary`.
-
-Examples:
-
-- strong technology breakthrough + weak structural adoption = promising but early
-- strong structural demand + weak technology progress = established demand without major new inflection
-- strong structural + strong technology = high convergence
-
-Set `commercial_readiness` using only:
+Use only these `commercial_readiness` values:
 
 - `early`
 - `watch`
@@ -480,29 +273,40 @@ Set `commercial_readiness` using only:
 - `actionable`
 - `mature`
 
-`commercial_readiness` is **not a Buy/Sell recommendation**.
+Set a concise evidence-based `time_horizon` such as `1–3 years`, `3–5 years` or `5–10 years` consistent with the stored theme horizon.
 
-Set `time_horizon` to a concise range such as:
-
-- `1–3 years`
-- `3–5 years`
-- `5–10 years`
-
-based on evidence and the theme's stored horizon.
-
-Because `(theme_id, assessment_date, methodology_version)` is unique, update today's row on retries. When updating today's row, also update `assessment_run_id` to the current run.
+A high Opportunity Score is not a Buy recommendation.
 
 ---
 
-## 6. Existing instrument exposure
+## 6. Listed instrument exposure — tracked and external
 
-For each theme, review the existing active `public.instruments` universe.
+The purpose of this section is to identify the **best publicly listed exposures to each Opportunity Theme**, whether or not Discover Boulders Markets already tracks their market data.
 
-Where an existing tracked instrument has credible exposure to the theme, upsert into:
+### 6A. Exposure discovery must not be constrained by the Trading universe
 
-`public.opportunity_theme_instruments`
+For every active/watch theme, research credible publicly listed companies and ETFs whose businesses have material economic exposure to the theme.
 
-Allowed `exposure_type` values are:
+Rank exposure according to the relationship to the theme, not according to whether the ticker is already in `public.instruments`.
+
+Prefer, in this order where evidence supports it:
+
+1. direct/pure or near-pure businesses whose products or revenue materially depend on the theme;
+2. material suppliers, infrastructure providers and enabling technology businesses;
+3. meaningful beneficiaries;
+4. broad or diluted ETFs only where they add useful exposure and no better direct mapping is available.
+
+Do **not** allow a generic mega-cap technology company, semiconductor supplier or broad ETF to outrank a credible direct company merely because the generic instrument is already tracked internally.
+
+Examples of the distinction:
+
+- a listed robotics manufacturer/operator should normally rank ahead of a general-purpose GPU supplier for `ROBOTICS_PHYSICAL_AI`;
+- a listed fusion developer should normally rank ahead of a broad energy ETF for `FUSION_ENERGY_SUPPLY_CHAIN`;
+- a dedicated cybersecurity company should normally rank ahead of a general technology index for `CYBERSECURITY_CRITICAL_INFRASTRUCTURE`.
+
+Normally maintain approximately **3–8 strong listed exposures per theme** where credible candidates exist, but do not force a minimum or maximum when evidence does not support it.
+
+Allowed `exposure_type` values:
 
 - `direct`
 - `enabler`
@@ -514,25 +318,71 @@ Allowed `exposure_type` values are:
 
 Assign:
 
-- `exposure_score` from 0–100
-- concise `rationale`
+- `exposure_score` 0–100 based solely on theme relevance/materiality;
+- concise `rationale` explaining the economic relationship;
+- credible supporting evidence/source where available;
+- `is_active` reflecting whether the mapping remains currently useful.
+
+Exposure scores are **theme relevance scores, not trading recommendations**.
+
+### 6B. Existing Trading-universe instruments
+
+If the listed company/ETF already exists in `public.instruments`, upsert its mapping into:
+
+`public.opportunity_theme_instruments`
+
+Do not duplicate the same tracked ticker in the external table.
+
+### 6C. Publicly listed instruments not tracked by Trading
+
+If a credible exposure is publicly listed but does **not** exist in `public.instruments`, upsert it into:
+
+`public.opportunity_theme_external_instruments`
+
+Populate where available:
+
+- `theme_id`
+- `symbol`
+- `instrument_name`
+- `exchange_code`
+- `asset_type`
+- `market_source`
+- `external_market_url`
+- `evidence_source_name`
+- `evidence_url`
+- `exposure_type`
+- `exposure_score`
+- `rationale`
 - `is_active`
 
-Do not force every theme to map to an existing instrument.
+Use stable exchange/ticker identity and update an existing matching record rather than duplicating it.
 
-Do **not** automatically create new rows in `public.instruments`.
+For an automated external quote destination, `Yahoo Finance` is the default because a stable ticker-based URL can be constructed. A different reputable external source, including MSN Money, may be stored when a stable direct quote URL is actually known. **Do not invent opaque provider quote IDs.**
 
-If an important publicly listed beneficiary is identified but is not currently in the Trading universe, include it in the final report under **Potential instruments to review**, but do not add it to the database without explicit approval.
+An external Opportunity exposure is a research reference only. It does **not** create a market-data subscription, does not enter the short-term assessment universe and must not automatically create a row in `public.instruments`.
+
+### 6D. Read and verify the unified exposure set
+
+Use:
+
+`public.opportunity_theme_all_exposures`
+
+as the unified read/verification model across tracked and external exposures.
+
+After updating a theme:
+
+- verify the highest-ranked exposures are economically representative of the theme;
+- ensure direct listed businesses are not displaced merely by generic tracked instruments;
+- deactivate stale, duplicate, weak or misleading mappings;
+- preserve lower-ranked credible enablers where useful rather than deleting them solely because a stronger direct exposure exists.
+
+Never promote an external exposure into `public.instruments` without explicit user approval.
 
 ---
 
 # Research & Evidence document
 
-After completing each `public.opportunity_assessments` record, create or update its associated Research & Evidence document using:
-
-`public.assessment_research_documents`
-
-Use:
+After completing each `public.opportunity_assessments` record, create/update its associated document in `public.assessment_research_documents` with:
 
 - `document_scope = 'opportunity'`
 - `opportunity_assessment_id = <current opportunity assessment id>`
@@ -540,34 +390,19 @@ Use:
 - `content_schema_version = 'tiptap-v1'`
 - `generated_by = 'daily-opportunity-assessment'`
 
-Store the research narrative in `tiptap_json` as valid TipTap/ProseMirror JSON with root:
+Store valid TipTap/ProseMirror JSON rooted at:
 
 ```json
 {"type":"doc","content":[]}
 ```
 
-Populate `plain_text` with a searchable text representation of the research.
+Also populate searchable `plain_text`. Update the existing document on retries/subsequent updates instead of duplicating it.
 
-On retries or subsequent updates to the same assessment, update the existing document rather than creating a duplicate.
-
-The Research & Evidence document should present the evidence behind the Opportunity Assessment in a readable research-note format, including where relevant:
-
-- key structural developments
-- technology bottleneck and potential unlock
-- important scientific or engineering developments
-- commercialisation progress
-- capital investment or adoption evidence
-- important beneficiaries/enablers
-- risks or contradictory evidence
-- links to useful source material
+Include relevant structural developments, bottleneck/unlock, scientific/engineering developments, commercialisation, capital/adoption evidence, important listed exposures, risks/contradictory evidence and useful source links.
 
 ## Rich embedded evidence
 
-For meaningful supporting items, create/update records in:
-
-`public.assessment_research_embeds`
-
-Supported `embed_type` values are:
+Create/update meaningful `public.assessment_research_embeds` records. Supported `embed_type` values include:
 
 - `article`
 - `external_link`
@@ -578,161 +413,107 @@ Supported `embed_type` values are:
 - `evidence`
 - `callout`
 
-Use stable `node_id` values so retries update existing embeds rather than creating duplicates.
+Use stable `node_id` values. Populate source metadata, relevance/confidence and relevant Supabase IDs where available. Charts must use real sourced/Supabase data through `data_reference` or preserved `snapshot_data`; do not manufacture chart data.
 
-For articles or reports, populate where available:
+Do not paste whole copyrighted articles. Store links, concise summaries and specific supporting evidence.
 
-- `title`
-- `description`
-- `source_name`
-- `source_url`
-- `source_published_at`
-- `relevance_score`
-- `confidence`
-
-For Opportunity Assessment indicators, link directly to the relevant Supabase record where possible using:
-
-- `structural_signal_id`
-- `technology_inflection_signal_id`
-- `technology_inflection_event_id`
-- `opportunity_assessment_id`
-
-This allows the frontend to render a live indicator block rather than copying a value into prose.
-
-For charts:
-
-- store display configuration in `chart_config`
-- use `data_reference` when the chart should retrieve current Supabase data dynamically
-- use `snapshot_data` when the historical values shown at assessment time should be preserved
-
-Do not manufacture charts or indicator data. Charts must be based on real sourced or Supabase data.
-
-Do not paste entire copyrighted articles. Store links, concise summaries and the specific evidence relevant to the assessment.
-
-The structured Opportunity Assessment tables remain the system of record for scores. The TipTap Research & Evidence document is the explanatory research layer around those structured scores.
+Structured Opportunity tables remain the system of record for scores; the TipTap document is the explanatory research layer.
 
 ---
 
 ## 7. Daily change detection
 
-Compare today's assessment with the previous assessment for each theme.
+Compare today's assessment and exposure set with the prior assessment. Identify meaningful:
 
-Identify:
-
-- major score increases/decreases
+- score increases/decreases
 - maturity-stage changes
 - new bottleneck-unlock evidence
-- new commercial validation
-- major changes in capital investment
-- major changes in adoption
-- newly identified beneficiaries/enablers
-- themes losing support
+- commercial validation
+- capital/adoption changes
+- newly identified or removed direct companies, suppliers and beneficiaries
+- themes losing evidential support
 
-A single newspaper story or speculative claim should not materially change a long-term score without sufficient supporting evidence.
+A single speculative claim should not materially change a long-term score without sufficient supporting evidence.
 
 ---
 
 ## 8. Daily report
 
-At the end of every scheduled run, provide a concise report containing:
+At the end of every run, provide a concise report covering:
 
 ### 1. Major Opportunity Changes
-
-Only meaningful changes since the previous assessment.
+Meaningful changes since the previous assessment.
 
 ### 2. Highest Opportunity Convergence
-
 Top themes by current `opportunity_score`.
 
 ### 3. Technology Inflections
-
-New or materially strengthened bottleneck-unlock developments.
+New/materially strengthened bottleneck-unlock developments.
 
 ### 4. Structural Changes
-
-Important adoption, demand, capital-investment, capacity or economic changes.
+Important adoption, demand, capital, capacity or economics changes.
 
 ### 5. Themes to Watch
+Promising themes with early/conflicting evidence.
 
-Promising themes where evidence is still early or conflicting.
+### 6. Listed Opportunity Exposure
+For the strongest themes, summarise the most relevant direct/enabling listed exposures. Clearly distinguish:
 
-### 6. Existing Trading Universe Exposure
-
-Tracked instruments most directly exposed to the strongest themes.
+- **Tracked internally** — exists in `public.instruments`;
+- **External exposure** — listed company/ETF stored in `public.opportunity_theme_external_instruments` but not part of the Trading market-data universe.
 
 ### 7. Potential instruments to review
-
-Relevant listed companies identified through the research that are not currently in the Trading instrument universe.
+Highlight external exposures that may merit future promotion into the tracked Trading universe. This is a review list only; do not automatically promote them.
 
 ### 8. Run telemetry
-
-Report concisely:
-
-- `run_id`
-- `model_reported`
-- `reasoning_level_reported` where available
-- `execution_source`
-- `github_spec_version`
-- themes requested/completed
-- final run status
+Report `run_id`, `model_reported`, `reasoning_level_reported` where available, `execution_source`, `github_spec_version`, themes requested/completed and final run status.
 
 If there are no material changes, say:
 
 > **No material Opportunity Assessment changes today.**
 
-but still complete the daily Supabase assessment refresh and run-audit finalisation.
+but still complete the daily Supabase refresh and run-audit finalisation.
 
 ---
 
 ## 8A. Finalise the run audit
 
-Before ending the execution, update the current `public.opportunity_assessment_runs` row.
-
-Set:
+Before ending, update the current `public.opportunity_assessment_runs` row:
 
 - `completed_at = now()`
-- `themes_completed` to the number of requested themes for which the current execution successfully wrote/updated the final `public.opportunity_assessments` row
-- `status = 'succeeded'` when all requested themes completed successfully
-- `status = 'partial'` when at least one requested theme completed but one or more failed
-- `status = 'failed'` when the run could not produce usable assessment results
-- `status = 'skipped'` only when the execution deliberately performs no assessment for a valid operational reason
-- `notes` to a concise run summary
-- `error_message` when a failure or material partial failure occurred
+- `themes_completed` = number of requested themes for which this execution successfully wrote/updated the final Opportunity Assessment
+- `status = 'succeeded'` when all requested themes complete
+- `status = 'partial'` when at least one completes but one or more fail
+- `status = 'failed'` when no usable assessment results can be produced
+- `status = 'skipped'` only when deliberately doing no assessment for a valid operational reason
+- concise `notes`
+- `error_message` for failure/material partial failure
 - `updated_at = now()`
 
-Finalise the run row even when the assessment is partial or failed, provided Supabase is still reachable. Do not leave a run indefinitely in `running` merely because one theme failed.
-
-The count in `themes_completed` must reflect actual final Opportunity Assessment rows written or updated by **this run**, not a planned count and not a count copied from a previous run.
+Finalise partial/failed runs whenever Supabase remains reachable. Do not leave a run indefinitely `running` because one theme failed.
 
 ---
 
 # Governing rules
 
-- Supabase is the system of record for assessment data and results.
-- GitHub is the system of record for this methodology specification.
-- `public.opportunity_assessment_runs` is the system of record for execution-level audit telemetry.
-- Model/reasoning telemetry is self-reported operational evidence, not authoritative OpenAI platform telemetry.
-- Never invent the model identity, reasoning level, task ID or GitHub SHA. Store `unknown`/null where the runtime cannot determine them.
-- Do not fabricate scientific, technical, commercial or financial evidence.
-- Distinguish scientific promise from engineering feasibility.
-- Distinguish engineering feasibility from commercial viability.
-- Distinguish commercial viability from large-scale deployment.
-- Prefer primary and authoritative sources whenever possible.
-- Use multiple independent sources for major claims where feasible.
-- Do not copy long passages from sources.
-- Do not turn the Opportunity Assessment into a short-term Market Assessment.
-- Do not use Technical Engine or ChatGPT Market Assessment results as inputs.
-- Do not issue automatic trades.
-- Do not equate a high Opportunity Score with a Buy recommendation.
-- Be willing to reduce a score when evidence weakens.
+- Supabase is the system of record for assessment data/results.
+- GitHub is the system of record for this methodology.
+- `public.opportunity_assessment_runs` is the execution audit trail.
+- Model/reasoning telemetry is self-reported operational evidence, not authoritative platform telemetry.
+- Never invent model identity, reasoning level, task ID, GitHub SHA, technical evidence or market identity.
+- Prefer primary/authoritative sources and multiple independent sources for major claims where feasible.
+- Distinguish scientific promise, engineering feasibility, commercial viability and scaled deployment.
+- Keep Opportunity Assessment independent from Technical Engine and short-term Market Assessment inputs.
+- Do not issue automatic trades or equate a high Opportunity Score with a Buy recommendation.
+- Be willing to reduce scores/mappings when evidence weakens.
 - Keep confidence low when evidence is speculative, contradictory or poorly replicated.
+- The best Opportunity exposure may be outside the active Trading market universe; do not distort exposure rankings to fit the tracked universe.
+- Do not automatically add external exposures to `public.instruments`.
 - Do not require the user to be online and do not wait for manual confirmation during a normal scheduled run.
 
 ---
 
 ## Execution relationship
-
-The intended architecture is:
 
 ```text
 GitHub specification
@@ -741,11 +522,11 @@ ChatGPT Scheduled Task / manual execution
         ↓
 Opportunity run audit created
         ↓
-Supabase reads / research / reasoning / writes
+Supabase reads + public research + independent reasoning
         ↓
 Structural + Technology + Opportunity Assessment
         ↓
+Tracked + external listed exposure mapping
+        ↓
 Research & Evidence + run audit finalised
 ```
-
-The Scheduled Task should remain a small runner whose first action is to retrieve this file. Methodology and execution-audit changes should normally be made here rather than by replacing the Scheduled Task prompt.
