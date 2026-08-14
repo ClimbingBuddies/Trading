@@ -1,4 +1,4 @@
-.oppExposureInspectorLayout { grid-template-columns: minmax(0, .82fr) minmax(520px, 1.18fr) !important; gap: 16px !important; }
+.oppExposureInspectorLayout { grid-template-columns: minmax(0, 3fr) minmax(440px, 2fr) !important; gap: 16px !important; }
 .oppExposureInspector > *:not(.oppExposureMount) { display: none !important; }
 .oppExposureMount { height: 100%; }
 .oppExposureSelectable { cursor: pointer; grid-template-columns: 145px 76px 76px minmax(145px, 1fr) auto !important; gap: 9px !important; padding: 9px 10px !important; transition: border-color .15s ease, background .15s ease; }
@@ -58,7 +58,7 @@
 .oppTakeawayOriginal > span:not([class*="roundIcon"]) { color: #8196ac; font-size: 10px; text-transform: uppercase; }
 
 @media (max-width: 1380px) {
-  .oppExposureInspectorLayout { grid-template-columns: minmax(0, .95fr) minmax(430px, 1.05fr) !important; }
+  .oppExposureInspectorLayout { grid-template-columns: minmax(0, 3fr) minmax(400px, 2fr) !important; }
   .oppExposureSelectable { grid-template-columns: 150px 82px 82px minmax(150px, 1fr) auto !important; }
   .oppInspectorTabs button { font-size: 14px; }
   .oppTrendChart { height: 180px; }
