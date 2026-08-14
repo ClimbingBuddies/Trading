@@ -31,7 +31,8 @@ export default function OpportunityCarousel({ rows }: { rows: OpportunityOvervie
     const track = trackRef.current
     if (!track) return
     const card = track.querySelector<HTMLElement>('[data-opportunity-card]')
-    const distance = card ? card.offsetWidth + 14 : track.clientWidth * 0.9
+    const oneCard = card ? card.offsetWidth + 14 : track.clientWidth * 0.9
+    const distance = Math.max(oneCard, track.clientWidth - 14)
     track.scrollBy({ left: direction * distance, behavior: 'smooth' })
   }
 
@@ -40,12 +41,11 @@ export default function OpportunityCarousel({ rows }: { rows: OpportunityOvervie
     if (!track) return
     const cards = Array.from(track.querySelectorAll('[data-opportunity-card]')) as HTMLElement[]
     if (!cards.length) return
-    const centre = track.scrollLeft + track.clientWidth / 2
+    const leftEdge = track.scrollLeft + 8
     let nearest = 0
     let nearestDistance = Number.POSITIVE_INFINITY
     cards.forEach((card, index) => {
-      const cardCentre = card.offsetLeft + card.offsetWidth / 2
-      const distance = Math.abs(cardCentre - centre)
+      const distance = Math.abs(card.offsetLeft - leftEdge)
       if (distance < nearestDistance) {
         nearest = index
         nearestDistance = distance
@@ -72,12 +72,12 @@ export default function OpportunityCarousel({ rows }: { rows: OpportunityOvervie
   return (
     <section className={styles.carouselShell} aria-label="Opportunity themes">
       <button className={`${styles.carouselArrow} ${styles.carouselArrowLeft}`} type="button" onClick={() => move(-1)} aria-label="Previous opportunities">‹</button>
-      <div className={styles.carouselTrack} ref={trackRef} onScroll={handleScroll}>
+      <div className={`${styles.carouselTrack} opportunityCarouselTrack`} ref={trackRef} onScroll={handleScroll}>
         {rows.map((row, index) => {
           const href = themeHref(row.theme.theme_code)
           return (
             <article
-              className={`${styles.overviewThemeCard} ${toneClass(index)}`}
+              className={`${styles.overviewThemeCard} ${toneClass(index)} opportunityCarouselCard`}
               key={row.theme.id}
               data-opportunity-card
               role="link"
