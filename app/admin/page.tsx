@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import LoadChart from '@/components/LoadChart'
 import { getAdminDashboardData } from '@/lib/dashboard'
+import { getLatestOpportunityAssessmentRun } from '@/lib/opportunity-runs'
 
 export const dynamic = 'force-dynamic'
 
@@ -31,11 +32,18 @@ function freshnessPercent(value: number, total: number) {
 
 export default async function AdminPage() {
   try {
-    const data = await getAdminDashboardData()
+    const [data, opportunityRun] = await Promise.all([
+      getAdminDashboardData(),
+      getLatestOpportunityAssessmentRun(),
+    ])
     const latestAgeMinutes = data.latestObservationAt
       ? Math.max(0, Math.round((Date.now() - new Date(data.latestObservationAt).getTime()) / 60000))
       : null
     const health = data.failuresToday > 0 ? 'Warning' : latestAgeMinutes !== null && latestAgeMinutes > 90 ? 'Warning' : data.lastRun ? 'Healthy' : 'No data'
+
+    const opportunityModel = opportunityRun
+      ? `${opportunityRun.model_reported === 'unknown' ? 'Model not captured' : opportunityRun.model_reported}${opportunityRun.reasoning_level_reported ? ` · ${opportunityRun.reasoning_level_reported}` : ''}`
+      : 'No audited runs yet'
 
     return (
       <div className="page">
@@ -65,6 +73,16 @@ export default async function AdminPage() {
           <span>DATA FRESHNESS</span>
           <strong>Latest Market Observation: {fmtDate(data.latestObservationAt)}</strong>
           <small>{latestAgeMinutes === null ? 'No observations loaded' : `Age: ${latestAgeMinutes} min`}</small>
+        </section>
+
+        <section className="freshnessBar">
+          <span>OPPORTUNITY ENGINE</span>
+          <strong>{opportunityModel}</strong>
+          <small>
+            {opportunityRun
+              ? `${opportunityRun.status} · ${opportunityRun.execution_source} · ${opportunityRun.themes_completed}/${opportunityRun.themes_requested} themes · Spec ${opportunityRun.github_spec_version ?? '—'} · ${fmtDate(opportunityRun.completed_at ?? opportunityRun.started_at)}`
+              : 'Run telemetry will appear after the next Opportunity Assessment'}
+          </small>
         </section>
 
         <section className="analyticsGrid adminAnalytics">
