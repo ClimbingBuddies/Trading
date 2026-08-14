@@ -1,36 +1,52 @@
-.oppExposureInspectorLayout { grid-template-columns: minmax(0, 1fr) 340px !important; }
+.oppExposureInspectorLayout { grid-template-columns: minmax(0, 1fr) 360px !important; }
 .oppExposureInspector > *:not(.oppExposureMount) { display: none !important; }
 .oppExposureMount { height: 100%; }
-.oppExposureSelectable { cursor: pointer; grid-template-columns: 180px 100px 90px minmax(180px, 1fr) auto !important; gap: 12px !important; padding: 11px 12px !important; transition: border-color .15s ease, background .15s ease, transform .15s ease; }
+.oppExposureSelectable { cursor: pointer; grid-template-columns: 170px 92px 86px minmax(170px, 1fr) auto !important; gap: 11px !important; padding: 10px 12px !important; transition: border-color .15s ease, background .15s ease; }
 .oppExposureSelectable:hover { border-color: #4777a6 !important; background: #0d2742 !important; }
 .oppExposureSelected { border-color: #5e9fe2 !important; background: #0c2947 !important; box-shadow: inset 3px 0 0 #62a7ef; }
-.oppExposureSelectable [class*="instrumentBadge"] { width: 44px !important; height: 44px !important; }
-.oppExposureSelectable [class*="instrumentIdentity"] strong { font-size: 16px !important; }
-.oppExposureSelectable [class*="exposureScoreBlock"] strong { font-size: 27px !important; }
+.oppExposureSelectable [class*="instrumentBadge"] { width: 42px !important; height: 42px !important; }
+.oppExposureSelectable [class*="instrumentIdentity"] strong { font-size: 15px !important; }
+.oppExposureSelectable [class*="exposureScoreBlock"] strong { font-size: 25px !important; }
 
-.oppExposureInspectorInner { height: 100%; display: flex; flex-direction: column; }
-.oppInspectorTabs { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid rgba(120,159,199,.22); }
-.oppInspectorTabs button { appearance: none; border: 0; border-bottom: 2px solid transparent; background: transparent; color: #91a8bf; padding: 13px 8px 11px; font: inherit; font-size: 10px; font-weight: 750; cursor: pointer; }
+.oppExposureInspectorInner { min-height: 100%; display: flex; flex-direction: column; }
+.oppInspectorTabs { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid rgba(120,159,199,.22); padding: 0 12px; }
+.oppInspectorTabs button { appearance: none; border: 0; border-bottom: 3px solid transparent; background: transparent; color: #91a8bf; padding: 14px 8px 12px; font: inherit; font-size: 10px; font-weight: 800; cursor: pointer; white-space: nowrap; }
 .oppInspectorTabs button:hover { color: #d6e5f6; }
-.oppInspectorTabs button.active { color: #82baff; border-bottom-color: #65a9ef; }
-.oppTrendPanel, .oppTakeawayOriginal { padding: 18px; }
-.oppTrendHeading { display: flex; justify-content: space-between; gap: 16px; align-items: start; }
-.oppTrendHeading span { color: #8196ac; font-size: 9px; text-transform: uppercase; letter-spacing: .04em; }
-.oppTrendHeading h3 { margin: 5px 0 2px; font-size: 23px; }
-.oppTrendHeading p { margin: 0; color: #a9bacd; font-size: 10px; }
-.oppTrendHeading > strong { color: #7fe05f; font-size: 26px; text-align: right; line-height: 1; }
+.oppInspectorTabs button.active { color: #eaf4ff; border-bottom-color: #65a9ef; }
+.oppTrendPanel, .oppTakeawayOriginal { padding: 17px 18px 18px; }
+.oppTrendHeading { display: flex; justify-content: space-between; gap: 14px; align-items: start; }
+.oppTrendHeading span { color: #82baff; font-size: 10px; font-weight: 800; letter-spacing: .03em; }
+.oppTrendHeading h3 { margin: 4px 0 0; font-size: 18px; line-height: 1.25; }
+.oppTrendHeading > strong { color: #7fe05f; font-size: 22px; text-align: right; line-height: 1; }
 .oppTrendHeading > strong small { display: block; margin-top: 5px; color: #91a5ba; font-size: 8px; font-weight: 500; }
-.oppTrendPrice { margin-top: 20px; padding-top: 16px; border-top: 1px solid rgba(120,159,199,.18); display: flex; align-items: baseline; gap: 7px; flex-wrap: wrap; }
-.oppTrendPrice > strong { font-size: 26px; color: #e7eef7; }
-.oppTrendPrice > span { font-size: 10px; color: #9fb3c7; }
-.oppTrendPrice > small { width: 100%; color: #8298ae; font-size: 9px; }
-.oppTrendChartWrap { margin-top: 12px; }
-.oppTrendChart { width: 100%; height: 145px; overflow: visible; }
-.oppTrendChart polyline { stroke: #66aaf1; stroke-width: 2; }
-.oppTrendRange { display: flex; justify-content: space-between; align-items: center; margin-top: 5px; color: #8096ad; font-size: 9px; }
-.oppTrendRange strong { color: #7fe05f; font-size: 11px; }
-.oppTrendEmpty { margin-top: 18px; min-height: 110px; display: grid; place-items: center; padding: 18px; border: 1px dashed rgba(108,151,194,.35); border-radius: 9px; color: #91a6bb; font-size: 10px; text-align: center; }
-.oppInspectorAction { display: inline-flex; margin-top: 16px; padding: 8px 11px; border: 1px solid #3d6d9b; border-radius: 6px; color: #86bcf7 !important; font-size: 10px; font-weight: 750; }
+.oppTrendPriceLine { display: flex; justify-content: space-between; gap: 12px; align-items: end; margin-top: 17px; padding-top: 15px; border-top: 1px solid rgba(120,159,199,.18); }
+.oppTrendPrice { display: flex; align-items: baseline; gap: 6px; }
+.oppTrendPrice > strong { font-size: 28px; color: #f2f7fd; line-height: 1; }
+.oppTrendPrice > span { font-size: 9px; color: #9fb3c7; }
+.oppTrendChange { display: flex; gap: 4px; align-items: baseline; font-size: 10px; font-weight: 750; }
+.oppTrendChange.positive { color: #79dc5b; }
+.oppTrendChange.negative { color: #ff7373; }
+.oppTrendObserved { margin-top: 7px; color: #7f96ad; font-size: 8px; }
+.oppTrendRanges { display: flex; gap: 5px; margin-top: 14px; }
+.oppTrendRanges button { appearance: none; border: 0; border-radius: 6px; background: transparent; color: #8ea5bb; padding: 6px 8px; font: inherit; font-size: 9px; font-weight: 700; cursor: pointer; }
+.oppTrendRanges button:hover { color: #d9e8f8; background: rgba(91,151,211,.1); }
+.oppTrendRanges button.active { color: #fff; background: #214f7c; }
+.oppTrendChartWrap { margin-top: 8px; }
+.oppTrendChart { width: 100%; height: 155px; overflow: visible; }
+.oppTrendChart .grid { stroke: rgba(137,167,196,.15); stroke-width: .5; vector-effect: non-scaling-stroke; }
+.oppTrendChart .line { stroke-width: 2; vector-effect: non-scaling-stroke; }
+.oppTrendChart .area { opacity: .12; }
+.oppTrendChartWrap.positive .line { stroke: #69b2f6; }
+.oppTrendChartWrap.positive .area { fill: #69b2f6; }
+.oppTrendChartWrap.negative .line { stroke: #ef6c6c; }
+.oppTrendChartWrap.negative .area { fill: #ef6c6c; }
+.oppTrendRange { display: flex; justify-content: space-between; margin-top: -2px; color: #70879e; font-size: 8px; }
+.oppTrendStats { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; margin-top: 13px; padding-top: 12px; border-top: 1px solid rgba(120,159,199,.18); }
+.oppTrendStats > div { display: flex; justify-content: space-between; gap: 10px; padding: 5px 0; }
+.oppTrendStats span { color: #849bb2; font-size: 9px; }
+.oppTrendStats strong { color: #dce8f5; font-size: 9px; }
+.oppTrendEmpty { margin-top: 18px; min-height: 120px; display: grid; place-items: center; padding: 18px; border: 1px dashed rgba(108,151,194,.35); border-radius: 9px; color: #91a6bb; font-size: 10px; text-align: center; }
+.oppInspectorAction { display: inline-flex; margin-top: 15px; padding: 8px 11px; border: 1px solid #3d6d9b; border-radius: 6px; color: #86bcf7 !important; font-size: 10px; font-weight: 750; }
 .oppInspectorAction:hover { background: #0d3155; }
 .oppTakeawayOriginal > [class*="roundIcon"] { display: grid !important; }
 .oppTakeawayOriginal h3 { margin: 16px 0 10px; font-size: 19px; }
@@ -39,11 +55,12 @@
 
 @media (max-width: 1180px) {
   .oppExposureInspectorLayout { grid-template-columns: 1fr !important; }
-  .oppExposureSelectable { grid-template-columns: 180px 100px 90px minmax(180px, 1fr) auto !important; }
-  .oppExposureInspector { min-height: 320px; }
+  .oppExposureSelectable { grid-template-columns: 170px 92px 86px minmax(170px, 1fr) auto !important; }
+  .oppExposureInspector { min-height: 360px; }
 }
 @media (max-width: 760px) {
   .oppExposureSelectable { grid-template-columns: 1fr 1fr !important; }
   .oppExposureInspector { min-height: 0; }
-  .oppTrendChart { height: 120px; }
+  .oppTrendChart { height: 130px; }
+  .oppTrendPriceLine { align-items: flex-start; flex-direction: column; }
 }
