@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { usePathname, useSearchParams } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 
 type TrendPoint = { observed_at: string; close: number }
 type TrendPayload = {
@@ -72,7 +72,6 @@ function Sparkline({ points }: { points: TrendPoint[] }) {
 
 export default function OpportunityExposurePanel() {
   const pathname = usePathname()
-  const searchParams = useSearchParams()
   const [mount, setMount] = useState<HTMLElement | null>(null)
   const [takeawayHtml, setTakeawayHtml] = useState('')
   const [selected, setSelected] = useState<SelectedExposure | null>(null)
@@ -81,7 +80,8 @@ export default function OpportunityExposurePanel() {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    if (!pathname.startsWith('/opportunities/') || searchParams.get('view') !== 'exposure') {
+    const view = new URLSearchParams(window.location.search).get('view')
+    if (!pathname.startsWith('/opportunities/') || view !== 'exposure') {
       setMount(null)
       return
     }
@@ -94,8 +94,7 @@ export default function OpportunityExposurePanel() {
 
     layout.classList.add('oppExposureInspectorLayout')
     aside.classList.add('oppExposureInspector')
-    const originalHtml = aside.innerHTML
-    setTakeawayHtml(originalHtml)
+    setTakeawayHtml(aside.innerHTML)
 
     let portalMount = aside.querySelector<HTMLElement>(':scope > .oppExposureMount')
     if (!portalMount) {
@@ -140,7 +139,7 @@ export default function OpportunityExposurePanel() {
       portalMount?.remove()
       setMount(null)
     }
-  }, [pathname, searchParams])
+  }, [pathname])
 
   useEffect(() => {
     if (!selected?.symbol) return
