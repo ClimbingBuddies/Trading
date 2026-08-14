@@ -7,6 +7,7 @@ import './opportunity-carousel-responsive.css'
 import type { Metadata } from 'next'
 import AppNav from '@/components/AppNav'
 import ThemePaletteSelector from '@/components/ThemePaletteSelector'
+import OpportunityMarketLinkFallback from '@/components/OpportunityMarketLinkFallback'
 
 export const metadata: Metadata = {
   title: 'Discover Boulders Markets',
@@ -36,6 +37,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <script dangerouslySetInnerHTML={{ __html: paletteBootScript }} />
       </head>
       <body>
+        <OpportunityMarketLinkFallback />
         <div className="appShell">
           <AppNav />
           <div className="contentShell">
