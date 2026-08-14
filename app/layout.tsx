@@ -4,10 +4,12 @@ import './theme-v2.css'
 import './theme-light.css'
 import './theme-compliance.css'
 import './opportunity-carousel-responsive.css'
+import './opportunity-exposure-inspector.css'
 import type { Metadata } from 'next'
 import AppNav from '@/components/AppNav'
 import ThemePaletteSelector from '@/components/ThemePaletteSelector'
 import OpportunityMarketLinkFallback from '@/components/OpportunityMarketLinkFallback'
+import OpportunityExposurePanel from '@/components/OpportunityExposurePanel'
 
 export const metadata: Metadata = {
   title: 'Discover Boulders Markets',
@@ -38,6 +40,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       </head>
       <body>
         <OpportunityMarketLinkFallback />
+        <OpportunityExposurePanel />
         <div className="appShell">
           <AppNav />
           <div className="contentShell">
