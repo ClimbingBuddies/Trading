@@ -115,7 +115,7 @@ export default function OpportunityExposurePanel() {
 
     layout.classList.add('oppExposureInspectorLayout')
     aside.classList.add('oppExposureInspector')
-    setTakeawayHtml(aside.innerHTML)
+    setTakeawayHtml(aside.innerHTML.replace('Tracked instruments', 'Mapped instruments'))
 
     let portalMount = aside.querySelector<HTMLElement>(':scope > .oppExposureMount')
     if (!portalMount) {

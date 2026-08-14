@@ -86,8 +86,13 @@ export type TechnologyEvent = {
 }
 
 export type ThemeExposure = {
+  source_kind: 'tracked' | 'external'
   theme_id: string
   instrument_id: string
+  external_market_url: string | null
+  market_source: string | null
+  evidence_source_name: string | null
+  evidence_url: string | null
   exposure_type: string
   exposure_score: number | null
   rationale: string | null
@@ -98,6 +103,24 @@ export type ThemeExposure = {
     asset_type: string
     exchange_code: string
   } | null
+}
+
+type UnifiedExposureRow = {
+  source_kind: 'tracked' | 'external'
+  theme_id: string
+  instrument_id: string | null
+  symbol: string
+  instrument_name: string
+  asset_type: string
+  exchange_code: string
+  external_market_url: string | null
+  market_source: string | null
+  evidence_source_name: string | null
+  evidence_url: string | null
+  exposure_type: string
+  exposure_score: number | null
+  rationale: string | null
+  is_active: boolean
 }
 
 export type OpportunityOverviewRow = {
@@ -176,6 +199,28 @@ function normalizeThemeCode(value: string) {
   return decodeURIComponent(value).trim().toLowerCase()
 }
 
+function toThemeExposure(row: UnifiedExposureRow): ThemeExposure {
+  return {
+    source_kind: row.source_kind,
+    theme_id: row.theme_id,
+    instrument_id: row.instrument_id ?? `external:${row.exchange_code}:${row.symbol}`,
+    external_market_url: row.external_market_url,
+    market_source: row.market_source,
+    evidence_source_name: row.evidence_source_name,
+    evidence_url: row.evidence_url,
+    exposure_type: row.exposure_type,
+    exposure_score: row.exposure_score,
+    rationale: row.rationale,
+    is_active: row.is_active,
+    instruments: {
+      symbol: row.symbol,
+      instrument_name: row.instrument_name,
+      asset_type: row.asset_type,
+      exchange_code: row.exchange_code,
+    },
+  }
+}
+
 export async function getOpportunityOverview() {
   const supabase = getSupabase()
   const [themesRes, assessmentsRes, exposuresRes] = await Promise.all([
@@ -191,8 +236,8 @@ export async function getOpportunityOverview() {
       .order('updated_at', { ascending: false })
       .limit(2000),
     supabase
-      .from('opportunity_theme_instruments')
-      .select('theme_id,instrument_id,exposure_type,exposure_score,rationale,is_active,instruments(symbol,instrument_name,asset_type,exchange_code)')
+      .from('opportunity_theme_all_exposures')
+      .select('source_kind,theme_id,instrument_id,symbol,instrument_name,asset_type,exchange_code,external_market_url,market_source,evidence_source_name,evidence_url,exposure_type,exposure_score,rationale,is_active')
       .eq('is_active', true)
       .order('exposure_score', { ascending: false }),
   ])
@@ -203,7 +248,7 @@ export async function getOpportunityOverview() {
 
   const themes = (themesRes.data ?? []) as OpportunityTheme[]
   const assessments = (assessmentsRes.data ?? []) as OpportunityAssessment[]
-  const exposures = (exposuresRes.data ?? []) as unknown as ThemeExposure[]
+  const exposures = ((exposuresRes.data ?? []) as unknown as UnifiedExposureRow[]).map(toThemeExposure)
   const latestMap = latestByTheme(assessments)
   const exposureMap = new Map<string, ThemeExposure[]>()
 
