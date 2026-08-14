@@ -53,7 +53,8 @@ export async function GET(request: Request, { params }: { params: Promise<{ symb
   const change = latestClose == null || oldestClose == null ? null : latestClose - oldestClose
   const changePercent = change == null || oldestClose === 0 ? null : (change / oldestClose) * 100
 
-  const periodOpen = rows.length ? Number(rows[rows.length - 1]?.open ?? oldestClose ?? 0) : null
+  const rawOpen = oldest?.open
+  const periodOpen = rawOpen == null ? oldestClose : Number(rawOpen)
   const highs = rows.map((row) => row.high == null ? null : Number(row.high)).filter((value): value is number => value !== null)
   const lows = rows.map((row) => row.low == null ? null : Number(row.low)).filter((value): value is number => value !== null)
   const volume = rows.reduce((sum, row) => sum + Number(row.volume ?? 0), 0)
