@@ -27,12 +27,25 @@ function fmtPrice(value: number | null, currency: string) {
   return `${value.toLocaleString('en-AU', { maximumFractionDigits: digits })} ${currency}`
 }
 
-function freshness(row: MarketRow) {
-  if (row.age_minutes === null) return { label: 'No data', tone: 'neutral' }
-  if (row.age_minutes < 15) return { label: '< 15 min', tone: 'healthy' }
-  if (row.age_minutes < 60) return { label: `${row.age_minutes} min`, tone: 'healthy' }
-  if (row.age_minutes < 240) return { label: `${Math.round(row.age_minutes / 60)} hr`, tone: 'warning' }
-  return { label: `${Math.round(row.age_minutes / 60)} hr`, tone: 'neutral' }
+function ageLabel(ageMinutes: number | null) {
+  if (ageMinutes === null) return '—'
+  if (ageMinutes < 60) return `${ageMinutes} min`
+  if (ageMinutes < 24 * 60) return `${Math.round(ageMinutes / 60)} hr`
+  return `${Math.round(ageMinutes / (24 * 60))} d`
+}
+
+function statusDisplay(row: MarketRow) {
+  if (row.data_status === 'current') return { label: 'Current', tone: 'healthy' }
+  if (row.data_status === 'due') return { label: 'Due', tone: 'warning' }
+  if (row.data_status === 'stale') return { label: 'Stale', tone: 'toneBad' }
+  if (row.data_status === 'market_closed') return { label: 'Market closed', tone: 'neutral' }
+  return { label: 'No data', tone: 'neutral' }
+}
+
+function sessionDisplay(row: MarketRow) {
+  if (row.session_status === '24h') return { label: '24h', tone: 'status-running' }
+  if (row.session_status === 'open') return { label: 'Open', tone: 'status-succeeded' }
+  return { label: 'Closed', tone: '' }
 }
 
 function symbolSlug(symbol: string) {
@@ -80,12 +93,13 @@ export default function MarketsTable({ rows }: { rows: MarketRow[] }) {
         <table>
           <thead>
             <tr>
-              <th>Symbol</th><th>Name</th><th>Asset class</th><th>Exchange</th><th>Latest price</th><th>Last observation</th><th>Age</th><th>Provider</th>
+              <th>Symbol</th><th>Name</th><th>Asset class</th><th>Exchange</th><th>Latest price</th><th>Last observation</th><th>Market</th><th>Data status</th><th>Provider</th>
             </tr>
           </thead>
           <tbody>
             {filtered.length ? filtered.map((row) => {
-              const fresh = freshness(row)
+              const status = statusDisplay(row)
+              const session = sessionDisplay(row)
               return (
                 <tr key={row.id}>
                   <td><Link className="rowLink" href={`/markets/${symbolSlug(row.symbol)}`}>{row.symbol}</Link></td>
@@ -93,14 +107,15 @@ export default function MarketsTable({ rows }: { rows: MarketRow[] }) {
                   <td><span className="assetTag">{row.asset_type}</span></td>
                   <td>{row.exchange_code}</td>
                   <td className="numericCell">{fmtPrice(row.latest_price, row.currency_code)}</td>
-                  <td>{fmtTime(row.loaded_at)}</td>
-                  <td><span className={`freshnessState ${fresh.tone}`}>{fresh.label}</span></td>
+                  <td>{fmtTime(row.observed_at)}</td>
+                  <td><span className={`status ${session.tone}`}>{session.label}</span></td>
+                  <td><span className={`freshnessState ${status.tone}`}>{status.label}</span> <span className="contextText">{ageLabel(row.age_minutes)}</span></td>
                   <td>{row.provider_code ?? row.provider_name ?? '—'}</td>
                 </tr>
               )
             }) : (
               <tr>
-                <td colSpan={8}>
+                <td colSpan={9}>
                   <div className="tableEmpty">No instruments match this filter yet.</div>
                 </td>
               </tr>
