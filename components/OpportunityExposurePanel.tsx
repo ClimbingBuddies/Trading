@@ -8,6 +8,9 @@ type TrendPoint = { observed_at: string; close: number }
 type RangeKey = '1D' | '5D' | '1M' | '1Y' | '5Y' | 'MAX'
 type TrendPayload = {
   tracked: boolean
+  available?: boolean
+  source?: 'internal' | 'yahoo_finance'
+  source_label?: string
   symbol: string
   instrument_name?: string
   currency_code?: string
@@ -19,6 +22,7 @@ type TrendPayload = {
   volume?: number | null
   change?: number | null
   change_percent?: number | null
+  external_market_url?: string | null
   points?: TrendPoint[]
 }
 
@@ -61,31 +65,74 @@ function formatDate(value: string | null | undefined) {
   }).format(new Date(value))
 }
 
-function TrendChart({ points, positive }: { points: TrendPoint[]; positive: boolean }) {
-  if (points.length < 2) return <div className="oppTrendEmpty">Not enough internal observations to draw this period yet.</div>
+function TrendChart({ points, positive, currencyCode }: { points: TrendPoint[]; positive: boolean; currencyCode?: string }) {
+  const [activeIndex, setActiveIndex] = useState<number | null>(null)
+
+  if (points.length < 2) return <div className="oppTrendEmpty">Not enough observations to draw this period yet.</div>
 
   const chronological = [...points].sort((a, b) => new Date(a.observed_at).getTime() - new Date(b.observed_at).getTime())
   const values = chronological.map((point) => point.close)
   const min = Math.min(...values)
   const max = Math.max(...values)
   const span = max - min || 1
-  const coords = chronological.map((point, index) => {
-    const x = 3 + (index / (chronological.length - 1)) * 94
-    const y = 86 - ((point.close - min) / span) * 68
-    return `${x},${y}`
-  }).join(' ')
+  const plotted = chronological.map((point, index) => ({
+    point,
+    x: 3 + (index / (chronological.length - 1)) * 94,
+    y: 86 - ((point.close - min) / span) * 68,
+  }))
+  const coords = plotted.map((item) => `${item.x},${item.y}`).join(' ')
   const area = `3,92 ${coords} 97,92`
+  const active = activeIndex === null ? null : plotted[Math.max(0, Math.min(activeIndex, plotted.length - 1))]
+
+  function selectNearest(clientX: number, svg: SVGSVGElement) {
+    const rect = svg.getBoundingClientRect()
+    if (!rect.width) return
+    const ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width))
+    setActiveIndex(Math.round(ratio * (plotted.length - 1)))
+  }
+
+  const tooltipClass = active ? active.x > 72 ? ' alignRight' : active.x < 28 ? ' alignLeft' : '' : ''
 
   return (
     <div className={`oppTrendChartWrap ${positive ? 'positive' : 'negative'}`}>
-      <svg className="oppTrendChart" viewBox="0 0 100 100" preserveAspectRatio="none" aria-label="Internal price trend">
+      <svg
+        className="oppTrendChart"
+        viewBox="0 0 100 100"
+        preserveAspectRatio="none"
+        aria-label="Price trend. Hover, tap or drag across the chart to inspect a price."
+        role="img"
+        tabIndex={0}
+        onPointerMove={(event) => selectNearest(event.clientX, event.currentTarget)}
+        onPointerDown={(event) => selectNearest(event.clientX, event.currentTarget)}
+        onPointerLeave={() => setActiveIndex(null)}
+        onKeyDown={(event) => {
+          if (event.key === 'ArrowLeft') {
+            event.preventDefault()
+            setActiveIndex((current) => Math.max(0, (current ?? plotted.length - 1) - 1))
+          }
+          if (event.key === 'ArrowRight') {
+            event.preventDefault()
+            setActiveIndex((current) => Math.min(plotted.length - 1, (current ?? -1) + 1))
+          }
+        }}
+      >
         <line x1="3" y1="25" x2="97" y2="25" className="grid" />
         <line x1="3" y1="55" x2="97" y2="55" className="grid" />
         <line x1="3" y1="85" x2="97" y2="85" className="grid" />
         <polygon points={area} className="area" />
         <polyline points={coords} className="line" fill="none" vectorEffect="non-scaling-stroke" />
+        {active && <>
+          <line x1={active.x} y1="14" x2={active.x} y2="92" className="oppTrendCrosshair" />
+          <circle cx={active.x} cy={active.y} r="1.8" className="oppTrendActivePoint" vectorEffect="non-scaling-stroke" />
+        </>}
       </svg>
-      <div className="oppTrendRange"><span>{formatPrice(min)}</span><span>{formatPrice(max)}</span></div>
+      {active && (
+        <div className={`oppTrendTooltip${tooltipClass}`} style={{ left: `${active.x}%` }}>
+          <strong>{formatPrice(active.point.close)}{currencyCode ? ` ${currencyCode}` : ''}</strong>
+          <span>{formatDate(active.point.observed_at)}</span>
+        </div>
+      )}
+      <div className="oppTrendRange"><span>{formatPrice(min)}</span><span>Hover / tap for price</span><span>{formatPrice(max)}</span></div>
     </div>
   )
 }
@@ -181,7 +228,9 @@ export default function OpportunityExposurePanel() {
     const slug = selected.symbol.replaceAll('/', '-').toLowerCase()
     void fetch(`/api/market-trend/${encodeURIComponent(slug)}?range=${range}`, { cache: 'no-store', signal: controller.signal })
       .then(async (response) => {
-        if (response.status === 404) return { tracked: false, symbol: selected.symbol } as TrendPayload
+        if (response.status === 404 || response.status === 502) {
+          return { tracked: false, available: false, symbol: selected.symbol } as TrendPayload
+        }
         if (!response.ok) throw new Error(`Trend request failed: ${response.status}`)
         return response.json() as Promise<TrendPayload>
       })
@@ -198,6 +247,8 @@ export default function OpportunityExposurePanel() {
   if (!mount) return null
 
   const positive = (trend?.change ?? 0) >= 0
+  const hasTrend = Boolean(trend?.available && trend.points?.length)
+  const observationLabel = trend?.tracked ? 'Latest internal observation' : `Latest ${trend?.source_label ?? 'external'} observation`
 
   return createPortal(
     <div className="oppExposureInspectorInner">
@@ -215,32 +266,36 @@ export default function OpportunityExposurePanel() {
             <strong>{selected.score}<small>/100 exposure</small></strong>
           </div>
 
-          {loading ? <div className="oppTrendEmpty">Loading market history…</div> : trend?.tracked ? <>
+          {loading ? <div className="oppTrendEmpty">Loading market history…</div> : hasTrend ? <>
             <div className="oppTrendPriceLine">
-              <div className="oppTrendPrice"><strong>{formatPrice(trend.latest_price)}</strong><span>{trend.currency_code ?? ''}</span></div>
+              <div className="oppTrendPrice"><strong>{formatPrice(trend?.latest_price)}</strong><span>{trend?.currency_code ?? ''}</span></div>
               <div className={`oppTrendChange ${positive ? 'positive' : 'negative'}`}>
-                <strong>{positive ? '+' : ''}{formatPrice(trend.change)}</strong>
-                <span>({positive ? '+' : ''}{(trend.change_percent ?? 0).toFixed(2)}%)</span>
+                <strong>{positive ? '+' : ''}{formatPrice(trend?.change)}</strong>
+                <span>({positive ? '+' : ''}{(trend?.change_percent ?? 0).toFixed(2)}%)</span>
               </div>
             </div>
-            <div className="oppTrendObserved">Latest internal observation · {formatDate(trend.latest_observation)}</div>
+            <div className="oppTrendObserved">{observationLabel} · {formatDate(trend?.latest_observation)}</div>
 
             <div className="oppTrendRanges" aria-label="Trend period">
               {RANGES.map((item) => <button key={item} type="button" className={range === item ? 'active' : ''} onClick={() => setRange(item)}>{item}</button>)}
             </div>
 
-            <TrendChart points={trend.points ?? []} positive={positive} />
+            <TrendChart points={trend?.points ?? []} positive={positive} currencyCode={trend?.currency_code} />
 
             <div className="oppTrendStats">
-              <div><span>Open</span><strong>{formatPrice(trend.open)}</strong></div>
-              <div><span>High</span><strong>{formatPrice(trend.high)}</strong></div>
-              <div><span>Low</span><strong>{formatPrice(trend.low)}</strong></div>
-              <div><span>Volume</span><strong>{formatVolume(trend.volume)}</strong></div>
+              <div><span>Open</span><strong>{formatPrice(trend?.open)}</strong></div>
+              <div><span>High</span><strong>{formatPrice(trend?.high)}</strong></div>
+              <div><span>Low</span><strong>{formatPrice(trend?.low)}</strong></div>
+              <div><span>Volume</span><strong>{formatVolume(trend?.volume)}</strong></div>
             </div>
-            <a className="oppInspectorAction" href={`/markets/${selected.symbol.replaceAll('/', '-').toLowerCase()}`}>Open full market →</a>
+            {trend?.tracked ? (
+              <a className="oppInspectorAction" href={`/markets/${selected.symbol.replaceAll('/', '-').toLowerCase()}`}>Open full market →</a>
+            ) : (
+              <a className="oppInspectorAction" href={trend?.external_market_url || externalMarketUrl(selected.symbol)} target="_blank" rel="noreferrer noopener">Open external market ↗</a>
+            )}
           </> : <>
-            <div className="oppTrendEmpty">This ticker is not currently available in our internal market database.</div>
-            <a className="oppInspectorAction" href={externalMarketUrl(selected.symbol)} target="_blank" rel="noreferrer noopener">View external ↗</a>
+            <div className="oppTrendEmpty">Market history is not available here for this ticker right now.</div>
+            <a className="oppInspectorAction" href={trend?.external_market_url || externalMarketUrl(selected.symbol)} target="_blank" rel="noreferrer noopener">View external ↗</a>
           </>}
         </div>
       ) : <div className="oppTrendEmpty">Select an exposure to inspect its market trend.</div>}
