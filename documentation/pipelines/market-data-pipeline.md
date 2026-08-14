@@ -37,6 +37,12 @@ Total: 30 instruments.
 
 Each internal instrument maps to the provider symbol expected by Twelve Data.
 
+### Latest observation view
+
+`latest_market_observations`
+
+This security-invoker view returns exactly one latest market observation per instrument, ordered by `observed_at` with `loaded_at` and row ID as deterministic tie-breakers. The Markets dashboard uses this view instead of downloading an arbitrary global observation window and reconstructing latest rows in application code.
+
 ## Scheduled loader
 
 pg_cron job:
@@ -200,6 +206,16 @@ It derives:
 - 14-day load/observation history
 - observation freshness by instrument
 
+The Markets dashboard reads `latest_market_observations` and interprets market-data state alongside the expected loader cadence and US market session:
+
+- `Current` — latest market observation is no more than 90 minutes old while the instrument is expected to be active;
+- `Due` — 91 to 120 minutes old while active;
+- `Stale` — more than 120 minutes old while active;
+- `Market Closed` — US equity or ETF outside the configured New York trading session or on a configured market holiday;
+- `No Observation` — no market observation exists yet.
+
+The Markets table displays `observed_at` as the market observation timestamp. `loaded_at` remains the ingestion timestamp and is used for operational loader diagnostics.
+
 The load-detail page uses a selected `sync_runs` record and searches `market_observations` around the run time to show the observations associated with that execution.
 
 ## Test Edge Function
@@ -219,9 +235,8 @@ This function is useful for controlled diagnostics but is not the scheduled prod
 - The current function loads quotes rather than full intraday bars.
 - Futures are not currently loaded.
 - Equity/ETF eligibility assumes US market hours, so adding non-US exchange instruments will require exchange-aware market-session logic.
-- Freshness should be interpreted by asset class and session state rather than using a single global stale-data threshold.
 - `observed_at` currently uses the loader execution time rather than a parsed provider timestamp.
 
 ## Recommended operational rule
 
-Do not infer loader health from instrument age alone. Use `sync_runs` status together with asset eligibility, current market session and the latest `market_observations.loaded_at` values.
+Do not infer loader health from instrument age alone. Use `sync_runs` status together with asset eligibility, current market session and the latest observation and ingestion timestamps.

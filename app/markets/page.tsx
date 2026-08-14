@@ -15,6 +15,15 @@ function fmtDate(value: string | null) {
   }).format(new Date(value))
 }
 
+function fmtTime(value: string | null) {
+  if (!value) return '—'
+  return new Intl.DateTimeFormat('en-AU', {
+    timeZone: 'Australia/Perth',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(new Date(value))
+}
+
 function percent(value: number, total: number) {
   return total ? `${Math.round((value / total) * 100)}%` : '0%'
 }
@@ -28,9 +37,9 @@ export default async function MarketsPage() {
         <header className="pageHeader">
           <div>
             <h1>Markets / Instrument Overview</h1>
-            <p className="subtitle">Current view of tracked instruments and market-data freshness.</p>
+            <p className="subtitle">Current view of tracked instruments, market session and data status.</p>
           </div>
-          <div className="headerActions"><span className="contextText">Latest data: {fmtDate(data.latestObservationAt)}</span></div>
+          <div className="headerActions"><span className="contextText">Latest market observation: {fmtDate(data.latestObservationAt)}</span></div>
         </header>
 
         <section className="kpiGrid">
@@ -39,7 +48,7 @@ export default async function MarketsPage() {
           <article className="kpi"><span>ETFs</span><strong className="number">{data.counts.etf}</strong><small>Active instruments</small></article>
           <article className="kpi"><span>Forex</span><strong className="number">{data.counts.forex}</strong><small>Active instruments</small></article>
           <article className="kpi"><span>Crypto</span><strong className="number">{data.counts.crypto}</strong><small>Active instruments</small></article>
-          <article className="kpi"><span>Latest Observation</span><strong>{data.latestObservationAt ? fmtDate(data.latestObservationAt).split(',').at(-1) : '—'}</strong><small>{data.latestObservationAt ? fmtDate(data.latestObservationAt) : 'No observations yet'}</small></article>
+          <article className="kpi"><span>Latest Observation</span><strong>{fmtTime(data.latestObservationAt)}</strong><small>{data.latestObservationAt ? fmtDate(data.latestObservationAt) : 'No observations yet'}</small></article>
         </section>
 
         <section className="panel tablePanel marketTablePanel">
@@ -50,13 +59,13 @@ export default async function MarketsPage() {
         </section>
 
         <section className="panel freshnessSummaryPanel">
-          <div className="panelHeader"><div><h2>Instrument Freshness Summary</h2><p className="panelHint">Freshness is interpreted alongside asset class and market session.</p></div></div>
+          <div className="panelHeader"><div><h2>Market Data Status Summary</h2><p className="panelHint">Current and due thresholds follow the loader cadence; closed US equity sessions are separated from stale data.</p></div></div>
           <div className="freshnessCards">
-            <article><span>&lt; 15 min ago</span><strong className="toneGood">{data.freshness.under15}</strong><small>{percent(data.freshness.under15, data.counts.total)}</small></article>
-            <article><span>15 min – 1 hour</span><strong className="toneBlue">{data.freshness.under60}</strong><small>{percent(data.freshness.under60, data.counts.total)}</small></article>
-            <article><span>1 – 4 hours</span><strong className="toneWarn">{data.freshness.under240}</strong><small>{percent(data.freshness.under240, data.counts.total)}</small></article>
-            <article><span>&gt; 4 hours</span><strong>{data.freshness.over240}</strong><small>{percent(data.freshness.over240, data.counts.total)}</small></article>
-            {data.freshness.noObservation > 0 && <article><span>No observation</span><strong>{data.freshness.noObservation}</strong><small>Waiting for first load</small></article>}
+            <article><span>Current</span><strong className="toneGood">{data.statusSummary.current}</strong><small>{percent(data.statusSummary.current, data.counts.total)} · within 90 min</small></article>
+            <article><span>Due</span><strong className="toneWarn">{data.statusSummary.due}</strong><small>{percent(data.statusSummary.due, data.counts.total)} · 91–120 min</small></article>
+            <article><span>Stale</span><strong className="toneBad">{data.statusSummary.stale}</strong><small>{percent(data.statusSummary.stale, data.counts.total)} · over 120 min while active</small></article>
+            <article><span>Market Closed</span><strong>{data.statusSummary.marketClosed}</strong><small>{percent(data.statusSummary.marketClosed, data.counts.total)} · US equities / ETFs</small></article>
+            <article><span>No Observation</span><strong>{data.statusSummary.noObservation}</strong><small>{percent(data.statusSummary.noObservation, data.counts.total)} · waiting for first load</small></article>
           </div>
         </section>
       </div>
@@ -64,7 +73,7 @@ export default async function MarketsPage() {
   } catch (error) {
     return (
       <div className="page">
-        <header className="pageHeader"><div><h1>Markets / Instrument Overview</h1><p className="subtitle">Current view of tracked instruments and market-data freshness.</p></div></header>
+        <header className="pageHeader"><div><h1>Markets / Instrument Overview</h1><p className="subtitle">Current view of tracked instruments, market session and data status.</p></div></header>
         <div className="errorState"><strong>Market data is not available to the dashboard yet.</strong><span>{error instanceof Error ? error.message : 'The page is ready and will populate when data becomes available.'}</span></div>
       </div>
     )
