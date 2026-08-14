@@ -1,6 +1,6 @@
 # Daily Opportunity Assessment
 
-**Specification version:** 1.1  
+**Specification version:** 1.2  
 **Last updated:** 14 August 2026  
 **System:** Discover Boulders Markets / Trading  
 **Supabase project:** `glvbqcplgjdfgjyknzsa`
@@ -54,6 +54,48 @@ The process must be idempotent. If today's assessment already exists, update/res
 
 ---
 
+## 2A. Start the run audit and capture model telemetry
+
+Every invocation of this specification — scheduled, manual or test — should create a distinct execution record in:
+
+`public.opportunity_assessment_runs`
+
+This run record is an **audit trail for the execution**, while the Structural, Technology Inflection and final Opportunity Assessment rows remain idempotent for the assessment date.
+
+Before performing assessment research or writing signal results:
+
+1. Read all current `active` and `watch` themes and count them as `themes_requested`.
+2. Determine `execution_source`:
+   - `scheduled-task` when this is the actual ChatGPT Scheduled Task execution;
+   - `manual-chat` when a user directly runs the assessment in a normal chat;
+   - `test` when the user explicitly requests a test execution.
+3. Set `task_id` to `6a7d49a185988191a6998cb4e236a28f` **only when this is the production Daily Opportunity Assessment Scheduled Task**. Otherwise leave it null unless another task ID is explicitly known.
+4. Capture `model_reported` from the model/runtime executing this run where that identity is actually available. Use the model's own reported identity, for example `GPT-5.6 Sol`. **Do not infer a model from what the user requested, from the chat UI, or from a previous run.** If the model identity is unavailable or uncertain, store `unknown`.
+5. Capture `reasoning_level_reported` when the runtime exposes a meaningful reasoning mode such as `High` or `Medium`. Otherwise leave it null. Do not guess.
+6. Set `github_spec_version = '1.2'`.
+7. Set `github_spec_sha` to the GitHub blob/content SHA returned when this file was retrieved, where available. If the SHA is not available to the execution environment, leave it null rather than inventing one.
+8. Insert the run with:
+   - `assessment_date = <today Australia/Perth>`
+   - `started_at = now()`
+   - `status = 'running'`
+   - `execution_source`
+   - `task_id`
+   - `model_reported`
+   - `reasoning_level_reported`
+   - `github_spec_version`
+   - `github_spec_sha`
+   - `themes_requested`
+   - `themes_completed = 0`
+9. Capture the returned `run_id` and use it for the entire execution.
+
+Each new execution gets a new `run_id`, even when it is retrying the same assessment date. The daily assessment rows themselves remain idempotent and should be updated to point to the most recent run that wrote them.
+
+The model and reasoning fields are **self-reported operational telemetry**, not authoritative OpenAI platform telemetry. They are intended to provide a useful indication of which model/mode produced a run so quality can be compared later.
+
+If Supabase is unavailable before the run audit can be created, do not fabricate a run ID. Report the failure clearly and do not pretend the assessment was audited.
+
+---
+
 ## 3. Review existing Opportunity Themes
 
 Read:
@@ -71,7 +113,7 @@ Compare today's evidence with previous assessments so that changes in direction,
 
 ### Baseline monitored theme universe
 
-As of specification v1.1, the intended baseline Opportunity Theme universe is:
+As of specification v1.2, the intended baseline Opportunity Theme universe is:
 
 | Theme code | Theme | Status | Horizon |
 |---|---|---|---|
@@ -219,8 +261,9 @@ Use:
 
 - `signal_date = <today Australia/Perth>`
 - `methodology_version = 'structural-signal-v1'`
+- `assessment_run_id = <current run_id>`
 
-Because `(theme_id, signal_date, methodology_version)` is unique, **update today's row if the task is retried rather than creating a duplicate**.
+Because `(theme_id, signal_date, methodology_version)` is unique, **update today's row if the task is retried rather than creating a duplicate**. When updating today's row, also update `assessment_run_id` to the current run.
 
 Assign `signal_label`:
 
@@ -311,8 +354,9 @@ Use:
 
 - `signal_date = <today Australia/Perth>`
 - `methodology_version = 'technology-inflection-v1'`
+- `assessment_run_id = <current run_id>`
 
-Update today's existing row on retry rather than inserting duplicates.
+Update today's existing row on retry rather than inserting duplicates. When updating today's row, also update `assessment_run_id` to the current run.
 
 Assign `signal_label`:
 
@@ -384,6 +428,7 @@ Use:
 
 - `methodology_version = 'opportunity-convergence-v1'`
 - `assessment_date = <today Australia/Perth>`
+- `assessment_run_id = <current run_id>`
 
 Link:
 
@@ -445,7 +490,7 @@ Set `time_horizon` to a concise range such as:
 
 based on evidence and the theme's stored horizon.
 
-Because `(theme_id, assessment_date, methodology_version)` is unique, update today's row on retries.
+Because `(theme_id, assessment_date, methodology_version)` is unique, update today's row on retries. When updating today's row, also update `assessment_run_id` to the current run.
 
 ---
 
@@ -619,11 +664,45 @@ Tracked instruments most directly exposed to the strongest themes.
 
 Relevant listed companies identified through the research that are not currently in the Trading instrument universe.
 
+### 8. Run telemetry
+
+Report concisely:
+
+- `run_id`
+- `model_reported`
+- `reasoning_level_reported` where available
+- `execution_source`
+- `github_spec_version`
+- themes requested/completed
+- final run status
+
 If there are no material changes, say:
 
 > **No material Opportunity Assessment changes today.**
 
-but still complete the daily Supabase assessment refresh.
+but still complete the daily Supabase assessment refresh and run-audit finalisation.
+
+---
+
+## 8A. Finalise the run audit
+
+Before ending the execution, update the current `public.opportunity_assessment_runs` row.
+
+Set:
+
+- `completed_at = now()`
+- `themes_completed` to the number of requested themes for which the current execution successfully wrote/updated the final `public.opportunity_assessments` row
+- `status = 'succeeded'` when all requested themes completed successfully
+- `status = 'partial'` when at least one requested theme completed but one or more failed
+- `status = 'failed'` when the run could not produce usable assessment results
+- `status = 'skipped'` only when the execution deliberately performs no assessment for a valid operational reason
+- `notes` to a concise run summary
+- `error_message` when a failure or material partial failure occurred
+- `updated_at = now()`
+
+Finalise the run row even when the assessment is partial or failed, provided Supabase is still reachable. Do not leave a run indefinitely in `running` merely because one theme failed.
+
+The count in `themes_completed` must reflect actual final Opportunity Assessment rows written or updated by **this run**, not a planned count and not a count copied from a previous run.
 
 ---
 
@@ -631,6 +710,9 @@ but still complete the daily Supabase assessment refresh.
 
 - Supabase is the system of record for assessment data and results.
 - GitHub is the system of record for this methodology specification.
+- `public.opportunity_assessment_runs` is the system of record for execution-level audit telemetry.
+- Model/reasoning telemetry is self-reported operational evidence, not authoritative OpenAI platform telemetry.
+- Never invent the model identity, reasoning level, task ID or GitHub SHA. Store `unknown`/null where the runtime cannot determine them.
 - Do not fabricate scientific, technical, commercial or financial evidence.
 - Distinguish scientific promise from engineering feasibility.
 - Distinguish engineering feasibility from commercial viability.
@@ -655,11 +737,15 @@ The intended architecture is:
 ```text
 GitHub specification
         ↓
-ChatGPT Scheduled Task
+ChatGPT Scheduled Task / manual execution
+        ↓
+Opportunity run audit created
         ↓
 Supabase reads / research / reasoning / writes
         ↓
-Opportunity Assessment + Research & Evidence
+Structural + Technology + Opportunity Assessment
+        ↓
+Research & Evidence + run audit finalised
 ```
 
-The Scheduled Task should remain a small runner whose first action is to retrieve this file. Methodology changes should normally be made here rather than by replacing the Scheduled Task prompt.
+The Scheduled Task should remain a small runner whose first action is to retrieve this file. Methodology and execution-audit changes should normally be made here rather than by replacing the Scheduled Task prompt.
