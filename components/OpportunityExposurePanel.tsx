@@ -104,7 +104,9 @@ function TrendChart({ points, positive, currencyCode }: { points: TrendPoint[]; 
         tabIndex={0}
         onPointerMove={(event) => selectNearest(event.clientX, event.currentTarget)}
         onPointerDown={(event) => selectNearest(event.clientX, event.currentTarget)}
-        onPointerLeave={() => setActiveIndex(null)}
+        onPointerLeave={(event) => {
+          if (event.pointerType !== 'touch') setActiveIndex(null)
+        }}
         onKeyDown={(event) => {
           if (event.key === 'ArrowLeft') {
             event.preventDefault()
