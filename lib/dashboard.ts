@@ -13,6 +13,9 @@ export type SyncRun = {
   metadata: Record<string, unknown> | null
 }
 
+export type MarketSessionStatus = 'open' | 'closed' | '24h'
+export type MarketDataStatus = 'current' | 'due' | 'stale' | 'market_closed' | 'no_data'
+
 export type MarketRow = {
   id: string
   symbol: string
@@ -26,6 +29,8 @@ export type MarketRow = {
   provider_name: string | null
   provider_code: string | null
   age_minutes: number | null
+  session_status: MarketSessionStatus
+  data_status: MarketDataStatus
 }
 
 export type AssessmentRow = {
@@ -49,7 +54,148 @@ export type AssessmentRow = {
   created_at: string
 }
 
+type MarketRun = {
+  run_id: string
+  started_at: string
+  completed_at: string | null
+  status: string
+  analysis_cutoff_time: string | null
+  model_name: string | null
+  prompt_version: string | null
+  analysis_mode: string | null
+  tickers_requested: number | null
+  tickers_completed: number | null
+  notes: string | null
+}
+
 const PAGE_SIZE = 1000
+const CURRENT_DATA_MINUTES = 90
+const DUE_DATA_MINUTES = 120
+
+function dateKey(date: Date) {
+  return `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, '0')}-${String(date.getUTCDate()).padStart(2, '0')}`
+}
+
+function nthWeekdayOfMonth(year: number, month: number, weekday: number, nth: number) {
+  const first = new Date(Date.UTC(year, month - 1, 1))
+  const offset = (weekday - first.getUTCDay() + 7) % 7
+  return new Date(Date.UTC(year, month - 1, 1 + offset + (nth - 1) * 7))
+}
+
+function lastWeekdayOfMonth(year: number, month: number, weekday: number) {
+  const last = new Date(Date.UTC(year, month, 0))
+  const offset = (last.getUTCDay() - weekday + 7) % 7
+  last.setUTCDate(last.getUTCDate() - offset)
+  return last
+}
+
+function observedFixedHoliday(year: number, month: number, day: number) {
+  const holiday = new Date(Date.UTC(year, month - 1, day))
+  if (holiday.getUTCDay() === 6) holiday.setUTCDate(holiday.getUTCDate() - 1)
+  else if (holiday.getUTCDay() === 0) holiday.setUTCDate(holiday.getUTCDate() + 1)
+  return holiday
+}
+
+function easterSunday(year: number) {
+  const a = year % 19
+  const b = Math.floor(year / 100)
+  const c = year % 100
+  const d = Math.floor(b / 4)
+  const e = b % 4
+  const f = Math.floor((b + 8) / 25)
+  const g = Math.floor((b - f + 1) / 3)
+  const h = (19 * a + b - d - g + 15) % 30
+  const i = Math.floor(c / 4)
+  const k = c % 4
+  const l = (32 + 2 * e + 2 * i - h - k) % 7
+  const m = Math.floor((a + 11 * h + 22 * l) / 451)
+  const month = Math.floor((h + l - 7 * m + 114) / 31)
+  const day = ((h + l - 7 * m + 114) % 31) + 1
+  return new Date(Date.UTC(year, month - 1, day))
+}
+
+function usMarketHolidayKeys(year: number) {
+  const keys = new Set<string>()
+
+  for (const holidayYear of [year - 1, year, year + 1]) {
+    keys.add(dateKey(observedFixedHoliday(holidayYear, 1, 1)))
+    keys.add(dateKey(nthWeekdayOfMonth(holidayYear, 1, 1, 3)))
+    keys.add(dateKey(nthWeekdayOfMonth(holidayYear, 2, 1, 3)))
+
+    const goodFriday = easterSunday(holidayYear)
+    goodFriday.setUTCDate(goodFriday.getUTCDate() - 2)
+    keys.add(dateKey(goodFriday))
+
+    keys.add(dateKey(lastWeekdayOfMonth(holidayYear, 5, 1)))
+    keys.add(dateKey(observedFixedHoliday(holidayYear, 6, 19)))
+    keys.add(dateKey(observedFixedHoliday(holidayYear, 7, 4)))
+    keys.add(dateKey(nthWeekdayOfMonth(holidayYear, 9, 1, 1)))
+    keys.add(dateKey(nthWeekdayOfMonth(holidayYear, 11, 4, 4)))
+    keys.add(dateKey(observedFixedHoliday(holidayYear, 12, 25)))
+  }
+
+  return keys
+}
+
+function newYorkParts(now: Date) {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/New_York',
+    weekday: 'short',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hourCycle: 'h23',
+  }).formatToParts(now)
+
+  const get = (type: Intl.DateTimeFormatPartTypes) => parts.find((part) => part.type === type)?.value ?? ''
+  const year = Number(get('year'))
+  const month = Number(get('month'))
+  const day = Number(get('day'))
+  const hour = Number(get('hour'))
+  const minute = Number(get('minute'))
+
+  return {
+    weekday: get('weekday'),
+    year,
+    dateKey: `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`,
+    minutes: hour * 60 + minute,
+  }
+}
+
+function isUsMarketOpen(now: Date) {
+  const ny = newYorkParts(now)
+  if (!['Mon', 'Tue', 'Wed', 'Thu', 'Fri'].includes(ny.weekday)) return false
+  if (usMarketHolidayKeys(ny.year).has(ny.dateKey)) return false
+  return ny.minutes >= 9 * 60 + 30 && ny.minutes < 16 * 60
+}
+
+function marketSessionStatus(assetType: string, now: Date): MarketSessionStatus {
+  if (assetType === 'equity' || assetType === 'etf') return isUsMarketOpen(now) ? 'open' : 'closed'
+  return '24h'
+}
+
+function marketDataStatus(sessionStatus: MarketSessionStatus, ageMinutes: number | null): MarketDataStatus {
+  if (ageMinutes === null) return 'no_data'
+  if (sessionStatus === 'closed') return 'market_closed'
+  if (ageMinutes <= CURRENT_DATA_MINUTES) return 'current'
+  if (ageMinutes <= DUE_DATA_MINUTES) return 'due'
+  return 'stale'
+}
+
+async function getLatestProductionMarketRun(): Promise<MarketRun | null> {
+  const supabase = getSupabase()
+  const result = await supabase
+    .from('gpt_market_runs')
+    .select('run_id,started_at,completed_at,status,analysis_cutoff_time,model_name,prompt_version,analysis_mode,tickers_requested,tickers_completed,notes')
+    .in('status', ['succeeded', 'partial'])
+    .order('started_at', { ascending: false })
+    .limit(20)
+
+  if (result.error) throw result.error
+  return ((result.data ?? []) as MarketRun[]).find((run) => run.analysis_mode !== 'test') ?? null
+}
 
 async function fetchSyncRunsSince(sinceIso: string) {
   const supabase = getSupabase()
@@ -210,10 +356,8 @@ export async function getMarketsData() {
       .select('instrument_id,is_active,data_providers(provider_name,provider_code)')
       .eq('is_active', true),
     supabase
-      .from('market_observations')
-      .select('instrument_id,close,observed_at,loaded_at,currency_code')
-      .order('loaded_at', { ascending: false })
-      .limit(1000),
+      .from('latest_market_observations')
+      .select('instrument_id,close,observed_at,loaded_at,currency_code'),
   ])
 
   if (instrumentsRes.error) throw instrumentsRes.error
@@ -230,14 +374,17 @@ export async function getMarketsData() {
   }
 
   const latestMap = new Map<string, { close: number; observed_at: string; loaded_at: string; currency_code: string | null }>()
-  for (const row of observationsRes.data ?? []) {
-    if (!latestMap.has(row.instrument_id)) latestMap.set(row.instrument_id, row)
-  }
+  for (const row of observationsRes.data ?? []) latestMap.set(row.instrument_id, row)
 
-  const now = Date.now()
+  const now = new Date()
   const rows: MarketRow[] = (instrumentsRes.data ?? []).map((instrument) => {
     const latest = latestMap.get(instrument.id)
     const provider = providerMap.get(instrument.id)
+    const ageMinutes = latest?.observed_at
+      ? Math.max(0, Math.round((now.getTime() - new Date(latest.observed_at).getTime()) / 60000))
+      : null
+    const sessionStatus = marketSessionStatus(instrument.asset_type, now)
+
     return {
       id: instrument.id,
       symbol: instrument.symbol,
@@ -250,7 +397,9 @@ export async function getMarketsData() {
       loaded_at: latest?.loaded_at ?? null,
       provider_name: provider?.provider_name ?? null,
       provider_code: provider?.provider_code ?? null,
-      age_minutes: latest?.loaded_at ? Math.max(0, Math.round((now - new Date(latest.loaded_at).getTime()) / 60000)) : null,
+      age_minutes: ageMinutes,
+      session_status: sessionStatus,
+      data_status: marketDataStatus(sessionStatus, ageMinutes),
     }
   })
 
@@ -266,22 +415,22 @@ export async function getMarketsData() {
     { total: 0, equity: 0, etf: 0, forex: 0, crypto: 0 },
   )
 
-  const freshness = { under15: 0, under60: 0, under240: 0, over240: 0, noObservation: 0 }
+  const statusSummary = { current: 0, due: 0, stale: 0, marketClosed: 0, noObservation: 0 }
   for (const row of rows) {
-    if (row.age_minutes === null) freshness.noObservation += 1
-    else if (row.age_minutes < 15) freshness.under15 += 1
-    else if (row.age_minutes < 60) freshness.under60 += 1
-    else if (row.age_minutes < 240) freshness.under240 += 1
-    else freshness.over240 += 1
+    if (row.data_status === 'current') statusSummary.current += 1
+    else if (row.data_status === 'due') statusSummary.due += 1
+    else if (row.data_status === 'stale') statusSummary.stale += 1
+    else if (row.data_status === 'market_closed') statusSummary.marketClosed += 1
+    else statusSummary.noObservation += 1
   }
 
   const latestObservationAt = rows
-    .map((row) => row.loaded_at)
+    .map((row) => row.observed_at)
     .filter((value): value is string => Boolean(value))
     .sort()
     .at(-1) ?? null
 
-  return { rows, counts, freshness, latestObservationAt }
+  return { rows, counts, statusSummary, latestObservationAt }
 }
 
 export async function getMarketDetail(symbol: string) {
@@ -295,53 +444,64 @@ export async function getMarketDetail(symbol: string) {
   if (instrumentRes.error) throw instrumentRes.error
   if (!instrumentRes.data) return null
 
-  const [observationsRes, assessmentRes] = await Promise.all([
+  const [observationsRes, latestRun] = await Promise.all([
     supabase
       .from('market_observations')
       .select('id,open,high,low,close,volume,currency_code,observed_at,loaded_at')
       .eq('instrument_id', instrumentRes.data.id)
-      .order('loaded_at', { ascending: false })
+      .order('observed_at', { ascending: false })
       .limit(200),
-    supabase
-      .from('gpt_market_assessments')
-      .select('assessment_id,assessment_date,rating,confidence,score,summary')
-      .eq('instrument_id', instrumentRes.data.id)
-      .order('assessment_date', { ascending: false })
-      .limit(1)
-      .maybeSingle(),
+    getLatestProductionMarketRun(),
   ])
 
   if (observationsRes.error) throw observationsRes.error
-  if (assessmentRes.error) throw assessmentRes.error
+
+  let latestAssessment = null
+  if (latestRun) {
+    const assessmentRes = await supabase
+      .from('gpt_market_assessments')
+      .select('assessment_id,assessment_date,rating,confidence,score,summary')
+      .eq('instrument_id', instrumentRes.data.id)
+      .eq('run_id', latestRun.run_id)
+      .maybeSingle()
+
+    if (assessmentRes.error) throw assessmentRes.error
+    latestAssessment = assessmentRes.data ?? null
+  }
 
   return {
     instrument: instrumentRes.data,
     observations: observationsRes.data ?? [],
-    latestAssessment: assessmentRes.data ?? null,
+    latestAssessment,
   }
 }
 
 export async function getAssessmentsData() {
   const supabase = getSupabase()
-  const [assessmentsRes, runRes] = await Promise.all([
-    supabase
-      .from('gpt_market_assessments')
-      .select('assessment_id,instrument_id,assessment_date,rating,confidence,score,summary,bull_case,bear_case,technical_view,macro_view,valuation_view,key_catalysts,key_risks,evidence_summary,created_at,instruments(symbol,instrument_name)')
-      .order('assessment_date', { ascending: false })
-      .order('confidence', { ascending: false })
-      .limit(500),
-    supabase
-      .from('gpt_market_runs')
-      .select('run_id,started_at,completed_at,status,analysis_cutoff_time,model_name,prompt_version,analysis_mode,tickers_requested,tickers_completed,notes')
-      .order('started_at', { ascending: false })
-      .limit(1)
-      .maybeSingle(),
-  ])
+  const latestRun = await getLatestProductionMarketRun()
+
+  if (!latestRun) {
+    return {
+      rows: [] as AssessmentRow[],
+      latestDate: null,
+      distribution: [] as { rating: string; count: number; avgConfidence: number | null }[],
+      averageConfidence: null,
+      highest: [] as AssessmentRow[],
+      lowest: [] as AssessmentRow[],
+      latestRun: null,
+    }
+  }
+
+  const assessmentsRes = await supabase
+    .from('gpt_market_assessments')
+    .select('assessment_id,instrument_id,assessment_date,rating,confidence,score,summary,bull_case,bear_case,technical_view,macro_view,valuation_view,key_catalysts,key_risks,evidence_summary,created_at,instruments(symbol,instrument_name)')
+    .eq('run_id', latestRun.run_id)
+    .order('confidence', { ascending: false })
+    .limit(500)
 
   if (assessmentsRes.error) throw assessmentsRes.error
-  if (runRes.error) throw runRes.error
 
-  const allRows: AssessmentRow[] = (assessmentsRes.data ?? []).map((row) => {
+  const rows: AssessmentRow[] = (assessmentsRes.data ?? []).map((row) => {
     const instrument = (row as unknown as { instruments: { symbol: string; instrument_name: string } | null }).instruments
     return {
       assessment_id: row.assessment_id,
@@ -365,8 +525,7 @@ export async function getAssessmentsData() {
     }
   })
 
-  const latestDate = allRows[0]?.assessment_date ?? null
-  const rows = latestDate ? allRows.filter((row) => row.assessment_date === latestDate) : []
+  const latestDate = rows[0]?.assessment_date ?? null
   const ratingMap = new Map<string, { rating: string; count: number; totalConfidence: number; confidenceCount: number }>()
   for (const row of rows) {
     const item = ratingMap.get(row.rating) ?? { rating: row.rating, count: 0, totalConfidence: 0, confidenceCount: 0 }
@@ -388,7 +547,7 @@ export async function getAssessmentsData() {
   const highest = [...rows].sort((a, b) => (b.confidence ?? -1) - (a.confidence ?? -1) || (b.score ?? -1) - (a.score ?? -1)).slice(0, 5)
   const lowest = [...rows].sort((a, b) => (a.confidence ?? 101) - (b.confidence ?? 101) || (a.score ?? 101) - (b.score ?? 101)).slice(0, 5)
 
-  return { rows, latestDate, distribution, averageConfidence, highest, lowest, latestRun: runRes.data ?? null }
+  return { rows, latestDate, distribution, averageConfidence, highest, lowest, latestRun }
 }
 
 export async function getAssessmentDetail(symbol: string) {
@@ -397,12 +556,14 @@ export async function getAssessmentDetail(symbol: string) {
   if (instrumentRes.error) throw instrumentRes.error
   if (!instrumentRes.data) return null
 
+  const latestRun = await getLatestProductionMarketRun()
+  if (!latestRun) return { instrument: instrumentRes.data, assessment: null, evidence: [] }
+
   const assessmentRes = await supabase
     .from('gpt_market_assessments')
     .select('assessment_id,instrument_id,assessment_date,rating,confidence,score,summary,bull_case,bear_case,technical_view,macro_view,valuation_view,key_catalysts,key_risks,evidence_summary,created_at')
     .eq('instrument_id', instrumentRes.data.id)
-    .order('assessment_date', { ascending: false })
-    .limit(1)
+    .eq('run_id', latestRun.run_id)
     .maybeSingle()
 
   if (assessmentRes.error) throw assessmentRes.error
