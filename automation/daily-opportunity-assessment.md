@@ -1,7 +1,7 @@
 # Daily Opportunity Assessment
 
-**Specification version:** 1.0  
-**Last updated:** 13 August 2026  
+**Specification version:** 1.1  
+**Last updated:** 14 August 2026  
 **System:** Discover Boulders Markets / Trading  
 **Supabase project:** `glvbqcplgjdfgjyknzsa`
 
@@ -69,6 +69,27 @@ Review all themes with `status = 'active'` or `status = 'watch'`.
 
 Compare today's evidence with previous assessments so that changes in direction, maturity, score and confidence are identifiable.
 
+### Baseline monitored theme universe
+
+As of specification v1.1, the intended baseline Opportunity Theme universe is:
+
+| Theme code | Theme | Status | Horizon |
+|---|---|---|---|
+| `AI_ADVANCED_PACKAGING` | Advanced Packaging for AI Compute | active | 1–5 years |
+| `AI_DATACENTRE_POWER_COOLING` | AI Data-Centre Power and Cooling | active | 1–5 years |
+| `GRID_SCALE_BATTERY_STORAGE` | Grid-Scale Battery Storage | active | 1–5 years |
+| `ROBOTICS_PHYSICAL_AI` | Robotics & Physical AI | active | 1–7 years |
+| `FUSION_ENERGY_SUPPLY_CHAIN` | Fusion Energy & Enabling Supply Chain | watch | 5–15 years |
+| `AI_MEDICAL_DEVICES_DIAGNOSTICS` | AI-Enabled Medical Diagnostics & Devices | active | 1–5 years |
+| `GRID_MODERNISATION_TRANSMISSION` | Grid Modernisation & Transmission | active | 1–8 years |
+| `ADVANCED_NUCLEAR_SMRS` | Advanced Nuclear & SMRs | watch | 3–10 years |
+| `CYBERSECURITY_CRITICAL_INFRASTRUCTURE` | Cybersecurity & Critical Infrastructure | active | 1–5 years |
+| `WATER_SECURITY_DESALINATION_REUSE` | Water Security, Desalination & Reuse | watch | 2–10 years |
+
+This table documents the intended starting watch universe. **Supabase remains the system of record** for the live set of themes and their current status. The task must assess every current `active` or `watch` theme in `public.opportunity_themes`, including themes added later.
+
+The baseline is **not a hard cap**. The task should continue to discover new themes under Section 4 where evidence supports a distinct multi-year opportunity. Avoid creating overlapping themes unless the economics, bottlenecks, beneficiaries or commercial maturity are sufficiently different to justify separate assessment.
+
 ---
 
 ## 4. Discover new potential themes
@@ -85,11 +106,15 @@ Relevant areas may include, but are not limited to:
 - grid infrastructure
 - energy storage and batteries
 - fusion
+- advanced nuclear and small modular reactors
 - advanced materials
 - cooling and power systems
 - quantum technologies
 - biotechnology
 - healthcare technology
+- medical diagnostics and devices
+- cybersecurity and critical infrastructure
+- water security, desalination and reuse
 - defence technology
 - space infrastructure
 - communications
