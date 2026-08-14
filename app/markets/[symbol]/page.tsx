@@ -34,10 +34,10 @@ async function resolveDetail(slug: string) {
 
 export default async function MarketDetailPage({ params }: { params: Promise<{ symbol: string }> }) {
   const { symbol } = await params
-  try {
-    const detail = await resolveDetail(symbol)
-    if (!detail) notFound()
+  const detail = await resolveDetail(symbol)
+  if (!detail) notFound()
 
+  try {
     const latest = detail.observations[0] ?? null
     const chartData = detail.observations
       .filter((row) => typeof row.close === 'number')
