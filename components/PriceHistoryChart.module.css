@@ -1,0 +1,66 @@
+.rangeBar {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px;
+  margin-bottom: 8px;
+  border: 1px solid var(--border, rgba(127, 146, 171, .24));
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--panel, #0a2038) 82%, transparent);
+}
+
+.rangeButton,
+.rangeActive {
+  min-width: 44px;
+  min-height: 32px;
+  padding: 6px 10px;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--muted, #9eb1c9);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .15s ease, color .15s ease, border-color .15s ease;
+}
+
+.rangeButton:hover {
+  color: var(--text, #f5f9ff);
+  background: rgba(90, 163, 255, .08);
+}
+
+.rangeActive {
+  color: #fff;
+  border-color: rgba(90, 163, 255, .55);
+  background: rgba(90, 163, 255, .20);
+}
+
+.rangeMeta {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 20px;
+  margin-bottom: 6px;
+  color: var(--muted, #8ea2bb);
+  font-size: 11px;
+}
+
+.rangeMeta span:first-child {
+  font-weight: 700;
+  color: var(--text-secondary, #c4d0df);
+}
+
+@media (max-width: 720px) {
+  .rangeBar {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(38px, 1fr));
+    width: 100%;
+  }
+
+  .rangeButton,
+  .rangeActive {
+    min-width: 0;
+    padding-inline: 4px;
+  }
+}
