@@ -2,48 +2,103 @@
 
 ## Purpose
 
-The market-data pipeline loads current quotes from Twelve Data into Supabase and records each execution for operational monitoring.
+Trading now has two deliberately separate market-data paths:
 
-This is currently the most complete automated pipeline in the platform.
+1. **Twelve Data live/current quotes** for operational dashboards.
+2. **Tiingo daily historical backfills** for indicators, research and backtesting.
 
-## Components
+Both write to `market_observations`, but they use separate providers and interval codes so current-market behaviour and historical analysis do not interfere with one another.
 
-### Provider
+For the complete historical procedure, see:
 
-`data_providers`
+`documentation/pipelines/historical-market-data-backfill.md`
 
-Current provider:
+## Providers
 
-- code: `twelvedata`
-- name: `Twelve Data`
-- active: true
+`data_providers` currently includes:
 
-### Instrument universe
+- `twelvedata` / Twelve Data — current quote provider.
+- `tiingo` / Tiingo — on-demand historical provider.
 
-`instruments`
+Provider identity is part of the observation key and must remain accurate. Historical Tiingo data must never be labelled as Twelve Data.
 
-Current active universe:
+## Instrument universe
+
+`instruments` is the internal instrument master.
+
+Current active universe at the time of this documentation includes:
 
 - 15 equities
 - 5 ETFs
 - 5 forex pairs
 - 5 crypto pairs
 
-Total: 30 instruments.
+Total: 30 active instruments.
 
-### Provider mappings
+## Provider mappings
 
-`provider_instruments`
+`provider_instruments` maps each internal instrument to the provider-specific symbol.
 
-Each internal instrument maps to the provider symbol expected by Twelve Data.
+A single instrument may have separate mappings for Twelve Data and Tiingo.
 
-### Latest observation view
+This permits:
 
-`latest_market_observations`
+```text
+internal instrument
+  +-- Twelve Data symbol -> live quotes
+  +-- Tiingo symbol      -> daily history
+```
 
-This security-invoker view returns exactly one latest market observation per instrument, ordered by `observed_at` with `loaded_at` and row ID as deterministic tie-breakers. The Markets dashboard uses this view instead of downloading an arbitrary global observation window and reconstructing latest rows in application code.
+Do not assume two providers always use identical ticker syntax. Stop rather than guess when a mapping is ambiguous.
 
-## Scheduled loader
+## `market_observations`
+
+The shared observation table stores both current and historical market records.
+
+### Live records
+
+The scheduled Twelve Data loader writes:
+
+- `provider_id` = Twelve Data
+- `interval_code = 'quote'`
+- current OHLC/close/volume information
+- provider response in `raw_payload`
+
+### Historical records
+
+The Tiingo backfill writes:
+
+- `provider_id` = Tiingo
+- `interval_code = '1day'`
+- actual historical market date in `observed_at`
+- raw OHLC
+- adjusted close where available
+- volume
+- Tiingo provenance in `raw_payload._backfill`
+
+The unique key is:
+
+```text
+(instrument_id, provider_id, interval_code, observed_at)
+```
+
+This supports idempotent provider-specific historical upserts.
+
+## Latest observation view
+
+`latest_market_observations` is a security-invoker view used by the Markets dashboard.
+
+It is intentionally restricted to:
+
+```sql
+interval_code = 'quote'
+```
+
+This is important because daily Tiingo history can otherwise have a later market date than the latest current quote and incorrectly become the dashboard's "latest" observation.
+
+The view still returns one latest live quote per instrument using `observed_at`, `loaded_at` and row ID as deterministic ordering fields.
+
+## Scheduled Twelve Data loader
 
 pg_cron job:
 
@@ -55,188 +110,142 @@ The cron job calls the Supabase Edge Function `full-twelve-data-load` through `n
 
 The project URL and publishable key used by the scheduled HTTP call are stored in Supabase Vault.
 
-## Edge Function: `full-twelve-data-load`
+### Edge Function: `full-twelve-data-load`
 
-Current version: 4.
+Current deployed version at the time of this document: 4.
 
 JWT verification is enabled.
 
-### Server-side configuration
-
-The function expects:
+Server-side configuration:
 
 - `SUPABASE_URL`
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `TWELVE_DATA_API_KEY`
 
-The service-role key and Twelve Data key stay inside the Edge Function environment and must never be exposed in frontend code.
+The service-role key and Twelve Data key must never be exposed in frontend code.
 
 ### Eligibility logic
 
-The loader evaluates instruments by asset type.
+Forex and crypto are always eligible.
 
-#### Forex
+US equities and ETFs are eligible only while the US market is open. The loader uses `America/New_York` time and checks weekday, configured US market holidays and 09:30-16:00 market hours.
 
-Always eligible.
+Futures and unknown asset types are currently skipped.
 
-#### Crypto
+### Refresh control
 
-Always eligible.
+Before selecting a batch, the loader queries observations loaded during the previous 60 minutes.
 
-#### Equities and ETFs
+Recently loaded instruments are excluded, then remaining eligible instruments are sorted by symbol and limited to a maximum batch of 8.
 
-Eligible only while the US market is open.
+The cron triggers every 15 minutes, but an individual instrument is normally refreshed no more frequently than about once an hour.
 
-The loader uses `America/New_York` time and checks:
+### Quote retrieval
 
-- weekday
-- 09:30 to 16:00 local market hours
-- major US market holidays
-
-The holiday calculation includes:
-
-- New Year's Day
-- Martin Luther King Jr. Day
-- Presidents Day
-- Good Friday
-- Memorial Day
-- Juneteenth
-- Independence Day
-- Labor Day
-- Thanksgiving
-- Christmas Day
-
-#### Futures
-
-Explicitly not eligible in the current function.
-
-Unknown asset types are also skipped.
-
-## Refresh control
-
-Before choosing the batch, the function queries observations loaded in the previous 60 minutes.
-
-Any instrument seen in that rolling window is excluded from the next batch.
-
-The eligible instruments are then:
-
-1. filtered to those not loaded in the previous 60 minutes;
-2. sorted by symbol;
-3. limited to a maximum batch size of 8.
-
-This means the pg_cron trigger runs every 15 minutes, but an individual instrument is generally refreshed no more frequently than approximately once per hour.
-
-## Load execution
-
-For each chosen provider mapping, the function calls:
+The loader calls:
 
 `https://api.twelvedata.com/quote`
 
-The provider symbol and API key are passed as query parameters.
+Successful provider responses are inserted into `market_observations` with `interval_code = 'quote'`.
 
-A 250 ms pause is used between symbols in the batch.
+### Current-loader audit
 
-## Observation insert
-
-Successful provider responses are written to `market_observations`.
-
-Fields populated include:
-
-- `instrument_id`
-- `provider_id`
-- `interval_code = 'quote'`
-- `observed_at`
-- OHLC fields
-- `adjusted_close`
-- `volume`
-- `currency_code`
-- `is_delayed = true`
-- `raw_payload`
-
-`loaded_at` is assigned by the database default.
-
-## Sync-run audit
-
-Every loader invocation first creates a `sync_runs` row with status `running`.
-
-Metadata currently records:
-
-```json
-{
-  "function": "full-twelve-data-load",
-  "batch_size": 8,
-  "market_hours_aware": true,
-  "eligible_count": 0,
-  "skipped_out_of_session": 0,
-  "evaluated_at": "timestamp"
-}
-```
-
-After processing the batch, the run is updated with:
-
-- `finished_at`
-- `received_count`
-- `inserted_count`
-- final `status`
-- `error_message` if required
+Every invocation creates a `sync_runs` record with status `running`, then updates it with counts, finish time, final status and any error message.
 
 Status logic:
 
-- `succeeded` — no symbol failures
-- `partial` — at least one row inserted, but one or more symbols failed
-- `failed` — failures occurred and nothing was inserted
+- `succeeded` — no symbol failures.
+- `partial` — at least one row inserted and at least one symbol failed.
+- `failed` — failures occurred and nothing was inserted.
+
+## On-demand Tiingo historical loader
+
+Edge Function:
+
+`backfill-market-history`
+
+Default request:
+
+```json
+{
+  "symbol": "NVDA",
+  "years": 5
+}
+```
+
+Server-side configuration:
+
+- `SUPABASE_URL`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `TIINGO_API_TOKEN`
+
+The Tiingo token is stored in Supabase Edge Function secrets and must never be committed to GitHub.
+
+The function requires:
+
+- an existing active instrument;
+- an active Tiingo provider;
+- an active Tiingo mapping for the instrument.
+
+It currently contains retrieval handling for equities/ETFs, forex and crypto. The production-proven path as of 15 August 2026 is Tiingo EOD equity history.
+
+### Idempotency
+
+Historical observations are upserted using the unique market-observation key. Repeating the same symbol/range updates existing Tiingo daily records rather than creating duplicates.
+
+The NVDA production test loaded 1,255 daily rows on the first run. The immediate rerun received the same 1,255 rows, inserted 0 new rows and updated the existing 1,255 rows. The final historical row count remained 1,255 with zero duplicate dates.
+
+### Historical audit
+
+Each backfill creates a Tiingo `sync_runs` record with metadata including:
+
+- function
+- symbol
+- provider symbol
+- asset type
+- requested start/end
+- years
+- interval
+- endpoint family
+- received/normalised/upsert counts
+- inserted and updated-existing counts
+- actual coverage
+- total coverage rows
+
+For the complete run procedure and validation checklist, use `historical-market-data-backfill.md`.
 
 ## Monitoring dashboard
 
-The Admin dashboard reads:
+The Admin dashboard reads `sync_runs`, `market_observations` and `instruments` to derive loader health, current observation freshness, run counts and failures.
 
-- `sync_runs`
-- `market_observations`
-- `instruments`
+The Markets dashboard reads `latest_market_observations`, which now deliberately represents live `quote` observations only.
 
-It derives:
+Historical `1day` records are analytical data and are not used to determine current-market freshness.
 
-- last load
-- last successful load
-- loads today
-- observations today
-- failed/partial runs today
-- active instrument count
-- latest observation time
-- 14-day load/observation history
-- observation freshness by instrument
+## Diagnostic functions
 
-The Markets dashboard reads `latest_market_observations` and interprets market-data state alongside the expected loader cadence and US market session:
+`test-twelve-data-load` remains available for loading one explicitly requested live quote, defaulting to NVDA when no symbol is supplied.
 
-- `Current` — latest market observation is no more than 90 minutes old while the instrument is expected to be active;
-- `Due` — 91 to 120 minutes old while active;
-- `Stale` — more than 120 minutes old while active;
-- `Market Closed` — US equity or ETF outside the configured New York trading session or on a configured market holiday;
-- `No Observation` — no market observation exists yet.
-
-The Markets table displays `observed_at` as the market observation timestamp. `loaded_at` remains the ingestion timestamp and is used for operational loader diagnostics.
-
-The load-detail page uses a selected `sync_runs` record and searches `market_observations` around the run time to show the observations associated with that execution.
-
-## Test Edge Function
-
-`test-twelve-data-load` is also active.
-
-Purpose:
-
-- load one explicitly requested symbol;
-- default to NVDA when no symbol is provided;
-- create the same `sync_runs` and `market_observations` audit trail.
-
-This function is useful for controlled diagnostics but is not the scheduled production loader.
+`backfill-twelve-data` also exists as an earlier historical Twelve Data test function. The canonical on-demand five-year historical workflow is now `backfill-market-history` using Tiingo.
 
 ## Known limitations
 
-- The current function loads quotes rather than full intraday bars.
-- Futures are not currently loaded.
-- Equity/ETF eligibility assumes US market hours, so adding non-US exchange instruments will require exchange-aware market-session logic.
-- `observed_at` currently uses the loader execution time rather than a parsed provider timestamp.
+- The scheduled current loader loads quote snapshots rather than full intraday bars.
+- Futures are not loaded by the current quote function.
+- US equity/ETF session logic is not yet exchange-aware for non-US listings.
+- The current Twelve Data quote loader uses loader execution time for `observed_at` rather than parsing the provider timestamp.
+- Tiingo equity EOD history is production-tested; Tiingo forex and crypto paths require their own controlled verification before being treated as production-proven.
 
-## Recommended operational rule
+## Operational rules
 
-Do not infer loader health from instrument age alone. Use `sync_runs` status together with asset eligibility, current market session and the latest observation and ingestion timestamps.
+For live-loader health, use `sync_runs` status together with asset eligibility, market session, latest observation time and ingestion time.
+
+For historical onboarding use:
+
+```text
+Add instrument
+-> create/verify provider mappings
+-> Tiingo 5-year backfill
+-> verify coverage and idempotency
+-> ready for indicators/backtesting
+```
