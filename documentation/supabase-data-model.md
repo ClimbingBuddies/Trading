@@ -2,7 +2,7 @@
 
 Supabase project reference: `glvbqcplgjdfgjyknzsa`
 
-This document groups the public schema by business purpose and records the implementation state observed on 12 August 2026.
+This document groups the public schema by business purpose and records the implementation state through 15 August 2026.
 
 ## 1. Provider and instrument reference data
 
@@ -17,14 +17,20 @@ Key fields:
 - `provider_name`
 - `base_url`
 - `is_active`
+- `created_at`
 
-Current data: one active provider, `twelvedata` / Twelve Data.
+Current active market-data providers:
+
+- `twelvedata` / Twelve Data — scheduled current/live quotes.
+- `tiingo` / Tiingo — on-demand daily historical backfill.
 
 Relationships:
 
 - one provider to many `provider_instruments`
 - one provider to many `market_observations`
 - one provider to many `sync_runs`
+
+Provider identity is part of the observation uniqueness model. Data retrieved from Tiingo must use the Tiingo provider ID and must not be labelled as Twelve Data.
 
 Status: **Operational**.
 
@@ -42,8 +48,9 @@ Key fields:
 - `currency_code`
 - `country_code`
 - `is_active`
+- `created_at`
 
-Current data:
+Current active universe:
 
 - 30 active instruments
 - 15 equities
@@ -51,23 +58,42 @@ Current data:
 - 5 forex pairs
 - 5 crypto pairs
 
-This table is the central reference table for most market and research features.
+This table is the central instrument reference for market data, assessments, opportunities, research and strategy features.
+
+Historical data should normally be retained when an instrument leaves the active universe. Deactivate the instrument or provider mapping rather than deleting historical observations needed for reproducible analysis.
 
 Status: **Operational**.
 
 ### `provider_instruments`
 
-Purpose: maps an internal instrument to the provider-specific symbol used by Twelve Data or future providers.
+Purpose: maps an internal instrument to the provider-specific symbol used by an external market-data provider.
 
 Key fields:
 
+- `id`
 - `provider_id`
 - `instrument_id`
 - `provider_symbol`
 - `metadata`
 - `is_active`
+- `created_at`
 
-Current data: 30 mappings.
+Important unique constraints:
+
+- `(provider_id, instrument_id)`
+- `(provider_id, provider_symbol)`
+
+An instrument can therefore have one mapping per provider, for example:
+
+```text
+NVDA
+  +-- Twelve Data -> NVDA
+  +-- Tiingo      -> NVDA
+```
+
+The Tiingo mapping is required before `backfill-market-history` can load history for an instrument.
+
+Do not assume provider symbols are identical across providers. Resolve and verify mappings before creating them.
 
 Status: **Operational**.
 
@@ -75,10 +101,11 @@ Status: **Operational**.
 
 ### `market_observations`
 
-Purpose: persistent market observation history.
+Purpose: persistent provider-specific market observation history.
 
 Key fields:
 
+- `id`
 - `instrument_id`
 - `provider_id`
 - `interval_code`
@@ -94,9 +121,52 @@ Key fields:
 - `raw_payload`
 - `loaded_at`
 
-The current loader writes quote observations with `interval_code = 'quote'`.
+Current usage:
 
-The table contains the raw provider response in `raw_payload`, which is useful for audit and troubleshooting.
+- Twelve Data scheduled loader writes `interval_code = 'quote'`.
+- Tiingo historical backfill writes `interval_code = '1day'`.
+
+Historical Tiingo rows store the actual historical market date in `observed_at`, raw OHLC values, adjusted close when available, volume and provenance in `raw_payload._backfill`.
+
+Important uniqueness constraint:
+
+```text
+(instrument_id, provider_id, interval_code, observed_at)
+```
+
+This allows current and historical records to coexist and makes the Tiingo historical workflow idempotent when it upserts on the same provider/date key.
+
+Useful constraints also enforce non-negative OHLC/volume values and `high >= low` when both values exist.
+
+### NVDA historical control result
+
+The production Tiingo test on 15 August 2026 created:
+
+- instrument: NVDA
+- provider: Tiingo
+- interval: `1day`
+- first date: 16 August 2021
+- last date: 14 August 2026
+- rows: 1,255
+- duplicate date groups: 0
+
+An immediate rerun inserted 0 new rows and updated the existing 1,255 rows, leaving the total unchanged at 1,255.
+
+Status: **Operational for live quotes and Tiingo EOD equity history**.
+
+### `latest_market_observations`
+
+Purpose: one latest **live/current quote** per instrument for the Markets dashboard.
+
+The view is `security_invoker = true` and now filters:
+
+```sql
+interval_code = 'quote'
+```
+
+This prevents Tiingo daily historical rows from becoming the apparent latest market observation on the live Markets dashboard.
+
+Ordering remains by instrument, then `observed_at`, `loaded_at` and row ID as deterministic tie-breakers.
 
 Status: **Operational**.
 
@@ -106,6 +176,7 @@ Purpose: execution audit for market-data loads.
 
 Key fields:
 
+- `id`
 - `provider_id`
 - `started_at`
 - `finished_at`
@@ -116,16 +187,38 @@ Key fields:
 - `error_message`
 - `metadata`
 
-Current metadata from `full-twelve-data-load` includes:
+Twelve Data current-loader metadata includes operational fields such as function, batch size, market-hours state and evaluated time.
 
-- `function`
-- `batch_size`
-- `market_hours_aware`
-- `eligible_count`
-- `skipped_out_of_session`
-- `evaluated_at`
+Tiingo historical metadata includes:
+
+- function
+- provider
+- symbol
+- provider symbol
+- asset type
+- years
+- interval
+- requested start/end
+- endpoint family
+- received/normalised/upsert counts
+- inserted count
+- updated-existing count
+- actual coverage start/end
+- total coverage rows
+
+Failed provider calls are retained as failed audit rows rather than silently discarded.
 
 Status: **Operational**.
+
+### Market-data pipeline documentation
+
+Current/live pipeline:
+
+`documentation/pipelines/market-data-pipeline.md`
+
+Authoritative historical backfill procedure:
+
+`documentation/pipelines/historical-market-data-backfill.md`
 
 ## 3. Technical analysis and scoring
 
@@ -144,7 +237,7 @@ Key fields:
 - `values`
 - `calculation_version`
 
-Current data: no rows.
+The new Tiingo `1day` history provides the daily source series required for future indicator calculations and strategy backtesting.
 
 Status: **Scaffolded**.
 
@@ -152,17 +245,13 @@ Status: **Scaffolded**.
 
 Purpose: daily momentum/trend/volatility/volume scoring by instrument.
 
-Current data: no rows.
-
 Status: **Scaffolded**.
 
 ### `market_opinions`
 
 Purpose: older/simple instrument-level opinion table containing rating, confidence, score and key factors.
 
-Current data: no rows.
-
-This appears to overlap conceptually with the newer opinion and GPT-assessment models and should be reviewed before further development.
+This overlaps conceptually with the newer opinion and GPT-assessment models and should be reviewed before further development.
 
 Status: **Scaffolded / possible legacy model**.
 
@@ -172,8 +261,6 @@ Status: **Scaffolded / possible legacy model**.
 
 Purpose: user-owned lists of instruments.
 
-Current data: one row.
-
 Owner relationship: `owner_user_id -> auth.users.id`.
 
 Status: **Partial**.
@@ -182,23 +269,17 @@ Status: **Partial**.
 
 Purpose: instruments assigned to a watchlist, including sort order and notes.
 
-Current data: one row.
-
 Status: **Partial**.
 
 ### `alerts`
 
 Purpose: user-owned alert definitions against an instrument or watchlist.
 
-Current data: no rows.
-
 Status: **Scaffolded**.
 
 ### `alert_events`
 
 Purpose: individual alert trigger history.
-
-Current data: no rows.
 
 Status: **Scaffolded**.
 
@@ -208,17 +289,11 @@ Status: **Scaffolded**.
 
 Purpose: catalogues approved sources such as analyst consensus, financial news, official company information, regulatory sources, market commentary and research.
 
-Current data: five sources.
-
 Status: **Partial**.
 
 ### `opinion_reviews`
 
 Purpose: records an opinion/research collection run.
-
-Current data: one succeeded review.
-
-The current review checked one instrument, inserted two opinions and recorded two material changes.
 
 Status: **Partial / tested**.
 
@@ -226,18 +301,7 @@ Status: **Partial / tested**.
 
 Purpose: detailed source-specific opinions attached to instruments.
 
-Key concepts include:
-
-- opinion type
-- stance
-- confidence
-- rating / target price
-- headline / summary / rationale
-- source URL and publish time
-- materiality
-- content hash
-
-Current data: two rows.
+Key concepts include opinion type, stance, confidence, rating/target price, headline/summary/rationale, source URL/publish time, materiality and content hash.
 
 Status: **Partial / tested**.
 
@@ -245,114 +309,72 @@ Status: **Partial / tested**.
 
 Purpose: aggregate opinion state for an instrument and review.
 
-Current data: one row.
-
 Status: **Partial / tested**.
 
 ## 6. GPT market assessments
 
 ### `gpt_market_runs`
 
-Purpose: run-level metadata for a GPT assessment pass.
+Purpose: run-level metadata for GPT assessment passes.
 
-Key fields:
+Key fields include run status, model name, prompt version, analysis mode, requested/completed ticker counts and notes.
 
-- `run_id`
-- `started_at`
-- `completed_at`
-- `analysis_cutoff_time`
-- `status`
-- `model_name`
-- `prompt_version`
-- `analysis_mode`
-- `tickers_requested`
-- `tickers_completed`
-- `notes`
-
-Current state: one test run exists. It requested 30 tickers but remains marked `running`, with `tickers_completed = 0`, even though 30 assessment records exist.
-
-Status: **Partial; data-quality issue exists**.
+Status: **Operational pipeline with ongoing monitoring**.
 
 ### `gpt_market_assessments`
 
 Purpose: instrument-level GPT market assessment.
 
-Key fields:
+Key concepts include rating, confidence, score, summary, bull/bear case, technical/macro/valuation views, catalysts, risks, evidence summary and model version.
 
-- `run_id`
-- `instrument_id`
-- `assessment_date`
-- `rating`
-- `confidence`
-- `score`
-- `summary`
-- `bull_case`
-- `bear_case`
-- `technical_view`
-- `macro_view`
-- `valuation_view`
-- `key_catalysts`
-- `key_risks`
-- `evidence_summary`
-- `model_version`
-
-Current data: 30 rows from the current test run.
-
-Status: **Operational for display; generation pipeline not yet fully operational**.
+Status: **Operational for stored assessment records**.
 
 ### `gpt_market_evidence`
 
-Purpose: evidence records supporting a GPT assessment.
+Purpose: evidence records supporting GPT assessments.
 
-Key fields:
-
-- `assessment_id`
-- `evidence_type`
-- `source_name`
-- `source_url`
-- `evidence_text`
-- `relevance_score`
-- `confidence`
-
-Current data: 30 rows.
-
-Status: **Operational for current assessment records**.
+Status: **Operational**.
 
 ## 7. Scheduled assessment queue
 
 ### `market_assessment_queue`
 
-Purpose: daily work queue for the assessment process.
+Purpose: queued work for the daily market-assessment process.
 
-Current data: seven pending requests, one for each scheduled weekday from 3 August through 11 August 2026.
-
-No current rows have `processed_at` populated.
-
-Status: **Partial; queue is accumulating without a consumer**.
+Status: **Operational/under active pipeline development**.
 
 ### `market_assessment_schedule_log`
 
-Purpose: scheduler audit trail.
+Purpose: scheduler audit trail for assessment requests.
 
-Current data: seven `triggered` records corresponding to the queued assessment requests.
+Status: **Operational**.
 
-Status: **Operational as scheduler logging, but downstream process incomplete**.
+## 8. Opportunity assessment and structural signal model
 
-## 8. Trading strategies and test results
+The schema also contains the opportunity-assessment and independent structural/technology signal tables used by the Opportunities dashboard and daily opportunity workflow, including:
+
+- `opportunity_assessment_runs`
+- `opportunity_assessments`
+- `opportunity_themes`
+- `opportunity_theme_instruments`
+- `opportunity_theme_external_instruments`
+- `opportunity_theme_all_exposures`
+- `structural_opportunity_signals`
+- `technology_inflection_signals`
+- `technology_inflection_events`
+- `market_convergence_assessments`
+- `assessment_research_documents`
+- `assessment_research_embeds`
+
+These models are independent from the market-data provider design but use the same instrument master where applicable.
+
+## 9. Trading strategies and test results
 
 ### `trading_strategies`
 
 Purpose: user-owned strategy definitions.
 
-Status values:
-
-- `draft`
-- `testing`
-- `approved`
-- `paused`
-- `retired`
-
-Current data: no rows.
+Typical statuses include draft, testing, approved, paused and retired.
 
 Status: **Scaffolded**.
 
@@ -360,29 +382,17 @@ Status: **Scaffolded**.
 
 Purpose: backtest, paper-trading or live test results for a strategy.
 
-Important metrics include:
+Important metrics include trade count, net profit, return percentage, win rate, profit factor, expectancy, max drawdown, Sharpe ratio and out-of-sample return.
 
-- trade count
-- net profit
-- return percentage
-- win rate
-- profit factor
-- expectancy
-- max drawdown
-- Sharpe ratio
-- out-of-sample return
-
-Current data: no rows.
+Tiingo daily history is intended to provide reproducible historical source data for future backtests.
 
 Status: **Scaffolded**.
 
-## 9. Strategy decision framework
+## 10. Strategy decision framework
 
 ### `trading_decision_trees`
 
 Purpose: reusable strategy-review workflow definitions.
-
-Current data: one active system template, `STANDARD_STRATEGY_REVIEW`.
 
 Status: **Operational template**.
 
@@ -390,15 +400,11 @@ Status: **Operational template**.
 
 Purpose: start, decision and outcome nodes within a decision tree.
 
-Current data: 12 nodes.
-
 Status: **Operational template**.
 
 ### `trading_decision_edges`
 
 Purpose: true/false or workflow transitions between decision nodes.
-
-Current data: 11 edges.
 
 Status: **Operational template**.
 
@@ -406,17 +412,13 @@ Status: **Operational template**.
 
 Purpose: stores the decision path and final outcome for a test run evaluated against a decision tree.
 
-Current data: no rows.
-
 Status: **Scaffolded**.
 
-## 10. Application settings
+## 11. Application settings
 
 ### `app_settings`
 
 Purpose: generic application configuration store.
-
-Current data: no rows.
 
 Status: **Scaffolded**.
 
@@ -438,6 +440,7 @@ instruments
    +-- market_opinions
    +-- gpt_market_assessments -- gpt_market_runs
                               +-- gpt_market_evidence
+   +-- opportunity and structural signal models
 
 trading_strategies
    +-- trading_test_runs
@@ -448,4 +451,17 @@ trading_strategies
 trading_decision_trees
    +-- trading_decision_nodes
    +-- trading_decision_edges
+```
+
+## Historical onboarding rule
+
+For a new instrument:
+
+```text
+Add instrument
+-> create/verify live provider mapping
+-> create/verify Tiingo historical mapping
+-> Tiingo 5-year backfill
+-> verify coverage and idempotency
+-> ready for indicators/backtesting
 ```
