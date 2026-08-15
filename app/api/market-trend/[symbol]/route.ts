@@ -3,7 +3,9 @@ import { getSupabase } from '@/lib/supabase'
 
 export const dynamic = 'force-dynamic'
 
-type RangeKey = '1D' | '5D' | '1M' | '1Y' | '5Y' | 'MAX'
+type RangeKey = '1D' | '5D' | '1W' | '1M' | '3M' | '6M' | '1Y' | '5Y' | 'MAX'
+
+const VALID_RANGES: RangeKey[] = ['1D', '5D', '1W', '1M', '3M', '6M', '1Y', '5Y', 'MAX']
 
 function decodeSymbol(value: string) {
   return decodeURIComponent(value).toUpperCase().replaceAll('-', '/')
@@ -11,7 +13,16 @@ function decodeSymbol(value: string) {
 
 function rangeStart(range: RangeKey) {
   if (range === 'MAX') return null
-  const days = range === '1D' ? 1 : range === '5D' ? 5 : range === '1M' ? 31 : range === '1Y' ? 365 : 1825
+  const days = {
+    '1D': 1,
+    '5D': 5,
+    '1W': 7,
+    '1M': 31,
+    '3M': 93,
+    '6M': 186,
+    '1Y': 365,
+    '5Y': 1825,
+  }[range]
   return new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString()
 }
 
@@ -19,7 +30,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ symb
   const { symbol: rawSymbol } = await params
   const symbol = decodeSymbol(rawSymbol)
   const requestedRange = new URL(request.url).searchParams.get('range')?.toUpperCase() as RangeKey | undefined
-  const range: RangeKey = requestedRange && ['1D', '5D', '1M', '1Y', '5Y', 'MAX'].includes(requestedRange) ? requestedRange : '1D'
+  const range: RangeKey = requestedRange && VALID_RANGES.includes(requestedRange) ? requestedRange : '1D'
   const supabase = getSupabase()
 
   const instrumentRes = await supabase
@@ -67,6 +78,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ symb
     currency_code: latest?.currency_code?.trim() || instrumentRes.data.currency_code?.trim() || null,
     latest_price: latestClose,
     latest_observation: latest?.observed_at ?? null,
+    period_start: oldest?.observed_at ?? null,
     open: periodOpen,
     high: highs.length ? Math.max(...highs) : null,
     low: lows.length ? Math.min(...lows) : null,
