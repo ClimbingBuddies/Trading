@@ -22,7 +22,7 @@
   font-size: 12px;
   font-weight: 700;
   cursor: pointer;
-  transition: background .15s ease, color .15s ease, border-color .15s ease;
+  transition: background .12s ease, color .12s ease, border-color .12s ease, transform .12s ease;
 }
 
 .rangeButton:hover {
@@ -30,10 +30,16 @@
   background: rgba(90, 163, 255, .08);
 }
 
+.rangeButton:active,
+.rangeActive:active {
+  transform: translateY(1px);
+}
+
 .rangeActive {
   color: #fff;
   border-color: rgba(90, 163, 255, .55);
   background: rgba(90, 163, 255, .20);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .025);
 }
 
 .rangeMeta {
@@ -49,6 +55,51 @@
 .rangeMeta span:first-child {
   font-weight: 700;
   color: var(--text-secondary, #c4d0df);
+}
+
+.loadingMeta {
+  opacity: .8;
+}
+
+.chartFrame {
+  position: relative;
+  min-height: 300px;
+}
+
+.chartUpdating {
+  opacity: .78;
+  transition: opacity .12s ease;
+}
+
+.chartProgress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 32%;
+  border-radius: 999px;
+  background: var(--chart-1);
+  animation: chartProgressSlide .8s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes chartProgressSlide {
+  from { transform: translateX(0); }
+  to { transform: translateX(210%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rangeButton,
+  .rangeActive,
+  .chartUpdating {
+    transition: none;
+  }
+
+  .chartProgress {
+    animation: none;
+    width: 100%;
+    opacity: .5;
+  }
 }
 
 @media (max-width: 720px) {
