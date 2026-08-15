@@ -18,15 +18,59 @@ Historical interval: `1day`
 
 The existing Twelve Data quote loader remains the live/current market-data pipeline and must not be replaced or disrupted by this process.
 
+## Natural-language command interface
+
+The normal user-facing interface is deliberately simple: **symbol + years**.
+
+Canonical command form:
+
+> Backfill <SYMBOL> for <YEARS> years
+
+Examples:
+
+> Backfill QQQ for 3 years
+
+> Backfill NVDA for 5 years
+
+> Backfill AMD for 2 years
+
+The assistant should interpret these commands as instructions to retrieve this GitHub procedure fresh and execute the historical backfill end-to-end. The user does not need to mention Supabase, Tiingo, the Edge Function name, database tables or validation steps in each request.
+
+Command rules:
+
+- `SYMBOL` identifies the internal Trading instrument.
+- `YEARS` is an integer from 1 to 5.
+- if the user omits `YEARS`, default to 5 years;
+- preserve internal pair notation such as `EUR/USD` or `BTC/USD` when resolving the instrument;
+- do not guess an ambiguous or unknown symbol;
+- the instrument must exist in Trading before history is loaded;
+- one symbol is the atomic execution unit for `backfill-market-history`;
+- if a user requests several symbols, apply this same procedure independently to each symbol and pace the provider calls according to the applicable universe/batch procedure.
+
+The corresponding Edge Function request is:
+
+```json
+{
+  "symbol": "QQQ",
+  "years": 3
+}
+```
+
+This **symbol + years** contract is the intended public operational interface. Arbitrary start/end dates are not required for the normal Trading historical backfill workflow unless a future requirement specifically justifies adding them.
+
 ## Simple future instruction
 
-A normal ChatGPT request can be as short as:
+A normal ChatGPT request can therefore be as short as:
 
-> Backfill NVDA 5 years using the Trading historical backfill procedure.
+> Backfill QQQ for 3 years
+
+or:
+
+> Backfill NVDA for 5 years
 
 For a newly added ticker:
 
-> Add MSFT to the Trading universe and backfill 5 years using the Trading historical backfill procedure.
+> Add MSFT to the Trading universe and backfill it for 5 years
 
 For a complete active-universe seed, use the canonical universe execution specification:
 
@@ -117,6 +161,8 @@ Rules:
 - the instrument must already exist and be active in `instruments`.
 - an active Tiingo provider mapping must exist.
 
+The Edge Function remains intentionally single-symbol. Batch or universe requests are orchestration around repeated calls to this same contract rather than a separate historical-data implementation.
+
 ## Retrieval
 
 The function selects the Tiingo endpoint family from `asset_type`.
@@ -179,6 +225,18 @@ Re-running the same backfill must therefore update the same provider/date record
 
 A successful verification rerun for NVDA on 15 August 2026 returned 1,255 rows from Tiingo, inserted 0 new rows and updated the existing 1,255 rows in place. The table remained at 1,255 daily Tiingo rows with zero duplicate dates.
 
+## Existing coverage and repeat commands
+
+Before consuming a Tiingo request, inspect existing Tiingo `1day` coverage for the requested symbol.
+
+A command such as:
+
+> Backfill QQQ for 3 years
+
+means **ensure QQQ has the requested three-year Tiingo history**, not blindly create duplicate rows. The function is idempotent, and orchestration should avoid unnecessary provider calls when existing coverage is already clearly complete and current for the requested horizon.
+
+If a longer request is made later, for example changing from three years to five years, the same symbol + years contract applies and the resulting canonical Tiingo history should cover the longer requested horizon.
+
 ## Sync-run audit
 
 Every invocation creates a `sync_runs` record for the Tiingo provider.
@@ -219,7 +277,7 @@ After every backfill, verify all of the following before declaring success:
 9. The live `latest_market_observations` view remains quote-only.
 10. A repeat execution does not increase the historical row count for the same period.
 
-For newly listed instruments, five-year backfill means all data Tiingo actually has since listing. Never fabricate missing pre-listing history.
+For newly listed instruments, a request for N years means all data Tiingo actually has within that horizon. Never fabricate pre-listing history.
 
 ## Proven NVDA control test
 
@@ -269,7 +327,7 @@ Use this sequence whenever a new market instrument is added:
 Add instrument
 -> create/verify Twelve Data live mapping if current quotes are required
 -> create/verify Tiingo historical mapping
--> run Tiingo 5-year backfill
+-> run Tiingo N-year backfill
 -> verify coverage and idempotency
 -> ready for indicators/backtesting
 ```
@@ -278,18 +336,31 @@ Do not delete historical rows when an instrument later leaves the active univers
 
 ## Operational prompt
 
-Preferred short prompt:
+Preferred command:
 
-> Backfill <SYMBOL> 5 years using the Trading historical backfill procedure.
+> Backfill <SYMBOL> for <YEARS> years
+
+Examples:
+
+> Backfill QQQ for 3 years
+
+> Backfill NVDA for 5 years
+
+If years are omitted:
+
+> Backfill AMD
+
+interpret the request as a five-year backfill.
 
 The execution agent should then:
 
 1. retrieve this document fresh from GitHub;
-2. inspect the instrument and Tiingo mapping;
-3. create the mapping only when identity is unambiguous;
-4. invoke `backfill-market-history`;
-5. verify the database result and audit record;
-6. report actual coverage, row count, duplicates and any limitations.
+2. parse the requested symbol and years;
+3. inspect the instrument and existing Tiingo coverage;
+4. inspect or create the Tiingo mapping only when identity is unambiguous;
+5. invoke `backfill-market-history` when a provider pull is required;
+6. verify the database result and audit record;
+7. report actual coverage, row count, duplicates and any limitations.
 
 For the entire current active universe, retrieve and follow:
 
