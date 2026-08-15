@@ -1,0 +1,168 @@
+.dailyStrip {
+  display: grid;
+  grid-template-columns: minmax(190px, .8fr) minmax(0, 2.7fr);
+  gap: 18px;
+  align-items: center;
+  margin: 0 0 22px;
+  padding: 14px 16px;
+  border: 1px solid #24415f;
+  border-radius: 12px;
+  background: linear-gradient(90deg, rgba(90, 163, 255, .09), rgba(10, 32, 56, .92));
+}
+
+.dailyStripLead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.dailyStripLeadIcon {
+  width: 30px;
+  height: 30px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  color: #7bdc57;
+  background: rgba(123, 220, 87, .12);
+  border: 1px solid rgba(123, 220, 87, .28);
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.dailyStripLead span {
+  display: block;
+  color: #8fa5be;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.dailyStripLead strong {
+  display: block;
+  margin-top: 2px;
+  color: #f5f9ff;
+  font-size: 13px;
+}
+
+.dailyMetrics {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.dailyMetric {
+  min-width: 0;
+  padding-left: 12px;
+  border-left: 1px solid rgba(90, 163, 255, .16);
+}
+
+.dailyMetric span {
+  display: block;
+  color: #7f95ae;
+  font-size: 9px;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.dailyMetric strong {
+  display: block;
+  margin-top: 4px;
+  color: #dce8f6;
+  font-size: 12px;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.runStatusSuccess { color: #7bdc57 !important; }
+.runStatusWarning { color: #f3a63a !important; }
+
+.cardScoreStack {
+  display: grid !important;
+  justify-items: end;
+  align-items: initial !important;
+  gap: 3px !important;
+}
+
+.cardScoreMain {
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+}
+
+.cardDelta {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .01em;
+}
+
+.deltaPositive { color: #7bdc57; }
+.deltaNegative { color: #ff8a72; }
+.deltaNeutral { color: #7187a0; }
+
+.cardUpdateStatus {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  max-width: 100%;
+  margin: -5px 0 12px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(90, 163, 255, .08);
+  border: 1px solid rgba(90, 163, 255, .16);
+  color: #9ebce0;
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.cardUpdateStatusChanged {
+  color: #9de77f;
+  background: rgba(123, 220, 87, .08);
+  border-color: rgba(123, 220, 87, .18);
+}
+
+.cardUpdateStatusEvent {
+  color: #d6bcff;
+  background: rgba(177, 129, 255, .09);
+  border-color: rgba(177, 129, 255, .18);
+}
+
+@media (max-width: 1050px) {
+  .dailyStrip {
+    grid-template-columns: 1fr;
+  }
+
+  .dailyMetrics {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .dailyMetric:first-child {
+    border-left: 0;
+    padding-left: 0;
+  }
+}
+
+@media (max-width: 680px) {
+  .dailyStrip {
+    padding: 13px;
+  }
+
+  .dailyMetrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .dailyMetric:nth-child(odd) {
+    border-left: 0;
+    padding-left: 0;
+  }
+
+  .cardUpdateStatus {
+    margin-top: 0;
+  }
+}
