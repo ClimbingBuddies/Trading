@@ -28,7 +28,15 @@ For a newly added ticker:
 
 > Add MSFT to the Trading universe and backfill 5 years using the Trading historical backfill procedure.
 
-The assistant must retrieve this GitHub document fresh and treat it as the authoritative procedure for the run.
+For a complete active-universe seed, use the canonical universe execution specification:
+
+`automation/historical-market-universe-backfill.md`
+
+A universe request can be as short as:
+
+> Run the Trading universe historical backfill.
+
+The assistant must retrieve the applicable GitHub document fresh and treat it as the authoritative procedure for the run.
 
 ## Architecture
 
@@ -282,5 +290,9 @@ The execution agent should then:
 4. invoke `backfill-market-history`;
 5. verify the database result and audit record;
 6. report actual coverage, row count, duplicates and any limitations.
+
+For the entire current active universe, retrieve and follow:
+
+`automation/historical-market-universe-backfill.md`
 
 Stop rather than guess when symbol identity, provider mapping or returned data is ambiguous.
