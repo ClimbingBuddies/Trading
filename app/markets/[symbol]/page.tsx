@@ -64,8 +64,8 @@ export default async function MarketDetailPage({ params }: { params: Promise<{ s
         </section>
 
         <section className="panel">
-          <div className="panelHeader"><div><h2>Price History</h2><p className="panelHint">Recent close observations available in Supabase.</p></div></div>
-          <PriceHistoryChart data={chartData} />
+          <div className="panelHeader"><div><h2>Price History</h2><p className="panelHint">Select a period to view available Supabase market history.</p></div></div>
+          <PriceHistoryChart symbol={detail.instrument.symbol} data={chartData} />
         </section>
 
         <section className="panel tablePanel">
