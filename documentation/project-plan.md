@@ -101,7 +101,7 @@ The Daily Opportunity Assessment Scheduled Task is enabled. A first unattended s
 - 30 Market Assessment rows and 30 evidence rows exist from the historical test dataset.
 - The historical run remains inconsistent: `running`, `tickers_completed = 0`, `completed_at = null` despite the assessment rows.
 - The Daily Trading Market Assessment Scheduled Task exists but is currently disabled.
-- Its methodology is still embedded in the Scheduled Task rather than stored in a canonical GitHub file.
+- Canonical methodology now exists at `automation/daily-market-assessment.md`; migrating the Scheduled Task to use it remains `OPS-002`.
 
 ### Technical Engine — Scaffolded
 
@@ -123,8 +123,8 @@ RLS remains disabled on the older Market Assessment/control tables, including `g
 | PLAN-001 | **DONE** | Create this canonical project plan | Project plan exists in GitHub and is linked from documentation navigation. |
 | DOC-001 | **DONE** | Create `documentation/assessment-system-overview.md` | Clearly explains Market vs Opportunity Assessment, independence, convergence and UI cross-reference. |
 | DOC-002 | **DONE** | Create `documentation/pipelines/opportunity-assessment-pipeline.md` | Documents lifecycle, tables, schedule, retries, evidence and operational definition. |
-| DOC-003 | **IN REVIEW** | Create `automation/daily-market-assessment.md` | Canonical Market Assessment methodology exists in GitHub with explicit independence rules. |
-| DOC-004 | **PLANNED** | Reconcile root README and documentation index | Both assessment systems and this plan are linked and stale descriptions removed. |
+| DOC-003 | **DONE** | Create `automation/daily-market-assessment.md` | Canonical Market Assessment methodology exists in GitHub with explicit independence rules. |
+| DOC-004 | **NEXT** | Reconcile root README and documentation index | Both assessment systems and this plan are linked and stale descriptions removed. |
 | DOC-005 | **PLANNED** | Refresh Supabase data model documentation | Opportunity, Research, Market Convergence and current RLS/maturity are represented. |
 | DOC-006 | **PLANNED** | Refresh roadmap and Phase 2 progress | Roadmap reflects the current two-assessment architecture. |
 | DOC-007 | **PLANNED** | Refresh frontend/design documentation | Current Opportunity tabs, routes, palette system and responsive behaviour are documented. |
@@ -238,7 +238,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `DOC-003 — IN REVIEW — automation/daily-market-assessment.md`.
+**Current work:** `DOC-004 — NEXT — Reconcile root README and documentation index`.
 
 ## Definition of Operational
 
@@ -252,3 +252,4 @@ A workflow is Operational only when its schema and implementation exist, schedul
 | 17-Aug-2026 | Project automation governance | `automation/project-plan-builder.md`, `automation/project-plan-auditor.md` | Independent Builder/Auditor execution and quality-gate workflow established. |
 | 17-Aug-2026 | DOC-001 | `documentation/project-audits/DOC-001.md` | Independent audit PASS; assessment-system overview verified and DOC-002 promoted. |
 | 17-Aug-2026 | DOC-002 | `documentation/project-audits/DOC-002.md` | Independent audit PASS WITH ADVICE; Opportunity Assessment pipeline documentation verified and DOC-003 promoted. |
+| 17-Aug-2026 | DOC-003 | `documentation/project-audits/DOC-003.md` | Independent audit PASS WITH ADVICE; canonical Market Assessment methodology and independence rules verified and DOC-004 promoted. |
