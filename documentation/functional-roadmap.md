@@ -1,104 +1,174 @@
 # Trading Platform Functional Roadmap
 
-This roadmap classifies Discover Boulders Markets by what is working now, what should be finished next, and what remains future capability.
+**Last reviewed:** 18 August 2026  
+**Canonical execution plan:** `documentation/project-plan.md`
 
-The roadmap is based on the live Supabase structure and current GitHub application.
+This roadmap classifies Discover Boulders Markets by what is working now, what should be finished next, and what remains future capability. It reflects the current architecture in which the platform contains two analytically independent assessment systems:
+
+1. **Short-term Market Assessment** — *Is this instrument attractive now?*
+2. **Long-term Opportunity Assessment** — *What could become important next?*
+
+They may be presented together after each system has independently produced its result, but one must not be used to form the other.
+
+The roadmap is based on current GitHub implementation and live Supabase state. A table, dashboard or historical dataset existing is not sufficient evidence that an end-to-end workflow is Operational.
 
 ## Roadmap principles
 
-1. Supabase is the source of truth for persisted platform state.
-2. A table existing does not mean the feature is operational.
-3. Complete partially connected operating loops before expanding the UI.
-4. Do not fabricate production data.
-5. Keep public dashboard access read-only unless a feature explicitly needs authenticated writes.
-6. Make scheduling ownership explicit so two schedulers cannot process the same workflow.
+1. Supabase is the source of truth for persisted platform state and assessment results.
+2. GitHub is the source of truth for source code, canonical methodology and project control.
+3. A table existing does not mean the feature is operational.
+4. Complete partially connected operating loops before expanding the UI.
+5. Do not fabricate production data, metrics, evidence, prices or links.
+6. Keep public dashboard access read-only unless a feature explicitly requires authenticated writes.
+7. Make scheduling ownership explicit so two schedulers cannot process the same workflow.
+8. Preserve analytical independence between Opportunity Assessment, AI Market Assessment and the Technical Engine until their defined convergence stages.
+9. Important scoring workflows should store methodology/version metadata.
+10. Scheduled and retryable workflows should be idempotent and reach a terminal state.
 
 ---
 
-# Phase 1 — Working Now
+# Phase 1 — Working Now / Persisted Foundations
 
 ## Market-data ingestion — Operational
 
 Current foundation:
 
 - Twelve Data provider integration.
-- 30 active instruments:
-  - 15 equities
-  - 5 ETFs
-  - 5 forex
-  - 5 crypto
+- 30 active instruments.
 - provider/instrument mappings.
 - `full-twelve-data-load` Edge Function.
-- `test-twelve-data-load` single-symbol test function.
+- single-symbol loader/test path.
 - 15-minute Supabase pg_cron schedule.
 - US-market-hours rules for equities/ETFs.
 - continuous forex/crypto eligibility.
 - `market_observations` history.
 - `sync_runs` operational monitoring.
 
-## Admin dashboard — Operational
+## Admin dashboard — Operational monitoring foundation
 
-- loader health and freshness.
-- loads/observations today.
-- active instruments.
-- failed/partial run counts.
-- daily observation chart.
+Current capability includes:
+
+- loader health and freshness;
+- loads/observations today;
+- active instruments;
+- failed/partial run counts;
+- observation history;
 - sync history and drill-through.
 
-## Markets dashboard — Operational
+## Markets dashboard — Operational market-data view
 
-- active universe.
-- asset-class filters and search.
-- latest observations/prices.
-- provider and freshness information.
-- price-history drill-through.
-- latest assessment cross-link where available.
+Current capability includes:
 
-## GPT assessment data model — Operational as a data model/test dataset
+- active universe;
+- asset-class filters and search;
+- latest observations/prices;
+- provider and freshness information;
+- price-history drill-through;
+- links to current assessment context where available.
 
-Working structures:
+## Independent AI Market Assessment — Persisted / partial operational maturity
+
+The short-term AI Market branch uses:
 
 - `gpt_market_runs`
 - `gpt_market_assessments`
 - `gpt_market_evidence`
-- 30 current test assessments.
-- 30 current evidence rows.
-- Assessments dashboard and detail pages.
+- `/assessments`
+- `/assessments/[symbol]`
 
-The historical 30-row test dataset is not evidence that the previous daily scheduler was fully unattended.
+Live Supabase on 18 August 2026 contains 60 Market Assessment rows and 90 evidence rows. This proves persisted assessment capability, not the complete unattended daily operating loop.
+
+Canonical methodology now exists at:
+
+- `automation/daily-market-assessment.md`
+
+The current project plan still requires the scheduled task to be converted to a thin GitHub-spec runner, independence metadata to be standardised, the task to be reactivated, a complete unattended run to be verified, retry/idempotency to be proven, and historical backlog state to be resolved before this branch is called fully Operational.
+
+## Long-term Opportunity Assessment — Persisted / advanced partial maturity
+
+The Opportunity system contains two independent components:
+
+```text
+Structural Opportunity Signal
+              +
+Technology Inflection Signal
+              |
+              v
+Opportunity Assessment / Opportunity Convergence
+              |
+       +------+-------+
+       |              |
+ Exposure        Research & Evidence
+```
+
+Primary persisted structures include:
+
+- `opportunity_themes`
+- `structural_opportunity_signals`
+- `technology_inflection_signals`
+- `technology_inflection_events`
+- `opportunity_assessments`
+- `opportunity_theme_instruments`
+- `opportunity_theme_external_instruments`
+- `opportunity_theme_all_exposures`
+- `assessment_research_documents`
+- `assessment_research_embeds`
+- `opportunity_assessment_runs`
+
+Live Supabase on 18 August 2026 contains:
+
+- 10 active/watch Opportunity themes;
+- 43 Structural Opportunity Signal rows;
+- 43 Technology Inflection Signal rows;
+- 43 Opportunity Assessment rows.
+
+The canonical methodology is:
+
+- `automation/daily-opportunity-assessment.md`
+
+This system is substantially populated and has successful run history, but `OPS-001` deliberately remains open until an unattended run is independently verified against the project-wide Definition of Operational.
 
 ## Strategy decision framework — Operational as a framework
 
-The active `STANDARD_STRATEGY_REVIEW` system template currently evaluates:
+The active `STANDARD_STRATEGY_REVIEW` system template evaluates defined performance gates and can produce continue/revise/pause/validate/promote outcomes.
 
-1. trade count >= 30
-2. expectancy > 0
-3. profit factor >= 1.2
-4. maximum drawdown <= 20%
-5. out-of-sample return > 0
-
-Possible outcomes include continue testing, revise, reduce risk/pause, validate robustness, and promote.
+The framework exists, but a full real strategy laboratory remains future work until real strategies and test runs populate the currently unused execution tables.
 
 ---
 
-# Phase 2 — Finish Next
+# Phase 2 — Finish Both Assessment Loops and Harden Operations
 
-## Priority 1 — Complete daily market-assessment automation
+## Priority 1 — Independently verify Opportunity Assessment operation
 
-**Status: In progress.**
+**Project-plan item:** `OPS-001`
 
-### Architecture decision
+The Opportunity system already has a canonical GitHub specification and populated results. The remaining gate is not another redesign; it is independent proof that the unattended workflow satisfies the full Operational definition.
 
-The daily reasoning/assessment layer will run as a **ChatGPT Scheduled Task** with access to the connected Trading Supabase project.
+Verify that a real scheduled run:
 
-Supabase continues to own market-data loading and persistence. ChatGPT owns the assessment schedule and research/analysis step.
+- retrieves the current GitHub specification;
+- creates a distinct run audit row;
+- evaluates every current active/watch theme;
+- updates Structural and Technology signals independently;
+- creates/updates Technology Events when warranted;
+- creates Opportunity Convergence only after both signals exist;
+- updates tracked/external exposure mappings without contaminating the score with Market data;
+- updates Research & Evidence documents/embeds;
+- reaches a terminal run state;
+- is idempotent on retry;
+- records failures rather than fabricating success.
 
-The old Supabase pg_cron job `daily_market_assessment` has been unscheduled so there is only one assessment scheduler.
+## Priority 2 — Complete the independent AI Market Assessment operating loop
 
-### Target flow
+**Project-plan items:** `OPS-002` through `OPS-007`
+
+Target architecture:
 
 ```text
 ChatGPT Scheduled Task
+      |
+      v
+retrieve automation/daily-market-assessment.md fresh
       |
       v
 check current New York date + market-data freshness
@@ -110,10 +180,10 @@ prepare_chatgpt_market_assessment()
       +--> create/resume gpt_market_run
       |
       v
-read active instruments + observations + available research context
+read active instruments + raw market observations + independent research
       |
       v
-ChatGPT assessment/research
+Independent ChatGPT Market Assessment
       |
       +--> gpt_market_assessments
       +--> gpt_market_evidence
@@ -124,72 +194,120 @@ finalize_chatgpt_market_assessment()
       +--> tickers_completed
       +--> completed_at
       +--> succeeded / partial / failed
-      |
-      v
-notify user
 ```
 
-### Completed foundations
+Required completion work:
 
-- explicit queue lifecycle and attempt tracking.
-- queue-to-run linking.
-- idempotent prepare/resume helper.
-- finalisation helper based on actual assessment rows.
-- unique `(run_id, instrument_id)` constraint prevents duplicate assessment rows.
-- historical queue backlog is isolated from the current-date task path.
-- inactive OpenAI-API Edge Function retained only as a fallback/prototype.
+1. convert the scheduled task into a thin GitHub-spec runner;
+2. standardise persisted independence metadata such as `independent-market-ai-v1` and `technical_engine_input_used = false`;
+3. reactivate the weekday task only after the canonical specification is wired in;
+4. verify a complete unattended current-date run;
+5. verify retry/resume behaviour does not duplicate assessments or evidence;
+6. deliberately resolve legacy run/backlog state.
 
-### Definition of done
+The AI Market Assessment must not use `technical_indicators`, `market_scores`, Market Convergence outputs or Opportunity Assessment outputs when forming its conclusions.
 
-Priority 1 moves to Phase 1 when:
+## Priority 3 — Security and operational hardening
 
-- one recurring ChatGPT task runs unattended;
-- it can read/write the connected Supabase project;
-- the current date/run is created or resumed safely;
-- all active instruments are assessed;
-- evidence is persisted;
-- retrying does not duplicate results;
-- run and queue statuses finalise correctly;
-- the user receives the run summary;
-- at least one complete scheduled production-style run is verified.
+**Project-plan items:** `SEC-001` through `SEC-005`
 
-## Priority 2 — Resolve assessment security model
+The older roadmap incorrectly stated that RLS was disabled across the Market Assessment tables. Current live state has already moved beyond that baseline for the targeted assessment/research tables. The remaining security phase is therefore a deliberate hardening/reconciliation exercise, not a blanket “turn RLS on” task.
 
-RLS is currently disabled on:
+Remaining work includes:
 
-- `market_assessment_schedule_log`
-- `market_assessment_queue`
-- `gpt_market_runs`
-- `gpt_market_assessments`
-- `gpt_market_evidence`
+- define published versus private/control access explicitly;
+- verify and complete deliberate RLS policies without breaking approved dashboard reads;
+- keep anonymous writes blocked;
+- protect internal queue/run-control tables;
+- harden helper-function search paths;
+- review the `pg_net` warning;
+- remove frontend Supabase fallback configuration so production relies on Vercel environment variables without privileged browser secrets.
 
-Recommended direction:
+## Priority 4 — Build the independent Technical Engine
 
-- published assessment outputs may remain read-only to the dashboard;
-- internal queue/run-control data should be protected;
-- anonymous writes should not be allowed;
-- enable RLS only with deliberate policies so the dashboard is not accidentally broken.
+**Project-plan items:** `TECH-001` through `TECH-005`
 
-## Priority 3 — Complete external opinion/research pipeline
+Current live state on 18 August 2026:
 
-Existing partial structures:
+- `technical_indicators`: 0 rows;
+- `market_scores`: 0 rows.
+
+The Technical Engine should be reproducible and versioned. It should derive indicators and scores from market/indicator inputs only and must not read AI Market conclusions.
+
+Work sequence:
+
+1. define formulas, intervals, history requirements, versions and missing-data behaviour;
+2. generate core indicators;
+3. generate reproducible market scores;
+4. add scheduling, retries, error handling and Admin monitoring;
+5. independently verify the engine does not use GPT Market conclusions.
+
+## Priority 5 — Implement Market Convergence
+
+**Project-plan items:** `CONV-001` through `CONV-004`
+
+Current live state on 18 August 2026:
+
+- `market_convergence_assessments`: 0 rows.
+
+Only after the independent Technical Engine and independent AI Market Assessment are both operating should they converge.
+
+Required work:
+
+- define score/confidence methodology;
+- preserve visible disagreement rather than hiding it;
+- populate persisted convergence rows;
+- define uniqueness/history/retry/stale-input behaviour;
+- surface Technical, AI and Convergence results distinctly in the frontend.
+
+## Priority 6 — Cross-system investment research presentation
+
+**Project-plan items:** `UX-001` through `UX-004`
+
+The long-term Opportunity system and short-term Market system may be displayed together only after they independently produce results.
+
+Allowed:
+
+```text
+Long-term Opportunity exposure: High
+Current independent Market Assessment: Hold
+```
+
+Not allowed:
+
+```text
+Opportunity score increased because the current Market rating is Buy.
+```
+
+The purpose of this phase is joined research context, not a new combined score.
+
+---
+
+# Phase 3 — Monitoring, Research Ingestion and Strategy Laboratory
+
+## Watchlists and alerts
+
+Future work includes:
+
+- decide watchlist/auth ownership model;
+- activate real user-owned watchlists;
+- define approved price, freshness, assessment, opportunity, technical and convergence alert triggers;
+- persist alert lifecycle and event history.
+
+## External opinion/research pipeline
+
+Existing partial structures include:
 
 - `opinion_sources`
 - `opinion_reviews`
 - `instrument_opinions`
 - `instrument_opinion_consensus`
 
-Next work:
+Future work should explicitly define how external opinion is used without double-counting evidence already consumed by the independent Market Assessment.
 
-- define approved sources and trigger mechanism;
-- automate collection/normalisation;
-- update consensus;
-- decide how this evidence feeds daily assessments;
-- add RLS when the feature becomes active.
+## Strategy laboratory
 
-## Priority 4 — Turn strategy schema into an executable workflow
-
-Existing schema is ready for:
+Existing schema supports:
 
 - strategy definitions;
 - backtest/paper/live test runs;
@@ -197,94 +315,67 @@ Existing schema is ready for:
 - decision-tree evaluation;
 - persisted outcomes.
 
-Still empty:
-
-- `trading_strategies`
-- `trading_test_runs`
-- `trading_decision_evaluations`
-
-Next work:
-
-1. create the first real strategy;
-2. define test-run ingestion format;
-3. load real test results;
-4. evaluate results against the system decision tree;
-5. persist decision path/outcome;
-6. expose the real results in the Strategies dashboard.
+Do not build performance dashboards before real strategy test data exists.
 
 ---
 
-# Phase 3 — Future Platform Capability
+# Phase 4 — Quality and Maintainability
 
-## Technical indicators
+The project plan includes dedicated work for:
 
-Use the existing `technical_indicators` scaffold for server-side, versioned measures such as moving averages, RSI, MACD, ATR, volatility, volume and trend state.
+- automated tests for critical calculations and data access;
+- performance budgets and query/network monitoring;
+- an operational runbook;
+- a documentation checklist for architecture/schema changes.
 
-## Market scoring
-
-Use `market_scores` for momentum, trend, volatility, volume and overall rankings once the indicator layer is reliable.
-
-## Watchlists
-
-Use `watchlists` and `watchlist_items` for authenticated personal or strategy-specific instrument groups.
-
-## Alerts
-
-Use `alerts` and `alert_events` for price, assessment, data-freshness, strategy and indicator conditions.
-
-## Authenticated multi-user workspace
-
-Owner-aware tables already support a future model for private strategies, test runs, watchlists and user-specific decision trees.
-
-## Additional market-data providers
-
-The provider abstraction through `data_providers` and `provider_instruments` can support fallback providers, broader asset coverage and cross-provider validation.
-
-## Broader strategy laboratory
-
-Future strategy capability can include templates, parameters, instrument universes, backtests, paper/live stages, version comparisons, promotion/retirement and richer decision trees.
-
-Do not build performance dashboards before real strategy test data exists.
+These controls become increasingly important as the Technical Engine and convergence layers start producing decision-support outputs automatically.
 
 ---
 
 # Recommended delivery order
 
 ```text
-1. Keep Twelve Data ingestion stable
+1. Keep market-data ingestion stable
         |
         v
-2. Prove ChatGPT Scheduled Task assessment end-to-end
+2. Independently verify Opportunity Assessment unattended operation
         |
         v
-3. Harden assessment RLS/security
+3. Convert + reactivate + verify independent AI Market Assessment
         |
         v
-4. Complete external opinion/research ingestion
+4. Complete security and operational hardening
         |
         v
-5. Create first real strategy + test run
+5. Build and verify independent Technical Engine
         |
         v
-6. Implement automatic strategy decision evaluation
+6. Implement Market Convergence
         |
         v
-7. Add technical indicators and market scoring
+7. Add cross-system research presentation
         |
         v
-8. Add watchlists / alerts / authenticated user features
+8. Expand monitoring / research ingestion / strategy laboratory
+        |
+        v
+9. Strengthen tests, performance monitoring and runbooks
 ```
 
 # Working definition of platform maturity
 
-A feature should only move into **Phase 1 — Working Now** when:
+A workflow should only be described as **Operational** when, where applicable:
 
-- schema exists;
-- the worker/process exists;
-- scheduling/manual triggering is explicit;
-- lifecycle status finalises correctly;
+- schema and implementation exist;
+- scheduling/trigger ownership is explicit;
+- source data is validated;
+- real results are persisted;
+- lifecycle reaches a terminal state;
 - errors are recorded;
-- access/RLS is deliberate;
+- retries are idempotent;
+- access policies are deliberate;
 - frontend access does not require privileged secrets;
-- retries and empty/error states are handled;
-- documentation explains the complete flow.
+- an end-to-end run has been independently verified;
+- documentation explains the actual flow.
+
+A dashboard, populated table or historical test dataset alone does not satisfy this definition.
