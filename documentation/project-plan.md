@@ -127,7 +127,7 @@ RLS remains disabled on the older Market Assessment/control tables, including `g
 | DOC-004 | **DONE** | Reconcile root README and documentation index | Both assessment systems and this plan are linked and stale descriptions removed. |
 | DOC-005 | **DONE** | Refresh Supabase data model documentation | Opportunity, Research, Market Convergence and current RLS/maturity are represented. |
 | DOC-006 | **DONE** | Refresh roadmap and Phase 2 progress | Roadmap reflects the current two-assessment architecture. |
-| DOC-007 | **NEXT** | Refresh frontend/design documentation | Current Opportunity tabs, routes, palette system and responsive behaviour are documented. |
+| DOC-007 | **IN REVIEW** | Refresh frontend/design documentation | Current Opportunity tabs, routes, palette system and responsive behaviour are documented. |
 
 ## Phase 1 — Make both assessment loops operational
 
@@ -238,7 +238,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `DOC-007 — NEXT — Refresh frontend/design documentation`.
+**Current work:** `DOC-007 — IN REVIEW — Refresh frontend/design documentation`.
 
 ## Definition of Operational
 
