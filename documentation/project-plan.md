@@ -125,8 +125,8 @@ RLS remains disabled on the older Market Assessment/control tables, including `g
 | DOC-002 | **DONE** | Create `documentation/pipelines/opportunity-assessment-pipeline.md` | Documents lifecycle, tables, schedule, retries, evidence and operational definition. |
 | DOC-003 | **DONE** | Create `automation/daily-market-assessment.md` | Canonical Market Assessment methodology exists in GitHub with explicit independence rules. |
 | DOC-004 | **DONE** | Reconcile root README and documentation index | Both assessment systems and this plan are linked and stale descriptions removed. |
-| DOC-005 | **IN REVIEW** | Refresh Supabase data model documentation | Opportunity, Research, Market Convergence and current RLS/maturity are represented. |
-| DOC-006 | **PLANNED** | Refresh roadmap and Phase 2 progress | Roadmap reflects the current two-assessment architecture. |
+| DOC-005 | **DONE** | Refresh Supabase data model documentation | Opportunity, Research, Market Convergence and current RLS/maturity are represented. |
+| DOC-006 | **NEXT** | Refresh roadmap and Phase 2 progress | Roadmap reflects the current two-assessment architecture. |
 | DOC-007 | **PLANNED** | Refresh frontend/design documentation | Current Opportunity tabs, routes, palette system and responsive behaviour are documented. |
 
 ## Phase 1 — Make both assessment loops operational
@@ -238,7 +238,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `DOC-005 — IN REVIEW — Refresh Supabase data model documentation`.
+**Current work:** `DOC-006 — NEXT — Refresh roadmap and Phase 2 progress`.
 
 ## Definition of Operational
 
@@ -254,3 +254,4 @@ A workflow is Operational only when its schema and implementation exist, schedul
 | 17-Aug-2026 | DOC-002 | `documentation/project-audits/DOC-002.md` | Independent audit PASS WITH ADVICE; Opportunity Assessment pipeline documentation verified and DOC-003 promoted. |
 | 17-Aug-2026 | DOC-003 | `documentation/project-audits/DOC-003.md` | Independent audit PASS WITH ADVICE; canonical Market Assessment methodology and independence rules verified and DOC-004 promoted. |
 | 17-Aug-2026 | DOC-004 | `documentation/project-audits/DOC-004.md` | Independent audit PASS WITH ADVICE; root README and documentation index reconciled and DOC-005 promoted. |
+| 18-Aug-2026 | DOC-005 | `documentation/project-audits/DOC-005.md` | Independent audit PASS WITH ADVICE; Supabase data-model documentation verified against live schema/data/RLS and DOC-006 promoted. |
