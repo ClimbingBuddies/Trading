@@ -4,13 +4,28 @@
 **Supabase:** `glvbqcplgjdfgjyknzsa`  
 **Production:** `https://discoverbouldersmarkets.vercel.app`  
 **Vercel project:** `boulders-market`  
-**Last reviewed:** 13 August 2026
+**Last reviewed:** 17 August 2026
 
 ## Purpose
 
 This is the canonical task plan for the Trading platform. It is intended to be retrieved from GitHub whenever work resumes so tasks can be completed one at a time and the plan can be updated as milestones are verified.
 
-Status values: **DONE**, **NEXT**, **PLANNED**, **IN PROGRESS**, **BLOCKED**, **DEFERRED**.
+Status values: **DONE**, **NEXT**, **PLANNED**, **IN PROGRESS**, **IN REVIEW**, **BLOCKED**, **DEFERRED**.
+
+## Automated delivery governance
+
+The project may be advanced by the paired scheduled workflow defined in:
+
+- `automation/project-plan-builder.md`
+- `automation/project-plan-auditor.md`
+
+The **Project Plan Builder** implements exactly one eligible item at a time. It may move `NEXT -> IN PROGRESS -> IN REVIEW`, but it must never approve its own work, mark an item `DONE`, or promote the next item.
+
+The independent **Project Plan Auditor** owns the quality gate. It reviews exactly one `IN REVIEW` item against the item's Definition of Done using primary evidence from the relevant GitHub, Supabase, Vercel/production and browser layers. The Auditor may return the item to `IN PROGRESS` for rework, mark it `BLOCKED`, or mark it `DONE` after `PASS` / `PASS WITH ADVICE` and promote exactly one valid `PLANNED` item to `NEXT`.
+
+Normally only one project-plan item should be in `NEXT`, `IN PROGRESS` or `IN REVIEW` at a time. Neither scheduled workflow may guess through an ambiguous project state.
+
+Audit history is stored in `documentation/project-audits/<TASK-ID>.md`.
 
 ## Platform principles
 
@@ -234,3 +249,4 @@ A workflow is Operational only when its schema and implementation exist, schedul
 | Date | Task | Evidence | Notes |
 |---|---|---|---|
 | 13-Aug-2026 | PLAN-001 | `documentation/project-plan.md` | Canonical task-by-task project plan created. |
+| 17-Aug-2026 | Project automation governance | `automation/project-plan-builder.md`, `automation/project-plan-auditor.md` | Independent Builder/Auditor execution and quality-gate workflow established. |
