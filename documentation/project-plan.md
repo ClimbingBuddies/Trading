@@ -122,7 +122,7 @@ RLS remains disabled on the older Market Assessment/control tables, including `g
 |---|---|---|---|
 | PLAN-001 | **DONE** | Create this canonical project plan | Project plan exists in GitHub and is linked from documentation navigation. |
 | DOC-001 | **DONE** | Create `documentation/assessment-system-overview.md` | Clearly explains Market vs Opportunity Assessment, independence, convergence and UI cross-reference. |
-| DOC-002 | **NEXT** | Create `documentation/pipelines/opportunity-assessment-pipeline.md` | Documents lifecycle, tables, schedule, retries, evidence and operational definition. |
+| DOC-002 | **IN REVIEW** | Create `documentation/pipelines/opportunity-assessment-pipeline.md` | Documents lifecycle, tables, schedule, retries, evidence and operational definition. |
 | DOC-003 | **PLANNED** | Create `automation/daily-market-assessment.md` | Canonical Market Assessment methodology exists in GitHub with explicit independence rules. |
 | DOC-004 | **PLANNED** | Reconcile root README and documentation index | Both assessment systems and this plan are linked and stale descriptions removed. |
 | DOC-005 | **PLANNED** | Refresh Supabase data model documentation | Opportunity, Research, Market Convergence and current RLS/maturity are represented. |
@@ -238,7 +238,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current next task:** `DOC-002 — Create documentation/pipelines/opportunity-assessment-pipeline.md`.
+**Current work:** `DOC-002 — IN REVIEW — documentation/pipelines/opportunity-assessment-pipeline.md`.
 
 ## Definition of Operational
 
