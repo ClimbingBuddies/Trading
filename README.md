@@ -6,17 +6,32 @@ Trading dashboard application backed by the existing Supabase Trading project.
 
 The platform is documented from the live Supabase structure outward. Start here:
 
-- [Canonical Project Plan](documentation/project-plan.md)
+- [Canonical Project Plan](documentation/project-plan.md) — delivery status, dependencies and next action.
+- [Assessment System Overview](documentation/assessment-system-overview.md) — short-term Market Assessment vs long-term Opportunity Assessment, independence and convergence boundaries.
 - [Trading Platform Documentation](documentation/README.md)
 - [Platform Architecture](documentation/platform-architecture.md)
 - [Supabase Data Model](documentation/supabase-data-model.md)
 - [Market Data Pipeline](documentation/pipelines/market-data-pipeline.md)
 - [Market Assessment Pipeline](documentation/pipelines/market-assessment-pipeline.md)
+- [Opportunity Assessment Pipeline](documentation/pipelines/opportunity-assessment-pipeline.md)
+- [Daily Market Assessment Specification](automation/daily-market-assessment.md)
+- [Daily Opportunity Assessment Specification](automation/daily-opportunity-assessment.md)
 - [Strategy Framework](documentation/strategy-framework.md)
 - [Frontend Route Map](documentation/frontend-route-map.md)
 - [Security and Operational Notes](documentation/security-and-operational-notes.md)
 
-The documentation distinguishes between operational features, partially implemented pipelines and schema that is currently only scaffolded.
+The documentation distinguishes between operational features, partially implemented pipelines and schema that is currently only scaffolded. A visible dashboard or populated table does not by itself make an underlying workflow Operational.
+
+## Assessment systems
+
+Discover Boulders Markets has two separate assessment systems:
+
+- **Short-term Market Assessment** — answers **“Is this instrument attractive now?”** The independent ChatGPT Market Assessment has persisted results. The independent Technical Engine and Market Convergence remain scaffolded and are not yet operational.
+- **Long-term Opportunity Assessment** — answers **“What could become important next?”** Structural Opportunity and Technology Inflection signals are produced independently and then combined into Opportunity Assessment / Opportunity Convergence. Themes, signals, assessments, exposure mappings and Research & Evidence are persisted, with formal Operational verification still governed by the project plan.
+
+The systems may be displayed together after each has produced its own result, but neither system's scores or conclusions may be used to form the other. A high Opportunity score is not a Buy recommendation, and a strong Market rating does not prove a long-term structural opportunity.
+
+See [Assessment System Overview](documentation/assessment-system-overview.md) for the authoritative architecture and independence rules.
 
 ## Canonical deployment
 
@@ -44,7 +59,7 @@ Do not create or use duplicate Trading deployment projects for application devel
 - Deployment target: Vercel project `boulders-market`
 - Canonical public URL: `https://discoverbouldersmarkets.vercel.app`
 
-Supabase remains responsible for persistence, scheduled market-data loading and Edge Functions. ChatGPT Scheduled Tasks perform the independent assessment workflows defined in GitHub specifications. The Next.js application is the monitoring, research and drill-through presentation layer.
+Supabase remains responsible for persistence, scheduled market-data loading and Edge Functions. ChatGPT Scheduled Tasks perform independent assessment workflows defined in GitHub specifications. The Next.js application is the monitoring, research and drill-through presentation layer.
 
 The application uses only the Supabase publishable key. Never add the service-role key or Twelve Data API key to the frontend.
 
@@ -64,6 +79,8 @@ The application uses only the Supabase publishable key. Never add the service-ro
 
 - `/assessments` — short-term independent ChatGPT Market Assessment distribution, conviction and recent assessment rows
 - `/assessments/[symbol]` — analyst-style market assessment detail and supporting evidence
+
+These routes currently represent the AI Market branch, not completed Market Convergence.
 
 ### Opportunities
 
