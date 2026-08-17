@@ -121,7 +121,7 @@ RLS remains disabled on the older Market Assessment/control tables, including `g
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
 | PLAN-001 | **DONE** | Create this canonical project plan | Project plan exists in GitHub and is linked from documentation navigation. |
-| DOC-001 | **IN PROGRESS** | Create `documentation/assessment-system-overview.md` | Clearly explains Market vs Opportunity Assessment, independence, convergence and UI cross-reference. |
+| DOC-001 | **IN REVIEW** | Create `documentation/assessment-system-overview.md` | Clearly explains Market vs Opportunity Assessment, independence, convergence and UI cross-reference. |
 | DOC-002 | **PLANNED** | Create `documentation/pipelines/opportunity-assessment-pipeline.md` | Documents lifecycle, tables, schedule, retries, evidence and operational definition. |
 | DOC-003 | **PLANNED** | Create `automation/daily-market-assessment.md` | Canonical Market Assessment methodology exists in GitHub with explicit independence rules. |
 | DOC-004 | **PLANNED** | Reconcile root README and documentation index | Both assessment systems and this plan are linked and stale descriptions removed. |
@@ -238,7 +238,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `DOC-001 — Create documentation/assessment-system-overview.md` (`IN PROGRESS`, Builder implementation).
+**Current work:** `DOC-001 — Create documentation/assessment-system-overview.md` (`IN REVIEW`, awaiting independent Auditor decision).
 
 ## Definition of Operational
 
