@@ -126,7 +126,7 @@ RLS remains disabled on the older Market Assessment/control tables, including `g
 | DOC-003 | **DONE** | Create `automation/daily-market-assessment.md` | Canonical Market Assessment methodology exists in GitHub with explicit independence rules. |
 | DOC-004 | **DONE** | Reconcile root README and documentation index | Both assessment systems and this plan are linked and stale descriptions removed. |
 | DOC-005 | **DONE** | Refresh Supabase data model documentation | Opportunity, Research, Market Convergence and current RLS/maturity are represented. |
-| DOC-006 | **NEXT** | Refresh roadmap and Phase 2 progress | Roadmap reflects the current two-assessment architecture. |
+| DOC-006 | **IN PROGRESS** | Refresh roadmap and Phase 2 progress | Roadmap reflects the current two-assessment architecture. |
 | DOC-007 | **PLANNED** | Refresh frontend/design documentation | Current Opportunity tabs, routes, palette system and responsive behaviour are documented. |
 
 ## Phase 1 — Make both assessment loops operational
@@ -238,7 +238,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `DOC-006 — NEXT — Refresh roadmap and Phase 2 progress`.
+**Current work:** `DOC-006 — IN PROGRESS — Refresh roadmap and Phase 2 progress`.
 
 ## Definition of Operational
 
