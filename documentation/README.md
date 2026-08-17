@@ -8,27 +8,52 @@ The documentation is intentionally based on the live platform structure rather t
 
 Use the following order when resolving uncertainty:
 
-1. Supabase schema, functions, scheduled jobs and Edge Functions.
-2. GitHub application code in `ClimbingBuddies/Trading`.
-3. Vercel deployment configuration.
+1. Supabase schema, functions, scheduled jobs and persisted results.
+2. GitHub application code and canonical methodology in `ClimbingBuddies/Trading`.
+3. Vercel deployment configuration and production behaviour where relevant.
 4. Historical chat notes only as supporting context.
+
+Project delivery state is controlled by [project-plan.md](project-plan.md).
+
+## Assessment systems
+
+The platform contains two analytically independent assessment systems:
+
+- **Short-term Market Assessment** — asks whether a tracked instrument is attractive now. The independent ChatGPT Market branch has persisted assessment results. The independent Technical Engine and Market Convergence remain scaffolded and are not yet operational.
+- **Long-term Opportunity Assessment** — asks what structural or technological changes could become important over months or years. Structural Opportunity and Technology Inflection signals are assessed independently before Opportunity Assessment / Opportunity Convergence is calculated. Themes, signals, assessments, exposures and Research & Evidence are persisted.
+
+The two systems may be displayed together only after each has independently produced its result. Neither system's score, rating or conclusion may be used to form the other.
+
+Start with [Assessment System Overview](assessment-system-overview.md) for the architecture, independence rules, convergence boundaries, current maturity and UI cross-reference.
 
 ## Documentation map
 
+### Project control and system overview
+
 - [Canonical Project Plan](project-plan.md) — task-by-task delivery plan, dependencies, status and next action.
+- [Assessment System Overview](assessment-system-overview.md) — Market vs Opportunity Assessment, independence, convergence and UI boundaries.
 - [Platform Architecture](platform-architecture.md) — major platform layers and how they connect.
 - [Supabase Data Model](supabase-data-model.md) — tables, relationships and current implementation status.
-- [Functional Roadmap](functional-roadmap.md) — Phase 1 working now, Phase 2 finish next, and Phase 3 future capability.
-- [Phase 2 Progress](phase2-progress.md) — implementation status, completed work, activation gates and next actions.
+- [Functional Roadmap](functional-roadmap.md) — staged platform capability and future work.
+- [Phase 2 Progress](phase2-progress.md) — implementation status, activation gates and next actions.
+
+### Data and assessment pipelines
+
 - [Market Data Pipeline](pipelines/market-data-pipeline.md) — Twelve Data ingestion, scheduling and load monitoring.
-- [Market Assessment Pipeline](pipelines/market-assessment-pipeline.md) — scheduled assessment queue, GPT assessment records and current gaps.
+- [Market Assessment Pipeline](pipelines/market-assessment-pipeline.md) — AI Market Assessment records, lifecycle and known gaps.
+- [Opportunity Assessment Pipeline](pipelines/opportunity-assessment-pipeline.md) — Structural Signal, Technology Inflection, Opportunity Convergence, exposure, Research & Evidence, retries and Operational definition.
+- [Daily Market Assessment Specification](../automation/daily-market-assessment.md) — canonical short-term AI Market Assessment methodology and independence rules.
+- [Daily Opportunity Assessment Specification](../automation/daily-opportunity-assessment.md) — canonical long-term Opportunity Assessment execution specification.
+
+### Product, strategy and operations
+
 - [Strategy Framework](strategy-framework.md) — strategy/test tables and the standard decision tree.
 - [Frontend Route Map](frontend-route-map.md) — Next.js routes and the Supabase data each page uses.
 - [Security and Operational Notes](security-and-operational-notes.md) — RLS, public dashboard access, secrets and known technical debt.
 
 ## Current platform status
 
-### Operational
+### Operational foundation
 
 - Twelve Data market-data ingestion.
 - 30 active instruments across equities, ETFs, forex and crypto.
@@ -36,30 +61,37 @@ Use the following order when resolving uncertainty:
 - Market-hours-aware loading for US equities and ETFs.
 - Market observation history and sync-run monitoring.
 - Admin and Markets dashboards.
-- GPT assessment records for all 30 instruments from the current test run.
-- Assessments dashboard and instrument assessment drill-through.
-- Standard Trading Strategy Review decision-tree template.
 
-### Partially implemented
+### Assessment systems — partial / advanced
 
-- Daily market-assessment automation: queue lifecycle and worker are now deployed; OpenAI configuration, backlog handling and recurring worker activation remain outstanding.
+#### Market Assessment
+
+- Independent ChatGPT Market Assessment rows and evidence are persisted.
+- The `/assessments` and `/assessments/[symbol]` routes expose the AI Market branch.
+- A canonical GitHub Market methodology now exists at `automation/daily-market-assessment.md`.
+- The Daily Trading Market Assessment task still requires migration to the canonical GitHub specification and unattended-run verification under the project plan.
+- The Technical Engine has no current persisted indicator/score output.
+- Market Convergence has no current persisted convergence output.
+
+#### Opportunity Assessment
+
+- Active/watch Opportunity Themes are persisted.
+- Structural Opportunity Signals, Technology Inflection Signals and final Opportunity Assessments are populated.
+- Technology Inflection Events, tracked/external exposure mappings and Research & Evidence are populated.
+- The `/opportunities` and `/opportunities/[theme]` routes expose the long-term Opportunity system.
+- The project plan retains a formal end-to-end Operational verification item before the workflow is labelled fully Operational.
+
+### Other partial or future capability
+
 - External opinion/research capture.
 - Watchlists and alerts.
 - Strategy testing and evaluation workflow.
-
-### Scaffolded but not yet populated
-
-- Technical indicators.
-- Market scores.
-- Legacy market opinions table.
-- Trading strategies.
-- Trading test runs.
-- Trading decision evaluations.
+- Trading strategies and test-run data remain unpopulated until the strategy laboratory is operationalised.
 
 ## Important principle
 
-A table existing in Supabase does not mean the associated product feature is complete. Documentation in this folder distinguishes between:
+A table existing in Supabase or a dashboard existing in the frontend does not mean the associated workflow is complete. Documentation in this folder distinguishes between:
 
-- **Operational** — actively populated and used by the platform.
-- **Partial** — some pipeline/database pieces exist but the end-to-end process is incomplete.
-- **Scaffolded** — schema is ready but there are no production records yet.
+- **Operational** — implemented, scheduled/owned, verified end to end and documented under the project-plan definition.
+- **Partial** — meaningful pipeline/database/UI pieces exist but the end-to-end process is incomplete or awaiting verification.
+- **Scaffolded** — schema or UI structure exists but the production workflow or persisted output is not yet present.
