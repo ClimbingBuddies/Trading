@@ -127,13 +127,13 @@ RLS remains disabled on the older Market Assessment/control tables, including `g
 | DOC-004 | **DONE** | Reconcile root README and documentation index | Both assessment systems and this plan are linked and stale descriptions removed. |
 | DOC-005 | **DONE** | Refresh Supabase data model documentation | Opportunity, Research, Market Convergence and current RLS/maturity are represented. |
 | DOC-006 | **DONE** | Refresh roadmap and Phase 2 progress | Roadmap reflects the current two-assessment architecture. |
-| DOC-007 | **IN REVIEW** | Refresh frontend/design documentation | Current Opportunity tabs, routes, palette system and responsive behaviour are documented. |
+| DOC-007 | **DONE** | Refresh frontend/design documentation | Current Opportunity tabs, routes, palette system and responsive behaviour are documented. |
 
 ## Phase 1 — Make both assessment loops operational
 
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
-| OPS-001 | **PLANNED** | Verify first unattended Opportunity Assessment run | GitHub spec is retrieved, Supabase is updated idempotently, Research & Evidence is updated and result verified. |
+| OPS-001 | **NEXT** | Verify first unattended Opportunity Assessment run | GitHub spec is retrieved, Supabase is updated idempotently, Research & Evidence is updated and result verified. |
 | OPS-002 | **PLANNED** | Change Market Scheduled Task to use the GitHub Market specification | Scheduled Task becomes a thin runner that retrieves the current GitHub specification. |
 | OPS-003 | **PLANNED** | Standardise Market AI independence metadata | New rows record a version such as `independent-market-ai-v1` and `technical_engine_input_used = false`. |
 | OPS-004 | **PLANNED** | Reactivate Daily Trading Market Assessment | Weekday task is enabled after the canonical specification is ready. |
@@ -238,7 +238,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `DOC-007 — IN REVIEW — Refresh frontend/design documentation`.
+**Current work:** `OPS-001 — NEXT — Verify first unattended Opportunity Assessment run`.
 
 ## Definition of Operational
 
@@ -256,3 +256,4 @@ A workflow is Operational only when its schema and implementation exist, schedul
 | 17-Aug-2026 | DOC-004 | `documentation/project-audits/DOC-004.md` | Independent audit PASS WITH ADVICE; root README and documentation index reconciled and DOC-005 promoted. |
 | 18-Aug-2026 | DOC-005 | `documentation/project-audits/DOC-005.md` | Independent audit PASS WITH ADVICE; Supabase data-model documentation verified against live schema/data/RLS and DOC-006 promoted. |
 | 18-Aug-2026 | DOC-006 | `documentation/project-audits/DOC-006.md` | Independent audit PASS; roadmap and Phase 2 progress verified against canonical architecture and live Supabase state; DOC-007 promoted. |
+| 18-Aug-2026 | DOC-007 | `documentation/project-audits/DOC-007.md` | Independent audit PASS; current Opportunity tabs, routes, palette system and responsive behaviour verified against source and production; OPS-001 promoted. |
