@@ -133,8 +133,8 @@ RLS remains disabled on the older Market Assessment/control tables, including `g
 
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
-| OPS-001 | **IN REVIEW** | Verify first unattended Opportunity Assessment run | GitHub spec is retrieved, Supabase is updated idempotently, Research & Evidence is updated and result verified. |
-| OPS-002 | **PLANNED** | Change Market Scheduled Task to use the GitHub Market specification | Scheduled Task becomes a thin runner that retrieves the current GitHub specification. |
+| OPS-001 | **DONE** | Verify first unattended Opportunity Assessment run | GitHub spec is retrieved, Supabase is updated idempotently, Research & Evidence is updated and result verified. |
+| OPS-002 | **NEXT** | Change Market Scheduled Task to use the GitHub Market specification | Scheduled Task becomes a thin runner that retrieves the current GitHub specification. |
 | OPS-003 | **PLANNED** | Standardise Market AI independence metadata | New rows record a version such as `independent-market-ai-v1` and `technical_engine_input_used = false`. |
 | OPS-004 | **PLANNED** | Reactivate Daily Trading Market Assessment | Weekday task is enabled after the canonical specification is ready. |
 | OPS-005 | **PLANNED** | Verify first unattended Market Assessment run | Freshness check, full active universe, evidence, finalisation and report complete successfully. |
@@ -238,7 +238,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `OPS-001 — IN REVIEW — Verify first unattended Opportunity Assessment run`.
+**Current work:** `OPS-002 — NEXT — Change Market Scheduled Task to use the GitHub Market specification`.
 
 ## Definition of Operational
 
@@ -257,3 +257,4 @@ A workflow is Operational only when its schema and implementation exist, schedul
 | 18-Aug-2026 | DOC-005 | `documentation/project-audits/DOC-005.md` | Independent audit PASS WITH ADVICE; Supabase data-model documentation verified against live schema/data/RLS and DOC-006 promoted. |
 | 18-Aug-2026 | DOC-006 | `documentation/project-audits/DOC-006.md` | Independent audit PASS; roadmap and Phase 2 progress verified against canonical architecture and live Supabase state; DOC-007 promoted. |
 | 18-Aug-2026 | DOC-007 | `documentation/project-audits/DOC-007.md` | Independent audit PASS; current Opportunity tabs, routes, palette system and responsive behaviour verified against source and production; OPS-001 promoted. |
+| 18-Aug-2026 | OPS-001 | `documentation/project-audits/OPS-001.md` | Independent audit PASS WITH ADVICE; unattended Opportunity Assessment execution verified from canonical GitHub spec and live Supabase evidence; OPS-002 promoted. |
