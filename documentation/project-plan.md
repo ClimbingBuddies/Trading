@@ -100,9 +100,10 @@ Successful unattended scheduled runs are persisted for 15–17 August 2026. The 
 
 - 30 Market Assessment rows and 30 evidence rows exist from the historical test dataset.
 - The historical run remains inconsistent: `running`, `tickers_completed = 0`, `completed_at = null` despite the assessment rows.
-- The Daily Trading Market Assessment Scheduled Task exists but is currently disabled.
+- The Daily Trading Market Assessment Scheduled Task exists and is currently enabled on its weekday schedule.
 - Canonical methodology exists at `automation/daily-market-assessment.md`.
-- The Scheduled Task prompt has been migrated to a thin runner that retrieves the canonical GitHub specification fresh on every run; activation remains a separate later project-plan item.
+- The Scheduled Task prompt is the thin runner that retrieves the canonical GitHub specification fresh on every run.
+- Reactivation is complete from the Builder perspective and is awaiting independent audit under `OPS-004`.
 
 ### Technical Engine — Scaffolded
 
@@ -137,7 +138,7 @@ RLS remains disabled on the older Market Assessment/control tables, including `g
 | OPS-001 | **DONE** | Verify first unattended Opportunity Assessment run | GitHub spec is retrieved, Supabase is updated idempotently, Research & Evidence is updated and result verified. |
 | OPS-002 | **DONE** | Change Market Scheduled Task to use the GitHub Market specification | Scheduled Task becomes a thin runner that retrieves the current GitHub specification. |
 | OPS-003 | **DONE** | Standardise Market AI independence metadata | New rows record a version such as `independent-market-ai-v1` and `technical_engine_input_used = false`. |
-| OPS-004 | **IN PROGRESS** | Reactivate Daily Trading Market Assessment | Weekday task is enabled after the canonical specification is ready. |
+| OPS-004 | **IN REVIEW** | Reactivate Daily Trading Market Assessment | Weekday task is enabled after the canonical specification is ready. |
 | OPS-005 | **PLANNED** | Verify first unattended Market Assessment run | Freshness check, full active universe, evidence, finalisation and report complete successfully. |
 | OPS-006 | **PLANNED** | Verify Market retry/idempotency | Retry/resume produces no duplicate assessment or evidence records. |
 | OPS-007 | **PLANNED** | Resolve historical Market run and backlog | Legacy test/backlog rows are deliberately archived, superseded or finalised without replaying them as current work. |
@@ -239,7 +240,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current next task:** `OPS-004 — Reactivate Daily Trading Market Assessment`.
+**Current work:** `OPS-004 — Reactivate Daily Trading Market Assessment` is **IN REVIEW** and awaiting the independent Project Plan Auditor. No later item has been promoted.
 
 ## Definition of Operational
 
