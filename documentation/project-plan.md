@@ -137,7 +137,7 @@ RLS remains disabled on the older Market Assessment/control tables, including `g
 | OPS-001 | **DONE** | Verify first unattended Opportunity Assessment run | GitHub spec is retrieved, Supabase is updated idempotently, Research & Evidence is updated and result verified. |
 | OPS-002 | **DONE** | Change Market Scheduled Task to use the GitHub Market specification | Scheduled Task becomes a thin runner that retrieves the current GitHub specification. |
 | OPS-003 | **DONE** | Standardise Market AI independence metadata | New rows record a version such as `independent-market-ai-v1` and `technical_engine_input_used = false`. |
-| OPS-004 | **NEXT** | Reactivate Daily Trading Market Assessment | Weekday task is enabled after the canonical specification is ready. |
+| OPS-004 | **IN PROGRESS** | Reactivate Daily Trading Market Assessment | Weekday task is enabled after the canonical specification is ready. |
 | OPS-005 | **PLANNED** | Verify first unattended Market Assessment run | Freshness check, full active universe, evidence, finalisation and report complete successfully. |
 | OPS-006 | **PLANNED** | Verify Market retry/idempotency | Retry/resume produces no duplicate assessment or evidence records. |
 | OPS-007 | **PLANNED** | Resolve historical Market run and backlog | Legacy test/backlog rows are deliberately archived, superseded or finalised without replaying them as current work. |
