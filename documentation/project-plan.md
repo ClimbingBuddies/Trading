@@ -136,7 +136,7 @@ RLS remains disabled on the older Market Assessment/control tables, including `g
 |---|---|---|---|
 | OPS-001 | **DONE** | Verify first unattended Opportunity Assessment run | GitHub spec is retrieved, Supabase is updated idempotently, Research & Evidence is updated and result verified. |
 | OPS-002 | **DONE** | Change Market Scheduled Task to use the GitHub Market specification | Scheduled Task becomes a thin runner that retrieves the current GitHub specification. |
-| OPS-003 | **IN PROGRESS** | Standardise Market AI independence metadata | New rows record a version such as `independent-market-ai-v1` and `technical_engine_input_used = false`. |
+| OPS-003 | **IN REVIEW** | Standardise Market AI independence metadata | New rows record a version such as `independent-market-ai-v1` and `technical_engine_input_used = false`. |
 | OPS-004 | **PLANNED** | Reactivate Daily Trading Market Assessment | Weekday task is enabled after the canonical specification is ready. |
 | OPS-005 | **PLANNED** | Verify first unattended Market Assessment run | Freshness check, full active universe, evidence, finalisation and report complete successfully. |
 | OPS-006 | **PLANNED** | Verify Market retry/idempotency | Retry/resume produces no duplicate assessment or evidence records. |
@@ -239,7 +239,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `OPS-003 — IN PROGRESS — Standardise Market AI independence metadata`.
+**Current work:** `OPS-003 — IN REVIEW — awaiting independent Auditor verification of Market AI independence metadata`.
 
 ## Definition of Operational
 
