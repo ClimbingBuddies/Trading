@@ -101,7 +101,8 @@ Successful unattended scheduled runs are persisted for 15–17 August 2026. The 
 - 30 Market Assessment rows and 30 evidence rows exist from the historical test dataset.
 - The historical run remains inconsistent: `running`, `tickers_completed = 0`, `completed_at = null` despite the assessment rows.
 - The Daily Trading Market Assessment Scheduled Task exists but is currently disabled.
-- Canonical methodology now exists at `automation/daily-market-assessment.md`; migrating the Scheduled Task to use it remains `OPS-002`.
+- Canonical methodology exists at `automation/daily-market-assessment.md`.
+- The Scheduled Task prompt has been migrated to a thin runner that retrieves the canonical GitHub specification fresh on every run; activation remains a separate later project-plan item.
 
 ### Technical Engine — Scaffolded
 
@@ -134,7 +135,7 @@ RLS remains disabled on the older Market Assessment/control tables, including `g
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
 | OPS-001 | **DONE** | Verify first unattended Opportunity Assessment run | GitHub spec is retrieved, Supabase is updated idempotently, Research & Evidence is updated and result verified. |
-| OPS-002 | **NEXT** | Change Market Scheduled Task to use the GitHub Market specification | Scheduled Task becomes a thin runner that retrieves the current GitHub specification. |
+| OPS-002 | **IN REVIEW** | Change Market Scheduled Task to use the GitHub Market specification | Scheduled Task becomes a thin runner that retrieves the current GitHub specification. |
 | OPS-003 | **PLANNED** | Standardise Market AI independence metadata | New rows record a version such as `independent-market-ai-v1` and `technical_engine_input_used = false`. |
 | OPS-004 | **PLANNED** | Reactivate Daily Trading Market Assessment | Weekday task is enabled after the canonical specification is ready. |
 | OPS-005 | **PLANNED** | Verify first unattended Market Assessment run | Freshness check, full active universe, evidence, finalisation and report complete successfully. |
@@ -238,7 +239,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `OPS-002 — NEXT — Change Market Scheduled Task to use the GitHub Market specification`.
+**Current work:** `OPS-002 — IN REVIEW — Change Market Scheduled Task to use the GitHub Market specification`.
 
 ## Definition of Operational
 
