@@ -94,7 +94,7 @@ Current populated data includes 3 themes, 3 Structural Signals, 3 Technology Inf
 
 Canonical specification: `automation/daily-opportunity-assessment.md`.
 
-The Daily Opportunity Assessment Scheduled Task is enabled. A first unattended scheduled run still needs explicit end-to-end verification before this workflow is labelled fully Operational.
+Successful unattended scheduled runs are persisted for 15–17 August 2026. The 17 August run used canonical specification v1.3, completed 10/10 themes and updated Research & Evidence. The Daily Opportunity Assessment task exists but was disabled at Builder verification time on 18 August 2026, so historical unattended success must not be confused with current schedule activation.
 
 ### ChatGPT Market Assessment — Partial
 
@@ -133,7 +133,7 @@ RLS remains disabled on the older Market Assessment/control tables, including `g
 
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
-| OPS-001 | **NEXT** | Verify first unattended Opportunity Assessment run | GitHub spec is retrieved, Supabase is updated idempotently, Research & Evidence is updated and result verified. |
+| OPS-001 | **IN REVIEW** | Verify first unattended Opportunity Assessment run | GitHub spec is retrieved, Supabase is updated idempotently, Research & Evidence is updated and result verified. |
 | OPS-002 | **PLANNED** | Change Market Scheduled Task to use the GitHub Market specification | Scheduled Task becomes a thin runner that retrieves the current GitHub specification. |
 | OPS-003 | **PLANNED** | Standardise Market AI independence metadata | New rows record a version such as `independent-market-ai-v1` and `technical_engine_input_used = false`. |
 | OPS-004 | **PLANNED** | Reactivate Daily Trading Market Assessment | Weekday task is enabled after the canonical specification is ready. |
@@ -238,7 +238,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `OPS-001 — NEXT — Verify first unattended Opportunity Assessment run`.
+**Current work:** `OPS-001 — IN REVIEW — Verify first unattended Opportunity Assessment run`.
 
 ## Definition of Operational
 
