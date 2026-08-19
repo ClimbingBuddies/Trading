@@ -149,7 +149,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` now cla
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
 | SEC-001 | **DONE** | Define public/private Market Assessment access | Published assessment output and internal queue/run-control access are explicitly classified. |
-| SEC-002 | **NEXT** | Apply deliberate RLS policies | Approved dashboard reads continue; anonymous writes are blocked; internal control tables are protected. |
+| SEC-002 | **IN PROGRESS** | Apply deliberate RLS policies | Approved dashboard reads continue; anonymous writes are blocked; internal control tables are protected. |
 | SEC-003 | **PLANNED** | Harden helper-function search paths | Relevant functions use explicit safe search paths or fully qualified references. |
 | SEC-004 | **PLANNED** | Review `pg_net` warning | Placement/usage is remediated or explicitly accepted with rationale. |
 | SEC-005 | **PLANNED** | Remove frontend Supabase fallback configuration | Production uses Vercel environment variables without privileged frontend secrets. |
@@ -241,7 +241,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `SEC-002 — Apply deliberate RLS policies` is **NEXT** and ready for Builder implementation. No later item has been promoted.
+**Current work:** `SEC-002 — Apply deliberate RLS policies` is **IN PROGRESS** under Builder implementation. No later item has been promoted.
 
 ## Definition of Operational
 
