@@ -104,7 +104,7 @@ Successful unattended scheduled runs are persisted for 15–17 August 2026. The 
 - Canonical methodology exists at `automation/daily-market-assessment.md`.
 - The Scheduled Task prompt is the thin runner that retrieves the canonical GitHub specification fresh on every run.
 - Reactivation passed independent audit under `OPS-004`. The first unattended production run completed for the 18 August 2026 New York assessment date with 30/30 active instruments, 68 evidence rows and terminal `succeeded` run/queue state; it passed independent audit under `OPS-005`.
-- The same-date prepare helper now qualifies its queue/run references correctly. Builder verification for `OPS-006` confirmed completed retries and isolated resume probes reuse the existing run without assessment or evidence duplicates.
+- The same-date prepare helper now qualifies its queue/run references correctly. Completed and resumable retry paths passed independent audit under `OPS-006`, reusing the existing run without assessment or evidence duplicates.
 
 ### Technical Engine — Scaffolded
 
@@ -141,8 +141,8 @@ RLS remains disabled on the older Market Assessment/control tables, including `g
 | OPS-003 | **DONE** | Standardise Market AI independence metadata | New rows record a version such as `independent-market-ai-v1` and `technical_engine_input_used = false`. |
 | OPS-004 | **DONE** | Reactivate Daily Trading Market Assessment | Weekday task is enabled after the canonical specification is ready. |
 | OPS-005 | **DONE** | Verify first unattended Market Assessment run | Freshness check, full active universe, evidence, finalisation and report complete successfully. |
-| OPS-006 | **IN REVIEW** | Verify Market retry/idempotency | Retry/resume produces no duplicate assessment or evidence records. |
-| OPS-007 | **PLANNED** | Resolve historical Market run and backlog | Legacy test/backlog rows are deliberately archived, superseded or finalised without replaying them as current work. |
+| OPS-006 | **DONE** | Verify Market retry/idempotency | Retry/resume produces no duplicate assessment or evidence records. |
+| OPS-007 | **NEXT** | Resolve historical Market run and backlog | Legacy test/backlog rows are deliberately archived, superseded or finalised without replaying them as current work. |
 
 ## Phase 2 — Security and operational hardening
 
@@ -241,7 +241,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `OPS-006 — Verify Market retry/idempotency` is **IN REVIEW** and awaiting independent audit. No later item has been promoted.
+**Current work:** `OPS-007 — Resolve historical Market run and backlog` is **NEXT** and ready for Builder execution.
 
 ## Definition of Operational
 
@@ -265,3 +265,4 @@ A workflow is Operational only when its schema and implementation exist, schedul
 | 18-Aug-2026 | OPS-003 | `documentation/project-audits/OPS-003.md` | Independent audit PASS WITH ADVICE; Market AI independence metadata standardised in the canonical spec and live persistence contract; OPS-004 promoted. |
 | 18-Aug-2026 | OPS-004 | `documentation/project-audits/OPS-004.md` | Independent audit PASS WITH ADVICE; weekday Market Assessment task verified enabled with the canonical thin runner; OPS-005 promoted. |
 | 19-Aug-2026 | OPS-005 | `documentation/project-audits/OPS-005.md` | Independent audit PASS WITH ADVICE; first unattended Market Assessment verified with 30/30 active instruments, 68 evidence rows and terminal run/queue state; OPS-006 promoted. |
+| 19-Aug-2026 | OPS-006 | `documentation/project-audits/OPS-006.md` | Independent audit PASS WITH ADVICE; completed and resumable same-date retries reused the existing run without assessment/evidence duplicates; OPS-007 promoted. |
