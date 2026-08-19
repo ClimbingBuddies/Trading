@@ -1,8 +1,10 @@
 # Security and Operational Notes
 
-This document records the current Supabase access model and known security/operational issues observed on 12 August 2026.
+This document records Supabase access and operational findings first observed on 12 August 2026 and re-verified where noted on 19 August 2026.
 
 No remediation in this document should be applied blindly. RLS changes can immediately change what the public dashboard can read.
+
+The canonical Market Assessment public/private decision is now [Market Assessment Access Classification](security/market-assessment-access-classification.md).
 
 ## 1. Frontend credential model
 
@@ -63,35 +65,19 @@ Owner-specific policies use `owner_user_id = auth.uid()`.
 
 System decision-tree templates can be read by authenticated users, while user-owned trees/nodes/edges remain owner-specific.
 
-## 5. Critical RLS issue: five public tables have RLS disabled
+## 5. Market Assessment access — re-verified 19 August 2026
 
-Supabase Security Advisor currently reports RLS disabled on:
+The earlier RLS-disabled finding is resolved in live Supabase:
 
-- `market_assessment_schedule_log`
-- `market_assessment_queue`
-- `gpt_market_runs`
-- `gpt_market_assessments`
-- `gpt_market_evidence`
+- RLS is enabled on `gpt_market_runs`, `gpt_market_assessments`, `gpt_market_evidence`, `market_assessment_queue` and `market_assessment_schedule_log`;
+- `anon` and `authenticated` currently have read-only access to the three GPT output/run tables;
+- queue and schedule-log client access is explicitly blocked;
+- no client write grants exist on the five tables.
 
-Because these tables are in the exposed `public` schema, Supabase flags this as an ERROR-level security issue.
+The formal access decision is recorded in [Market Assessment Access Classification](security/market-assessment-access-classification.md). It classifies terminal non-test assessment output and linked evidence as public read-only, while full run control, test/non-terminal state, queues, scheduler logs, writes and orchestration functions are internal.
 
-Reference:
+`SEC-002` must narrow the current broad table reads to that approved publication boundary while preserving the public Assessments routes. It must also revoke client execution from the two legacy scheduler functions that remain callable by `anon` and `authenticated`.
 
-https://supabase.com/docs/guides/database/database-linter?lint=0013_rls_disabled_in_public
-
-### Important caution
-
-Do not simply enable RLS without first defining the intended policies.
-
-The current public Assessments dashboard reads `gpt_market_runs`, `gpt_market_assessments` and `gpt_market_evidence`. Enabling RLS with no policies would immediately make these datasets disappear from the public application.
-
-A deliberate access decision is required first:
-
-- keep assessment results public read-only; or
-- require authentication for assessments; or
-- expose a constrained public view/API while protecting internal run/evidence tables.
-
-The queue and scheduler log should normally not need public write access.
 
 ## 6. RLS enabled but no policies
 
@@ -139,21 +125,12 @@ https://supabase.com/docs/guides/database/database-linter?lint=0014_extension_in
 
 This should be reviewed before production hardening.
 
-## 9. Assessment pipeline operational issue
+## 9. Historical Market backlog — resolved
 
-Seven daily assessment queue rows are currently pending and unprocessed.
+The earlier seven-row orphan queue backlog and stale 1 August test-run lifecycle were resolved non-destructively under `OPS-007`.
 
-The scheduler is creating work, but no active end-to-end consumer is finalising the queue.
+The test run is terminal at 30/30 from its persisted assessment rows. The seven unattempted queues are terminally superseded without replay or replacement GPT runs, and their schedule logs remain preserved. See `documentation/project-audits/OPS-007.md`.
 
-The existing GPT test run is also inconsistent:
-
-- 30 assessment rows exist;
-- 30 evidence rows exist;
-- the run is still `running`;
-- `tickers_completed = 0`;
-- `completed_at` is null.
-
-This is a data-quality/operational issue rather than a frontend issue.
 
 ## 10. Current GitHub configuration note
 
@@ -171,13 +148,12 @@ Recommended direction:
 
 Recommended order:
 
-1. Decide the intended public/authenticated access model for GPT assessments.
-2. Enable RLS on the five exposed assessment/queue tables with deliberate policies.
-3. Protect queue and scheduler tables from public mutation.
-4. Add policies only when the corresponding watchlist/opinion/alert features are implemented.
-5. Harden database function search paths.
-6. Review the `pg_net` extension placement.
-7. Move frontend Supabase configuration fully to environment variables.
+1. Apply the approved Market Assessment access classification under `SEC-002`, preserving public assessment reads while narrowing run/output access and revoking client orchestration-function execution.
+2. Harden helper-function search paths under `SEC-003`.
+3. Review the `pg_net` extension placement under `SEC-004`.
+4. Move frontend Supabase configuration fully to environment variables under `SEC-005`.
+5. Add policies only when corresponding watchlist/opinion/alert features are implemented.
+
 
 ## Operational principle
 
