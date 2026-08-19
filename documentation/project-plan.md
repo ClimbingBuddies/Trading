@@ -117,7 +117,7 @@ Successful unattended scheduled runs are persisted for 15–17 August 2026. The 
 
 ### Security — Requires hardening
 
-RLS remains disabled on the older Market Assessment/control tables, including `gpt_market_runs`, `gpt_market_assessments`, `gpt_market_evidence`, `market_assessment_queue` and `market_assessment_schedule_log`.
+RLS is enabled on the Market Assessment output/control tables. `SEC-001` now classifies terminal non-test assessment output and linked evidence as public read-only, while full run control, queues, schedule logs, writes and orchestration functions are internal. Live access is not yet fully aligned: the three GPT run/output tables still have broad client `SELECT`, and two legacy scheduler functions remain client-executable. Applying the approved boundary belongs to `SEC-002`.
 
 ## Phase 0 — Documentation baseline
 
@@ -148,7 +148,7 @@ RLS remains disabled on the older Market Assessment/control tables, including `g
 
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
-| SEC-001 | **IN PROGRESS** | Define public/private Market Assessment access | Published assessment output and internal queue/run-control access are explicitly classified. |
+| SEC-001 | **IN REVIEW** | Define public/private Market Assessment access | Published assessment output and internal queue/run-control access are explicitly classified. |
 | SEC-002 | **PLANNED** | Apply deliberate RLS policies | Approved dashboard reads continue; anonymous writes are blocked; internal control tables are protected. |
 | SEC-003 | **PLANNED** | Harden helper-function search paths | Relevant functions use explicit safe search paths or fully qualified references. |
 | SEC-004 | **PLANNED** | Review `pg_net` warning | Placement/usage is remediated or explicitly accepted with rationale. |
@@ -241,7 +241,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `SEC-001 — Define public/private Market Assessment access` is **IN PROGRESS**. No later item has been promoted.
+**Current work:** `SEC-001 — Define public/private Market Assessment access` is **IN REVIEW** and awaiting independent audit. No later item has been promoted.
 
 ## Definition of Operational
 
