@@ -142,7 +142,7 @@ RLS remains disabled on the older Market Assessment/control tables, including `g
 | OPS-004 | **DONE** | Reactivate Daily Trading Market Assessment | Weekday task is enabled after the canonical specification is ready. |
 | OPS-005 | **DONE** | Verify first unattended Market Assessment run | Freshness check, full active universe, evidence, finalisation and report complete successfully. |
 | OPS-006 | **DONE** | Verify Market retry/idempotency | Retry/resume produces no duplicate assessment or evidence records. |
-| OPS-007 | **NEXT** | Resolve historical Market run and backlog | Legacy test/backlog rows are deliberately archived, superseded or finalised without replaying them as current work. |
+| OPS-007 | **IN PROGRESS** | Resolve historical Market run and backlog | Legacy test/backlog rows are deliberately archived, superseded or finalised without replaying them as current work. |
 
 ## Phase 2 — Security and operational hardening
 
@@ -241,7 +241,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `OPS-007 — Resolve historical Market run and backlog` is **NEXT** and ready for Builder execution.
+**Current work:** `OPS-007 — Resolve historical Market run and backlog` is **IN PROGRESS** while the Builder inventories and deliberately resolves legacy Market run/queue state.
 
 ## Definition of Operational
 
