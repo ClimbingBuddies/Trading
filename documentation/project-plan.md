@@ -148,8 +148,8 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` now cla
 
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
-| SEC-001 | **IN REVIEW** | Define public/private Market Assessment access | Published assessment output and internal queue/run-control access are explicitly classified. |
-| SEC-002 | **PLANNED** | Apply deliberate RLS policies | Approved dashboard reads continue; anonymous writes are blocked; internal control tables are protected. |
+| SEC-001 | **DONE** | Define public/private Market Assessment access | Published assessment output and internal queue/run-control access are explicitly classified. |
+| SEC-002 | **NEXT** | Apply deliberate RLS policies | Approved dashboard reads continue; anonymous writes are blocked; internal control tables are protected. |
 | SEC-003 | **PLANNED** | Harden helper-function search paths | Relevant functions use explicit safe search paths or fully qualified references. |
 | SEC-004 | **PLANNED** | Review `pg_net` warning | Placement/usage is remediated or explicitly accepted with rationale. |
 | SEC-005 | **PLANNED** | Remove frontend Supabase fallback configuration | Production uses Vercel environment variables without privileged frontend secrets. |
@@ -241,7 +241,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `SEC-001 — Define public/private Market Assessment access` is **IN REVIEW** and awaiting independent audit. No later item has been promoted.
+**Current work:** `SEC-002 — Apply deliberate RLS policies` is **NEXT** and ready for Builder implementation. No later item has been promoted.
 
 ## Definition of Operational
 
@@ -267,3 +267,4 @@ A workflow is Operational only when its schema and implementation exist, schedul
 | 19-Aug-2026 | OPS-005 | `documentation/project-audits/OPS-005.md` | Independent audit PASS WITH ADVICE; first unattended Market Assessment verified with 30/30 active instruments, 68 evidence rows and terminal run/queue state; OPS-006 promoted. |
 | 19-Aug-2026 | OPS-006 | `documentation/project-audits/OPS-006.md` | Independent audit PASS WITH ADVICE; completed and resumable same-date retries reused the existing run without assessment/evidence duplicates; OPS-007 promoted. |
 | 19-Aug-2026 | OPS-007 | `documentation/project-audits/OPS-007.md` | Independent audit PASS WITH ADVICE; legacy test lifecycle finalised and seven obsolete queue rows terminally superseded without replay; SEC-001 promoted. |
+| 19-Aug-2026 | SEC-001 | `documentation/project-audits/SEC-001.md` | Independent audit PASS WITH ADVICE; public assessment output and internal run/queue/control access explicitly classified; SEC-002 promoted. |
