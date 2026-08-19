@@ -140,7 +140,7 @@ RLS remains disabled on the older Market Assessment/control tables, including `g
 | OPS-003 | **DONE** | Standardise Market AI independence metadata | New rows record a version such as `independent-market-ai-v1` and `technical_engine_input_used = false`. |
 | OPS-004 | **DONE** | Reactivate Daily Trading Market Assessment | Weekday task is enabled after the canonical specification is ready. |
 | OPS-005 | **DONE** | Verify first unattended Market Assessment run | Freshness check, full active universe, evidence, finalisation and report complete successfully. |
-| OPS-006 | **NEXT** | Verify Market retry/idempotency | Retry/resume produces no duplicate assessment or evidence records. |
+| OPS-006 | **IN PROGRESS** | Verify Market retry/idempotency | Retry/resume produces no duplicate assessment or evidence records. |
 | OPS-007 | **PLANNED** | Resolve historical Market run and backlog | Legacy test/backlog rows are deliberately archived, superseded or finalised without replaying them as current work. |
 
 ## Phase 2 — Security and operational hardening
@@ -240,7 +240,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `OPS-006 — Verify Market retry/idempotency` is **NEXT** and ready for Builder execution.
+**Current work:** `OPS-006 — Verify Market retry/idempotency` is **IN PROGRESS** while the Builder verifies same-date retry behaviour against the completed production run.
 
 ## Definition of Operational
 
