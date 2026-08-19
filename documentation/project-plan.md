@@ -148,7 +148,7 @@ RLS remains disabled on the older Market Assessment/control tables, including `g
 
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
-| SEC-001 | **NEXT** | Define public/private Market Assessment access | Published assessment output and internal queue/run-control access are explicitly classified. |
+| SEC-001 | **IN PROGRESS** | Define public/private Market Assessment access | Published assessment output and internal queue/run-control access are explicitly classified. |
 | SEC-002 | **PLANNED** | Apply deliberate RLS policies | Approved dashboard reads continue; anonymous writes are blocked; internal control tables are protected. |
 | SEC-003 | **PLANNED** | Harden helper-function search paths | Relevant functions use explicit safe search paths or fully qualified references. |
 | SEC-004 | **PLANNED** | Review `pg_net` warning | Placement/usage is remediated or explicitly accepted with rationale. |
@@ -241,7 +241,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `SEC-001 — Define public/private Market Assessment access` is **NEXT** and ready for Builder implementation. No later item has been promoted.
+**Current work:** `SEC-001 — Define public/private Market Assessment access` is **IN PROGRESS**. No later item has been promoted.
 
 ## Definition of Operational
 
