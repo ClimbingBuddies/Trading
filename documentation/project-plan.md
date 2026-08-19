@@ -104,6 +104,7 @@ Successful unattended scheduled runs are persisted for 15–17 August 2026. The 
 - Canonical methodology exists at `automation/daily-market-assessment.md`.
 - The Scheduled Task prompt is the thin runner that retrieves the canonical GitHub specification fresh on every run.
 - Reactivation passed independent audit under `OPS-004`. The first unattended production run completed for the 18 August 2026 New York assessment date with 30/30 active instruments, 68 evidence rows and terminal `succeeded` run/queue state; it passed independent audit under `OPS-005`.
+- The same-date prepare helper now qualifies its queue/run references correctly. Builder verification for `OPS-006` confirmed completed retries and isolated resume probes reuse the existing run without assessment or evidence duplicates.
 
 ### Technical Engine — Scaffolded
 
@@ -140,7 +141,7 @@ RLS remains disabled on the older Market Assessment/control tables, including `g
 | OPS-003 | **DONE** | Standardise Market AI independence metadata | New rows record a version such as `independent-market-ai-v1` and `technical_engine_input_used = false`. |
 | OPS-004 | **DONE** | Reactivate Daily Trading Market Assessment | Weekday task is enabled after the canonical specification is ready. |
 | OPS-005 | **DONE** | Verify first unattended Market Assessment run | Freshness check, full active universe, evidence, finalisation and report complete successfully. |
-| OPS-006 | **IN PROGRESS** | Verify Market retry/idempotency | Retry/resume produces no duplicate assessment or evidence records. |
+| OPS-006 | **IN REVIEW** | Verify Market retry/idempotency | Retry/resume produces no duplicate assessment or evidence records. |
 | OPS-007 | **PLANNED** | Resolve historical Market run and backlog | Legacy test/backlog rows are deliberately archived, superseded or finalised without replaying them as current work. |
 
 ## Phase 2 — Security and operational hardening
@@ -240,7 +241,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `OPS-006 — Verify Market retry/idempotency` is **IN PROGRESS** while the Builder verifies same-date retry behaviour against the completed production run.
+**Current work:** `OPS-006 — Verify Market retry/idempotency` is **IN REVIEW** and awaiting independent audit. No later item has been promoted.
 
 ## Definition of Operational
 
