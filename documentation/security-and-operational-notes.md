@@ -65,19 +65,18 @@ Owner-specific policies use `owner_user_id = auth.uid()`.
 
 System decision-tree templates can be read by authenticated users, while user-owned trees/nodes/edges remain owner-specific.
 
-## 5. Market Assessment access — re-verified 19 August 2026
+## 5. Market Assessment access — applied and verified 19 August 2026
 
-The earlier RLS-disabled finding is resolved in live Supabase:
+`SEC-002` applies the canonical [Market Assessment Access Classification](security/market-assessment-access-classification.md):
 
-- RLS is enabled on `gpt_market_runs`, `gpt_market_assessments`, `gpt_market_evidence`, `market_assessment_queue` and `market_assessment_schedule_log`;
-- `anon` and `authenticated` currently have read-only access to the three GPT output/run tables;
-- queue and schedule-log client access is explicitly blocked;
-- no client write grants exist on the five tables.
+- RLS remains enabled on all five Market Assessment output/control tables;
+- `anon` and `authenticated` can read only completed terminal `scheduled` runs and linked assessment/evidence rows;
+- explicit column grants expose the approved run envelope and approved assessment/evidence fields, leaving future columns private by default;
+- no client write privileges exist on the five tables;
+- queue and schedule-log tables have no client grants and retain deny policies;
+- all seven orchestration functions are executable by `service_role` and not by `PUBLIC`, `anon` or `authenticated`.
 
-The formal access decision is recorded in [Market Assessment Access Classification](security/market-assessment-access-classification.md). It classifies terminal non-test assessment output and linked evidence as public read-only, while full run control, test/non-terminal state, queues, scheduler logs, writes and orchestration functions are internal.
-
-`SEC-002` must narrow the current broad table reads to that approved publication boundary while preserving the public Assessments routes. It must also revoke client execution from the two legacy scheduler functions that remain callable by `anon` and `authenticated`.
-
+Live role verification returned 1 run, 30 assessments and 68 evidence rows to `anon`; internal run columns and both test datasets were inaccessible. The public frontend query requests only the approved run envelope.
 
 ## 6. RLS enabled but no policies
 
@@ -148,7 +147,7 @@ Recommended direction:
 
 Recommended order:
 
-1. Apply the approved Market Assessment access classification under `SEC-002`, preserving public assessment reads while narrowing run/output access and revoking client orchestration-function execution.
+1. Independently audit the applied Market Assessment boundary under `SEC-002`.
 2. Harden helper-function search paths under `SEC-003`.
 3. Review the `pg_net` extension placement under `SEC-004`.
 4. Move frontend Supabase configuration fully to environment variables under `SEC-005`.
