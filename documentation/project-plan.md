@@ -142,13 +142,13 @@ RLS remains disabled on the older Market Assessment/control tables, including `g
 | OPS-004 | **DONE** | Reactivate Daily Trading Market Assessment | Weekday task is enabled after the canonical specification is ready. |
 | OPS-005 | **DONE** | Verify first unattended Market Assessment run | Freshness check, full active universe, evidence, finalisation and report complete successfully. |
 | OPS-006 | **DONE** | Verify Market retry/idempotency | Retry/resume produces no duplicate assessment or evidence records. |
-| OPS-007 | **IN REVIEW** | Resolve historical Market run and backlog | Legacy test/backlog rows are deliberately archived, superseded or finalised without replaying them as current work. |
+| OPS-007 | **DONE** | Resolve historical Market run and backlog | Legacy test/backlog rows are deliberately archived, superseded or finalised without replaying them as current work. |
 
 ## Phase 2 — Security and operational hardening
 
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
-| SEC-001 | **PLANNED** | Define public/private Market Assessment access | Published assessment output and internal queue/run-control access are explicitly classified. |
+| SEC-001 | **NEXT** | Define public/private Market Assessment access | Published assessment output and internal queue/run-control access are explicitly classified. |
 | SEC-002 | **PLANNED** | Apply deliberate RLS policies | Approved dashboard reads continue; anonymous writes are blocked; internal control tables are protected. |
 | SEC-003 | **PLANNED** | Harden helper-function search paths | Relevant functions use explicit safe search paths or fully qualified references. |
 | SEC-004 | **PLANNED** | Review `pg_net` warning | Placement/usage is remediated or explicitly accepted with rationale. |
@@ -241,7 +241,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `OPS-007 — Resolve historical Market run and backlog` is **IN REVIEW** and awaiting independent audit. No later item has been promoted.
+**Current work:** `SEC-001 — Define public/private Market Assessment access` is **NEXT** and ready for Builder implementation. No later item has been promoted.
 
 ## Definition of Operational
 
@@ -266,3 +266,4 @@ A workflow is Operational only when its schema and implementation exist, schedul
 | 18-Aug-2026 | OPS-004 | `documentation/project-audits/OPS-004.md` | Independent audit PASS WITH ADVICE; weekday Market Assessment task verified enabled with the canonical thin runner; OPS-005 promoted. |
 | 19-Aug-2026 | OPS-005 | `documentation/project-audits/OPS-005.md` | Independent audit PASS WITH ADVICE; first unattended Market Assessment verified with 30/30 active instruments, 68 evidence rows and terminal run/queue state; OPS-006 promoted. |
 | 19-Aug-2026 | OPS-006 | `documentation/project-audits/OPS-006.md` | Independent audit PASS WITH ADVICE; completed and resumable same-date retries reused the existing run without assessment/evidence duplicates; OPS-007 promoted. |
+| 19-Aug-2026 | OPS-007 | `documentation/project-audits/OPS-007.md` | Independent audit PASS WITH ADVICE; legacy test lifecycle finalised and seven obsolete queue rows terminally superseded without replay; SEC-001 promoted. |
