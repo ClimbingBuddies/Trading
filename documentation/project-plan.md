@@ -98,8 +98,8 @@ Successful unattended scheduled runs are persisted for 15–17 August 2026. The 
 
 ### ChatGPT Market Assessment — Partial
 
-- 30 Market Assessment rows and 30 evidence rows exist from the historical test dataset.
-- The historical run remains inconsistent: `running`, `tickers_completed = 0`, `completed_at = null` despite the assessment rows.
+- The 1 August historical test dataset remains preserved with 30 Market Assessment rows and 30 evidence rows. Its stale lifecycle was deliberately finalised under `OPS-007` at `succeeded` and 30/30 from persisted rows, without replaying or rewriting assessment/evidence content.
+- Seven unattempted orphan queue records from 3–11 August were terminally closed as superseded legacy backlog under `OPS-007`; no historical GPT runs were created for them and the original schedule logs remain preserved.
 - The Daily Trading Market Assessment Scheduled Task exists and is currently enabled on its weekday schedule.
 - Canonical methodology exists at `automation/daily-market-assessment.md`.
 - The Scheduled Task prompt is the thin runner that retrieves the canonical GitHub specification fresh on every run.
@@ -142,7 +142,7 @@ RLS remains disabled on the older Market Assessment/control tables, including `g
 | OPS-004 | **DONE** | Reactivate Daily Trading Market Assessment | Weekday task is enabled after the canonical specification is ready. |
 | OPS-005 | **DONE** | Verify first unattended Market Assessment run | Freshness check, full active universe, evidence, finalisation and report complete successfully. |
 | OPS-006 | **DONE** | Verify Market retry/idempotency | Retry/resume produces no duplicate assessment or evidence records. |
-| OPS-007 | **IN PROGRESS** | Resolve historical Market run and backlog | Legacy test/backlog rows are deliberately archived, superseded or finalised without replaying them as current work. |
+| OPS-007 | **IN REVIEW** | Resolve historical Market run and backlog | Legacy test/backlog rows are deliberately archived, superseded or finalised without replaying them as current work. |
 
 ## Phase 2 — Security and operational hardening
 
@@ -241,7 +241,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `OPS-007 — Resolve historical Market run and backlog` is **IN PROGRESS** while the Builder inventories and deliberately resolves legacy Market run/queue state.
+**Current work:** `OPS-007 — Resolve historical Market run and backlog` is **IN REVIEW** and awaiting independent audit. No later item has been promoted.
 
 ## Definition of Operational
 
