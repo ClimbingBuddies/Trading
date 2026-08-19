@@ -2,7 +2,7 @@
 
 Supabase project reference: `glvbqcplgjdfgjyknzsa`
 
-**Last verified against the live database:** 18 August 2026
+**Last verified against the live database:** 19 August 2026
 
 This document groups the public schema by business purpose and records both the structural model and current implementation maturity. Supabase is the persisted-data system of record; GitHub holds the canonical assessment methodology and project-control documentation.
 
@@ -303,31 +303,26 @@ Status: **Scaffolded**. The table and access model exist, but production converg
 
 ## 8. RLS and client-access maturity
 
-RLS state was re-verified directly against the live database on 18 August 2026.
+RLS and client privileges were re-verified directly against the live database on 19 August 2026.
 
-### Assessment/output tables with RLS enabled and dashboard-readable SELECT policies
+### Market Assessment publication boundary
 
-The following targeted tables have RLS enabled and an explicit `SELECT` policy for `anon` and `authenticated` users:
+The three GPT Market tables use explicit read allowlists for `anon` and `authenticated`:
 
-- `opportunity_themes`
-- `structural_opportunity_signals`
-- `technology_inflection_signals`
-- `technology_inflection_events`
-- `opportunity_assessments`
-- `opportunity_theme_instruments`
-- `opportunity_theme_external_instruments`
-- `assessment_research_documents`
-- `assessment_research_embeds`
-- `market_convergence_assessments`
-- `gpt_market_runs`
-- `gpt_market_assessments`
-- `gpt_market_evidence`
+- `gpt_market_runs` publishes only completed `scheduled` runs in `succeeded` or `partial` state and grants only the approved seven-field run envelope;
+- `gpt_market_assessments` publishes only rows linked to that run set;
+- `gpt_market_evidence` publishes only rows linked to those published assessments;
+- assessment and evidence column grants enumerate every currently approved public field, so future fields are private by default.
 
-These policies provide dashboard read access; they are not permission for anonymous client writes.
+Live `anon` verification saw 1 run, 30 assessments and 68 evidence rows. Two test runs, 60 test assessments, 90 linked test evidence rows, and internal run metadata were inaccessible.
 
-### Internal Market Assessment control tables
+`market_assessment_queue` and `market_assessment_schedule_log` have no client grants and retain explicit deny policies as defense in depth. No client role has write privileges on any of the five Market Assessment output/control tables. All seven Market orchestration functions are restricted to `service_role`.
 
-`market_assessment_queue` and `market_assessment_schedule_log` both have RLS enabled with explicit `ALL` policies for `anon`/`authenticated` whose conditions are `false`. Client access is therefore deliberately blocked.
+The canonical boundary and exact fields are defined in `documentation/security/market-assessment-access-classification.md`.
+
+### Other assessment/output tables
+
+The Opportunity, Research, Market Convergence and core dashboard tables retain their previously documented read policies. Their access models are separate from the Market Assessment publication boundary.
 
 ### Technical tables
 
@@ -339,9 +334,7 @@ These policies provide dashboard read access; they are not permission for anonym
 
 ### Current security maturity
 
-The targeted assessment tables no longer match the older documentation statement that RLS was disabled across Market Assessment/control tables. The live state is materially more deliberate: published assessment/research output has explicit read policies, while internal queue/schedule controls block client access.
-
-This does **not** complete the wider security-hardening phase. `SEC-001` through `SEC-005` still own the formal access classification, policy review, helper-function search-path hardening, `pg_net` warning review and frontend environment-secret work.
+The Market Assessment policy boundary is implemented under `SEC-002`. The wider hardening phase remains open for helper-function search paths, the `pg_net` warning and frontend environment configuration.
 
 ---
 
