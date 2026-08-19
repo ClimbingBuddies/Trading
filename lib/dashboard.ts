@@ -60,12 +60,8 @@ type MarketRun = {
   completed_at: string | null
   status: string
   analysis_cutoff_time: string | null
-  model_name: string | null
-  prompt_version: string | null
-  analysis_mode: string | null
   tickers_requested: number | null
   tickers_completed: number | null
-  notes: string | null
 }
 
 const PAGE_SIZE = 1000
@@ -188,13 +184,14 @@ async function getLatestProductionMarketRun(): Promise<MarketRun | null> {
   const supabase = getSupabase()
   const result = await supabase
     .from('gpt_market_runs')
-    .select('run_id,started_at,completed_at,status,analysis_cutoff_time,model_name,prompt_version,analysis_mode,tickers_requested,tickers_completed,notes')
+    .select('run_id,started_at,completed_at,status,analysis_cutoff_time,tickers_requested,tickers_completed')
     .in('status', ['succeeded', 'partial'])
     .order('started_at', { ascending: false })
-    .limit(20)
+    .limit(1)
+    .maybeSingle()
 
   if (result.error) throw result.error
-  return ((result.data ?? []) as MarketRun[]).find((run) => run.analysis_mode !== 'test') ?? null
+  return (result.data as MarketRun | null) ?? null
 }
 
 async function fetchSyncRunsSince(sinceIso: string) {
