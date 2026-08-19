@@ -153,26 +153,23 @@ Market Assessment writes are reserved for the trusted scheduled runner/backend u
 | Orchestration functions | No execute | No execute | Execute |
 | Assessment/output writes | No | No | Yes |
 
-## Current live alignment on 19 August 2026
+## SEC-002 live implementation — 19 August 2026
 
-Live Supabase inspection found:
+Migration `supabase/migrations/20260819055000_apply_deliberate_market_assessment_rls.sql` applies this classification without an RLS-bypassing view:
 
-- RLS enabled on all five Market Assessment/output/control tables;
-- `anon` and `authenticated` have `SELECT` only on `gpt_market_runs`, `gpt_market_assessments`, and `gpt_market_evidence`;
-- no client write grants on those five tables;
-- queue and schedule-log policies explicitly deny client access;
-- prepare, finalise, claim, and queue-finalisation functions are restricted to `service_role`;
-- `queue_daily_market_assessment()` and `process_market_assessment_queue()` are still executable by `anon` and `authenticated`;
-- the frontend uses the publishable key and directly reads the three GPT Market tables.
+- `gpt_market_runs` uses a positive production-mode allowlist: only `analysis_mode = 'scheduled'`, terminal `succeeded`/`partial` rows with `completed_at` are client-visible;
+- client column grants on `gpt_market_runs` expose only the seven-field run envelope; model, prompt, mode, notes and `created_at` remain internal;
+- `gpt_market_assessments` and `gpt_market_evidence` use explicit current-column allowlists, so future columns remain private until deliberately granted;
+- assessment policy membership is derived from the client-visible published-run set, and evidence membership is derived from the client-visible published-assessment set;
+- all client write/table privileges remain absent;
+- queue and schedule-log tables retain no client grants plus deny policies as defense in depth;
+- all seven orchestration functions are non-executable by `PUBLIC`, `anon` and `authenticated`, with explicit `service_role` execution.
 
-The current table policy is safer than the historical RLS-disabled state, but it is broader than this classification in two places:
+Builder verification as `anon` returned 1 published run, 30 assessments and 68 evidence rows. The two test runs, their 60 assessments and their 90 evidence rows were not visible. Selecting internal run columns returned PostgreSQL `42501 permission denied`.
 
-1. direct public `SELECT` on all `gpt_market_runs` rows exposes test, non-terminal, and internal metadata;
-2. table-wide assessment/evidence policies do not enforce the terminal non-test publication boundary.
+The frontend now requests only the published run envelope; database policy, rather than browser-side filtering, determines which run is publishable.
 
-The two legacy scheduler functions also have broader execute grants than this classification permits.
-
-## SEC-002 implementation contract
+## SEC-002 implementation and audit contract
 
 `SEC-002 — Apply deliberate RLS policies` should:
 
