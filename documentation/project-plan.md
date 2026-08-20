@@ -152,7 +152,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | SEC-002 | **DONE** | Apply deliberate RLS policies | Approved dashboard reads continue; anonymous writes are blocked; internal control tables are protected. |
 | SEC-003 | **DONE** | Harden helper-function search paths | Relevant functions use explicit safe search paths or fully qualified references. |
 | SEC-004 | **DONE** | Review `pg_net` warning | Placement/usage is remediated or explicitly accepted with rationale. |
-| SEC-005 | **IN PROGRESS** | Remove frontend Supabase fallback configuration | Production uses Vercel environment variables without privileged frontend secrets. |
+| SEC-005 | **BLOCKED** | Remove frontend Supabase fallback configuration | Production uses Vercel environment variables without privileged frontend secrets. |
 
 ## Phase 3 — Independent Technical Engine
 
@@ -241,7 +241,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `SEC-005 — Remove frontend Supabase fallback configuration` is **IN PROGRESS**. The Builder is inspecting frontend configuration, Vercel environment variables, and the active production deployment before removing hard-coded fallbacks. All later items remain PLANNED.
+**Current work:** `SEC-005 — Remove frontend Supabase fallback configuration` is **BLOCKED**. Fail-closed deployment `ef853bf4ec25262c6ac1b29fb4c563128c50e0ab` proved that `boulders-market` production does not define `NEXT_PUBLIC_SUPABASE_URL` or `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`; `/markets/NVDA` returned 500 with both names reported missing. The Builder restored the prior fallback implementation in `6439b7ebc12393d10eb5a7f816419e2c6a6e9584` to preserve production availability. Remediation: configure both non-privileged variables for the Vercel production environment, redeploy, then rerun SEC-005 to remove the source fallbacks and verify data-backed production routes. All later items remain PLANNED.
 
 ## Definition of Operational
 
