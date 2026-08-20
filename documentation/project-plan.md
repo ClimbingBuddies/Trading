@@ -115,9 +115,9 @@ Successful unattended scheduled runs are persisted for 15–17 August 2026. The 
 
 - `market_convergence_assessments`: no current rows.
 
-### Security — Requires hardening
+### Security — Hardened through SEC-005
 
-RLS is enabled on the Market Assessment output/control tables. `SEC-001` classifies terminal non-test assessment output and linked evidence as public read-only, while full run control, queues, schedule logs, writes and orchestration functions are internal. `SEC-002` has applied the strict row-level and column-level publication boundary, blocked client writes, protected control tables and restricted all Market orchestration functions to the trusted backend. The corrected frontend query is deployed, the temporary four-column compatibility grant has been revoked, and the affected production routes remain healthy. SEC-002 passed independent audit. SEC-003 passed independent audit after all nine application-owned helper functions were verified with an empty fixed search path, fully qualified application references, preserved access boundaries and passing live smoke probes. SEC-004 passed independent audit with advice: the remaining pg_net catalog-placement warning is explicitly accepted because pg_net 0.20.4 is non-relocatable, all 28 extension members are isolated in net, none are in public, and the supported cron/Vault loader path remains operational. The audit records follow-up advice for API-schema exposure and response-timeout observability.
+RLS is enabled on the Market Assessment output/control tables. `SEC-001` classifies terminal non-test assessment output and linked evidence as public read-only, while full run control, queues, schedule logs, writes and orchestration functions are internal. `SEC-002` has applied the strict row-level and column-level publication boundary, blocked client writes, protected control tables and restricted all Market orchestration functions to the trusted backend. The corrected frontend query is deployed, the temporary four-column compatibility grant has been revoked, and the affected production routes remain healthy. SEC-002 passed independent audit. SEC-003 passed independent audit after all nine application-owned helper functions were verified with an empty fixed search path, fully qualified application references, preserved access boundaries and passing live smoke probes. SEC-004 passed independent audit with advice: the remaining pg_net catalog-placement warning is explicitly accepted because pg_net 0.20.4 is non-relocatable, all 28 extension members are isolated in net, none are in public, and the supported cron/Vault loader path remains operational. SEC-005 passed independent audit after the hard-coded frontend Supabase URL/publishable-key fallbacks were removed, the production Vercel variables were proven effective through fallback-free data-backed routes, and no privileged frontend credential was required.
 
 ## Phase 0 — Documentation baseline
 
@@ -152,13 +152,13 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | SEC-002 | **DONE** | Apply deliberate RLS policies | Approved dashboard reads continue; anonymous writes are blocked; internal control tables are protected. |
 | SEC-003 | **DONE** | Harden helper-function search paths | Relevant functions use explicit safe search paths or fully qualified references. |
 | SEC-004 | **DONE** | Review `pg_net` warning | Placement/usage is remediated or explicitly accepted with rationale. |
-| SEC-005 | **IN REVIEW** | Remove frontend Supabase fallback configuration | Production uses Vercel environment variables without privileged frontend secrets. |
+| SEC-005 | **DONE** | Remove frontend Supabase fallback configuration | Production uses Vercel environment variables without privileged frontend secrets. |
 
 ## Phase 3 — Independent Technical Engine
 
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
-| TECH-001 | **PLANNED** | Define technical calculation specification | Indicators, intervals, history requirements, formulas, versioning and missing-data behaviour are documented. |
+| TECH-001 | **NEXT** | Define technical calculation specification | Indicators, intervals, history requirements, formulas, versioning and missing-data behaviour are documented. |
 | TECH-002 | **PLANNED** | Implement core technical indicators | Versioned `technical_indicators` are generated from real market observations. |
 | TECH-003 | **PLANNED** | Implement technical market scoring | `market_scores` receives reproducible component scores, overall score, confidence and version. |
 | TECH-004 | **PLANNED** | Add scheduler and monitoring | Frequency, ownership, errors, retries and Admin visibility are explicit. |
@@ -241,7 +241,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `SEC-005 — Remove frontend Supabase fallback configuration` is **IN REVIEW**. Vercel project `boulders-market` now defines `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` for Production only. An unchanged fallback deployment (`dpl_CTy15Lyz8fUUyEgJex2pYWWqZLoZ`) first reached READY and passed `/markets`, `/markets/NVDA`, `/assessments`, `/opportunities` and `/admin`. Commit `3164149cedad421f81e6bb837d888628b2327949` then removed the hard-coded URL and publishable-key fallbacks, retaining explicit fail-closed validation. Its production deployment (`dpl_2SCVuTQALbNt2mVVGKscYJsCAMxF`) reached READY and the same five data-backed routes passed. SEC-005 now awaits independent Auditor verification; all later items remain PLANNED.
+**Current work:** `TECH-001 — Define technical calculation specification` is **NEXT**. SEC-005 passed independent audit and the security-hardening phase is complete. The next Builder run may begin TECH-001; all later items remain PLANNED.
 
 ## Definition of Operational
 
@@ -271,3 +271,4 @@ A workflow is Operational only when its schema and implementation exist, schedul
 | 20-Aug-2026 | SEC-002 | `documentation/project-audits/SEC-002.md` | Independent audit PASS; deliberate RLS, client-write denial, internal controls and production dashboard reads verified; SEC-003 promoted. |
 | 20-Aug-2026 | SEC-003 | `documentation/project-audits/SEC-003.md` | Independent audit PASS; all nine application-owned helpers verified with fixed empty search paths and qualified application references; SEC-004 promoted. |
 | 20-Aug-2026 | SEC-004 | `documentation/project-audits/SEC-004.md` | Independent audit PASS WITH ADVICE; bounded pg_net warning acceptance verified against live object placement and supported healthy usage; SEC-005 promoted. |
+| 20-Aug-2026 | SEC-005 | `documentation/project-audits/SEC-005.md` | Independent audit PASS; fallback-free frontend configuration and live Vercel environment-backed production reads verified; TECH-001 promoted. |
