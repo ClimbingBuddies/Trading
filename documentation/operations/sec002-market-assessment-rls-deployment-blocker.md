@@ -2,7 +2,7 @@
 
 **Task:** `SEC-002 — Apply deliberate RLS policies`  
 **Date:** 19 August 2026  
-**Status:** BLOCKED pending corrected frontend deployment
+**Status:** RESOLVED — strict boundary restored and ready for independent audit
 
 ## Implemented database boundary
 
@@ -61,3 +61,23 @@ SEC-002 must not move to `IN REVIEW` until all of the following are independentl
 5. test/non-terminal rows remain hidden, client writes remain blocked, control tables remain private and orchestration functions remain trusted-backend-only.
 
 The Builder must then re-run primary-evidence verification and only then hand SEC-002 to the independent Auditor.
+
+## Resolution and Builder re-verification — 20 August 2026
+
+The deployment dependency is resolved. Vercel production deployment `dpl_AkLMcwYHY3PgsWbxg8gURh8f3puj` is `READY` on current `main` commit `aec4efc96cc6df9ca7c6840e46375a39de630c52`, which contains the corrected seven-field `lib/dashboard.ts` query.
+
+Migration `supabase/migrations/20260820013500_sec002_remove_legacy_frontend_compatibility.sql` was committed to GitHub and applied to live project `glvbqcplgjdfgjyknzsa`. It revokes client `SELECT` on `model_name`, `prompt_version`, `analysis_mode`, and `notes`.
+
+Fresh post-change evidence:
+
+- `anon` and `authenticated` have exactly the approved seven readable `gpt_market_runs` columns;
+- direct reads of the four legacy/internal columns fail with PostgreSQL `42501 permission denied`;
+- both client roles see exactly 2 currently publishable runs, 60 linked assessments, and 128 linked evidence rows;
+- the database contains 4 total runs, 120 assessments, and 218 evidence rows, so the 2 private runs and their 60 assessments / 90 evidence rows remain hidden;
+- clients retain no insert, update, or delete privileges on any of the five output/control tables;
+- `market_assessment_queue` and `market_assessment_schedule_log` remain unreadable to client roles;
+- all seven orchestration functions remain non-executable by `anon` and `authenticated`, and executable by `service_role`;
+- `/assessments`, `/assessments/NVDA`, and `/markets/NVDA` each return HTTP 200 with real published data after the revocation;
+- the fresh Supabase Security Advisor result contains no SEC-002-specific finding. The existing `pg_net` warning remains scoped to `SEC-004`.
+
+All recorded remediation conditions are now satisfied. SEC-002 has been handed to the independent Auditor as `IN REVIEW`.
