@@ -188,3 +188,19 @@ If views are used, their ownership and `security_invoker` behaviour must be deli
 ## Default rule for future fields and resources
 
 New Market Assessment fields, tables, views, functions, and error/telemetry data are internal by default. They become public only after this document or a successor security decision explicitly classifies them and the public surface is verified not to expose credentials, private operator notes, or mutable control capability.
+
+## SEC-002 strict-boundary completion — 20 August 2026
+
+The temporary compatibility bridge created while Vercel served the legacy query has been removed. Migration `supabase/migrations/20260820013500_sec002_remove_legacy_frontend_compatibility.sql` revokes client access to `model_name`, `prompt_version`, `analysis_mode`, and `notes` after the corrected seven-field frontend query reached production.
+
+Fresh Builder verification established:
+
+- `anon` and `authenticated` can read exactly the approved seven-field run envelope;
+- selecting the four internal legacy columns fails with PostgreSQL `42501`;
+- the publication policies expose 2 of 4 runs, 60 of 120 assessments, and 128 of 218 evidence rows, exactly matching the current terminal `scheduled` set;
+- client writes are absent across all five Market Assessment output/control tables;
+- the queue and schedule-log tables remain client-inaccessible;
+- all seven orchestration functions remain trusted-backend-only;
+- production `/assessments`, `/assessments/NVDA`, and `/markets/NVDA` return HTTP 200 with real published data.
+
+This is Builder pre-flight evidence only. Independent approval remains the responsibility of the Project Plan Auditor.
