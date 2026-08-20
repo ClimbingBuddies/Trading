@@ -150,7 +150,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 |---|---|---|---|
 | SEC-001 | **DONE** | Define public/private Market Assessment access | Published assessment output and internal queue/run-control access are explicitly classified. |
 | SEC-002 | **DONE** | Apply deliberate RLS policies | Approved dashboard reads continue; anonymous writes are blocked; internal control tables are protected. |
-| SEC-003 | **NEXT** | Harden helper-function search paths | Relevant functions use explicit safe search paths or fully qualified references. |
+| SEC-003 | **IN PROGRESS** | Harden helper-function search paths | Relevant functions use explicit safe search paths or fully qualified references. |
 | SEC-004 | **PLANNED** | Review `pg_net` warning | Placement/usage is remediated or explicitly accepted with rationale. |
 | SEC-005 | **PLANNED** | Remove frontend Supabase fallback configuration | Production uses Vercel environment variables without privileged frontend secrets. |
 
@@ -241,7 +241,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `SEC-003 — Harden helper-function search paths` is **NEXT** after SEC-002 passed independent audit. The next Builder run should harden only SEC-003; SEC-004 and all later items remain PLANNED.
+**Current work:** `SEC-003 — Harden helper-function search paths` is **IN PROGRESS**. The Builder is replacing trusted helper-function paths with an empty fixed search path after verifying their database references are schema-qualified. SEC-004 and all later items remain PLANNED.
 
 ## Definition of Operational
 
