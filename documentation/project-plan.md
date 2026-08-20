@@ -151,7 +151,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | SEC-001 | **DONE** | Define public/private Market Assessment access | Published assessment output and internal queue/run-control access are explicitly classified. |
 | SEC-002 | **DONE** | Apply deliberate RLS policies | Approved dashboard reads continue; anonymous writes are blocked; internal control tables are protected. |
 | SEC-003 | **DONE** | Harden helper-function search paths | Relevant functions use explicit safe search paths or fully qualified references. |
-| SEC-004 | **NEXT** | Review `pg_net` warning | Placement/usage is remediated or explicitly accepted with rationale. |
+| SEC-004 | **IN PROGRESS** | Review `pg_net` warning | Placement/usage is remediated or explicitly accepted with rationale. |
 | SEC-005 | **PLANNED** | Remove frontend Supabase fallback configuration | Production uses Vercel environment variables without privileged frontend secrets. |
 
 ## Phase 3 — Independent Technical Engine
@@ -241,7 +241,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `SEC-004` — Review `pg_net` warning — is **NEXT**. The Builder should determine whether the extension's placement/usage can be remediated safely or must be explicitly accepted with rationale. SEC-005 and all later items remain PLANNED.
+**Current work:** `SEC-004` — Review `pg_net` warning — is **IN PROGRESS**. The Builder is inspecting the live extension placement, dependencies and supported remediation path. SEC-005 and all later items remain PLANNED.
 
 ## Definition of Operational
 
