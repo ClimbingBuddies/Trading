@@ -117,7 +117,7 @@ Successful unattended scheduled runs are persisted for 15–17 August 2026. The 
 
 ### Security — Requires hardening
 
-RLS is enabled on the Market Assessment output/control tables. `SEC-001` classifies terminal non-test assessment output and linked evidence as public read-only, while full run control, queues, schedule logs, writes and orchestration functions are internal. `SEC-002` has applied the strict row-level and column-level publication boundary, blocked client writes, protected control tables and restricted all Market orchestration functions to the trusted backend. The corrected frontend query is deployed, the temporary four-column compatibility grant has been revoked, and the affected production routes remain healthy. SEC-002 passed independent audit; SEC-003 is the active hardening item.
+RLS is enabled on the Market Assessment output/control tables. `SEC-001` classifies terminal non-test assessment output and linked evidence as public read-only, while full run control, queues, schedule logs, writes and orchestration functions are internal. `SEC-002` has applied the strict row-level and column-level publication boundary, blocked client writes, protected control tables and restricted all Market orchestration functions to the trusted backend. The corrected frontend query is deployed, the temporary four-column compatibility grant has been revoked, and the affected production routes remain healthy. SEC-002 passed independent audit. SEC-003 has pinned all nine application-owned helper functions to an empty fixed search path while preserving their bodies, attributes, grants and trigger bindings; it is awaiting independent audit.
 
 ## Phase 0 — Documentation baseline
 
@@ -150,7 +150,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 |---|---|---|---|
 | SEC-001 | **DONE** | Define public/private Market Assessment access | Published assessment output and internal queue/run-control access are explicitly classified. |
 | SEC-002 | **DONE** | Apply deliberate RLS policies | Approved dashboard reads continue; anonymous writes are blocked; internal control tables are protected. |
-| SEC-003 | **IN PROGRESS** | Harden helper-function search paths | Relevant functions use explicit safe search paths or fully qualified references. |
+| SEC-003 | **IN REVIEW** | Harden helper-function search paths | Relevant functions use explicit safe search paths or fully qualified references. |
 | SEC-004 | **PLANNED** | Review `pg_net` warning | Placement/usage is remediated or explicitly accepted with rationale. |
 | SEC-005 | **PLANNED** | Remove frontend Supabase fallback configuration | Production uses Vercel environment variables without privileged frontend secrets. |
 
@@ -241,7 +241,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `SEC-003 — Harden helper-function search paths` is **IN PROGRESS**. The Builder is replacing trusted helper-function paths with an empty fixed search path after verifying their database references are schema-qualified. SEC-004 and all later items remain PLANNED.
+**Current work:** `SEC-003 — Harden helper-function search paths` is **IN REVIEW**. The Builder applied an empty fixed search path to all nine application-owned helpers, preserved execution privileges and trigger bindings, and completed live smoke verification. The independent Auditor owns the next decision. SEC-004 and all later items remain PLANNED.
 
 ## Definition of Operational
 
