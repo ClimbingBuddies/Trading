@@ -117,7 +117,7 @@ Successful unattended scheduled runs are persisted for 15–17 August 2026. The 
 
 ### Security — Requires hardening
 
-RLS is enabled on the Market Assessment output/control tables. `SEC-001` classifies terminal non-test assessment output and linked evidence as public read-only, while full run control, queues, schedule logs, writes and orchestration functions are internal. `SEC-002` has applied the row-level publication boundary, blocked client writes, protected control tables and restricted all Market orchestration functions to the trusted backend. The corrected frontend query is now deployed in production and the affected public routes are healthy. SEC-002 has resumed so the Builder can revoke the temporary four-column compatibility grant, re-verify the strict publication boundary, and hand the item to independent audit.
+RLS is enabled on the Market Assessment output/control tables. `SEC-001` classifies terminal non-test assessment output and linked evidence as public read-only, while full run control, queues, schedule logs, writes and orchestration functions are internal. `SEC-002` has applied the strict row-level and column-level publication boundary, blocked client writes, protected control tables and restricted all Market orchestration functions to the trusted backend. The corrected frontend query is deployed, the temporary four-column compatibility grant has been revoked, and the affected production routes remain healthy. SEC-002 is awaiting independent audit.
 
 ## Phase 0 — Documentation baseline
 
@@ -149,7 +149,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
 | SEC-001 | **DONE** | Define public/private Market Assessment access | Published assessment output and internal queue/run-control access are explicitly classified. |
-| SEC-002 | **IN PROGRESS** | Apply deliberate RLS policies | Approved dashboard reads continue; anonymous writes are blocked; internal control tables are protected. |
+| SEC-002 | **IN REVIEW** | Apply deliberate RLS policies | Approved dashboard reads continue; anonymous writes are blocked; internal control tables are protected. |
 | SEC-003 | **PLANNED** | Harden helper-function search paths | Relevant functions use explicit safe search paths or fully qualified references. |
 | SEC-004 | **PLANNED** | Review `pg_net` warning | Placement/usage is remediated or explicitly accepted with rationale. |
 | SEC-005 | **PLANNED** | Remove frontend Supabase fallback configuration | Production uses Vercel environment variables without privileged frontend secrets. |
@@ -241,7 +241,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `SEC-002 — Apply deliberate RLS policies` is **IN PROGRESS**. The Vercel deployment dependency has cleared; the Builder must remove the temporary compatibility grants, re-verify production and the strict RLS boundary, then hand the item to the Auditor. No later item has been promoted.
+**Current work:** `SEC-002 — Apply deliberate RLS policies` is **IN REVIEW**. The Builder removed the temporary compatibility grants and re-verified the strict Supabase publication boundary plus the affected production routes. The independent Auditor owns the next decision. No later item has been promoted.
 
 ## Definition of Operational
 
