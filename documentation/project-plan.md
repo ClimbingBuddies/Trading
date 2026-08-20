@@ -117,7 +117,7 @@ Successful unattended scheduled runs are persisted for 15–17 August 2026. The 
 
 ### Security — Requires hardening
 
-RLS is enabled on the Market Assessment output/control tables. `SEC-001` classifies terminal non-test assessment output and linked evidence as public read-only, while full run control, queues, schedule logs, writes and orchestration functions are internal. `SEC-002` has applied the strict row-level and column-level publication boundary, blocked client writes, protected control tables and restricted all Market orchestration functions to the trusted backend. The corrected frontend query is deployed, the temporary four-column compatibility grant has been revoked, and the affected production routes remain healthy. SEC-002 passed independent audit. SEC-003 has pinned all nine application-owned helper functions to an empty fixed search path while preserving their bodies, attributes, grants and trigger bindings; it is awaiting independent audit.
+RLS is enabled on the Market Assessment output/control tables. `SEC-001` classifies terminal non-test assessment output and linked evidence as public read-only, while full run control, queues, schedule logs, writes and orchestration functions are internal. `SEC-002` has applied the strict row-level and column-level publication boundary, blocked client writes, protected control tables and restricted all Market orchestration functions to the trusted backend. The corrected frontend query is deployed, the temporary four-column compatibility grant has been revoked, and the affected production routes remain healthy. SEC-002 passed independent audit. SEC-003 passed independent audit after all nine application-owned helper functions were verified with an empty fixed search path, fully qualified application references, preserved access boundaries and passing live smoke probes. SEC-004 is next.
 
 ## Phase 0 — Documentation baseline
 
@@ -150,8 +150,8 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 |---|---|---|---|
 | SEC-001 | **DONE** | Define public/private Market Assessment access | Published assessment output and internal queue/run-control access are explicitly classified. |
 | SEC-002 | **DONE** | Apply deliberate RLS policies | Approved dashboard reads continue; anonymous writes are blocked; internal control tables are protected. |
-| SEC-003 | **IN REVIEW** | Harden helper-function search paths | Relevant functions use explicit safe search paths or fully qualified references. |
-| SEC-004 | **PLANNED** | Review `pg_net` warning | Placement/usage is remediated or explicitly accepted with rationale. |
+| SEC-003 | **DONE** | Harden helper-function search paths | Relevant functions use explicit safe search paths or fully qualified references. |
+| SEC-004 | **NEXT** | Review `pg_net` warning | Placement/usage is remediated or explicitly accepted with rationale. |
 | SEC-005 | **PLANNED** | Remove frontend Supabase fallback configuration | Production uses Vercel environment variables without privileged frontend secrets. |
 
 ## Phase 3 — Independent Technical Engine
@@ -241,7 +241,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `SEC-003 — Harden helper-function search paths` is **IN REVIEW**. The Builder applied an empty fixed search path to all nine application-owned helpers, preserved execution privileges and trigger bindings, and completed live smoke verification. The independent Auditor owns the next decision. SEC-004 and all later items remain PLANNED.
+**Current work:** `SEC-004` — Review `pg_net` warning — is **NEXT**. The Builder should determine whether the extension's placement/usage can be remediated safely or must be explicitly accepted with rationale. SEC-005 and all later items remain PLANNED.
 
 ## Definition of Operational
 
@@ -269,3 +269,4 @@ A workflow is Operational only when its schema and implementation exist, schedul
 | 19-Aug-2026 | OPS-007 | `documentation/project-audits/OPS-007.md` | Independent audit PASS WITH ADVICE; legacy test lifecycle finalised and seven obsolete queue rows terminally superseded without replay; SEC-001 promoted. |
 | 19-Aug-2026 | SEC-001 | `documentation/project-audits/SEC-001.md` | Independent audit PASS WITH ADVICE; public assessment output and internal run/queue/control access explicitly classified; SEC-002 promoted. |
 | 20-Aug-2026 | SEC-002 | `documentation/project-audits/SEC-002.md` | Independent audit PASS; deliberate RLS, client-write denial, internal controls and production dashboard reads verified; SEC-003 promoted. |
+| 20-Aug-2026 | SEC-003 | `documentation/project-audits/SEC-003.md` | Independent audit PASS; all nine application-owned helpers verified with fixed empty search paths and qualified application references; SEC-004 promoted. |
