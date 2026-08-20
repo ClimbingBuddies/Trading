@@ -152,7 +152,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | SEC-002 | **DONE** | Apply deliberate RLS policies | Approved dashboard reads continue; anonymous writes are blocked; internal control tables are protected. |
 | SEC-003 | **DONE** | Harden helper-function search paths | Relevant functions use explicit safe search paths or fully qualified references. |
 | SEC-004 | **DONE** | Review `pg_net` warning | Placement/usage is remediated or explicitly accepted with rationale. |
-| SEC-005 | **NEXT** | Remove frontend Supabase fallback configuration | Production uses Vercel environment variables without privileged frontend secrets. |
+| SEC-005 | **IN PROGRESS** | Remove frontend Supabase fallback configuration | Production uses Vercel environment variables without privileged frontend secrets. |
 
 ## Phase 3 — Independent Technical Engine
 
@@ -241,7 +241,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `SEC-005 — Remove frontend Supabase fallback configuration` is **NEXT**. The Builder should remove hard-coded fallback values and verify production uses Vercel environment variables without privileged frontend secrets. All later items remain PLANNED.
+**Current work:** `SEC-005 — Remove frontend Supabase fallback configuration` is **IN PROGRESS**. The Builder is inspecting frontend configuration, Vercel environment variables, and the active production deployment before removing hard-coded fallbacks. All later items remain PLANNED.
 
 ## Definition of Operational
 
