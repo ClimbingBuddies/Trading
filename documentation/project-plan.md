@@ -117,7 +117,7 @@ Successful unattended scheduled runs are persisted for 15–17 August 2026. The 
 
 ### Security — Requires hardening
 
-RLS is enabled on the Market Assessment output/control tables. `SEC-001` classifies terminal non-test assessment output and linked evidence as public read-only, while full run control, queues, schedule logs, writes and orchestration functions are internal. `SEC-002` has applied the strict row-level and column-level publication boundary, blocked client writes, protected control tables and restricted all Market orchestration functions to the trusted backend. The corrected frontend query is deployed, the temporary four-column compatibility grant has been revoked, and the affected production routes remain healthy. SEC-002 passed independent audit. SEC-003 passed independent audit after all nine application-owned helper functions were verified with an empty fixed search path, fully qualified application references, preserved access boundaries and passing live smoke probes. SEC-004 is next.
+RLS is enabled on the Market Assessment output/control tables. `SEC-001` classifies terminal non-test assessment output and linked evidence as public read-only, while full run control, queues, schedule logs, writes and orchestration functions are internal. `SEC-002` has applied the strict row-level and column-level publication boundary, blocked client writes, protected control tables and restricted all Market orchestration functions to the trusted backend. The corrected frontend query is deployed, the temporary four-column compatibility grant has been revoked, and the affected production routes remain healthy. SEC-002 passed independent audit. SEC-003 passed independent audit after all nine application-owned helper functions were verified with an empty fixed search path, fully qualified application references, preserved access boundaries and passing live smoke probes. SEC-004 has documented a bounded acceptance of the remaining pg_net catalog-placement warning: pg_net 0.20.4 is non-relocatable, owns no objects in public, and is operationally required by the healthy 15-minute loader. It is awaiting independent audit.
 
 ## Phase 0 — Documentation baseline
 
@@ -151,7 +151,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | SEC-001 | **DONE** | Define public/private Market Assessment access | Published assessment output and internal queue/run-control access are explicitly classified. |
 | SEC-002 | **DONE** | Apply deliberate RLS policies | Approved dashboard reads continue; anonymous writes are blocked; internal control tables are protected. |
 | SEC-003 | **DONE** | Harden helper-function search paths | Relevant functions use explicit safe search paths or fully qualified references. |
-| SEC-004 | **IN PROGRESS** | Review `pg_net` warning | Placement/usage is remediated or explicitly accepted with rationale. |
+| SEC-004 | **IN REVIEW** | Review `pg_net` warning | Placement/usage is remediated or explicitly accepted with rationale. |
 | SEC-005 | **PLANNED** | Remove frontend Supabase fallback configuration | Production uses Vercel environment variables without privileged frontend secrets. |
 
 ## Phase 3 — Independent Technical Engine
@@ -241,7 +241,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `SEC-004` — Review `pg_net` warning — is **IN PROGRESS**. The Builder is inspecting the live extension placement, dependencies and supported remediation path. SEC-005 and all later items remain PLANNED.
+**Current work:** `SEC-004` — Review `pg_net` warning — is **IN REVIEW**. The Builder explicitly accepted the catalog-placement warning with rationale after verifying that pg_net is non-relocatable, owns zero public-schema members, and supports the active healthy loader from its dedicated `net` schema. The independent Auditor owns the next decision. SEC-005 and all later items remain PLANNED.
 
 ## Definition of Operational
 
