@@ -2,7 +2,7 @@
 
 Supabase project reference: `glvbqcplgjdfgjyknzsa`
 
-**Last verified against the live database:** 19 August 2026
+**Last verified against the live database:** 21 August 2026
 
 This document groups the public schema by business purpose and records both the structural model and current implementation maturity. Supabase is the persisted-data system of record; GitHub holds the canonical assessment methodology and project-control documentation.
 
@@ -92,15 +92,22 @@ Key fields include `instrument_id`, `observation_id`, `indicator_code`, `interva
 
 The service-only `technical_engine.refresh_v1` function calculates deterministic latest snapshots from Tiingo `1day` observations. Its identity key includes `interval_code` so daily and weekly results cannot overwrite one another.
 
-Status: **Partial / advanced** — calculation and persisted results are implemented; technical scoring, recurring ownership and product surfaces remain later project-plan items.
+Status: **Partial / advanced** — calculation and persisted results are implemented; recurring ownership and product surfaces remain later project-plan items.
 
 ### `market_scores`
 
-Intended persisted technical market scoring by instrument, including component/overall scoring and confidence/versioning once the Technical Engine is implemented.
+Independent, versioned technical market scoring by instrument. Key fields include component scores, `overall_score`, `confidence_score`, `methodology_version`, `technical_calculation_version`, `score_status`, `score_details` and `calculated_at`. The deterministic identity is `(instrument_id, score_date, methodology_version)`.
 
-**Live verification on 18 August 2026:** 0 rows.
+The service-only `technical_engine.refresh_scores_v1` function consumes only `technical-engine-v1` indicators and canonical Tiingo price/volume observations. It does not read AI Market Assessment, Opportunity Assessment or convergence output.
 
-Status: **Scaffolded**.
+**Live verification on 21 August 2026:** 71 `technical-score-v1` rows across 71 instruments: 61 complete and 10 partial. All scores are within 0–100, every row contains reproducibility metadata, and a full retry preserved all row IDs and deterministic score payloads with zero duplicate identities.
+
+Status: **Partial / advanced** — component, overall, confidence and versioned persistence are implemented; recurring ownership, monitoring and product surfaces remain later project-plan items.
+
+Canonical methodology and implementation:
+
+- `documentation/specifications/technical-market-scoring-specification.md`
+- `documentation/pipelines/technical-market-scoring-pipeline.md`
 
 ### `market_opinions`
 
