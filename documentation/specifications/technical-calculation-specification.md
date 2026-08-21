@@ -2,7 +2,7 @@
 
 **Task:** TECH-001 — Define technical calculation specification  
 **Specification version:** `technical-engine-v1`  
-**Status:** Design baseline
+**Status:** Builder complete — awaiting Auditor review
 
 ## Purpose
 
@@ -10,7 +10,7 @@ This document defines the calculation contract for the Independent Technical Eng
 
 > Is this instrument technically attractive based only on market observations and technical calculations?
 
-The Technical Engine is independent from the ChatGPT Market Assessment, Opportunity Assessment and Market Convergence systems until the defined convergence phase.
+The Technical Engine is independent from ChatGPT Market Assessment, Opportunity Assessment and Market Convergence until the defined convergence phase.
 
 ## Source data
 
@@ -18,13 +18,19 @@ Primary input:
 
 - `market_observations`
 
-The engine must only use validated market observations. It must not consume:
+Required ordering:
 
-- GPT Market Assessment outputs;
-- Buy/Hold/Sell conclusions;
-- Opportunity Assessment signals;
-- Technology Inflection Signals;
-- Market Convergence outputs.
+- observations are processed in ascending observation timestamp order;
+- duplicate instrument/date observations must be removed deterministically using the canonical observation identifier and latest valid persisted observation rule;
+- calculations must never depend on query return order.
+
+Invalid observations:
+
+- null, zero or negative prices are invalid inputs for price-based calculations;
+- invalid observations are excluded from calculation windows and recorded as data-quality failures;
+- calculations are not produced when exclusion causes insufficient history.
+
+The engine must not consume GPT Market Assessment outputs, Buy/Hold/Sell conclusions, Opportunity Assessment signals, Technology Inflection Signals or Market Convergence outputs.
 
 ## Calculation intervals
 
@@ -36,7 +42,11 @@ Initial supported intervals:
 | Weekly | Medium-term trend confirmation |
 | Intraday observations | Future extension only after scheduler requirements are defined |
 
-The first production implementation should calculate daily indicators from available historical observations.
+Weekly aggregation:
+
+- weekly candles are derived only from validated daily observations;
+- week boundaries use the platform market calendar definition;
+- weekly open is first valid observation, high is maximum price, low is minimum price, close is final valid observation, and volume is aggregated where available.
 
 ## History requirements
 
@@ -44,18 +54,17 @@ Minimum history requirements:
 
 | Indicator family | Required history |
 |---|---|
-| Moving averages | Maximum lookback window + warm-up period |
-| RSI | 14 periods minimum |
-| MACD | 26-period EMA, 12-period EMA and 9-period signal EMA inputs |
-| Volatility | 20 periods minimum for rolling volatility |
+| SMA | Period length plus complete available periods |
+| EMA | Period length plus warm-up observations |
+| RSI | 14 periods plus initial average gain/loss seed |
+| MACD | 26-period EMA, 12-period EMA and 9-period signal warm-up |
+| Volatility | 20 return observations |
 
-If insufficient history exists, the indicator must not fabricate values.
+No indicator value may be fabricated when history is unavailable.
 
 ## Indicator definitions
 
 ### Simple Moving Average (SMA)
-
-Formula:
 
 `SMA(n) = Sum(close prices for n periods) / n`
 
@@ -75,6 +84,12 @@ where:
 
 `multiplier = 2 / (n + 1)`
 
+EMA seeding:
+
+- the first EMA value is seeded using the SMA of the first n valid closing prices;
+- subsequent values use the recursive EMA formula;
+- no EMA is emitted until the complete seed window exists.
+
 Initial periods:
 
 - EMA-12
@@ -90,6 +105,12 @@ where:
 
 `RS = Average Gain / Average Loss`
 
+RSI smoothing:
+
+- RSI uses Wilder's smoothing method after the initial 14-period seed;
+- initial average gain and loss are arithmetic averages of the first 14 periods;
+- later values use Wilder recursive smoothing.
+
 Initial period:
 
 - RSI-14
@@ -104,15 +125,36 @@ Formula:
 
 `Histogram = MACD Line - Signal Line`
 
+MACD warm-up:
+
+- MACD requires completed EMA-12 and EMA-26 series;
+- signal values begin only after nine MACD line values exist;
+- histogram values begin only after signal warm-up completes.
+
 ### Rolling volatility
 
-Formula:
+Return calculation:
 
-`Volatility = Standard Deviation(period returns) × sqrt(periods per year)`
+`return = (close_today / close_previous) - 1`
+
+Volatility:
+
+`annualised volatility = standard deviation(period returns) × sqrt(252)`
 
 Initial period:
 
-- 20 trading days
+- 20 trading-day rolling volatility.
+
+## Calculation timestamps
+
+Each calculation must record:
+
+- source observation timestamp range;
+- calculation timestamp in UTC;
+- calculation interval;
+- methodology version.
+
+The calculation timestamp represents when the engine produced the result, not the market observation timestamp.
 
 ## Missing-data behaviour
 
@@ -123,26 +165,28 @@ The Technical Engine must:
 - preserve the reason for incomplete calculations;
 - avoid partial scores being interpreted as complete assessments.
 
-Examples:
+Statuses:
 
-- missing price observation: calculation waits for valid data;
-- insufficient history: indicator status is `insufficient_history`;
-- invalid input data: calculation status is `invalid_input`.
+- `complete`
+- `insufficient_history`
+- `invalid_input`
+- `data_quality_failure`
 
 ## Versioning
 
-Every calculation result must record methodology version:
+Every calculation result records:
 
 `technical-engine-v1`
 
-Future changes to formulas, parameters, weighting or missing-data rules require a new methodology version.
+Formula, parameter, smoothing, aggregation or missing-data changes require a new methodology version.
 
 ## Output contract
 
 Future `technical_indicators` records should contain:
 
 - instrument identifier;
-- calculation date/time;
+- calculation timestamp;
+- source observation range;
 - indicator name;
 - interval;
 - calculated value;
