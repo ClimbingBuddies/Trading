@@ -112,7 +112,7 @@ Successful unattended scheduled runs are persisted for 15–17 August 2026. The 
 - `market_scores`: no current rows.
 - Canonical calculation methodology: `documentation/specifications/technical-calculation-specification.md` (`technical-engine-v1`).
 - Implementation and verification: `documentation/pipelines/technical-indicator-pipeline.md`; recurring refresh ownership, scoring and product surfaces remain later project-plan items.
-- Auditor REWORK: grant or otherwise provide `service_role` access to the private calculation helpers used by the `SECURITY INVOKER` refresh entry point, verify the call under the real role, rerun idempotency checks, and preserve the current `anon` / `authenticated` denial boundary. Evidence: `documentation/project-audits/TECH-002.md`.
+- Auditor rework remediation is implemented: `service_role` has explicit access to every private helper used by the `SECURITY INVOKER` refresh entry point; the real-role call and idempotent retry pass while `anon` / `authenticated` remain denied. TECH-002 awaits independent re-audit. Evidence: `documentation/pipelines/technical-indicator-pipeline.md` and `documentation/project-audits/TECH-002.md`.
 
 ### Market Convergence — Scaffolded
 
@@ -162,7 +162,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
 | TECH-001 | **DONE** | Define technical calculation specification | Indicators, intervals, history requirements, formulas, versioning and missing-data behaviour are documented. |
-| TECH-002 | **IN PROGRESS** | Implement core technical indicators | Versioned `technical_indicators` are generated from real market observations. |
+| TECH-002 | **IN REVIEW** | Implement core technical indicators | Versioned `technical_indicators` are generated from real market observations. |
 | TECH-003 | **PLANNED** | Implement technical market scoring | `market_scores` receives reproducible component scores, overall score, confidence and version. |
 | TECH-004 | **PLANNED** | Add scheduler and monitoring | Frequency, ownership, errors, retries and Admin visibility are explicit. |
 | TECH-005 | **PLANNED** | Verify Technical Engine independence | Engine uses market/indicator inputs only and does not read GPT Market conclusions. |
@@ -244,7 +244,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `TECH-002 — Implement core technical indicators` is **IN PROGRESS** after Auditor REWORK. The persisted formulas and results passed, but the documented `service_role` caller cannot execute the private helper functions (`permission denied for function sma`). Required remediation is recorded in `documentation/project-audits/TECH-002.md`; no next item is promoted.
+**Current work:** `TECH-002 — Implement core technical indicators` is **IN REVIEW** after Builder remediation. The trusted `service_role` call now succeeds through every private helper, retry identity/count checks pass, and `anon` / `authenticated` remain denied. The item is waiting for independent Auditor re-review; no next item is promoted.
 
 ## Definition of Operational
 
