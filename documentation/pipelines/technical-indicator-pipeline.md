@@ -16,12 +16,13 @@ The private `technical_engine` database schema contains deterministic calculatio
 select * from technical_engine.refresh_v1(null);
 ```
 
-Passing `null` refreshes every instrument with Tiingo `1day` history. Passing an instrument UUID refreshes one instrument. The function is `SECURITY INVOKER`; schema access and function execution are revoked from `public`, `anon` and `authenticated`, and granted only to `service_role`.
+Passing `null` refreshes every instrument with Tiingo `1day` history. Passing an instrument UUID refreshes one instrument. The function is `SECURITY INVOKER`; schema access and function execution are revoked from `public`, `anon` and `authenticated`. `service_role` has explicit schema usage plus execution on the refresh entry point and every private helper in its call chain.
 
 The implementation is maintained by:
 
 - `supabase/migrations/20260821064000_implement_technical_indicators_v1.sql`
 - `supabase/migrations/20260821070000_add_technical_indicator_interval_identity.sql`
+- `supabase/migrations/20260821073000_grant_technical_indicator_helper_execution.sql`
 
 ## Source and output
 
@@ -85,6 +86,8 @@ The production refresh processed 71 instruments and persisted 1,136 `technical-e
 | Duplicate deterministic keys | 0 |
 
 A full retry again upserted 1,136 calculations while the persisted row count remained 1,136 with zero duplicate keys. Formula smoke tests independently confirmed SMA and EMA seeding, rising/flat Wilder RSI, constant-series MACD and zero constant-series volatility.
+
+After Auditor rework, the exact trusted caller path was exercised with `SET LOCAL ROLE service_role`. A targeted NVDA refresh succeeded with one instrument and 16 complete upserts. A committed retry retained the same 16 row IDs, kept the total at 1,136 and produced zero duplicate deterministic keys. Privilege inspection confirmed that `service_role` can execute the entry point and all five private helpers while `anon` and `authenticated` have neither schema usage nor function execution.
 
 ## Current operational boundary
 
