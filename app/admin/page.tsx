@@ -2,6 +2,7 @@ import Link from 'next/link'
 import LoadChart from '@/components/LoadChart'
 import { getAdminDashboardData } from '@/lib/dashboard'
 import { getLatestOpportunityAssessmentRun } from '@/lib/opportunity-runs'
+import { getTechnicalEngineRuns } from '@/lib/technical-engine-runs'
 
 export const dynamic = 'force-dynamic'
 
@@ -32,9 +33,10 @@ function freshnessPercent(value: number, total: number) {
 
 export default async function AdminPage() {
   try {
-    const [data, opportunityRun] = await Promise.all([
+    const [data, opportunityRun, technicalRuns] = await Promise.all([
       getAdminDashboardData(),
       getLatestOpportunityAssessmentRun(),
+      getTechnicalEngineRuns(),
     ])
     const latestAgeMinutes = data.latestObservationAt
       ? Math.max(0, Math.round((Date.now() - new Date(data.latestObservationAt).getTime()) / 60000))
@@ -44,6 +46,7 @@ export default async function AdminPage() {
     const opportunityModel = opportunityRun
       ? `${opportunityRun.model_reported === 'unknown' ? 'Model not captured' : opportunityRun.model_reported}${opportunityRun.reasoning_level_reported ? ` · ${opportunityRun.reasoning_level_reported}` : ''}`
       : 'No audited runs yet'
+    const technicalRun = technicalRuns[0] ?? null
 
     return (
       <div className="page">
@@ -85,6 +88,20 @@ export default async function AdminPage() {
           </small>
         </section>
 
+        <section className="freshnessBar">
+          <span>TECHNICAL ENGINE</span>
+          <strong>
+            {technicalRun
+              ? `${technicalRun.status} · ${technicalRun.indicator_rows_upserted} indicators · ${technicalRun.score_rows_upserted} scores`
+              : 'No monitored runs yet'}
+          </strong>
+          <small>
+            {technicalRun
+              ? `${technicalRun.execution_source} attempt ${technicalRun.attempt_number} · ${technicalRun.calculation_version ?? '—'} · ${technicalRun.methodology_version ?? '—'} · ${fmtDate(technicalRun.finished_at ?? technicalRun.started_at)}${technicalRun.error_message ? ` · ${technicalRun.error_message}` : ''}`
+              : 'Daily 07:15 AWST; one bounded automatic retry at 07:45 AWST'}
+          </small>
+        </section>
+
         <section className="analyticsGrid adminAnalytics">
           <article className="panel analyticsPanel">
             <div className="panelHeader">
@@ -105,6 +122,36 @@ export default async function AdminPage() {
             <div className="freshnessTotal"><span>Total instruments</span><strong>{data.activeInstruments}</strong></div>
             <p className="panelNote">Freshness is informational. Equities and ETFs may be older while US markets are closed.</p>
           </aside>
+        </section>
+
+        <section className="panel tablePanel">
+          <div className="panelHeader">
+            <div><h2>Technical Engine Run History</h2><p className="panelHint">Daily 07:15 AWST · automatic retry at 07:45 AWST · maximum three attempts</p></div>
+          </div>
+          <div className="tableScroll">
+            <table>
+              <thead>
+                <tr><th>Started At</th><th>Status</th><th>Trigger / Attempt</th><th>Indicators</th><th>Scores</th><th>Complete / Partial</th><th>Versions</th><th>Duration</th><th>Error</th></tr>
+              </thead>
+              <tbody>
+                {technicalRuns.length ? technicalRuns.map((run) => (
+                  <tr key={run.id}>
+                    <td>{fmtDate(run.started_at)}</td>
+                    <td><span className={`status status-${run.status}`}>{run.status}</span></td>
+                    <td>{run.execution_source} / {run.attempt_number}</td>
+                    <td className="numericCell">{run.indicator_rows_upserted}</td>
+                    <td className="numericCell">{run.score_rows_upserted}</td>
+                    <td>{run.complete_scores} / {run.partial_scores}</td>
+                    <td>{run.calculation_version ?? '—'}<br /><small>{run.methodology_version ?? '—'}</small></td>
+                    <td>{duration(run.started_at, run.finished_at)}</td>
+                    <td className="errorCell">{run.error_message ?? '—'}</td>
+                  </tr>
+                )) : (
+                  <tr><td colSpan={9}><div className="tableEmpty">No Technical Engine run history is visible yet.</div></td></tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         </section>
 
         <section className="panel tablePanel">
