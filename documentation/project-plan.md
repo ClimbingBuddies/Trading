@@ -158,7 +158,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
-| TECH-001 | **IN PROGRESS** | Define technical calculation specification | Indicators, intervals, history requirements, formulas, versioning and missing-data behaviour are documented. |
+| TECH-001 | **IN REVIEW** | Define technical calculation specification | Indicators, intervals, history requirements, formulas, versioning and missing-data behaviour are documented. |
 | TECH-002 | **PLANNED** | Implement core technical indicators | Versioned `technical_indicators` are generated from real market observations. |
 | TECH-003 | **PLANNED** | Implement technical market scoring | `market_scores` receives reproducible component scores, overall score, confidence and version. |
 | TECH-004 | **PLANNED** | Add scheduler and monitoring | Frequency, ownership, errors, retries and Admin visibility are explicit. |
@@ -241,7 +241,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `TECH-001 — Define technical calculation specification` is **IN PROGRESS**. The Builder is verifying the technical calculation contract against the live market-observation schema and canonical architecture before hand-off; all later items remain PLANNED.
+**Current work:** `TECH-001 — Define technical calculation specification` is **IN REVIEW**. The Builder completed and verified `documentation/specifications/technical-calculation-specification.md` against the live `market_observations` and `technical_indicators` schemas; the independent Auditor must now verify the Definition of Done. All later items remain PLANNED and no next item has been promoted.
 
 ## Definition of Operational
 
