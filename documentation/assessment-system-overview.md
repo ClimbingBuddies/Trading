@@ -4,7 +4,7 @@
 **Repository:** `ClimbingBuddies/Trading`  
 **Supabase project:** `glvbqcplgjdfgjyknzsa`  
 **Production:** `https://discoverbouldersmarkets.vercel.app`  
-**Last verified:** 17 August 2026
+**Last verified:** 21 August 2026
 
 ## Purpose
 
@@ -87,13 +87,20 @@ The current frontend reads these results on `/assessments` and `/assessments/[sy
 
 ## B. Independent Technical Engine
 
-The Technical Engine is intended to derive reproducible indicators and scores from real market observations without reading the ChatGPT Market conclusion.
+The Technical Engine derives reproducible indicators and scores from real market observations without reading the ChatGPT Market conclusion.
 
 Primary tables:
 
 - `public.market_observations`
 - `public.technical_indicators`
 - `public.market_scores`
+
+The live `technical-engine-v1` indicator pipeline feeds the independent `technical-score-v1` scoring pipeline. Canonical formulas and operations are documented in:
+
+- [Technical Calculation Specification](specifications/technical-calculation-specification.md)
+- [Technical Indicator Pipeline](pipelines/technical-indicator-pipeline.md)
+- [Technical Market Scoring Specification](specifications/technical-market-scoring-specification.md)
+- [Technical Market Scoring Pipeline](pipelines/technical-market-scoring-pipeline.md)
 
 The Technical Engine must not use ChatGPT Market ratings, conclusions or confidence as inputs.
 
@@ -109,14 +116,15 @@ For example, the eventual system may show a technically strong instrument alongs
 
 ## Current Market maturity
 
-As verified against live Supabase on 17 August 2026:
+As verified against live Supabase on 21 August 2026:
 
 - Market observations are populated and operational as the price-data foundation.
 - `gpt_market_runs`, `gpt_market_assessments` and `gpt_market_evidence` contain real persisted assessment/test data.
 - The most recent Market test run in Supabase completed successfully for 30/30 requested instruments.
 - An older historical test run remains incorrectly `running` with `tickers_completed = 0`; that legacy state is still scheduled for deliberate cleanup.
-- `technical_indicators` contains versioned daily and weekly `technical-engine-v1` calculation output; scoring and convergence remain separate later stages.
-- `market_scores` currently has no rows.
+- `technical_indicators` contains 1,136 versioned daily/weekly `technical-engine-v1` rows across 71 instruments.
+- `market_scores` contains 71 independent `technical-score-v1` rows: 61 complete and 10 partial.
+- Technical recurring ownership/monitoring and Market Convergence remain separate later stages.
 - `market_convergence_assessments` currently has no rows.
 - The Daily Trading Market Assessment Scheduled Task is not yet considered fully operational under the project plan; the canonical GitHub methodology and unattended-run verification remain planned work.
 
