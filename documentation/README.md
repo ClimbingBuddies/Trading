@@ -44,6 +44,7 @@ Start with [Assessment System Overview](assessment-system-overview.md) for the a
 - [Technical Indicator Pipeline](pipelines/technical-indicator-pipeline.md) — service-only calculation implementation, persistence, idempotency and verification.
 - [Technical Market Scoring Specification](specifications/technical-market-scoring-specification.md) — deterministic component, overall, confidence, missing-data and versioning rules.
 - [Technical Market Scoring Pipeline](pipelines/technical-market-scoring-pipeline.md) — service-only scoring implementation, persistence, security and verification.
+- [Technical Engine Scheduling and Monitoring](pipelines/technical-engine-operations.md) — daily frequency, trusted ownership, durable errors, bounded retries and Admin visibility.
 - [Market Assessment Pipeline](pipelines/market-assessment-pipeline.md) — AI Market Assessment records, lifecycle and known gaps.
 - [Opportunity Assessment Pipeline](pipelines/opportunity-assessment-pipeline.md) — Structural Signal, Technology Inflection, Opportunity Convergence, exposure, Research & Evidence, retries and Operational definition.
 - [Daily Market Assessment Specification](../automation/daily-market-assessment.md) — canonical short-term AI Market Assessment methodology and independence rules.
@@ -75,7 +76,7 @@ Start with [Assessment System Overview](assessment-system-overview.md) for the a
 - The `/assessments` and `/assessments/[symbol]` routes expose the AI Market branch.
 - A canonical GitHub Market methodology now exists at `automation/daily-market-assessment.md`.
 - The Daily Trading Market Assessment task still requires migration to the canonical GitHub specification and unattended-run verification under the project plan.
-- The Technical Engine now persists versioned daily/weekly indicator snapshots and independent `technical-score-v1` market scores; recurring ownership remains a later project-plan item.
+- The Technical Engine now persists versioned daily/weekly indicator snapshots and independent `technical-score-v1` market scores, with a daily Supabase scheduler, bounded retry, durable run telemetry and Admin monitoring.
 - Market Convergence has no current persisted convergence output.
 
 #### Opportunity Assessment
