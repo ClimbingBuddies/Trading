@@ -18,17 +18,32 @@ Primary input:
 
 - `market_observations`
 
-Required ordering:
+Canonical v1 daily source selection:
 
-- observations are processed in ascending observation timestamp order;
-- duplicate instrument/date observations must be removed deterministically using the canonical observation identifier and latest valid persisted observation rule;
-- calculations must never depend on query return order.
+- use only `market_observations.interval_code = '1day'`;
+- use the Tiingo daily provider series; `quote` observations and intraday snapshots are excluded from v1 calculations;
+- use positive `adjusted_close` as the canonical price input so split/dividend adjustments do not create false technical moves;
+- never mix `adjusted_close` and raw `close` within one calculation series;
+- if a required daily row lacks a valid `adjusted_close`, mark the affected calculation `invalid_input` rather than silently substituting another price basis.
+
+Required ordering and deduplication:
+
+1. filter to the canonical instrument, provider and `1day` interval;
+2. identify a source period by `observed_at`;
+3. if more than one candidate survives for the same source period, retain the row with greatest `loaded_at`, then greatest `id` as the final tie-breaker;
+4. process the resulting rows by `observed_at ASC, loaded_at ASC, id ASC`;
+5. calculations must never depend on database return order.
+
+The live table already enforces uniqueness on `(instrument_id, provider_id, interval_code, observed_at)`; the explicit deduplication rule remains mandatory for deterministic corrections, imports and future provider expansion.
 
 Invalid observations:
 
-- null, zero or negative prices are invalid inputs for price-based calculations;
-- invalid observations are excluded from calculation windows and recorded as data-quality failures;
-- calculations are not produced when exclusion causes insufficient history.
+- null, zero, non-finite or negative required prices are invalid;
+- OHLC rows are also invalid when `high < low`, `high < open`, `high < close`, `low > open` or `low > close`;
+- negative volume is invalid; null volume is permitted and yields null aggregated weekly volume;
+- invalid observations are excluded from valid windows and recorded with the affected observation ID and reason;
+- a missing/invalid source period does not compress time or become an invented replacement period: any indicator whose exact window crosses it is not emitted and receives `data_quality_failure`;
+- calculations are not produced when valid history is below the exact threshold.
 
 The engine must not consume GPT Market Assessment outputs, Buy/Hold/Sell conclusions, Opportunity Assessment signals, Technology Inflection Signals or Market Convergence outputs.
 
@@ -44,23 +59,33 @@ Initial supported intervals:
 
 Weekly aggregation:
 
-- weekly candles are derived only from validated daily observations;
-- week boundaries use the platform market calendar definition;
-- weekly open is first valid observation, high is maximum price, low is minimum price, close is final valid observation, and volume is aggregated where available.
+- weekly candles are derived only from validated canonical `1day` observations;
+- v1 week boundaries are ISO-8601 weeks in UTC: Monday 00:00:00 inclusive to the following Monday 00:00:00 exclusive;
+- within a week, order rows by the deterministic ordering rule above;
+- weekly open is the first valid raw `open`, high is the maximum valid raw `high`, low is the minimum valid raw `low`, and raw close is the final valid raw `close`;
+- the weekly technical price is the final valid `adjusted_close`;
+- weekly volume is the sum only when every included daily row has non-null, non-negative volume; otherwise weekly volume is null with `volume_complete = false`;
+- a week with no valid daily row is absent rather than synthesised;
+- weekly indicator windows count completed weekly periods, not calendar weeks.
 
 ## History requirements
 
-Minimum history requirements:
+Exact minimum history requirements:
 
-| Indicator family | Required history |
-|---|---|
-| SMA | Period length plus complete available periods |
-| EMA | Period length plus warm-up observations |
-| RSI | 14 periods plus initial average gain/loss seed |
-| MACD | 26-period EMA, 12-period EMA and 9-period signal warm-up |
-| Volatility | 20 return observations |
+| Output | First eligible output | Exact valid input requirement |
+|---|---:|---|
+| SMA-20 | period 20 | 20 closes |
+| SMA-50 | period 50 | 50 closes |
+| SMA-200 | period 200 | 200 closes |
+| EMA-12 | period 12 | 12 closes; first value is the 12-close SMA seed |
+| EMA-26 | period 26 | 26 closes; first value is the 26-close SMA seed |
+| RSI-14 | period 15 | 15 closes producing 14 consecutive price changes |
+| MACD line | period 26 | 26 closes; EMA-12 and EMA-26 must both exist |
+| MACD signal | period 34 | 34 closes producing 9 MACD-line values; first signal is their 9-value SMA seed |
+| MACD histogram | period 34 | same 34-close requirement as the first signal |
+| Volatility-20 | period 21 | 21 closes producing 20 consecutive returns |
 
-No indicator value may be fabricated when history is unavailable.
+The thresholds apply independently to daily and weekly series. A daily SMA-200 therefore requires 200 valid daily periods; a weekly SMA-200 requires 200 completed valid ISO weeks. No indicator value may be fabricated or backfilled before its threshold.
 
 ## Indicator definitions
 
@@ -107,9 +132,10 @@ where:
 
 RSI smoothing:
 
-- RSI uses Wilder's smoothing method after the initial 14-period seed;
-- initial average gain and loss are arithmetic averages of the first 14 periods;
-- later values use Wilder recursive smoothing.
+- define `change_t = price_t - price_(t-1)`, `gain_t = max(change_t, 0)`, and `loss_t = max(-change_t, 0)`;
+- the first RSI uses arithmetic average gain and arithmetic average loss across the first 14 changes;
+- later averages use Wilder recursion: `avg_gain_t = ((avg_gain_(t-1) × 13) + gain_t) / 14` and equivalently for loss;
+- when average loss is zero and average gain is positive, RSI is 100; when both are zero, RSI is 50; when average gain is zero and loss is positive, RSI is 0.
 
 Initial period:
 
@@ -128,8 +154,10 @@ Formula:
 MACD warm-up:
 
 - MACD requires completed EMA-12 and EMA-26 series;
-- signal values begin only after nine MACD line values exist;
-- histogram values begin only after signal warm-up completes.
+- the first MACD line is emitted at close 26;
+- signal values begin only after nine MACD-line values exist, at close 34;
+- the first signal value is seeded as the SMA of those first nine MACD-line values; later signal values use the recursive EMA-9 formula with multiplier `2 / 10`;
+- histogram values begin at the same period as the first signal value.
 
 ### Rolling volatility
 
@@ -139,22 +167,27 @@ Return calculation:
 
 Volatility:
 
-`annualised volatility = standard deviation(period returns) × sqrt(252)`
+- returns are simple arithmetic close-to-close returns, not log returns;
+- use the sample standard deviation of the 20-return window (denominator `n - 1 = 19`);
+- daily annualised volatility is `sample_stddev(20 daily returns) × sqrt(252)`;
+- weekly annualised volatility is `sample_stddev(20 weekly returns) × sqrt(52)`;
+- store volatility as a decimal ratio (for example `0.20` means 20%), not percentage points.
 
 Initial period:
 
-- 20 trading-day rolling volatility.
+- 20-return rolling volatility, requiring 21 valid consecutive prices.
 
 ## Calculation timestamps
 
 Each calculation must record:
 
-- source observation timestamp range;
-- calculation timestamp in UTC;
+- `observation_id`: the final source observation in the calculated window;
+- `source_observed_from` and `source_observed_to`: inclusive source timestamp range;
+- `calculated_at`: the UTC transaction timestamp at which the engine produced the persisted result;
 - calculation interval;
-- methodology version.
+- methodology/calculation version.
 
-The calculation timestamp represents when the engine produced the result, not the market observation timestamp.
+`calculated_at` is not the observation timestamp. Recalculating the same final observation and version must upsert the deterministic indicator identity rather than create a duplicate; the existing unique key is `(instrument_id, observation_id, indicator_code, calculation_version)`.
 
 ## Missing-data behaviour
 
@@ -182,17 +215,28 @@ Formula, parameter, smoothing, aggregation or missing-data changes require a new
 
 ## Output contract
 
-Future `technical_indicators` records should contain:
+The current `technical_indicators` schema is the v1 persistence target:
 
-- instrument identifier;
-- calculation timestamp;
-- source observation range;
-- indicator name;
-- interval;
-- calculated value;
-- methodology version;
-- status;
-- data quality metadata where required.
+- `instrument_id`: instrument identity;
+- `observation_id`: final source observation;
+- `indicator_code`: stable code such as `sma_20`, `ema_12`, `rsi_14`, `macd`, or `volatility_20`;
+- `interval_code`: `1day` or `1week`;
+- `calculated_at`: UTC calculation time;
+- `value`: primary scalar value (null for a non-complete status);
+- `calculation_version`: `technical-engine-v1`;
+- `values` JSONB: component values and provenance.
+
+For scalar indicators, `values` contains at least `status`, `source_observed_from`, `source_observed_to`, `required_periods`, `valid_periods`, and `price_basis`. MACD additionally stores `macd_line`, `signal_line`, and `histogram`. Incomplete/data-quality outputs store `reason_code` and affected observation IDs. No schema change is authorised by TECH-001; TECH-002 must implement against this contract or propose a migration explicitly.
+
+## Live compatibility snapshot
+
+Builder verification on 21 August 2026 confirmed:
+
+- `market_observations` contains `1day` Tiingo history and separate Twelve Data `quote` rows;
+- the live daily series spans 71 instruments, but history depth varies, so `insufficient_history` is a normal per-indicator outcome;
+- all current persisted price fields are positive and `adjusted_close` is populated, while the specification still defines fail-closed invalid-input behaviour;
+- the live uniqueness and ordering columns required above exist;
+- `technical_indicators` has zero rows and remains scaffolded, so this specification does not claim TECH-002 implementation.
 
 ## Relationship to market scoring
 
