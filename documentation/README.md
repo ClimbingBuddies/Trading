@@ -40,6 +40,7 @@ Start with [Assessment System Overview](assessment-system-overview.md) for the a
 ### Data and assessment pipelines
 
 - [Market Data Pipeline](pipelines/market-data-pipeline.md) — Twelve Data ingestion, scheduling and load monitoring.
+- [Technical Calculation Specification](specifications/technical-calculation-specification.md) — deterministic Technical Engine indicators, intervals, warm-up, formulas, provenance, versioning and missing-data rules.
 - [Market Assessment Pipeline](pipelines/market-assessment-pipeline.md) — AI Market Assessment records, lifecycle and known gaps.
 - [Opportunity Assessment Pipeline](pipelines/opportunity-assessment-pipeline.md) — Structural Signal, Technology Inflection, Opportunity Convergence, exposure, Research & Evidence, retries and Operational definition.
 - [Daily Market Assessment Specification](../automation/daily-market-assessment.md) — canonical short-term AI Market Assessment methodology and independence rules.
