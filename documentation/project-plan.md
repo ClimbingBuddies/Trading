@@ -4,7 +4,7 @@
 **Supabase:** `glvbqcplgjdfgjyknzsa`  
 **Production:** `https://discoverbouldersmarkets.vercel.app`  
 **Vercel project:** `boulders-market`  
-**Last reviewed:** 20 August 2026
+**Last reviewed:** 21 August 2026
 
 ## Purpose
 
@@ -110,6 +110,7 @@ Successful unattended scheduled runs are persisted for 15–17 August 2026. The 
 
 - `technical_indicators`: no current rows.
 - `market_scores`: no current rows.
+- Canonical calculation methodology: `documentation/specifications/technical-calculation-specification.md` (`technical-engine-v1`).
 
 ### Market Convergence — Scaffolded
 
@@ -158,8 +159,8 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
-| TECH-001 | **IN REVIEW** | Define technical calculation specification | Indicators, intervals, history requirements, formulas, versioning and missing-data behaviour are documented. |
-| TECH-002 | **PLANNED** | Implement core technical indicators | Versioned `technical_indicators` are generated from real market observations. |
+| TECH-001 | **DONE** | Define technical calculation specification | Indicators, intervals, history requirements, formulas, versioning and missing-data behaviour are documented. |
+| TECH-002 | **NEXT** | Implement core technical indicators | Versioned `technical_indicators` are generated from real market observations. |
 | TECH-003 | **PLANNED** | Implement technical market scoring | `market_scores` receives reproducible component scores, overall score, confidence and version. |
 | TECH-004 | **PLANNED** | Add scheduler and monitoring | Frequency, ownership, errors, retries and Admin visibility are explicit. |
 | TECH-005 | **PLANNED** | Verify Technical Engine independence | Engine uses market/indicator inputs only and does not read GPT Market conclusions. |
@@ -241,7 +242,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `TECH-001 — Define technical calculation specification` is **IN REVIEW**. The Builder completed and verified `documentation/specifications/technical-calculation-specification.md` against the live `market_observations` and `technical_indicators` schemas; the independent Auditor must now verify the Definition of Done. All later items remain PLANNED and no next item has been promoted.
+**Current work:** `TECH-002 — Implement core technical indicators` is **NEXT**. TECH-001 passed independent audit with advice and its calculation methodology is now the canonical implementation contract. All later items remain PLANNED.
 
 ## Definition of Operational
 
@@ -272,3 +273,4 @@ A workflow is Operational only when its schema and implementation exist, schedul
 | 20-Aug-2026 | SEC-003 | `documentation/project-audits/SEC-003.md` | Independent audit PASS; all nine application-owned helpers verified with fixed empty search paths and qualified application references; SEC-004 promoted. |
 | 20-Aug-2026 | SEC-004 | `documentation/project-audits/SEC-004.md` | Independent audit PASS WITH ADVICE; bounded pg_net warning acceptance verified against live object placement and supported healthy usage; SEC-005 promoted. |
 | 20-Aug-2026 | SEC-005 | `documentation/project-audits/SEC-005.md` | Independent audit PASS; fallback-free frontend configuration and live Vercel environment-backed production reads verified; TECH-001 promoted. |
+| 21-Aug-2026 | TECH-001 | `documentation/project-audits/TECH-001.md` | Independent audit PASS WITH ADVICE; technical calculation contract verified against live market-observation and technical-indicator schema; TECH-002 promoted. |
