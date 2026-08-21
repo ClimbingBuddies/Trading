@@ -112,7 +112,7 @@ Successful unattended scheduled runs are persisted for 15–17 August 2026. The 
 - `market_scores`: no current rows.
 - Canonical calculation methodology: `documentation/specifications/technical-calculation-specification.md` (`technical-engine-v1`).
 - Implementation and verification: `documentation/pipelines/technical-indicator-pipeline.md`; recurring refresh ownership, scoring and product surfaces remain later project-plan items.
-- Auditor rework remediation is implemented: `service_role` has explicit access to every private helper used by the `SECURITY INVOKER` refresh entry point; the real-role call and idempotent retry pass while `anon` / `authenticated` remain denied. TECH-002 awaits independent re-audit. Evidence: `documentation/pipelines/technical-indicator-pipeline.md` and `documentation/project-audits/TECH-002.md`.
+- TECH-002 passed independent re-audit after the `service_role` helper-execution chain, real-role refresh, formula comparisons, retry identity and client-denial boundary were verified. Core indicator generation is complete; scoring, recurring refresh ownership and product surfaces remain later project-plan items.
 
 ### Market Convergence — Scaffolded
 
@@ -162,8 +162,8 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
 | TECH-001 | **DONE** | Define technical calculation specification | Indicators, intervals, history requirements, formulas, versioning and missing-data behaviour are documented. |
-| TECH-002 | **IN REVIEW** | Implement core technical indicators | Versioned `technical_indicators` are generated from real market observations. |
-| TECH-003 | **PLANNED** | Implement technical market scoring | `market_scores` receives reproducible component scores, overall score, confidence and version. |
+| TECH-002 | **DONE** | Implement core technical indicators | Versioned `technical_indicators` are generated from real market observations. |
+| TECH-003 | **NEXT** | Implement technical market scoring | `market_scores` receives reproducible component scores, overall score, confidence and version. |
 | TECH-004 | **PLANNED** | Add scheduler and monitoring | Frequency, ownership, errors, retries and Admin visibility are explicit. |
 | TECH-005 | **PLANNED** | Verify Technical Engine independence | Engine uses market/indicator inputs only and does not read GPT Market conclusions. |
 
@@ -244,7 +244,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `TECH-002 — Implement core technical indicators` is **IN REVIEW** after Builder remediation. The trusted `service_role` call now succeeds through every private helper, retry identity/count checks pass, and `anon` / `authenticated` remain denied. The item is waiting for independent Auditor re-review; no next item is promoted.
+**Current work:** `TECH-003 — Implement technical market scoring` is **NEXT**. TECH-002 passed independent re-audit after live formula, service-role execution, access-boundary and idempotency verification. The next Builder run may begin TECH-003; all later items remain PLANNED.
 
 ## Definition of Operational
 
@@ -276,3 +276,4 @@ A workflow is Operational only when its schema and implementation exist, schedul
 | 20-Aug-2026 | SEC-004 | `documentation/project-audits/SEC-004.md` | Independent audit PASS WITH ADVICE; bounded pg_net warning acceptance verified against live object placement and supported healthy usage; SEC-005 promoted. |
 | 20-Aug-2026 | SEC-005 | `documentation/project-audits/SEC-005.md` | Independent audit PASS; fallback-free frontend configuration and live Vercel environment-backed production reads verified; TECH-001 promoted. |
 | 21-Aug-2026 | TECH-001 | `documentation/project-audits/TECH-001.md` | Independent audit PASS WITH ADVICE; technical calculation contract verified against live market-observation and technical-indicator schema; TECH-002 promoted. |
+| 21-Aug-2026 | TECH-002 | `documentation/project-audits/TECH-002.md` | Independent re-audit PASS; versioned indicators, formulas, service-role execution, client-denial boundary and retry idempotency verified; TECH-003 promoted. |
