@@ -2,7 +2,7 @@
 
 **Task:** TECH-001 — Define technical calculation specification  
 **Specification version:** `technical-engine-v1`  
-**Status:** Builder complete — awaiting Auditor review
+**Status:** Canonical implementation contract — TECH-001 audited
 
 ## Purpose
 
@@ -187,7 +187,7 @@ Each calculation must record:
 - calculation interval;
 - methodology/calculation version.
 
-`calculated_at` is not the observation timestamp. Recalculating the same final observation and version must upsert the deterministic indicator identity rather than create a duplicate; the existing unique key is `(instrument_id, observation_id, indicator_code, calculation_version)`.
+`calculated_at` is not the observation timestamp. Recalculating the same final observation, interval and version must upsert the deterministic indicator identity rather than create a duplicate. TECH-002 uses `(instrument_id, observation_id, interval_code, indicator_code, calculation_version)` because daily and weekly results can share the same final source observation.
 
 ## Missing-data behaviour
 
@@ -236,7 +236,9 @@ Builder verification on 21 August 2026 confirmed:
 - the live daily series spans 71 instruments, but history depth varies, so `insufficient_history` is a normal per-indicator outcome;
 - all current persisted price fields are positive and `adjusted_close` is populated, while the specification still defines fail-closed invalid-input behaviour;
 - the live uniqueness and ordering columns required above exist;
-- `technical_indicators` has zero rows and remains scaffolded, so this specification does not claim TECH-002 implementation.
+- TECH-002 has implemented the private, service-only `technical_engine.refresh_v1` calculation entry point;
+- the first production refresh persisted 1,136 versioned daily/weekly indicator rows across 71 instruments, including 15 explicit insufficient-history results;
+- implementation and operational evidence are documented in `documentation/pipelines/technical-indicator-pipeline.md`.
 
 ## Relationship to market scoring
 

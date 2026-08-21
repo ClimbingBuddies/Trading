@@ -115,7 +115,7 @@ As verified against live Supabase on 17 August 2026:
 - `gpt_market_runs`, `gpt_market_assessments` and `gpt_market_evidence` contain real persisted assessment/test data.
 - The most recent Market test run in Supabase completed successfully for 30/30 requested instruments.
 - An older historical test run remains incorrectly `running` with `tickers_completed = 0`; that legacy state is still scheduled for deliberate cleanup.
-- `technical_indicators` currently has no rows.
+- `technical_indicators` contains versioned daily and weekly `technical-engine-v1` calculation output; scoring and convergence remain separate later stages.
 - `market_scores` currently has no rows.
 - `market_convergence_assessments` currently has no rows.
 - The Daily Trading Market Assessment Scheduled Task is not yet considered fully operational under the project plan; the canonical GitHub methodology and unattended-run verification remain planned work.

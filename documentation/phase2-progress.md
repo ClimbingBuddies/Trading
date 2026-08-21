@@ -241,14 +241,14 @@ Market-data scheduling remains separate from assessment scheduling.
 
 ## Current status
 
-**Scaffolded — not yet producing persisted results.**
+**Partial / advanced — core indicator calculation is producing persisted results.**
 
-Live Supabase on 18 August 2026:
+Live Supabase on 21 August 2026:
 
-- `technical_indicators`: 0 rows;
+- `technical_indicators`: 1,136 versioned daily/weekly rows;
 - `market_scores`: 0 rows.
 
-The future Technical Engine must remain independent from the AI Market Assessment.
+The Technical Engine remains independent from the AI Market Assessment. Technical scoring, recurring refresh ownership and product surfaces remain later project-plan items.
 
 Project-plan work:
 

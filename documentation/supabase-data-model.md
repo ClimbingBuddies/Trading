@@ -88,9 +88,11 @@ Versioned calculated indicators attached to instruments and optionally source ob
 
 Key fields include `instrument_id`, `observation_id`, `indicator_code`, `interval_code`, `calculated_at`, `value`, `values` and `calculation_version`.
 
-**Live verification on 18 August 2026:** 0 rows.
+**Live verification on 21 August 2026:** 1,136 `technical-engine-v1` rows across 71 instruments, eight indicator codes and daily/weekly intervals. Of these, 1,121 are complete and 15 explicitly record insufficient history.
 
-Status: **Scaffolded**.
+The service-only `technical_engine.refresh_v1` function calculates deterministic latest snapshots from Tiingo `1day` observations. Its identity key includes `interval_code` so daily and weekly results cannot overwrite one another.
+
+Status: **Partial / advanced** — calculation and persisted results are implemented; technical scoring, recurring ownership and product surfaces remain later project-plan items.
 
 ### `market_scores`
 
@@ -326,7 +328,7 @@ The Opportunity, Research, Market Convergence and core dashboard tables retain t
 
 ### Technical tables
 
-`technical_indicators` and `market_scores` have RLS enabled. `market_scores` currently exposes an authenticated-read policy; the Technical Engine remains scaffolded and has no current rows.
+`technical_indicators` and `market_scores` have RLS enabled. Indicator calculation is isolated in the private `technical_engine` schema and executable only by `service_role`; `technical_indicators` has no client read policy. `market_scores` currently exposes an authenticated-read policy and remains scaffolded.
 
 ### View caution
 

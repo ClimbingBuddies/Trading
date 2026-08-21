@@ -227,9 +227,9 @@ Remaining work includes:
 
 **Project-plan items:** `TECH-001` through `TECH-005`
 
-Current live state on 18 August 2026:
+Current live state on 21 August 2026:
 
-- `technical_indicators`: 0 rows;
+- `technical_indicators`: 1,136 `technical-engine-v1` daily/weekly rows;
 - `market_scores`: 0 rows.
 
 The Technical Engine should be reproducible and versioned. It should derive indicators and scores from market/indicator inputs only and must not read AI Market conclusions.
