@@ -160,7 +160,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
 | TECH-001 | **DONE** | Define technical calculation specification | Indicators, intervals, history requirements, formulas, versioning and missing-data behaviour are documented. |
-| TECH-002 | **NEXT** | Implement core technical indicators | Versioned `technical_indicators` are generated from real market observations. |
+| TECH-002 | **IN PROGRESS** | Implement core technical indicators | Versioned `technical_indicators` are generated from real market observations. |
 | TECH-003 | **PLANNED** | Implement technical market scoring | `market_scores` receives reproducible component scores, overall score, confidence and version. |
 | TECH-004 | **PLANNED** | Add scheduler and monitoring | Frequency, ownership, errors, retries and Admin visibility are explicit. |
 | TECH-005 | **PLANNED** | Verify Technical Engine independence | Engine uses market/indicator inputs only and does not read GPT Market conclusions. |
@@ -242,7 +242,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `TECH-002 — Implement core technical indicators` is **NEXT**. TECH-001 passed independent audit with advice and its calculation methodology is now the canonical implementation contract. All later items remain PLANNED.
+**Current work:** `TECH-002 — Implement core technical indicators` is **IN PROGRESS**. The Builder is implementing versioned indicators from real market observations under the TECH-001 methodology contract. All later items remain PLANNED.
 
 ## Definition of Operational
 
