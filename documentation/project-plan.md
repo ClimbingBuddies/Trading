@@ -106,11 +106,12 @@ Successful unattended scheduled runs are persisted for 15–17 August 2026. The 
 - Reactivation passed independent audit under `OPS-004`. The first unattended production run completed for the 18 August 2026 New York assessment date with 30/30 active instruments, 68 evidence rows and terminal `succeeded` run/queue state; it passed independent audit under `OPS-005`.
 - The same-date prepare helper now qualifies its queue/run references correctly. Completed and resumable retry paths passed independent audit under `OPS-006`, reusing the existing run without assessment or evidence duplicates.
 
-### Technical Engine — Scaffolded
+### Technical Engine — Partial / advanced
 
-- `technical_indicators`: no current rows.
+- `technical_indicators`: 1,136 `technical-engine-v1` daily/weekly rows across 71 instruments; 1,121 complete and 15 explicit insufficient-history results.
 - `market_scores`: no current rows.
 - Canonical calculation methodology: `documentation/specifications/technical-calculation-specification.md` (`technical-engine-v1`).
+- Implementation and verification: `documentation/pipelines/technical-indicator-pipeline.md`; recurring refresh ownership, scoring and product surfaces remain later project-plan items.
 
 ### Market Convergence — Scaffolded
 
@@ -160,7 +161,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
 | TECH-001 | **DONE** | Define technical calculation specification | Indicators, intervals, history requirements, formulas, versioning and missing-data behaviour are documented. |
-| TECH-002 | **IN PROGRESS** | Implement core technical indicators | Versioned `technical_indicators` are generated from real market observations. |
+| TECH-002 | **IN REVIEW** | Implement core technical indicators | Versioned `technical_indicators` are generated from real market observations. |
 | TECH-003 | **PLANNED** | Implement technical market scoring | `market_scores` receives reproducible component scores, overall score, confidence and version. |
 | TECH-004 | **PLANNED** | Add scheduler and monitoring | Frequency, ownership, errors, retries and Admin visibility are explicit. |
 | TECH-005 | **PLANNED** | Verify Technical Engine independence | Engine uses market/indicator inputs only and does not read GPT Market conclusions. |
@@ -242,7 +243,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `TECH-002 — Implement core technical indicators` is **IN PROGRESS**. The Builder is implementing versioned indicators from real market observations under the TECH-001 methodology contract. All later items remain PLANNED.
+**Current work:** `TECH-002 — Implement core technical indicators` is **IN REVIEW**. The versioned daily/weekly calculation engine is implemented, populated and Builder-verified; it is awaiting independent Auditor review. No next item has been promoted and all later items remain PLANNED.
 
 ## Definition of Operational
 
