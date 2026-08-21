@@ -92,7 +92,7 @@ Key fields include `instrument_id`, `observation_id`, `indicator_code`, `interva
 
 The service-only `technical_engine.refresh_v1` function calculates deterministic latest snapshots from Tiingo `1day` observations. Its identity key includes `interval_code` so daily and weekly results cannot overwrite one another.
 
-Status: **Partial / advanced** — calculation and persisted results are implemented; recurring ownership and product surfaces remain later project-plan items.
+Status: **Partial / advanced** — calculation, persistence, recurring ownership and monitoring are implemented; product surfaces remain later project-plan items.
 
 ### `market_scores`
 
@@ -102,12 +102,23 @@ The service-only `technical_engine.refresh_scores_v1` function consumes only `te
 
 **Live verification on 21 August 2026:** 71 `technical-score-v1` rows across 71 instruments: 61 complete and 10 partial. All scores are within 0–100, every row contains reproducibility metadata, and a full retry preserved all row IDs and deterministic score payloads with zero duplicate identities.
 
-Status: **Partial / advanced** — component, overall, confidence and versioned persistence are implemented; recurring ownership, monitoring and product surfaces remain later project-plan items.
+Status: **Partial / advanced** — component, overall, confidence, versioned persistence, recurring ownership and monitoring are implemented; product surfaces remain later project-plan items.
+
+### `technical_engine_runs`
+
+Durable run-level telemetry for scheduled, manual and retry executions of the indicator and scoring stages. It records the Perth operating date, trigger source, retry parent, attempt number, lifecycle status, counts, versions and bounded error details.
+
+The daily 07:15 AWST primary job and 07:45 AWST retry job are owned by `postgres`. Client roles can read telemetry for the existing public Admin monitor, but cannot write the table or execute the private orchestration functions.
+
+**Live verification on 21 August 2026:** two full `service_role` executions succeeded for 71 instruments. The second retained 1,136 indicator identities and 71 score identities with stable deterministic payload digests and zero duplicates. A controlled failed attempt successfully exercised the attempt-2 retry path; its temporary verification records were removed.
+
+Status: **Operational**.
 
 Canonical methodology and implementation:
 
 - `documentation/specifications/technical-market-scoring-specification.md`
 - `documentation/pipelines/technical-market-scoring-pipeline.md`
+- `documentation/pipelines/technical-engine-operations.md`
 
 ### `market_opinions`
 
