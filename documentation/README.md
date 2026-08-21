@@ -19,7 +19,7 @@ Project delivery state is controlled by [project-plan.md](project-plan.md).
 
 The platform contains two analytically independent assessment systems:
 
-- **Short-term Market Assessment** — asks whether a tracked instrument is attractive now. The independent ChatGPT Market branch has persisted assessment results. The independent Technical Engine and Market Convergence remain scaffolded and are not yet operational.
+- **Short-term Market Assessment** — asks whether a tracked instrument is attractive now. The independent ChatGPT Market branch has persisted assessment results. The independent Technical Engine now persists versioned indicators and technical scores; recurring ownership and Market Convergence remain later stages.
 - **Long-term Opportunity Assessment** — asks what structural or technological changes could become important over months or years. Structural Opportunity and Technology Inflection signals are assessed independently before Opportunity Assessment / Opportunity Convergence is calculated. Themes, signals, assessments, exposures and Research & Evidence are persisted.
 
 The two systems may be displayed together only after each has independently produced its result. Neither system's score, rating or conclusion may be used to form the other.
@@ -42,6 +42,8 @@ Start with [Assessment System Overview](assessment-system-overview.md) for the a
 - [Market Data Pipeline](pipelines/market-data-pipeline.md) — Twelve Data ingestion, scheduling and load monitoring.
 - [Technical Calculation Specification](specifications/technical-calculation-specification.md) — deterministic Technical Engine indicators, intervals, warm-up, formulas, provenance, versioning and missing-data rules.
 - [Technical Indicator Pipeline](pipelines/technical-indicator-pipeline.md) — service-only calculation implementation, persistence, idempotency and verification.
+- [Technical Market Scoring Specification](specifications/technical-market-scoring-specification.md) — deterministic component, overall, confidence, missing-data and versioning rules.
+- [Technical Market Scoring Pipeline](pipelines/technical-market-scoring-pipeline.md) — service-only scoring implementation, persistence, security and verification.
 - [Market Assessment Pipeline](pipelines/market-assessment-pipeline.md) — AI Market Assessment records, lifecycle and known gaps.
 - [Opportunity Assessment Pipeline](pipelines/opportunity-assessment-pipeline.md) — Structural Signal, Technology Inflection, Opportunity Convergence, exposure, Research & Evidence, retries and Operational definition.
 - [Daily Market Assessment Specification](../automation/daily-market-assessment.md) — canonical short-term AI Market Assessment methodology and independence rules.
@@ -73,7 +75,7 @@ Start with [Assessment System Overview](assessment-system-overview.md) for the a
 - The `/assessments` and `/assessments/[symbol]` routes expose the AI Market branch.
 - A canonical GitHub Market methodology now exists at `automation/daily-market-assessment.md`.
 - The Daily Trading Market Assessment task still requires migration to the canonical GitHub specification and unattended-run verification under the project plan.
-- The Technical Engine now persists versioned daily and weekly indicator snapshots; technical market scoring remains scaffolded.
+- The Technical Engine now persists versioned daily/weekly indicator snapshots and independent `technical-score-v1` market scores; recurring ownership remains a later project-plan item.
 - Market Convergence has no current persisted convergence output.
 
 #### Opportunity Assessment
