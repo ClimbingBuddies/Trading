@@ -271,9 +271,22 @@ Shared ticker chips show which tracked instruments connect the themes.
 
 ### Exposure tab
 
-The Exposure tab combines ranked exposure with contextual market inspection.
+The Exposure tab combines ranked Opportunity exposure with independently completed current Market context.
 
-Current desktop layout uses approximately **3/5 width for Top Exposed Instruments and 2/5 for the context inspector**.
+Each mapped instrument row keeps the systems distinct:
+
+- **Opportunity Exposure** — the long-term theme-relevance score and exposure type from the Opportunity system;
+- **Current Market Result** — the latest persisted Market Convergence label, score, confidence and dated link to the independent Market detail;
+- **Exposure Rationale** — the stored reason the instrument is relevant to the theme.
+
+Tracked instruments without a completed Market Convergence result show `Not available`. External instruments show `Not tracked`; the UI does not manufacture a Market result or add them to the tracked universe. The Market result is read only after the exposure exists and does not adjust the exposure score. Opportunity exposure is not used to adjust Technical, AI or Market Convergence results.
+
+Primary cross-system sources:
+
+- `opportunity_theme_all_exposures`
+- `market_convergence_assessments`
+
+Current desktop layout uses approximately **3/5 width for mapped instruments and 2/5 for the context inspector**.
 
 The inspector contains two tabs:
 
