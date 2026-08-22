@@ -182,7 +182,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
-| UX-001 | **NEXT** | Show current Market result beside Opportunity exposure | The UI combines independently completed views without using one as an analytical input to the other. |
+| UX-001 | **IN PROGRESS** | Show current Market result beside Opportunity exposure | The UI combines independently completed views without using one as an analytical input to the other. |
 | UX-002 | **PLANNED** | Add Opportunity themes to Market instrument pages | Relevant long-term themes and exposure scores are visible for tracked instruments. |
 | UX-003 | **PLANNED** | Complete mobile interaction review | Headers, tabs, swipe, touch targets and responsive tables are verified. |
 | UX-004 | **PLANNED** | Maintain palette compliance | New components use semantic theme/chart tokens rather than fixed page colours. |
@@ -246,7 +246,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `UX-001 — Show current Market result beside Opportunity exposure` is **NEXT**. CONV-004 passed independent audit with advice after distinct Technical, AI and Market Convergence presentation, live lineage, deliberate public access, production deployment and browser navigation were verified. UX-002 and all later items remain `PLANNED`.
+**Current work:** `UX-001 — Show current Market result beside Opportunity exposure` is **IN PROGRESS**. The Builder is implementing a database-driven cross-system display that places independently completed current Market results beside Opportunity exposure without making either an analytical input to the other. UX-002 and all later items remain `PLANNED`.
 
 ## Definition of Operational
 
