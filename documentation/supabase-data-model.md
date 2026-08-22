@@ -2,7 +2,7 @@
 
 Supabase project reference: `glvbqcplgjdfgjyknzsa`
 
-**Last verified against the live database:** 21 August 2026
+**Last verified against the live database:** 22 August 2026
 
 This document groups the public schema by business purpose and records both the structural model and current implementation maturity. Supabase is the persisted-data system of record; GitHub holds the canonical assessment methodology and project-control documentation.
 
@@ -315,9 +315,11 @@ The schema already supports:
 
 This table must not be confused with `opportunity_assessments`: Market Convergence is short-term instrument convergence; Opportunity Convergence is long-term theme convergence.
 
-**Live verification on 18 August 2026:** 0 rows.
+**Live verification on 22 August 2026:** 30 `market-convergence-v1` rows across 30 instruments, each with mandatory Technical and AI lineage and complete source/output snapshots.
 
-Status: **Scaffolded**. The table and access model exist, but production convergence cannot be populated until the independent Technical Engine produces real results and the convergence methodology is finalised.
+Status: **Partial / advanced with live production data**. The private, service-only `market_convergence.refresh_v1` function deterministically selects the latest eligible independent Technical and AI Market results and persists current convergence rows. Client roles retain read-only access. History, stale-input policy and retry rules remain CONV-003; frontend presentation remains CONV-004.
+
+Pipeline documentation: `documentation/pipelines/market-convergence-pipeline.md`.
 
 ---
 
