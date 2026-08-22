@@ -118,7 +118,7 @@ Successful unattended scheduled runs are persisted for 15–17 August 2026. The 
 ### Market Convergence — Partial / advanced
 
 - `market_convergence_assessments`: 30 retained `market-convergence-v1` rows across 30 instruments, with complete Technical/AI source lineage and independently verified calculations.
-- CONV-003 passed independent re-audit after immutable-cutoff source-date history, four-calendar-day freshness, one-child retry lineage, exact `1 -> 2 -> 3` progression, fourth-attempt rejection, real service-role execution, formula parity and idempotency were verified. Frontend presentation is the next Market Convergence item under CONV-004.
+- CONV-003 passed independent re-audit after immutable-cutoff source-date history, four-calendar-day freshness, one-child retry lineage, exact `1 -> 2 -> 3` progression, fourth-attempt rejection, real service-role execution, formula parity and idempotency were verified. CONV-004 frontend presentation is now in progress.
 
 ### Security — Hardened through SEC-005
 
@@ -176,7 +176,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | CONV-001 | **DONE** | Finalise Market Convergence methodology | Score, confidence, disagreement handling, labels and version are documented. |
 | CONV-002 | **DONE** | Populate `market_convergence_assessments` | Independent Technical and AI Market results combine into persisted convergence rows. |
 | CONV-003 | **DONE** | Add convergence history and retry rules | Daily/history uniqueness and stale-input behaviour are deterministic. |
-| CONV-004 | **NEXT** | Surface convergence in frontend | Technical, AI and Convergence results are shown distinctly. |
+| CONV-004 | **IN PROGRESS** | Surface convergence in frontend | Technical, AI and Convergence results are shown distinctly. |
 
 ## Phase 5 — Cross-system investment research
 
@@ -246,7 +246,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `CONV-004 — Surface convergence in frontend` is **NEXT**. The Builder may begin the distinct Technical, AI and Convergence presentation slice; UX-001 and all later items remain `PLANNED`.
+**Current work:** `CONV-004 — Surface convergence in frontend` is **IN PROGRESS**. The Builder is implementing and verifying a database-driven presentation that keeps Technical, AI and Convergence results visually and semantically distinct; UX-001 and all later items remain `PLANNED`.
 
 ## Definition of Operational
 
