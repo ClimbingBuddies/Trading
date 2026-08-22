@@ -80,7 +80,24 @@ If either eligible branch is missing, do not create a calculated convergence row
 
 A partial Technical score remains eligible because its `confidence_score` already measures input coverage. The convergence calculation must not add a second arbitrary partial-data penalty.
 
-Input staleness policy, history retention and retry orchestration are completed under CONV-003. They may block or annotate a future run, but they must not silently change the v1 formula. Any formula-changing freshness adjustment requires a new methodology version.
+## History, cutoff and source freshness
+
+CONV-003 completes the v1 history and retry contract without changing the calculation:
+
+- every run has an immutable cutoff timestamp;
+- the logical assessment date is the cutoff converted to `America/New_York`, matching the AI Market assessment date boundary;
+- source rows must have both a source date on or before the logical date and a calculation/creation timestamp on or before the cutoff;
+- source selection retains the deterministic date, timestamp and stable-ID ordering above;
+- both selected source dates must be between zero and four calendar days old at the logical date;
+- four calendar days deliberately spans an ordinary Friday-to-Monday weekend without requiring an incomplete exchange-holiday calendar;
+- if either selected branch is older than four calendar days, the pair is recorded as stale in `public.market_convergence_runs` and no result is inserted or changed;
+- if either branch is missing, the instrument is recorded as missing input and no result is fabricated.
+
+History is source-date history. The result identity remains `(instrument_id, assessment_date, methodology_version)`, where `assessment_date` is the later source date. A new source date creates a new historical row; a retry for the same source identity updates only a materially changed payload and otherwise changes zero rows. Calendar days with no new eligible source pair do not create duplicate snapshot rows.
+
+Retries inherit the original cutoff, logical date and instrument scope. They are limited to three total attempts, require a failed parent, and cannot proceed when that parent already has a running or successful child. A freshness decision is therefore stable across retries.
+
+The canonical score, confidence, precedence, labels and summary remain unchanged. A formula-changing freshness adjustment requires a new methodology version.
 
 ## Normalised source signals
 
@@ -287,7 +304,7 @@ Documentation-only clarifications that do not change an output for any valid inp
 
 CONV-002 must implement this contract without populating inputs that fail eligibility and must verify exact calculations against live source rows.
 
-CONV-003 must add idempotent history/retry behaviour and explicit stale-input handling without silently altering v1 calculations.
+CONV-003 implements idempotent source-date history, immutable-cutoff retries and explicit stale-input handling without altering v1 calculations.
 
 The independent Auditor should verify:
 
