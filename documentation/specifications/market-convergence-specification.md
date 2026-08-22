@@ -238,7 +238,7 @@ T = 28, CT = 90, Technical signal = Sell
 A = 74, CA = 81, AI signal = Buy
 D = 46
 score = 51
-raw confidence = sqrt(90 * 81) * (1 - 46/200) = 65.76
+raw confidence = sqrt(90 * 81) * (1 - 46/200) = 65.74
 conflict cap = 40
 label = conflict
 confidence = 40
