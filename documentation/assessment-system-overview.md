@@ -110,9 +110,9 @@ Only after both independent branches exist should Market Convergence combine the
 
 - `public.market_convergence_assessments`
 
-The convergence methodology must define score, confidence, labels and disagreement handling. A disagreement is useful information and should remain visible rather than being hidden by an average.
+The canonical [Market Convergence Specification](specifications/market-convergence-specification.md) defines the `market-convergence-v1` equal-weight score, confidence calculation, disagreement precedence, labels, lineage and versioning. Disagreement remains visible as `mixed` or `conflict` rather than being hidden by the arithmetic mean.
 
-For example, the eventual system may show a technically strong instrument alongside a cautious AI assessment and label the final state as mixed or divergent.
+The methodology is defined independently of population. The convergence table remains empty until the later implementation stage.
 
 ## Current Market maturity
 
@@ -124,7 +124,7 @@ As verified against live Supabase on 21 August 2026:
 - An older historical test run remains incorrectly `running` with `tickers_completed = 0`; that legacy state is still scheduled for deliberate cleanup.
 - `technical_indicators` contains 1,136 versioned daily/weekly `technical-engine-v1` rows across 71 instruments.
 - `market_scores` contains 71 independent `technical-score-v1` rows: 61 complete and 10 partial.
-- Technical recurring ownership/monitoring and Market Convergence remain separate later stages.
+- Technical recurring ownership/monitoring is operational, and the canonical Market Convergence methodology is documented; convergence population remains a later stage.
 - `market_convergence_assessments` currently has no rows.
 - The Daily Trading Market Assessment Scheduled Task is not yet considered fully operational under the project plan; the canonical GitHub methodology and unattended-run verification remain planned work.
 
