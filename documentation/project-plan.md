@@ -106,13 +106,13 @@ Successful unattended scheduled runs are persisted for 15–17 August 2026. The 
 - Reactivation passed independent audit under `OPS-004`. The first unattended production run completed for the 18 August 2026 New York assessment date with 30/30 active instruments, 68 evidence rows and terminal `succeeded` run/queue state; it passed independent audit under `OPS-005`.
 - The same-date prepare helper now qualifies its queue/run references correctly. Completed and resumable retry paths passed independent audit under `OPS-006`, reusing the existing run without assessment or evidence duplicates.
 
-### Technical Engine — Partial / advanced
+### Technical Engine — Operational
 
 - `technical_indicators`: 1,136 `technical-engine-v1` daily/weekly rows across 71 instruments; 1,121 complete and 15 explicit insufficient-history results.
 - `market_scores`: 71 `technical-score-v1` rows across 71 instruments; 61 complete and 10 explicit partial results.
 - Canonical calculation methodology: `documentation/specifications/technical-calculation-specification.md` (`technical-engine-v1`).
 - Canonical scoring methodology: `documentation/specifications/technical-market-scoring-specification.md` (`technical-score-v1`).
-- Implementation and verification: `documentation/pipelines/technical-indicator-pipeline.md` and `documentation/pipelines/technical-market-scoring-pipeline.md`. Recurring refresh is operational at 07:15 AWST with a bounded 07:45 AWST retry watcher and production Admin telemetry. Builder input-boundary evidence is recorded in `documentation/pipelines/technical-engine-independence.md` and awaits independent audit.
+- Implementation and verification: `documentation/pipelines/technical-indicator-pipeline.md` and `documentation/pipelines/technical-market-scoring-pipeline.md`. Recurring refresh is operational at 07:15 AWST with a bounded 07:45 AWST retry watcher and production Admin telemetry. TECH-005 passed independent audit after source, live function dependencies, relationships, persisted provenance and a rollback-only GPT-contamination test confirmed the Technical Engine input boundary.
 - TECH-002 passed independent re-audit after the `service_role` helper-execution chain, real-role refresh, formula comparisons, retry identity and client-denial boundary were verified. TECH-003 passed independent audit with advice after all 71 component/overall/confidence results were independently recalculated, versioning and partial-data behaviour were verified, the real service-role path succeeded, client writes remained denied and retry identity remained deterministic.
 
 ### Market Convergence — Scaffolded
@@ -166,13 +166,13 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | TECH-002 | **DONE** | Implement core technical indicators | Versioned `technical_indicators` are generated from real market observations. |
 | TECH-003 | **DONE** | Implement technical market scoring | `market_scores` receives reproducible component scores, overall score, confidence and version. |
 | TECH-004 | **DONE** | Add scheduler and monitoring | Frequency, ownership, errors, retries and Admin visibility are explicit. |
-| TECH-005 | **IN REVIEW** | Verify Technical Engine independence | Engine uses market/indicator inputs only and does not read GPT Market conclusions. |
+| TECH-005 | **DONE** | Verify Technical Engine independence | Engine uses market/indicator inputs only and does not read GPT Market conclusions. |
 
 ## Phase 4 — Market Convergence
 
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
-| CONV-001 | **PLANNED** | Finalise Market Convergence methodology | Score, confidence, disagreement handling, labels and version are documented. |
+| CONV-001 | **NEXT** | Finalise Market Convergence methodology | Score, confidence, disagreement handling, labels and version are documented. |
 | CONV-002 | **PLANNED** | Populate `market_convergence_assessments` | Independent Technical and AI Market results combine into persisted convergence rows. |
 | CONV-003 | **PLANNED** | Add convergence history and retry rules | Daily/history uniqueness and stale-input behaviour are deterministic. |
 | CONV-004 | **PLANNED** | Surface convergence in frontend | Technical, AI and Convergence results are shown distinctly. |
@@ -245,7 +245,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `TECH-005 — Verify Technical Engine independence` is **IN REVIEW**. Builder verification found no GPT Market, Opportunity or convergence dependency in source, live function definitions, relationships or persisted metadata; a rollback-only GPT contamination test left Technical Engine payloads unchanged. The item is awaiting independent Auditor verification. No later item is promoted.
+**Current work:** `CONV-001 — Finalise Market Convergence methodology` is **NEXT**. TECH-005 passed independent audit after the Technical Engine's market/indicator-only boundary was verified from source, live database definitions, relationships, persisted provenance and an Auditor-owned rollback-only contamination test. No later item is promoted.
 
 ## Definition of Operational
 
@@ -280,3 +280,4 @@ A workflow is Operational only when its schema and implementation exist, schedul
 | 21-Aug-2026 | TECH-002 | `documentation/project-audits/TECH-002.md` | Independent re-audit PASS; versioned indicators, formulas, service-role execution, client-denial boundary and retry idempotency verified; TECH-003 promoted. |
 | 21-Aug-2026 | TECH-003 | `documentation/project-audits/TECH-003.md` | Independent audit PASS WITH ADVICE; 71 versioned scores, formula parity, partial-data handling, service-role execution, client-denial boundary and retry idempotency verified; TECH-004 promoted. |
 | 22-Aug-2026 | TECH-004 | `documentation/project-audits/TECH-004.md` | Independent audit PASS; active schedule, explicit ownership, terminal lifecycle, durable errors, bounded idempotent retry, deliberate access and production Admin visibility verified; TECH-005 promoted. |
+| 22-Aug-2026 | TECH-005 | `documentation/project-audits/TECH-005.md` | Independent audit PASS; market/indicator-only inputs, absence of GPT/Opportunity/convergence dependencies, persisted provenance and rollback-only contamination behavior verified; CONV-001 promoted. |
