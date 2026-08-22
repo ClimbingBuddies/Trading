@@ -115,9 +115,10 @@ Successful unattended scheduled runs are persisted for 15–17 August 2026. The 
 - Implementation and verification: `documentation/pipelines/technical-indicator-pipeline.md` and `documentation/pipelines/technical-market-scoring-pipeline.md`. Recurring refresh is operational at 07:15 AWST with a bounded 07:45 AWST retry watcher and production Admin telemetry. TECH-005 passed independent audit after source, live function dependencies, relationships, persisted provenance and a rollback-only GPT-contamination test confirmed the Technical Engine input boundary.
 - TECH-002 passed independent re-audit after the `service_role` helper-execution chain, real-role refresh, formula comparisons, retry identity and client-denial boundary were verified. TECH-003 passed independent audit with advice after all 71 component/overall/confidence results were independently recalculated, versioning and partial-data behaviour were verified, the real service-role path succeeded, client writes remained denied and retry identity remained deterministic.
 
-### Market Convergence — Scaffolded
+### Market Convergence — Partial / advanced
 
-- `market_convergence_assessments`: no current rows.
+- `market_convergence_assessments`: 30 current `market-convergence-v1` rows across 30 instruments, with complete Technical/AI source lineage and independently verified calculations.
+- Trusted current-state population is implemented and client writes are blocked; convergence history, stale-input behavior and retry rules remain CONV-003, while frontend presentation remains CONV-004.
 
 ### Security — Hardened through SEC-005
 
@@ -173,8 +174,8 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
 | CONV-001 | **DONE** | Finalise Market Convergence methodology | Score, confidence, disagreement handling, labels and version are documented. |
-| CONV-002 | **IN REVIEW** | Populate `market_convergence_assessments` | Independent Technical and AI Market results combine into persisted convergence rows. |
-| CONV-003 | **PLANNED** | Add convergence history and retry rules | Daily/history uniqueness and stale-input behaviour are deterministic. |
+| CONV-002 | **DONE** | Populate `market_convergence_assessments` | Independent Technical and AI Market results combine into persisted convergence rows. |
+| CONV-003 | **NEXT** | Add convergence history and retry rules | Daily/history uniqueness and stale-input behaviour are deterministic. |
 | CONV-004 | **PLANNED** | Surface convergence in frontend | Technical, AI and Convergence results are shown distinctly. |
 
 ## Phase 5 — Cross-system investment research
@@ -245,7 +246,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `CONV-002 — Populate market_convergence_assessments` is **IN REVIEW**. Builder implementation and verification are complete: the trusted `market-convergence-v1` path persisted 30 complete lineage-backed rows from eligible independent Technical and AI Market outputs, with zero formula mismatches, missing outputs or duplicate identities and a stable unchanged retry. Awaiting independent Auditor review. CONV-003 and later items remain unpromoted.
+**Current work:** `CONV-003 — Add convergence history and retry rules` is **NEXT** after CONV-002 passed independent audit with advice. Define deterministic daily/history retention, stale-input handling and retry behavior without changing the audited `market-convergence-v1` formula. CONV-004 and later items remain unpromoted.
 
 ## Definition of Operational
 
@@ -282,3 +283,4 @@ A workflow is Operational only when its schema and implementation exist, schedul
 | 22-Aug-2026 | TECH-004 | `documentation/project-audits/TECH-004.md` | Independent audit PASS; active schedule, explicit ownership, terminal lifecycle, durable errors, bounded idempotent retry, deliberate access and production Admin visibility verified; TECH-005 promoted. |
 | 22-Aug-2026 | TECH-005 | `documentation/project-audits/TECH-005.md` | Independent audit PASS; market/indicator-only inputs, absence of GPT/Opportunity/convergence dependencies, persisted provenance and rollback-only contamination behavior verified; CONV-001 promoted. |
 | 22-Aug-2026 | CONV-001 | `documentation/project-audits/CONV-001.md` | Independent audit PASS WITH ADVICE; score, confidence, disagreement precedence, labels, input boundary, lineage and `market-convergence-v1` versioning verified against live schema and exhaustive calculation cases; CONV-002 promoted. |
+| 22-Aug-2026 | CONV-002 | `documentation/project-audits/CONV-002.md` | Independent audit PASS WITH ADVICE; 30 eligible pairs and persisted rows, deterministic source selection, exact formula parity, mandatory lineage, missing-branch behavior, client-denial boundary and unchanged trusted retry verified; CONV-003 promoted. |
