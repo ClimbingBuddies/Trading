@@ -172,8 +172,8 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
-| CONV-001 | **IN REVIEW** | Finalise Market Convergence methodology | Score, confidence, disagreement handling, labels and version are documented. |
-| CONV-002 | **PLANNED** | Populate `market_convergence_assessments` | Independent Technical and AI Market results combine into persisted convergence rows. |
+| CONV-001 | **DONE** | Finalise Market Convergence methodology | Score, confidence, disagreement handling, labels and version are documented. |
+| CONV-002 | **NEXT** | Populate `market_convergence_assessments` | Independent Technical and AI Market results combine into persisted convergence rows. |
 | CONV-003 | **PLANNED** | Add convergence history and retry rules | Daily/history uniqueness and stale-input behaviour are deterministic. |
 | CONV-004 | **PLANNED** | Surface convergence in frontend | Technical, AI and Convergence results are shown distinctly. |
 
@@ -245,7 +245,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `CONV-001 — Finalise Market Convergence methodology` is **IN REVIEW**. Builder implementation and verification are complete: `market-convergence-v1` now defines eligible independent inputs, equal-weight score, confidence, disagreement precedence, labels, lineage, missing-input behaviour and versioning; a read-only live dry run produced 30 schema-valid candidate results with no convergence writes. Awaiting independent Auditor review. No later item is promoted.
+**Current work:** `CONV-002 — Populate market_convergence_assessments` is **NEXT** after CONV-001 passed independent audit with advice. The Builder may implement the trusted, versioned convergence calculation and persist rows from eligible independent Technical and AI Market sources. CONV-003 and later items remain unpromoted.
 
 ## Definition of Operational
 
@@ -281,3 +281,4 @@ A workflow is Operational only when its schema and implementation exist, schedul
 | 21-Aug-2026 | TECH-003 | `documentation/project-audits/TECH-003.md` | Independent audit PASS WITH ADVICE; 71 versioned scores, formula parity, partial-data handling, service-role execution, client-denial boundary and retry idempotency verified; TECH-004 promoted. |
 | 22-Aug-2026 | TECH-004 | `documentation/project-audits/TECH-004.md` | Independent audit PASS; active schedule, explicit ownership, terminal lifecycle, durable errors, bounded idempotent retry, deliberate access and production Admin visibility verified; TECH-005 promoted. |
 | 22-Aug-2026 | TECH-005 | `documentation/project-audits/TECH-005.md` | Independent audit PASS; market/indicator-only inputs, absence of GPT/Opportunity/convergence dependencies, persisted provenance and rollback-only contamination behavior verified; CONV-001 promoted. |
+| 22-Aug-2026 | CONV-001 | `documentation/project-audits/CONV-001.md` | Independent audit PASS WITH ADVICE; score, confidence, disagreement precedence, labels, input boundary, lineage and `market-convergence-v1` versioning verified against live schema and exhaustive calculation cases; CONV-002 promoted. |
