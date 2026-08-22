@@ -312,3 +312,13 @@ At CONV-001 design time, live Supabase showed:
 - 30 instruments had both an independently identified AI result and a Technical score.
 
 No convergence rows were created as part of CONV-001.
+
+A read-only v1 dry run over the 30 instruments with both eligible branches produced:
+
+- 30 bounded convergence scores and 30 bounded confidence values;
+- zero invalid labels against the live constraint;
+- 14 aligned, 10 mild-disagreement, 3 mixed and 3 conflict classifications;
+- a 31.48–79.78 score range and a 40.00–92.25 confidence range;
+- no inserts, updates or deletes.
+
+This dry run verifies that every formula branch maps into the existing schema. It is design evidence only, not proof of the later CONV-002 implementation.
