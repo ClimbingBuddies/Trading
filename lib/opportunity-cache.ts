@@ -3,12 +3,12 @@ import { getOpportunityDetail, getOpportunityOverview } from './opportunities'
 
 export const getCachedOpportunityOverview = unstable_cache(
   async () => getOpportunityOverview(),
-  ['opportunity-overview-v1'],
+  ['opportunity-overview-v2'],
   { revalidate: 60 },
 )
 
 export const getCachedOpportunityDetail = unstable_cache(
   async (themeCode: string) => getOpportunityDetail(themeCode),
-  ['opportunity-detail-v1'],
+  ['opportunity-detail-v2'],
   { revalidate: 60 },
 )
