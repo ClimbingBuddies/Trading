@@ -47,7 +47,7 @@ Start with [Assessment System Overview](assessment-system-overview.md) for the a
 - [Technical Engine Scheduling and Monitoring](pipelines/technical-engine-operations.md) — daily frequency, trusted ownership, durable errors, bounded retries and Admin visibility.
 - [Technical Engine Independence Verification](pipelines/technical-engine-independence.md) — permitted inputs, prohibited cross-system dependencies, live dependency evidence and the rollback-only contamination test.
 - [Market Convergence Specification](specifications/market-convergence-specification.md) — equal-weight score, confidence, disagreement, labels, lineage and versioning for the two independent Market branches.
-- [Market Convergence Population Pipeline](pipelines/market-convergence-pipeline.md) — trusted source selection, persistence, lineage, access and live verification for `market-convergence-v1`.
+- [Market Convergence Population Pipeline](pipelines/market-convergence-pipeline.md) — trusted source selection, source-date history, stale-input handling, bounded retries, persistence, lineage and live verification for `market-convergence-v1`.
 - [Market Assessment Pipeline](pipelines/market-assessment-pipeline.md) — AI Market Assessment records, lifecycle and known gaps.
 - [Opportunity Assessment Pipeline](pipelines/opportunity-assessment-pipeline.md) — Structural Signal, Technology Inflection, Opportunity Convergence, exposure, Research & Evidence, retries and Operational definition.
 - [Daily Market Assessment Specification](../automation/daily-market-assessment.md) — canonical short-term AI Market Assessment methodology and independence rules.
