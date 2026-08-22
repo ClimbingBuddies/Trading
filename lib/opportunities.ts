@@ -85,10 +85,28 @@ export type TechnologyEvent = {
   created_at: string
 }
 
+export type CurrentMarketResult = {
+  id: string
+  instrument_id: string
+  assessment_date: string
+  technical_score: number
+  technical_signal: string
+  technical_confidence: number
+  ai_score: number
+  ai_signal: string
+  ai_confidence: number
+  convergence_score: number
+  convergence_confidence: number
+  convergence_label: string
+  methodology_version: string
+  created_at: string
+}
+
 export type ThemeExposure = {
   source_kind: 'tracked' | 'external'
   theme_id: string
   instrument_id: string
+  currentMarket: CurrentMarketResult | null
   external_market_url: string | null
   market_source: string | null
   evidence_source_name: string | null
@@ -204,6 +222,7 @@ function toThemeExposure(row: UnifiedExposureRow): ThemeExposure {
     source_kind: row.source_kind,
     theme_id: row.theme_id,
     instrument_id: row.instrument_id ?? `external:${row.exchange_code}:${row.symbol}`,
+    currentMarket: null,
     external_market_url: row.external_market_url,
     market_source: row.market_source,
     evidence_source_name: row.evidence_source_name,
@@ -249,6 +268,34 @@ export async function getOpportunityOverview() {
   const themes = (themesRes.data ?? []) as OpportunityTheme[]
   const assessments = (assessmentsRes.data ?? []) as OpportunityAssessment[]
   const exposures = ((exposuresRes.data ?? []) as unknown as UnifiedExposureRow[]).map(toThemeExposure)
+  const trackedInstrumentIds = Array.from(new Set(
+    exposures
+      .filter((row) => row.source_kind === 'tracked')
+      .map((row) => row.instrument_id),
+  ))
+  const currentMarketMap = new Map<string, CurrentMarketResult>()
+
+  if (trackedInstrumentIds.length) {
+    const currentMarketRes = await supabase
+      .from('market_convergence_assessments')
+      .select('id,instrument_id,assessment_date,technical_score,technical_signal,technical_confidence,ai_score,ai_signal,ai_confidence,convergence_score,convergence_confidence,convergence_label,methodology_version,created_at')
+      .in('instrument_id', trackedInstrumentIds)
+      .order('assessment_date', { ascending: false })
+      .order('created_at', { ascending: false })
+      .order('id', { ascending: false })
+      .limit(5000)
+
+    if (currentMarketRes.error) throw currentMarketRes.error
+
+    for (const row of (currentMarketRes.data ?? []) as CurrentMarketResult[]) {
+      if (!currentMarketMap.has(row.instrument_id)) currentMarketMap.set(row.instrument_id, row)
+    }
+  }
+
+  for (const exposure of exposures) {
+    if (exposure.source_kind === 'tracked') exposure.currentMarket = currentMarketMap.get(exposure.instrument_id) ?? null
+  }
+
   const latestMap = latestByTheme(assessments)
   const exposureMap = new Map<string, ThemeExposure[]>()
 
