@@ -183,7 +183,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
 | UX-001 | **DONE** | Show current Market result beside Opportunity exposure | The UI combines independently completed views without using one as an analytical input to the other. |
-| UX-002 | **NEXT** | Add Opportunity themes to Market instrument pages | Relevant long-term themes and exposure scores are visible for tracked instruments. |
+| UX-002 | **IN PROGRESS** | Add Opportunity themes to Market instrument pages | Relevant long-term themes and exposure scores are visible for tracked instruments. |
 | UX-003 | **PLANNED** | Complete mobile interaction review | Headers, tabs, swipe, touch targets and responsive tables are verified. |
 | UX-004 | **PLANNED** | Maintain palette compliance | New components use semantic theme/chart tokens rather than fixed page colours. |
 
@@ -246,7 +246,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `UX-002 — Add Opportunity themes to Market instrument pages` is **NEXT**. UX-001 passed independent audit after distinct cross-system presentation, live data parity, truthful external handling, production navigation and the no-cross-input boundary were verified. The next Builder run may begin UX-002; UX-003 and all later items remain `PLANNED`.
+**Current work:** `UX-002 — Add Opportunity themes to Market instrument pages` is **IN PROGRESS**. The Builder is adding database-driven long-term Opportunity themes and exposure scores to tracked Market instrument pages without changing either assessment system. UX-003 and all later items remain `PLANNED`.
 
 ## Definition of Operational
 
