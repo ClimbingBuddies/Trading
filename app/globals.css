@@ -143,6 +143,31 @@ tbody tr:hover { background: #f7faff; }
 .convictionScore { color: var(--ok); font-weight: 800; text-align: right; }
 .emptyCompact { padding: 22px 12px; color: var(--muted); font-size: 11px; text-align: center; border: 1px dashed var(--line); border-radius: 7px; background: #fbfcfe; }
 
+.signalSourceGrid, .signalComparisonGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 12px; }
+.signalSourceCard, .signalResultCard { min-width: 0; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; }
+.signalSourceCard { display: grid; gap: 5px; padding: 13px 14px; border-top-width: 3px; }
+.signalSourceCard > span { color: var(--muted); font-size: 9px; font-weight: 850; text-transform: uppercase; letter-spacing: .04em; }
+.signalSourceCard strong { font-size: 17px; }
+.signalSourceCard small, .signalResultCard p { color: var(--muted); font-size: 9px; line-height: 1.45; }
+.technicalSource, .technicalResult { border-top-color: #2563eb; }
+.aiSource, .aiResult { border-top-color: #7c3aed; }
+.convergenceSource, .convergenceResult { border-top-color: #0f9f75; }
+.sourceBadge { display: inline-flex; width: fit-content; align-items: center; padding: 3px 7px; border-radius: 999px; font-size: 8px; font-weight: 850; text-transform: uppercase; letter-spacing: .035em; }
+.technicalBadge { color: #1d4ed8; background: #eff6ff; }
+.aiBadge { color: #6d28d9; background: #f5f3ff; }
+.convergenceBadge { color: #047857; background: #ecfdf5; }
+.signalTableCell { display: grid; justify-items: start; gap: 4px; min-width: 170px; white-space: normal; }
+.signalTableCell strong { font-size: 10px; }
+.signalTableCell small { color: var(--muted); font-size: 8px; line-height: 1.35; }
+.signalResultCard { padding: 16px; border-top-width: 3px; }
+.signalResultCard h2 { margin: 12px 0 4px; font-size: 20px; line-height: 1.25; }
+.signalResultCard p { margin: 0 0 13px; min-height: 28px; }
+.signalResultCard dl { margin: 0; }
+.signalResultCard dl div { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; border-top: 1px solid var(--line); font-size: 9px; }
+.signalResultCard dt { color: var(--muted); }
+.signalResultCard dd { margin: 0; text-align: right; font-weight: 750; overflow-wrap: anywhere; }
+.convergenceSummary { border-left: 3px solid #0f9f75; }
+
 .detailTopline { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; font-size: 10px; }
 .detailTopline a { color: #174da8; font-weight: 800; }
 .primaryLinkButton, .secondaryButton { display: inline-flex; align-items: center; justify-content: center; min-height: 34px; padding: 7px 11px; border-radius: 7px; border: 1px solid #174da8; background: #174da8; color: white; font-size: 10px; font-weight: 800; }
@@ -219,6 +244,7 @@ tbody tr:hover { background: #f7faff; }
   .navItem { min-width: max-content; }
   .navFooter { display: none; }
   .adminAnalytics, .assessmentGrid, .briefGrid, .detailGrid { grid-template-columns: 1fr; }
+  .signalSourceGrid, .signalComparisonGrid { grid-template-columns: 1fr; }
   .assessmentGrid > :first-child { grid-column: auto; }
   .freshnessCards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .freshnessCards article { border-bottom: 1px solid var(--line); }

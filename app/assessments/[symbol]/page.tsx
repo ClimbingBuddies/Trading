@@ -14,6 +14,14 @@ function fmtDate(value: string | null) {
   }).format(new Date(`${value}T00:00:00Z`))
 }
 
+function fmtScore(value: number | null) {
+  return value === null ? '—' : Number(value).toFixed(1)
+}
+
+function fmtLabel(value: string) {
+  return value.replaceAll('_', ' ').replace(/\b\w/g, (letter) => letter.toUpperCase())
+}
+
 async function resolveDetail(slug: string) {
   const decoded = decodeURIComponent(slug).toUpperCase()
   const candidates = [decoded]
@@ -31,6 +39,7 @@ export default async function AssessmentDetailPage({ params }: { params: Promise
     const detail = await resolveDetail(symbol)
     if (!detail) notFound()
     const assessment = detail.assessment
+    const convergence = detail.convergence
     const marketSlug = detail.instrument.symbol.replaceAll('/', '-').toLowerCase()
 
     return (
@@ -39,29 +48,46 @@ export default async function AssessmentDetailPage({ params }: { params: Promise
 
         <header className="pageHeader assessmentDetailHeader">
           <div>
-            <h1>{detail.instrument.symbol} / Market Assessment</h1>
+            <h1>{detail.instrument.symbol} / Market Signals</h1>
             <p className="subtitle">{detail.instrument.instrument_name} · {detail.instrument.asset_type} · {detail.instrument.exchange_code}</p>
           </div>
-          {assessment && <div className="assessmentHeadline"><span className="ratingTag large">{assessment.rating}</span><strong>{assessment.confidence ?? '—'}%</strong><small>confidence</small></div>}
         </header>
 
-        {!assessment ? (
+        {!assessment && !convergence ? (
           <div className="emptyStateLarge">
-            <strong>No assessment has been loaded for {detail.instrument.symbol} yet.</strong>
-            <span>The route and analyst-brief layout are ready and will populate automatically after an assessment is created.</span>
+            <strong>No market signals have been loaded for {detail.instrument.symbol} yet.</strong>
+            <span>Technical, AI and Convergence results will appear here independently as their pipelines produce eligible data.</span>
             <Link className="primaryLinkButton" href={`/markets/${marketSlug}`}>View market data</Link>
           </div>
         ) : (
           <>
-            <section className="kpiGrid detailKpis">
-              <article className="kpi"><span>Rating</span><strong className="number">{assessment.rating}</strong><small>Latest assessment</small></article>
-              <article className="kpi"><span>Score</span><strong className="number">{assessment.score ?? '—'}</strong><small>Model score</small></article>
-              <article className="kpi"><span>Confidence</span><strong className="number">{assessment.confidence === null ? '—' : `${assessment.confidence}%`}</strong><small>Higher is stronger conviction</small></article>
-              <article className="kpi"><span>Assessment Date</span><strong>{fmtDate(assessment.assessment_date)}</strong><small>Latest available</small></article>
+            <section className="signalComparisonGrid" aria-label="Technical, AI and Convergence results">
+              <article className="signalResultCard technicalResult">
+                <span className="sourceBadge technicalBadge">Technical Engine</span>
+                <h2>{convergence ? `${fmtLabel(convergence.technical_signal)} · ${fmtScore(convergence.technical_score)}` : 'Not available'}</h2>
+                <p>Immutable Technical source snapshot recorded before the combined result was calculated.</p>
+                <dl><div><dt>Confidence</dt><dd>{convergence ? `${fmtScore(convergence.technical_confidence)}%` : '—'}</dd></div><div><dt>Snapshot date</dt><dd>{fmtDate(convergence?.assessment_date ?? null)}</dd></div><div><dt>Source record</dt><dd>{convergence ? `market_scores #${convergence.technical_score_id}` : '—'}</dd></div><div><dt>Input boundary</dt><dd>AI result not used</dd></div></dl>
+              </article>
+
+              <article className="signalResultCard aiResult">
+                <span className="sourceBadge aiBadge">AI Market Assessment</span>
+                <h2>{assessment ? `${assessment.rating} · ${fmtScore(assessment.score)} / 100` : 'Not available'}</h2>
+                <p>Independent GPT assessment supported by its own research evidence.</p>
+                <dl><div><dt>Confidence</dt><dd>{assessment?.confidence === null || !assessment ? '—' : `${assessment.confidence}%`}</dd></div><div><dt>Source date</dt><dd>{fmtDate(assessment?.assessment_date ?? null)}</dd></div><div><dt>Methodology</dt><dd>{assessment?.methodology_version ?? '—'}</dd></div><div><dt>Input boundary</dt><dd>Technical result not used</dd></div></dl>
+              </article>
+
+              <article className="signalResultCard convergenceResult">
+                <span className="sourceBadge convergenceBadge">Market Convergence</span>
+                <h2>{convergence ? `${fmtLabel(convergence.convergence_label)} · ${fmtScore(convergence.convergence_score)}` : 'Not available'}</h2>
+                <p>Combined output produced only after eligible Technical and AI results exist.</p>
+                <dl><div><dt>Confidence</dt><dd>{convergence ? `${fmtScore(convergence.convergence_confidence)}%` : '—'}</dd></div><div><dt>Assessment date</dt><dd>{fmtDate(convergence?.assessment_date ?? null)}</dd></div><div><dt>Methodology</dt><dd>{convergence?.methodology_version ?? '—'}</dd></div><div><dt>Source snapshot</dt><dd>{convergence ? `Technical ${fmtScore(convergence.technical_score)} · AI ${fmtScore(convergence.ai_score)}` : '—'}</dd></div></dl>
+              </article>
             </section>
 
-            <section className="briefLead panel">
-              <div className="panelHeader"><div><h2>Assessment Summary</h2><p className="panelHint">Concise current view.</p></div></div>
+            {convergence?.summary && <section className="briefLead panel convergenceSummary"><div className="panelHeader"><div><h2>Market Convergence Summary</h2><p className="panelHint">Persisted combined interpretation; not an additional input.</p></div></div><p>{convergence.summary}</p></section>}
+
+            {assessment ? <><section className="briefLead panel">
+              <div className="panelHeader"><div><h2>AI Market Assessment Summary</h2><p className="panelHint">The independent AI view.</p></div></div>
               <p>{assessment.summary ?? 'No summary supplied.'}</p>
             </section>
 
@@ -77,19 +103,19 @@ export default async function AssessmentDetailPage({ params }: { params: Promise
             </section>
 
             <section className="panel">
-              <div className="panelHeader"><div><h2>Supporting Evidence</h2><p className="panelHint">Evidence rows linked to this assessment.</p></div><span className="contextText">{detail.evidence.length} items</span></div>
+              <div className="panelHeader"><div><h2>AI Supporting Evidence</h2><p className="panelHint">Evidence rows linked only to the AI Market Assessment.</p></div><span className="contextText">{detail.evidence.length} items</span></div>
               {detail.evidence.length ? (
                 <div className="evidenceList">
                   {detail.evidence.map((item) => (
-                    <article className="evidenceItem" key={item.evidence_id}>
-                      <div><span className="assetTag">{item.evidence_type}</span><strong>{item.source_name ?? 'Source not specified'}</strong></div>
-                      <p>{item.evidence_text}</p>
-                      <small>Relevance: {item.relevance_score ?? '—'} · Confidence: {item.confidence ?? '—'}</small>
+                    <article className="evidenceItem" key={String(item.evidence_id)}>
+                      <div><span className="assetTag">{String(item.evidence_type)}</span><strong>{item.source_name ? String(item.source_name) : 'Source not specified'}</strong></div>
+                      <p>{String(item.evidence_text)}</p>
+                      <small>Relevance: {item.relevance_score ? String(item.relevance_score) : '—'} · Confidence: {item.confidence ? String(item.confidence) : '—'}</small>
                     </article>
                   ))}
                 </div>
               ) : <div className="emptyCompact">No supporting evidence rows are linked yet.</div>}
-            </section>
+            </section></> : <div className="emptyCompact">No AI Market Assessment is available for the latest production run. Technical and Convergence results remain independently visible above.</div>}
           </>
         )}
       </div>

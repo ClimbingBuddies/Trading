@@ -51,6 +51,28 @@ export type AssessmentRow = {
   key_catalysts: string | null
   key_risks: string | null
   evidence_summary: string | null
+  methodology_version: string | null
+  created_at: string
+  convergence: ConvergenceSignal | null
+}
+
+export type ConvergenceSignal = {
+  id: string
+  instrument_id: string
+  assessment_date: string
+  technical_score_id: number
+  ai_assessment_id: string
+  technical_score: number
+  technical_signal: string
+  technical_confidence: number
+  ai_score: number
+  ai_signal: string
+  ai_confidence: number
+  convergence_score: number
+  convergence_confidence: number
+  convergence_label: string
+  summary: string | null
+  methodology_version: string
   created_at: string
 }
 
@@ -192,6 +214,27 @@ async function getLatestProductionMarketRun(): Promise<MarketRun | null> {
 
   if (result.error) throw result.error
   return (result.data as MarketRun | null) ?? null
+}
+
+async function getLatestConvergenceMap(instrumentIds: string[]) {
+  const convergence = new Map<string, ConvergenceSignal>()
+  if (!instrumentIds.length) return convergence
+
+  const supabase = getSupabase()
+  const convergenceRes = await supabase
+    .from('market_convergence_assessments')
+    .select('id,instrument_id,assessment_date,technical_score_id,ai_assessment_id,technical_score,technical_signal,technical_confidence,ai_score,ai_signal,ai_confidence,convergence_score,convergence_confidence,convergence_label,summary,methodology_version,created_at')
+    .in('instrument_id', instrumentIds)
+    .order('assessment_date', { ascending: false })
+    .order('created_at', { ascending: false })
+
+  if (convergenceRes.error) throw convergenceRes.error
+
+  for (const row of (convergenceRes.data ?? []) as ConvergenceSignal[]) {
+    if (!convergence.has(row.instrument_id)) convergence.set(row.instrument_id, row)
+  }
+
+  return convergence
 }
 
 async function fetchSyncRunsSince(sinceIso: string) {
@@ -491,12 +534,14 @@ export async function getAssessmentsData() {
 
   const assessmentsRes = await supabase
     .from('gpt_market_assessments')
-    .select('assessment_id,instrument_id,assessment_date,rating,confidence,score,summary,bull_case,bear_case,technical_view,macro_view,valuation_view,key_catalysts,key_risks,evidence_summary,created_at,instruments(symbol,instrument_name)')
+    .select('assessment_id,instrument_id,assessment_date,rating,confidence,score,summary,bull_case,bear_case,technical_view,macro_view,valuation_view,key_catalysts,key_risks,evidence_summary,methodology_version,created_at,instruments(symbol,instrument_name)')
     .eq('run_id', latestRun.run_id)
     .order('confidence', { ascending: false })
     .limit(500)
 
   if (assessmentsRes.error) throw assessmentsRes.error
+
+  const convergenceMap = await getLatestConvergenceMap((assessmentsRes.data ?? []).map((row) => row.instrument_id))
 
   const rows: AssessmentRow[] = (assessmentsRes.data ?? []).map((row) => {
     const instrument = (row as unknown as { instruments: { symbol: string; instrument_name: string } | null }).instruments
@@ -518,7 +563,9 @@ export async function getAssessmentsData() {
       key_catalysts: row.key_catalysts,
       key_risks: row.key_risks,
       evidence_summary: row.evidence_summary,
+      methodology_version: row.methodology_version,
       created_at: row.created_at,
+      convergence: convergenceMap.get(row.instrument_id) ?? null,
     }
   })
 
@@ -554,26 +601,39 @@ export async function getAssessmentDetail(symbol: string) {
   if (!instrumentRes.data) return null
 
   const latestRun = await getLatestProductionMarketRun()
-  if (!latestRun) return { instrument: instrumentRes.data, assessment: null, evidence: [] }
+  const convergenceMap = await getLatestConvergenceMap([instrumentRes.data.id])
+  let assessment = null
+  let evidence: Record<string, unknown>[] = []
 
-  const assessmentRes = await supabase
-    .from('gpt_market_assessments')
-    .select('assessment_id,instrument_id,assessment_date,rating,confidence,score,summary,bull_case,bear_case,technical_view,macro_view,valuation_view,key_catalysts,key_risks,evidence_summary,created_at')
-    .eq('instrument_id', instrumentRes.data.id)
-    .eq('run_id', latestRun.run_id)
-    .maybeSingle()
+  if (latestRun) {
+    const assessmentRes = await supabase
+      .from('gpt_market_assessments')
+      .select('assessment_id,instrument_id,assessment_date,rating,confidence,score,summary,bull_case,bear_case,technical_view,macro_view,valuation_view,key_catalysts,key_risks,evidence_summary,methodology_version,created_at')
+      .eq('instrument_id', instrumentRes.data.id)
+      .eq('run_id', latestRun.run_id)
+      .maybeSingle()
 
-  if (assessmentRes.error) throw assessmentRes.error
-  if (!assessmentRes.data) return { instrument: instrumentRes.data, assessment: null, evidence: [] }
+    if (assessmentRes.error) throw assessmentRes.error
+    assessment = assessmentRes.data ?? null
 
-  const evidenceRes = await supabase
-    .from('gpt_market_evidence')
-    .select('evidence_id,evidence_type,source_name,source_url,evidence_text,relevance_score,confidence,created_at')
-    .eq('assessment_id', assessmentRes.data.assessment_id)
-    .order('relevance_score', { ascending: false })
+    if (assessment) {
+      const evidenceRes = await supabase
+        .from('gpt_market_evidence')
+        .select('evidence_id,evidence_type,source_name,source_url,evidence_text,relevance_score,confidence,created_at')
+        .eq('assessment_id', assessment.assessment_id)
+        .order('relevance_score', { ascending: false })
 
-  if (evidenceRes.error) throw evidenceRes.error
-  return { instrument: instrumentRes.data, assessment: assessmentRes.data, evidence: evidenceRes.data ?? [] }
+      if (evidenceRes.error) throw evidenceRes.error
+      evidence = (evidenceRes.data ?? []) as Record<string, unknown>[]
+    }
+  }
+
+  return {
+    instrument: instrumentRes.data,
+    assessment,
+    convergence: convergenceMap.get(instrumentRes.data.id) ?? null,
+    evidence,
+  }
 }
 
 export async function getStrategiesData() {

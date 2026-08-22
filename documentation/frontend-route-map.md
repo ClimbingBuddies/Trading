@@ -1,6 +1,6 @@
 # Frontend Route Map and Design Behaviour
 
-**Last verified:** 18 August 2026  
+**Last verified:** 22 August 2026  
 **Application:** Discover Boulders Markets  
 **Production:** `https://discoverbouldersmarkets.vercel.app`  
 **Vercel project:** `boulders-market`
@@ -110,12 +110,13 @@ Tracked Opportunity exposures cross-link to this route. Symbols containing `/` a
 
 ### `/assessments`
 
-Purpose: overview of the latest independent ChatGPT Market Assessment set.
+Purpose: compare the latest persisted Technical Engine, AI Market Assessment and Market Convergence results without collapsing them into one recommendation.
 
 Primary Supabase sources:
 
 - `gpt_market_assessments`
 - `gpt_market_runs`
+- `market_convergence_assessments`
 - joined `instruments`
 
 Current features include:
@@ -127,7 +128,8 @@ Current features include:
 - highest-conviction instruments
 - lowest-conviction instruments
 - current run status
-- recent assessment table
+- explicit source/coverage cards for Technical, AI and Convergence
+- a recent signal-comparison table with separate score, confidence, source date and result labels
 
 Implementation entry point:
 
@@ -135,15 +137,22 @@ Implementation entry point:
 
 ### `/assessments/[symbol]`
 
-Purpose: instrument ChatGPT Market Assessment detail.
+Purpose: instrument-level comparison of independent Technical and AI results with their downstream Market Convergence output.
 
 Primary Supabase sources:
 
 - `instruments`
 - latest `gpt_market_assessments` row
+- latest `market_convergence_assessments` row
 - associated `gpt_market_evidence`
 
-The ChatGPT Market Assessment remains analytically independent from the Technical Engine before Market Convergence is calculated.
+The page renders three visually distinct result cards:
+
+1. **Technical Engine** — the immutable Technical score, signal, confidence and source-record ID captured by the Convergence row. Direct `market_scores` reads remain behind their existing authenticated-only RLS policy.
+2. **AI Market Assessment** — rating, score, confidence, source date and methodology version; the research brief and evidence stay explicitly AI-owned.
+3. **Market Convergence** — label, score, confidence, assessment date, methodology version and the Technical/AI source-score snapshot used by the combined result.
+
+Missing sources remain explicit instead of being inferred. The ChatGPT Market Assessment remains analytically independent from the Technical Engine before Market Convergence is calculated; UI proximity does not change that boundary.
 
 ---
 
