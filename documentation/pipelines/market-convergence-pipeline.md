@@ -121,7 +121,7 @@ Every run records:
 - terminal status, error code/message and timestamps;
 - methodology and freshness-rule metadata.
 
-Retries require a failed parent, inherit its cutoff and scope, and are limited to three attempts. A parent with a running or successful child cannot be retried again. Because result identity remains `(instrument_id, assessment_date, methodology_version)`, unchanged retries are idempotent.
+Retries require a failed parent, inherit its cutoff and scope, and are limited to three total attempts. Lineage is strictly linear: each failed run may have at most one direct child of any status, a subsequent retry targets only the latest failed leaf, and attempt numbers advance exactly `1 -> 2 -> 3`. `run_v1` rejects an ancestor that already has any child and rejects attempt 3 as a retry parent; a unique partial index on non-null `retry_of_run_id` independently prevents sibling children. `retry_latest_failed_v1` selects only a failed leaf with no child and returns `null` when no retryable leaf remains. Because result identity remains `(instrument_id, assessment_date, methodology_version)`, unchanged retries are idempotent.
 
 ## Independence boundary
 
@@ -150,11 +150,12 @@ The original CONV-002 retry reported `rows_changed = 0`. All 30 row identities a
 
 CONV-003 then verified the live history/retry path:
 
-- two real `service_role` current runs each considered 30 instruments and recorded 30 stale pairs, zero fresh pairs and zero writes;
-- both runs preserved the 30-row identity/timestamp hash and complete calculation-payload hash;
+- three real `service_role` current runs each considered 30 instruments and recorded 30 stale pairs, zero fresh pairs and zero writes;
+- the remediation run preserved all 30 result rows and the complete identity/timestamp/payload hash, with zero duplicate identities;
 - a rollback-only fresh-source test inserted one new source-date history row with zero duplicate identities;
-- a rollback-only failed-parent retry succeeded as attempt 2, inherited the parent's cutoff and instrument scope, and changed zero rows after the first calculation;
-- all rollback-only source and retry fixtures were removed automatically.
+- a rollback-only forced-failure test produced one linear chain with attempts `1`, `2` and `3`, inherited cutoff and instrument scope, SQLSTATE `42501` on the two function-created failed attempts, and zero sibling groups;
+- retrying the ancestor was rejected because it already had a child, directly retrying attempt 3 was rejected by the ceiling, and `retry_latest_failed_v1` returned `null` after the ceiling;
+- the attempted fourth invocation left the chain at exactly three rows, and all rollback-only source and retry fixtures were removed automatically.
 
 Verified label distribution:
 
