@@ -112,11 +112,11 @@ Only after both independent branches exist should Market Convergence combine the
 
 The canonical [Market Convergence Specification](specifications/market-convergence-specification.md) defines the `market-convergence-v1` equal-weight score, confidence calculation, disagreement precedence, labels, lineage and versioning. Disagreement remains visible as `mixed` or `conflict` rather than being hidden by the arithmetic mean.
 
-The methodology is defined independently of population. The convergence table remains empty until the later implementation stage.
+The trusted [Market Convergence Population Pipeline](pipelines/market-convergence-pipeline.md) now implements that methodology against independently completed source rows. It persists complete Technical and AI snapshots with mandatory source lineage; history/stale-input behavior remains a later stage.
 
 ## Current Market maturity
 
-As verified against live Supabase on 21 August 2026:
+As verified against live Supabase on 22 August 2026:
 
 - Market observations are populated and operational as the price-data foundation.
 - `gpt_market_runs`, `gpt_market_assessments` and `gpt_market_evidence` contain real persisted assessment/test data.
@@ -124,11 +124,11 @@ As verified against live Supabase on 21 August 2026:
 - An older historical test run remains incorrectly `running` with `tickers_completed = 0`; that legacy state is still scheduled for deliberate cleanup.
 - `technical_indicators` contains 1,136 versioned daily/weekly `technical-engine-v1` rows across 71 instruments.
 - `market_scores` contains 71 independent `technical-score-v1` rows: 61 complete and 10 partial.
-- Technical recurring ownership/monitoring is operational, and the canonical Market Convergence methodology is documented; convergence population remains a later stage.
-- `market_convergence_assessments` currently has no rows.
+- Technical recurring ownership/monitoring is operational, and the canonical Market Convergence methodology is implemented by a private service-only population function.
+- `market_convergence_assessments` contains 30 real `market-convergence-v1` rows with complete Technical/AI lineage and source snapshots.
 - The Daily Trading Market Assessment Scheduled Task is not yet considered fully operational under the project plan; the canonical GitHub methodology and unattended-run verification remain planned work.
 
-Therefore the **AI Market Assessment has persisted results, but the full two-branch Market Convergence architecture is not yet operational**.
+Therefore the two independent Market branches now combine into persisted current-state Market Convergence results. History/stale-input rules and frontend presentation remain planned before the full convergence phase is operational.
 
 ---
 
