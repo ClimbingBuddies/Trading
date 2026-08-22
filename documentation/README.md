@@ -19,7 +19,7 @@ Project delivery state is controlled by [project-plan.md](project-plan.md).
 
 The platform contains two analytically independent assessment systems:
 
-- **Short-term Market Assessment** — asks whether a tracked instrument is attractive now. The independent ChatGPT Market branch has persisted assessment results. The independent Technical Engine now persists versioned indicators and technical scores; recurring ownership and Market Convergence remain later stages.
+- **Short-term Market Assessment** — asks whether a tracked instrument is attractive now. The independent ChatGPT Market branch has persisted assessment results. The independent Technical Engine persists versioned indicators and technical scores under recurring monitored ownership; Market Convergence remains a later stage.
 - **Long-term Opportunity Assessment** — asks what structural or technological changes could become important over months or years. Structural Opportunity and Technology Inflection signals are assessed independently before Opportunity Assessment / Opportunity Convergence is calculated. Themes, signals, assessments, exposures and Research & Evidence are persisted.
 
 The two systems may be displayed together only after each has independently produced its result. Neither system's score, rating or conclusion may be used to form the other.
@@ -45,6 +45,7 @@ Start with [Assessment System Overview](assessment-system-overview.md) for the a
 - [Technical Market Scoring Specification](specifications/technical-market-scoring-specification.md) — deterministic component, overall, confidence, missing-data and versioning rules.
 - [Technical Market Scoring Pipeline](pipelines/technical-market-scoring-pipeline.md) — service-only scoring implementation, persistence, security and verification.
 - [Technical Engine Scheduling and Monitoring](pipelines/technical-engine-operations.md) — daily frequency, trusted ownership, durable errors, bounded retries and Admin visibility.
+- [Technical Engine Independence Verification](pipelines/technical-engine-independence.md) — permitted inputs, prohibited cross-system dependencies, live dependency evidence and the rollback-only contamination test.
 - [Market Assessment Pipeline](pipelines/market-assessment-pipeline.md) — AI Market Assessment records, lifecycle and known gaps.
 - [Opportunity Assessment Pipeline](pipelines/opportunity-assessment-pipeline.md) — Structural Signal, Technology Inflection, Opportunity Convergence, exposure, Research & Evidence, retries and Operational definition.
 - [Daily Market Assessment Specification](../automation/daily-market-assessment.md) — canonical short-term AI Market Assessment methodology and independence rules.
