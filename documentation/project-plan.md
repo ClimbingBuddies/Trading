@@ -4,7 +4,7 @@
 **Supabase:** `glvbqcplgjdfgjyknzsa`  
 **Production:** `https://discoverbouldersmarkets.vercel.app`  
 **Vercel project:** `boulders-market`  
-**Last reviewed:** 21 August 2026
+**Last reviewed:** 22 August 2026
 
 ## Purpose
 
@@ -112,7 +112,7 @@ Successful unattended scheduled runs are persisted for 15–17 August 2026. The 
 - `market_scores`: 71 `technical-score-v1` rows across 71 instruments; 61 complete and 10 explicit partial results.
 - Canonical calculation methodology: `documentation/specifications/technical-calculation-specification.md` (`technical-engine-v1`).
 - Canonical scoring methodology: `documentation/specifications/technical-market-scoring-specification.md` (`technical-score-v1`).
-- Implementation and verification: `documentation/pipelines/technical-indicator-pipeline.md` and `documentation/pipelines/technical-market-scoring-pipeline.md`; recurring refresh ownership and product surfaces remain later project-plan items.
+- Implementation and verification: `documentation/pipelines/technical-indicator-pipeline.md` and `documentation/pipelines/technical-market-scoring-pipeline.md`. Recurring refresh is operational at 07:15 AWST with a bounded 07:45 AWST retry watcher and production Admin telemetry; independent input-boundary verification remains the next project-plan item.
 - TECH-002 passed independent re-audit after the `service_role` helper-execution chain, real-role refresh, formula comparisons, retry identity and client-denial boundary were verified. TECH-003 passed independent audit with advice after all 71 component/overall/confidence results were independently recalculated, versioning and partial-data behaviour were verified, the real service-role path succeeded, client writes remained denied and retry identity remained deterministic.
 
 ### Market Convergence — Scaffolded
@@ -165,8 +165,8 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | TECH-001 | **DONE** | Define technical calculation specification | Indicators, intervals, history requirements, formulas, versioning and missing-data behaviour are documented. |
 | TECH-002 | **DONE** | Implement core technical indicators | Versioned `technical_indicators` are generated from real market observations. |
 | TECH-003 | **DONE** | Implement technical market scoring | `market_scores` receives reproducible component scores, overall score, confidence and version. |
-| TECH-004 | **IN REVIEW** | Add scheduler and monitoring | Frequency, ownership, errors, retries and Admin visibility are explicit. |
-| TECH-005 | **PLANNED** | Verify Technical Engine independence | Engine uses market/indicator inputs only and does not read GPT Market conclusions. |
+| TECH-004 | **DONE** | Add scheduler and monitoring | Frequency, ownership, errors, retries and Admin visibility are explicit. |
+| TECH-005 | **NEXT** | Verify Technical Engine independence | Engine uses market/indicator inputs only and does not read GPT Market conclusions. |
 
 ## Phase 4 — Market Convergence
 
@@ -245,7 +245,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `TECH-004 — Add scheduler and monitoring` is **IN REVIEW**. The implementation is awaiting independent Auditor verification against its Definition of Done and the project-wide Definition of Operational. No next item is promoted.
+**Current work:** `TECH-005 — Verify Technical Engine independence` is **NEXT**. TECH-004 passed independent audit after its live schedule, ownership, terminal lifecycle, durable errors, bounded idempotent retry and production Admin visibility were verified. No later item is promoted.
 
 ## Definition of Operational
 
@@ -279,3 +279,4 @@ A workflow is Operational only when its schema and implementation exist, schedul
 | 21-Aug-2026 | TECH-001 | `documentation/project-audits/TECH-001.md` | Independent audit PASS WITH ADVICE; technical calculation contract verified against live market-observation and technical-indicator schema; TECH-002 promoted. |
 | 21-Aug-2026 | TECH-002 | `documentation/project-audits/TECH-002.md` | Independent re-audit PASS; versioned indicators, formulas, service-role execution, client-denial boundary and retry idempotency verified; TECH-003 promoted. |
 | 21-Aug-2026 | TECH-003 | `documentation/project-audits/TECH-003.md` | Independent audit PASS WITH ADVICE; 71 versioned scores, formula parity, partial-data handling, service-role execution, client-denial boundary and retry idempotency verified; TECH-004 promoted. |
+| 22-Aug-2026 | TECH-004 | `documentation/project-audits/TECH-004.md` | Independent audit PASS; active schedule, explicit ownership, terminal lifecycle, durable errors, bounded idempotent retry, deliberate access and production Admin visibility verified; TECH-005 promoted. |
