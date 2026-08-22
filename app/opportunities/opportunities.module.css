@@ -536,7 +536,7 @@
 .exposureList { display: grid; gap: 10px; }
 .exposureRow {
   display: grid;
-  grid-template-columns: 220px 115px 100px minmax(230px, 1fr) auto;
+  grid-template-columns: 205px 105px 90px 170px minmax(220px, 1fr) auto;
   gap: 16px;
   align-items: center;
   padding: 14px 16px;
@@ -551,13 +551,21 @@
 .instrumentIdentity span { color: #a9bacd; font-size: 10px; overflow: hidden; text-overflow: ellipsis; }
 .exposureScoreBlock,
 .exposureTypeBlock,
+.marketResultBlock,
 .exposureRationale { display: grid; gap: 5px; }
 .exposureScoreBlock > span,
 .exposureTypeBlock > span,
+.marketResultBlock > span,
 .exposureRationale > span { color: #869ab0; font-size: 8px; text-transform: uppercase; letter-spacing: .04em; }
 .exposureScoreBlock strong { color: var(--opp-green); font-size: 30px; line-height: 1; }
 .exposureScoreBlock small { color: #bdcada; font-size: 9px; font-weight: 500; }
 .exposureTypeBlock strong { display: inline-flex; width: fit-content; padding: 5px 8px; border-radius: 5px; background: rgba(123,220,87,.09); border: 1px solid #3e7238; color: #92e66d; font-size: 10px; }
+.marketResultBlock { align-content: center; min-width: 0; padding-left: 13px; border-left: 1px solid var(--opp-border-soft); }
+.marketResultBlock a { display: flex; align-items: baseline; gap: 6px; width: fit-content; color: var(--opp-blue) !important; }
+.marketResultBlock a strong { font-size: 13px; }
+.marketResultBlock a small { color: #b8c9dc; font-size: 9px; }
+.marketResultBlock > small { color: #8da2b9; font-size: 8px; line-height: 1.4; }
+.marketUnavailable { color: #b2c0d0; font-size: 12px; }
 .exposureRationale p { margin: 0; color: #becada; font-size: 11px; line-height: 1.5; }
 
 .exposureTakeaway { padding: 20px; align-self: stretch; }
@@ -612,8 +620,8 @@
   .threeColumnGrid { grid-template-columns: 1fr 1fr; }
   .threeColumnGrid > :first-child { grid-column: 1 / -1; min-height: 0; }
   .synergyGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .exposureRow { grid-template-columns: 200px 100px 95px minmax(200px, 1fr); }
-  .exposureRow .viewButton { grid-column: 4; justify-self: start; }
+  .exposureRow { grid-template-columns: 190px 95px 90px 155px minmax(200px, 1fr); }
+  .exposureRow .viewButton { grid-column: 5; justify-self: start; }
   .recommendationHero { grid-template-columns: auto 1fr; }
   .recommendationMetrics { grid-column: 1 / -1; border-left: none; border-top: 1px solid var(--opp-border-soft); padding-top: 16px; }
 }
@@ -663,6 +671,7 @@
   .caseCard { min-height: 0; }
   .exposureRow { grid-template-columns: 1fr 1fr; }
   .instrumentIdentity { grid-column: 1 / -1; }
+  .marketResultBlock { grid-column: 1 / -1; padding: 10px 0 0; border-left: none; border-top: 1px solid var(--opp-border-soft); }
   .exposureRationale { grid-column: 1 / -1; }
   .exposureRow .viewButton { grid-column: 1 / -1; justify-self: start; }
   .timelineCard { grid-template-columns: 1fr; }
