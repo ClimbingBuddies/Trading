@@ -21,6 +21,29 @@ function fmtNumber(value: number | null | undefined) {
   return value === null || value === undefined ? '—' : value.toLocaleString('en-AU', { maximumFractionDigits: Math.abs(value) < 10 ? 5 : 2 })
 }
 
+function fmtScore(value: number | null | undefined) {
+  return value === null || value === undefined ? '—' : Math.round(value).toString()
+}
+
+function fmtDate(value: string | null | undefined) {
+  if (!value) return '—'
+  return new Intl.DateTimeFormat('en-AU', {
+    timeZone: 'Australia/Perth',
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  }).format(new Date(value))
+}
+
+function titleCase(value: string | null | undefined) {
+  if (!value) return '—'
+  return value.replaceAll('_', ' ').replace(/\b\w/g, (letter) => letter.toUpperCase())
+}
+
+function opportunityHref(themeCode: string) {
+  return `/opportunities/${encodeURIComponent(themeCode.toLowerCase())}?view=exposure`
+}
+
 async function resolveDetail(slug: string) {
   const decoded = decodeURIComponent(slug).toUpperCase()
   const candidates = [decoded]
@@ -61,6 +84,46 @@ export default async function MarketDetailPage({ params }: { params: Promise<{ s
           <article className="kpi"><span>Loaded At</span><strong>{fmt(latest?.loaded_at ?? null)}</strong><small>Supabase ingestion time</small></article>
           <article className="kpi"><span>Asset Class</span><strong>{detail.instrument.asset_type}</strong><small>{detail.instrument.exchange_code}</small></article>
           <article className="kpi"><span>Assessment</span><strong>{detail.latestAssessment?.rating ?? '—'}</strong><small>{detail.latestAssessment ? `${detail.latestAssessment.confidence ?? '—'}% confidence` : 'No assessment yet'}</small></article>
+        </section>
+
+        <section className="panel opportunityThemePanel">
+          <div className="panelHeader">
+            <div>
+              <h2>Long-term Opportunity Themes</h2>
+              <p className="panelHint">Stored thematic exposure for this tracked instrument, shown separately from current Market results.</p>
+            </div>
+            <span className="contextText">{detail.opportunityThemes.length} mapped {detail.opportunityThemes.length === 1 ? 'theme' : 'themes'}</span>
+          </div>
+
+          {detail.opportunityThemes.length ? (
+            <div className="opportunityThemeGrid">
+              {detail.opportunityThemes.map((theme) => (
+                <article className="opportunityThemeCard" key={theme.theme_id}>
+                  <div className="opportunityThemeCardHeader">
+                    <div>
+                      <Link href={opportunityHref(theme.theme_code)}>{theme.theme_name}</Link>
+                      <span>{titleCase(theme.theme_status)} · {titleCase(theme.exposure_type)}</span>
+                    </div>
+                    <strong>{fmtScore(theme.exposure_score)}<small>/100</small></strong>
+                  </div>
+                  <p>{theme.rationale ?? theme.theme_description ?? 'No exposure rationale has been stored.'}</p>
+                  <div className="opportunityThemeMeasures">
+                    <div><span>Exposure</span><strong>{fmtScore(theme.exposure_score)}/100</strong><small>Long-term relevance</small></div>
+                    <div><span>Opportunity</span><strong>{fmtScore(theme.opportunity_score)}/100</strong><small>{titleCase(theme.opportunity_level)}</small></div>
+                    <div><span>Confidence</span><strong>{fmtScore(theme.opportunity_confidence)}%</strong><small>{theme.methodology_version ?? 'No assessment yet'}</small></div>
+                  </div>
+                  <div className="opportunityThemeFooter">
+                    <span>{theme.time_horizon ?? 'Long-term horizon'} · assessed {fmtDate(theme.assessment_date)}</span>
+                    <Link href={opportunityHref(theme.theme_code)}>View theme exposure →</Link>
+                  </div>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <div className="emptyCompact">No active Opportunity theme currently maps to this tracked instrument.</div>
+          )}
+
+          <p className="opportunityIndependenceNote">Opportunity exposure is a long-term research measure. It does not alter Technical, AI or Market Convergence calculations, and current Market results do not alter the exposure score.</p>
         </section>
 
         <section className="panel">
