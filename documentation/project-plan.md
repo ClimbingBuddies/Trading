@@ -118,7 +118,7 @@ Successful unattended scheduled runs are persisted for 15–17 August 2026. The 
 ### Market Convergence — Partial / advanced
 
 - `market_convergence_assessments`: 30 retained `market-convergence-v1` rows across 30 instruments, with complete Technical/AI source lineage and independently verified calculations.
-- CONV-003 adds immutable-cutoff source-date history, four-calendar-day stale-input handling, durable run evidence and covering lineage indexes. The retry remediation now enforces one direct child per failed attempt at both function and unique-index layers, selects only failed leaves, advances exactly `1 -> 2 -> 3`, and rejects any fourth attempt. Live service-role, rollback-only failure-chain and idempotency verification passed; the item is awaiting independent re-audit. Frontend presentation remains CONV-004.
+- CONV-003 passed independent re-audit after immutable-cutoff source-date history, four-calendar-day freshness, one-child retry lineage, exact `1 -> 2 -> 3` progression, fourth-attempt rejection, real service-role execution, formula parity and idempotency were verified. Frontend presentation is the next Market Convergence item under CONV-004.
 
 ### Security — Hardened through SEC-005
 
@@ -175,8 +175,8 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 |---|---|---|---|
 | CONV-001 | **DONE** | Finalise Market Convergence methodology | Score, confidence, disagreement handling, labels and version are documented. |
 | CONV-002 | **DONE** | Populate `market_convergence_assessments` | Independent Technical and AI Market results combine into persisted convergence rows. |
-| CONV-003 | **IN REVIEW** | Add convergence history and retry rules | Daily/history uniqueness and stale-input behaviour are deterministic. |
-| CONV-004 | **PLANNED** | Surface convergence in frontend | Technical, AI and Convergence results are shown distinctly. |
+| CONV-003 | **DONE** | Add convergence history and retry rules | Daily/history uniqueness and stale-input behaviour are deterministic. |
+| CONV-004 | **NEXT** | Surface convergence in frontend | Technical, AI and Convergence results are shown distinctly. |
 
 ## Phase 5 — Cross-system investment research
 
@@ -246,7 +246,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `CONV-003 — Add convergence history and retry rules` is **IN REVIEW** after Builder remediation. Linear one-child retry lineage, exact `1 -> 2 -> 3` progression, fourth-attempt rejection, leaf-only selection, live service-role execution and unchanged-result idempotency are verified; the item is awaiting independent Auditor re-review. CONV-004 and later items remain unpromoted.
+**Current work:** `CONV-004 — Surface convergence in frontend` is **NEXT**. The Builder may begin the distinct Technical, AI and Convergence presentation slice; UX-001 and all later items remain `PLANNED`.
 
 ## Definition of Operational
 
@@ -284,3 +284,4 @@ A workflow is Operational only when its schema and implementation exist, schedul
 | 22-Aug-2026 | TECH-005 | `documentation/project-audits/TECH-005.md` | Independent audit PASS; market/indicator-only inputs, absence of GPT/Opportunity/convergence dependencies, persisted provenance and rollback-only contamination behavior verified; CONV-001 promoted. |
 | 22-Aug-2026 | CONV-001 | `documentation/project-audits/CONV-001.md` | Independent audit PASS WITH ADVICE; score, confidence, disagreement precedence, labels, input boundary, lineage and `market-convergence-v1` versioning verified against live schema and exhaustive calculation cases; CONV-002 promoted. |
 | 22-Aug-2026 | CONV-002 | `documentation/project-audits/CONV-002.md` | Independent audit PASS WITH ADVICE; 30 eligible pairs and persisted rows, deterministic source selection, exact formula parity, mandatory lineage, missing-branch behavior, client-denial boundary and unchanged trusted retry verified; CONV-003 promoted. |
+| 22-Aug-2026 | CONV-003 | `documentation/project-audits/CONV-003.md` | Independent re-audit PASS; source-date history, four-day/five-day freshness, linear `1 -> 2 -> 3` retry lineage, database sibling prevention, fourth-attempt rejection, real service-role execution and idempotency verified; CONV-004 promoted. |
