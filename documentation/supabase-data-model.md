@@ -317,7 +317,21 @@ This table must not be confused with `opportunity_assessments`: Market Convergen
 
 **Live verification on 22 August 2026:** 30 `market-convergence-v1` rows across 30 instruments, each with mandatory Technical and AI lineage and complete source/output snapshots.
 
-Status: **Partial / advanced with live production data**. The private, service-only `market_convergence.refresh_v1` function deterministically selects the latest eligible independent Technical and AI Market results and persists current convergence rows. Client roles retain read-only access. History, stale-input policy and retry rules remain CONV-003; frontend presentation remains CONV-004.
+Status: **Partial / advanced with live production data**. Private, service-only refresh and run functions deterministically select eligible independent Technical and AI Market results at an immutable cutoff. Source-date history retains one versioned identity per instrument/date/methodology. Stale or missing branches are counted and skipped rather than fabricated. Client roles retain read-only access. Frontend presentation remains CONV-004.
+
+### `market_convergence_runs`
+
+This read-only operational history records:
+
+- New York logical date and immutable cutoff;
+- full-universe or single-instrument scope;
+- manual, scheduled, historical or retry execution source;
+- failed-parent lineage and bounded attempt number;
+- considered, eligible, fresh, stale, missing-input and changed-row counts;
+- terminal status, error details and timestamps;
+- `market-convergence-v1` and freshness-rule metadata.
+
+Retries inherit the failed parent's cutoff and scope. The source foreign keys on `market_convergence_assessments` and retry/scope foreign keys on the run log have covering indexes for growing history.
 
 Pipeline documentation: `documentation/pipelines/market-convergence-pipeline.md`.
 
