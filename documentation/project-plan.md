@@ -166,7 +166,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | TECH-002 | **DONE** | Implement core technical indicators | Versioned `technical_indicators` are generated from real market observations. |
 | TECH-003 | **DONE** | Implement technical market scoring | `market_scores` receives reproducible component scores, overall score, confidence and version. |
 | TECH-004 | **DONE** | Add scheduler and monitoring | Frequency, ownership, errors, retries and Admin visibility are explicit. |
-| TECH-005 | **NEXT** | Verify Technical Engine independence | Engine uses market/indicator inputs only and does not read GPT Market conclusions. |
+| TECH-005 | **IN PROGRESS** | Verify Technical Engine independence | Engine uses market/indicator inputs only and does not read GPT Market conclusions. |
 
 ## Phase 4 — Market Convergence
 
@@ -245,7 +245,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `TECH-005 — Verify Technical Engine independence` is **NEXT**. TECH-004 passed independent audit after its live schedule, ownership, terminal lifecycle, durable errors, bounded idempotent retry and production Admin visibility were verified. No later item is promoted.
+**Current work:** `TECH-005 — Verify Technical Engine independence` is **IN PROGRESS**. The Builder is tracing the live Technical Engine input boundary across source, database dependencies and persisted results. No later item is promoted.
 
 ## Definition of Operational
 
