@@ -182,8 +182,8 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
-| UX-001 | **IN REVIEW** | Show current Market result beside Opportunity exposure | The UI combines independently completed views without using one as an analytical input to the other. |
-| UX-002 | **PLANNED** | Add Opportunity themes to Market instrument pages | Relevant long-term themes and exposure scores are visible for tracked instruments. |
+| UX-001 | **DONE** | Show current Market result beside Opportunity exposure | The UI combines independently completed views without using one as an analytical input to the other. |
+| UX-002 | **NEXT** | Add Opportunity themes to Market instrument pages | Relevant long-term themes and exposure scores are visible for tracked instruments. |
 | UX-003 | **PLANNED** | Complete mobile interaction review | Headers, tabs, swipe, touch targets and responsive tables are verified. |
 | UX-004 | **PLANNED** | Maintain palette compliance | New components use semantic theme/chart tokens rather than fixed page colours. |
 
@@ -246,7 +246,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `UX-001 — Show current Market result beside Opportunity exposure` is **IN REVIEW**. Builder implementation and verification are complete: independently produced Opportunity exposure and current Market Convergence results are displayed together without making either an analytical input to the other. UX-001 is awaiting independent Auditor review; UX-002 and all later items remain `PLANNED`.
+**Current work:** `UX-002 — Add Opportunity themes to Market instrument pages` is **NEXT**. UX-001 passed independent audit after distinct cross-system presentation, live data parity, truthful external handling, production navigation and the no-cross-input boundary were verified. The next Builder run may begin UX-002; UX-003 and all later items remain `PLANNED`.
 
 ## Definition of Operational
 
@@ -286,3 +286,4 @@ A workflow is Operational only when its schema and implementation exist, schedul
 | 22-Aug-2026 | CONV-002 | `documentation/project-audits/CONV-002.md` | Independent audit PASS WITH ADVICE; 30 eligible pairs and persisted rows, deterministic source selection, exact formula parity, mandatory lineage, missing-branch behavior, client-denial boundary and unchanged trusted retry verified; CONV-003 promoted. |
 | 22-Aug-2026 | CONV-003 | `documentation/project-audits/CONV-003.md` | Independent re-audit PASS; source-date history, four-day/five-day freshness, linear `1 -> 2 -> 3` retry lineage, database sibling prevention, fourth-attempt rejection, real service-role execution and idempotency verified; CONV-004 promoted. |
 | 22-Aug-2026 | CONV-004 | `documentation/project-audits/CONV-004.md` | Independent audit PASS WITH ADVICE; distinct Technical, AI and Market Convergence display, live lineage, public read boundary, healthy production deployment and browser journey verified; UX-001 promoted. |
+| 22-Aug-2026 | UX-001 | `documentation/project-audits/UX-001.md` | Independent audit PASS; distinct Opportunity Exposure and current Market Convergence presentation, live data parity, analytical independence, truthful external handling and healthy production navigation verified; UX-002 promoted. |
