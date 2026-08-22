@@ -115,10 +115,10 @@ Successful unattended scheduled runs are persisted for 15–17 August 2026. The 
 - Implementation and verification: `documentation/pipelines/technical-indicator-pipeline.md` and `documentation/pipelines/technical-market-scoring-pipeline.md`. Recurring refresh is operational at 07:15 AWST with a bounded 07:45 AWST retry watcher and production Admin telemetry. TECH-005 passed independent audit after source, live function dependencies, relationships, persisted provenance and a rollback-only GPT-contamination test confirmed the Technical Engine input boundary.
 - TECH-002 passed independent re-audit after the `service_role` helper-execution chain, real-role refresh, formula comparisons, retry identity and client-denial boundary were verified. TECH-003 passed independent audit with advice after all 71 component/overall/confidence results were independently recalculated, versioning and partial-data behaviour were verified, the real service-role path succeeded, client writes remained denied and retry identity remained deterministic.
 
-### Market Convergence — Partial / advanced
+### Market Convergence — Operational
 
 - `market_convergence_assessments`: 30 retained `market-convergence-v1` rows across 30 instruments, with complete Technical/AI source lineage and independently verified calculations.
-- CONV-003 passed independent re-audit after immutable-cutoff source-date history, four-calendar-day freshness, one-child retry lineage, exact `1 -> 2 -> 3` progression, fourth-attempt rejection, real service-role execution, formula parity and idempotency were verified. CONV-004 frontend presentation is implemented, production-verified and awaiting independent Auditor review.
+- CONV-003 passed independent re-audit after immutable-cutoff source-date history, four-calendar-day freshness, one-child retry lineage, exact `1 -> 2 -> 3` progression, fourth-attempt rejection, real service-role execution, formula parity and idempotency were verified. CONV-004 passed independent audit with advice after distinct Technical, AI and Market Convergence presentation, live lineage, deliberate public access, production deployment and browser navigation were verified.
 
 ### Security — Hardened through SEC-005
 
@@ -176,13 +176,13 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | CONV-001 | **DONE** | Finalise Market Convergence methodology | Score, confidence, disagreement handling, labels and version are documented. |
 | CONV-002 | **DONE** | Populate `market_convergence_assessments` | Independent Technical and AI Market results combine into persisted convergence rows. |
 | CONV-003 | **DONE** | Add convergence history and retry rules | Daily/history uniqueness and stale-input behaviour are deterministic. |
-| CONV-004 | **IN REVIEW** | Surface convergence in frontend | Technical, AI and Convergence results are shown distinctly. |
+| CONV-004 | **DONE** | Surface convergence in frontend | Technical, AI and Convergence results are shown distinctly. |
 
 ## Phase 5 — Cross-system investment research
 
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
-| UX-001 | **PLANNED** | Show current Market result beside Opportunity exposure | The UI combines independently completed views without using one as an analytical input to the other. |
+| UX-001 | **NEXT** | Show current Market result beside Opportunity exposure | The UI combines independently completed views without using one as an analytical input to the other. |
 | UX-002 | **PLANNED** | Add Opportunity themes to Market instrument pages | Relevant long-term themes and exposure scores are visible for tracked instruments. |
 | UX-003 | **PLANNED** | Complete mobile interaction review | Headers, tabs, swipe, touch targets and responsive tables are verified. |
 | UX-004 | **PLANNED** | Maintain palette compliance | New components use semantic theme/chart tokens rather than fixed page colours. |
@@ -246,7 +246,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `CONV-004 — Surface convergence in frontend` is **IN REVIEW**. The Builder implemented and production-verified a database-driven Assessments comparison with distinct Technical source snapshots, independent AI results and versioned Market Convergence output; UX-001 and all later items remain `PLANNED` pending independent Auditor review.
+**Current work:** `UX-001 — Show current Market result beside Opportunity exposure` is **NEXT**. CONV-004 passed independent audit with advice after distinct Technical, AI and Market Convergence presentation, live lineage, deliberate public access, production deployment and browser navigation were verified. UX-002 and all later items remain `PLANNED`.
 
 ## Definition of Operational
 
@@ -285,3 +285,4 @@ A workflow is Operational only when its schema and implementation exist, schedul
 | 22-Aug-2026 | CONV-001 | `documentation/project-audits/CONV-001.md` | Independent audit PASS WITH ADVICE; score, confidence, disagreement precedence, labels, input boundary, lineage and `market-convergence-v1` versioning verified against live schema and exhaustive calculation cases; CONV-002 promoted. |
 | 22-Aug-2026 | CONV-002 | `documentation/project-audits/CONV-002.md` | Independent audit PASS WITH ADVICE; 30 eligible pairs and persisted rows, deterministic source selection, exact formula parity, mandatory lineage, missing-branch behavior, client-denial boundary and unchanged trusted retry verified; CONV-003 promoted. |
 | 22-Aug-2026 | CONV-003 | `documentation/project-audits/CONV-003.md` | Independent re-audit PASS; source-date history, four-day/five-day freshness, linear `1 -> 2 -> 3` retry lineage, database sibling prevention, fourth-attempt rejection, real service-role execution and idempotency verified; CONV-004 promoted. |
+| 22-Aug-2026 | CONV-004 | `documentation/project-audits/CONV-004.md` | Independent audit PASS WITH ADVICE; distinct Technical, AI and Market Convergence display, live lineage, public read boundary, healthy production deployment and browser journey verified; UX-001 promoted. |
