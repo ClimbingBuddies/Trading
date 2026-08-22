@@ -90,19 +90,24 @@ Implementation entry point:
 
 ### `/markets/[symbol]`
 
-Purpose: instrument detail and price history.
+Purpose: instrument detail, price history and database-driven cross-reference to relevant long-term Opportunity themes.
 
 Primary Supabase sources:
 
 - `instruments`
 - `market_observations`
 - latest `gpt_market_assessments` record for the instrument
+- tracked rows from `opportunity_theme_all_exposures`
+- active/watch `opportunity_themes`
+- latest `opportunity_assessments` row for each mapped theme
 
 Implementation entry point:
 
 - `getMarketDetail(symbol)`
 
-Tracked Opportunity exposures cross-link to this route. Symbols containing `/` are normalised to `-` in route slugs.
+For each tracked instrument, the page shows active mapped Opportunity themes, the stored exposure score/type/rationale, and the latest long-term Opportunity score, level, confidence, horizon, date and methodology when available. Theme cards link back to the relevant Opportunity Exposure view. An explicit empty state is shown when no active theme maps to the instrument.
+
+This is a read-only cross-system presentation. Opportunity exposure does not alter Technical, AI or Market Convergence calculations, and Market results do not alter the Opportunity exposure score. External Opportunity exposures are excluded because this route represents an internally tracked instrument. Symbols containing `/` are normalised to `-` in route slugs.
 
 ---
 
