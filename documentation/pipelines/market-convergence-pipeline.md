@@ -12,34 +12,40 @@ The canonical calculations and labels are defined in the [Market Convergence Spe
 
 ## Trusted execution surface
 
-The implementation is the private PostgreSQL function:
+The implementation exposes four private PostgreSQL functions:
 
 ```sql
 market_convergence.refresh_v1(p_instrument_id uuid default null)
+market_convergence.refresh_as_of_v1(p_cutoff_at timestamptz, p_instrument_id uuid default null)
+market_convergence.run_v1(p_execution_source text, p_retry_of_run_id uuid, p_cutoff_at timestamptz, p_instrument_id uuid)
+market_convergence.retry_latest_failed_v1()
 ```
 
-- The function is owned by `postgres`, runs as `security invoker`, and uses `search_path = pg_catalog`.
+- The functions are owned by `postgres`, run as `security invoker`, and use `search_path = pg_catalog`.
 - Every table reference is schema-qualified.
 - Only `service_role` has schema usage and function execution.
-- `anon` and `authenticated` cannot access the private schema or execute the function.
-- The destination table remains read-only to clients: `anon` and `authenticated` have `SELECT` only, while `service_role` has trusted write privileges.
-- Row-level security remains enabled on `public.market_convergence_assessments`.
+- `anon` and `authenticated` cannot access the private schema or execute a function.
+- `public.market_convergence_assessments` and `public.market_convergence_runs` remain read-only to clients.
+- Row-level security remains enabled on both public tables.
 
-Trusted full refresh:
-
-```sql
-select *
-from market_convergence.refresh_v1(null);
-```
-
-Trusted single-instrument refresh:
+Trusted current refresh:
 
 ```sql
-select *
-from market_convergence.refresh_v1('<instrument-uuid>'::uuid);
+select * from market_convergence.refresh_v1(null);
 ```
 
-The returned `rows_changed` count reports inserts or material payload changes. An unchanged retry returns zero.
+Trusted monitored run with an explicit immutable cutoff:
+
+```sql
+select market_convergence.run_v1(
+  'manual',
+  null,
+  '2026-08-22T04:00:00Z'::timestamptz,
+  null
+);
+```
+
+`refresh_as_of_v1` returns considered, eligible, fresh, stale, missing-input and changed-row counts. `run_v1` records the same evidence and returns the durable run ID.
 
 ## Eligible inputs
 
@@ -50,7 +56,8 @@ The pipeline selects the latest eligible row per instrument from `public.market_
 - `methodology_version = 'technical-score-v1'`;
 - `score_status` is `complete` or `partial`;
 - `overall_score` and `confidence_score` are present and within 0–100;
-- `calculated_at` is not in the future.
+- `score_date` is on or before the run's New York logical date;
+- `calculated_at` is on or before the run's immutable cutoff.
 
 Selection is deterministic:
 
@@ -66,7 +73,8 @@ The pipeline independently selects the latest eligible row per instrument from `
 - `technical_engine_input_used is false`;
 - `score` and `confidence` are present and within 0–100;
 - `rating` is one of Strong Buy, Buy, Hold, Sell or Strong Sell;
-- `created_at` is not in the future.
+- `assessment_date` is on or before the run's New York logical date;
+- `created_at` is on or before the run's immutable cutoff.
 
 Selection is deterministic:
 
@@ -95,7 +103,25 @@ A database constraint prevents incomplete `market-convergence-v1` rows from bein
 (instrument_id, assessment_date, methodology_version)
 ```
 
-The refresh uses an upsert against that identity and updates only when the persisted payload differs. It does not read prior convergence rows as analytical inputs.
+The refresh uses an upsert against that identity and updates only when the persisted payload differs. A new later source date creates a historical row. No-input calendar days create no artificial snapshot. Prior convergence rows are never analytical inputs.
+
+## Freshness, history and retry rules
+
+The run cutoff is converted to an `America/New_York` logical date. Both selected source dates must be no more than four calendar days old. This deterministic window admits an ordinary weekend while rejecting materially stale daily inputs without relying on a partial exchange-holiday calendar.
+
+A stale pair is counted in `public.market_convergence_runs` and skipped. A missing branch is counted separately and skipped. Neither condition inserts a neutral/default convergence row or changes an existing historical row.
+
+Every run records:
+
+- logical date and immutable cutoff;
+- optional instrument scope;
+- execution source;
+- retry parent and attempt number;
+- considered, eligible, fresh, stale, missing-input and changed-row counts;
+- terminal status, error code/message and timestamps;
+- methodology and freshness-rule metadata.
+
+Retries require a failed parent, inherit its cutoff and scope, and are limited to three attempts. A parent with a running or successful child cannot be retried again. Because result identity remains `(instrument_id, assessment_date, methodology_version)`, unchanged retries are idempotent.
 
 ## Independence boundary
 
@@ -120,7 +146,15 @@ A trusted `service_role` refresh on 22 August 2026 produced:
 - zero duplicate identities;
 - zero independent formula or selected-source mismatches.
 
-A full retry reported `rows_changed = 0`. All 30 row identities and calculation payloads remained unchanged.
+The original CONV-002 retry reported `rows_changed = 0`. All 30 row identities and calculation payloads remained unchanged.
+
+CONV-003 then verified the live history/retry path:
+
+- two real `service_role` current runs each considered 30 instruments and recorded 30 stale pairs, zero fresh pairs and zero writes;
+- both runs preserved the 30-row identity/timestamp hash and complete calculation-payload hash;
+- a rollback-only fresh-source test inserted one new source-date history row with zero duplicate identities;
+- a rollback-only failed-parent retry succeeded as attempt 2, inherited the parent's cutoff and instrument scope, and changed zero rows after the first calculation;
+- all rollback-only source and retry fixtures were removed automatically.
 
 Verified label distribution:
 
@@ -141,7 +175,4 @@ Client privilege verification confirmed:
 
 ## Deliberate next-stage boundaries
 
-CONV-002 establishes real current-state persistence only. The following remain separate project-plan items:
-
-- convergence history, stale-input policy and retry rules: CONV-003;
-- frontend presentation of Technical, AI and Convergence results as distinct views: CONV-004.
+CONV-002 established current-state persistence and CONV-003 adds deterministic source-date history, stale-input decisions and bounded retries. Frontend presentation of Technical, AI and Convergence results as distinct views remains CONV-004.
