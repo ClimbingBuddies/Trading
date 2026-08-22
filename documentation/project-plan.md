@@ -117,8 +117,8 @@ Successful unattended scheduled runs are persisted for 15–17 August 2026. The 
 
 ### Market Convergence — Partial / advanced
 
-- `market_convergence_assessments`: 30 current `market-convergence-v1` rows across 30 instruments, with complete Technical/AI source lineage and independently verified calculations.
-- Trusted current-state population is implemented and client writes are blocked; convergence history, stale-input behavior and retry rules remain CONV-003, while frontend presentation remains CONV-004.
+- `market_convergence_assessments`: 30 retained `market-convergence-v1` rows across 30 instruments, with complete Technical/AI source lineage and independently verified calculations.
+- CONV-003 adds immutable-cutoff source-date history, four-calendar-day stale-input handling, durable run evidence, bounded retries and covering lineage indexes. Two live service-role runs recorded all 30 current pairs as stale and made zero result changes. Frontend presentation remains CONV-004.
 
 ### Security — Hardened through SEC-005
 
@@ -175,7 +175,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 |---|---|---|---|
 | CONV-001 | **DONE** | Finalise Market Convergence methodology | Score, confidence, disagreement handling, labels and version are documented. |
 | CONV-002 | **DONE** | Populate `market_convergence_assessments` | Independent Technical and AI Market results combine into persisted convergence rows. |
-| CONV-003 | **IN PROGRESS** | Add convergence history and retry rules | Daily/history uniqueness and stale-input behaviour are deterministic. |
+| CONV-003 | **IN REVIEW** | Add convergence history and retry rules | Daily/history uniqueness and stale-input behaviour are deterministic. |
 | CONV-004 | **PLANNED** | Surface convergence in frontend | Technical, AI and Convergence results are shown distinctly. |
 
 ## Phase 5 — Cross-system investment research
@@ -246,7 +246,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `CONV-003 — Add convergence history and retry rules` is **IN PROGRESS**. The Builder is defining and implementing deterministic as-of-date history, stale-source handling and idempotent retry behavior without changing the audited `market-convergence-v1` formula. CONV-004 and later items remain unpromoted.
+**Current work:** `CONV-003 — Add convergence history and retry rules` is **IN REVIEW** awaiting independent Auditor verification. The Builder implemented immutable-cutoff source-date history, deterministic stale/missing-input behavior, bounded retry lineage and idempotent persistence without changing the audited `market-convergence-v1` formula. CONV-004 and later items remain unpromoted.
 
 ## Definition of Operational
 
