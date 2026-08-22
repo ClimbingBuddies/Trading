@@ -175,7 +175,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 |---|---|---|---|
 | CONV-001 | **DONE** | Finalise Market Convergence methodology | Score, confidence, disagreement handling, labels and version are documented. |
 | CONV-002 | **DONE** | Populate `market_convergence_assessments` | Independent Technical and AI Market results combine into persisted convergence rows. |
-| CONV-003 | **NEXT** | Add convergence history and retry rules | Daily/history uniqueness and stale-input behaviour are deterministic. |
+| CONV-003 | **IN PROGRESS** | Add convergence history and retry rules | Daily/history uniqueness and stale-input behaviour are deterministic. |
 | CONV-004 | **PLANNED** | Surface convergence in frontend | Technical, AI and Convergence results are shown distinctly. |
 
 ## Phase 5 — Cross-system investment research
@@ -246,7 +246,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `CONV-003 — Add convergence history and retry rules` is **NEXT** after CONV-002 passed independent audit with advice. Define deterministic daily/history retention, stale-input handling and retry behavior without changing the audited `market-convergence-v1` formula. CONV-004 and later items remain unpromoted.
+**Current work:** `CONV-003 — Add convergence history and retry rules` is **IN PROGRESS**. The Builder is defining and implementing deterministic as-of-date history, stale-source handling and idempotent retry behavior without changing the audited `market-convergence-v1` formula. CONV-004 and later items remain unpromoted.
 
 ## Definition of Operational
 
