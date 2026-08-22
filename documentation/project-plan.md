@@ -112,7 +112,7 @@ Successful unattended scheduled runs are persisted for 15–17 August 2026. The 
 - `market_scores`: 71 `technical-score-v1` rows across 71 instruments; 61 complete and 10 explicit partial results.
 - Canonical calculation methodology: `documentation/specifications/technical-calculation-specification.md` (`technical-engine-v1`).
 - Canonical scoring methodology: `documentation/specifications/technical-market-scoring-specification.md` (`technical-score-v1`).
-- Implementation and verification: `documentation/pipelines/technical-indicator-pipeline.md` and `documentation/pipelines/technical-market-scoring-pipeline.md`. Recurring refresh is operational at 07:15 AWST with a bounded 07:45 AWST retry watcher and production Admin telemetry; independent input-boundary verification remains the next project-plan item.
+- Implementation and verification: `documentation/pipelines/technical-indicator-pipeline.md` and `documentation/pipelines/technical-market-scoring-pipeline.md`. Recurring refresh is operational at 07:15 AWST with a bounded 07:45 AWST retry watcher and production Admin telemetry. Builder input-boundary evidence is recorded in `documentation/pipelines/technical-engine-independence.md` and awaits independent audit.
 - TECH-002 passed independent re-audit after the `service_role` helper-execution chain, real-role refresh, formula comparisons, retry identity and client-denial boundary were verified. TECH-003 passed independent audit with advice after all 71 component/overall/confidence results were independently recalculated, versioning and partial-data behaviour were verified, the real service-role path succeeded, client writes remained denied and retry identity remained deterministic.
 
 ### Market Convergence — Scaffolded
@@ -166,7 +166,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | TECH-002 | **DONE** | Implement core technical indicators | Versioned `technical_indicators` are generated from real market observations. |
 | TECH-003 | **DONE** | Implement technical market scoring | `market_scores` receives reproducible component scores, overall score, confidence and version. |
 | TECH-004 | **DONE** | Add scheduler and monitoring | Frequency, ownership, errors, retries and Admin visibility are explicit. |
-| TECH-005 | **IN PROGRESS** | Verify Technical Engine independence | Engine uses market/indicator inputs only and does not read GPT Market conclusions. |
+| TECH-005 | **IN REVIEW** | Verify Technical Engine independence | Engine uses market/indicator inputs only and does not read GPT Market conclusions. |
 
 ## Phase 4 — Market Convergence
 
@@ -245,7 +245,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `TECH-005 — Verify Technical Engine independence` is **IN PROGRESS**. The Builder is tracing the live Technical Engine input boundary across source, database dependencies and persisted results. No later item is promoted.
+**Current work:** `TECH-005 — Verify Technical Engine independence` is **IN REVIEW**. Builder verification found no GPT Market, Opportunity or convergence dependency in source, live function definitions, relationships or persisted metadata; a rollback-only GPT contamination test left Technical Engine payloads unchanged. The item is awaiting independent Auditor verification. No later item is promoted.
 
 ## Definition of Operational
 
