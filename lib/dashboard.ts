@@ -76,6 +76,25 @@ export type ConvergenceSignal = {
   created_at: string
 }
 
+export type InstrumentOpportunityTheme = {
+  theme_id: string
+  theme_code: string
+  theme_name: string
+  theme_status: string
+  theme_description: string | null
+  horizon_years_min: number | null
+  horizon_years_max: number | null
+  exposure_type: string
+  exposure_score: number | null
+  rationale: string | null
+  assessment_date: string | null
+  opportunity_score: number | null
+  opportunity_confidence: number | null
+  opportunity_level: string | null
+  time_horizon: string | null
+  methodology_version: string | null
+}
+
 type MarketRun = {
   run_id: string
   started_at: string
@@ -484,7 +503,7 @@ export async function getMarketDetail(symbol: string) {
   if (instrumentRes.error) throw instrumentRes.error
   if (!instrumentRes.data) return null
 
-  const [observationsRes, latestRun] = await Promise.all([
+  const [observationsRes, latestRun, exposuresRes] = await Promise.all([
     supabase
       .from('market_observations')
       .select('id,open,high,low,close,volume,currency_code,observed_at,loaded_at')
@@ -492,9 +511,17 @@ export async function getMarketDetail(symbol: string) {
       .order('observed_at', { ascending: false })
       .limit(200),
     getLatestProductionMarketRun(),
+    supabase
+      .from('opportunity_theme_all_exposures')
+      .select('theme_id,exposure_type,exposure_score,rationale')
+      .eq('source_kind', 'tracked')
+      .eq('instrument_id', instrumentRes.data.id)
+      .eq('is_active', true)
+      .order('exposure_score', { ascending: false }),
   ])
 
   if (observationsRes.error) throw observationsRes.error
+  if (exposuresRes.error) throw exposuresRes.error
 
   let latestAssessment = null
   if (latestRun) {
@@ -509,10 +536,79 @@ export async function getMarketDetail(symbol: string) {
     latestAssessment = assessmentRes.data ?? null
   }
 
+  const exposures = (exposuresRes.data ?? []) as Array<{
+    theme_id: string
+    exposure_type: string
+    exposure_score: number | null
+    rationale: string | null
+  }>
+  const themeIds = Array.from(new Set(exposures.map((row) => row.theme_id)))
+  let opportunityThemes: InstrumentOpportunityTheme[] = []
+
+  if (themeIds.length) {
+    const [themesRes, assessmentsRes] = await Promise.all([
+      supabase
+        .from('opportunity_themes')
+        .select('id,theme_code,theme_name,status,description,horizon_years_min,horizon_years_max')
+        .in('id', themeIds)
+        .in('status', ['active', 'watch']),
+      supabase
+        .from('opportunity_assessments')
+        .select('id,theme_id,assessment_date,opportunity_score,opportunity_confidence,opportunity_level,time_horizon,methodology_version,updated_at')
+        .in('theme_id', themeIds)
+        .order('assessment_date', { ascending: false })
+        .order('updated_at', { ascending: false })
+        .order('id', { ascending: false })
+        .limit(2000),
+    ])
+
+    if (themesRes.error) throw themesRes.error
+    if (assessmentsRes.error) throw assessmentsRes.error
+
+    const themesById = new Map((themesRes.data ?? []).map((row) => [row.id, row]))
+    const latestByTheme = new Map<string, {
+      assessment_date: string
+      opportunity_score: number | null
+      opportunity_confidence: number | null
+      opportunity_level: string | null
+      time_horizon: string | null
+      methodology_version: string | null
+    }>()
+
+    for (const row of assessmentsRes.data ?? []) {
+      if (!latestByTheme.has(row.theme_id)) latestByTheme.set(row.theme_id, row)
+    }
+
+    opportunityThemes = exposures.flatMap((exposure) => {
+      const theme = themesById.get(exposure.theme_id)
+      if (!theme) return []
+      const latest = latestByTheme.get(exposure.theme_id)
+      return [{
+        theme_id: exposure.theme_id,
+        theme_code: theme.theme_code,
+        theme_name: theme.theme_name,
+        theme_status: theme.status,
+        theme_description: theme.description,
+        horizon_years_min: theme.horizon_years_min,
+        horizon_years_max: theme.horizon_years_max,
+        exposure_type: exposure.exposure_type,
+        exposure_score: exposure.exposure_score,
+        rationale: exposure.rationale,
+        assessment_date: latest?.assessment_date ?? null,
+        opportunity_score: latest?.opportunity_score ?? null,
+        opportunity_confidence: latest?.opportunity_confidence ?? null,
+        opportunity_level: latest?.opportunity_level ?? null,
+        time_horizon: latest?.time_horizon ?? null,
+        methodology_version: latest?.methodology_version ?? null,
+      }]
+    })
+  }
+
   return {
     instrument: instrumentRes.data,
     observations: observationsRes.data ?? [],
     latestAssessment,
+    opportunityThemes,
   }
 }
 
