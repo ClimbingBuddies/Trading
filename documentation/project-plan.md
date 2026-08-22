@@ -172,7 +172,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
-| CONV-001 | **NEXT** | Finalise Market Convergence methodology | Score, confidence, disagreement handling, labels and version are documented. |
+| CONV-001 | **IN PROGRESS** | Finalise Market Convergence methodology | Score, confidence, disagreement handling, labels and version are documented. |
 | CONV-002 | **PLANNED** | Populate `market_convergence_assessments` | Independent Technical and AI Market results combine into persisted convergence rows. |
 | CONV-003 | **PLANNED** | Add convergence history and retry rules | Daily/history uniqueness and stale-input behaviour are deterministic. |
 | CONV-004 | **PLANNED** | Surface convergence in frontend | Technical, AI and Convergence results are shown distinctly. |
@@ -245,7 +245,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `CONV-001 — Finalise Market Convergence methodology` is **NEXT**. TECH-005 passed independent audit after the Technical Engine's market/indicator-only boundary was verified from source, live database definitions, relationships, persisted provenance and an Auditor-owned rollback-only contamination test. No later item is promoted.
+**Current work:** `CONV-001 — Finalise Market Convergence methodology` is **IN PROGRESS**. The Builder is reconciling the live convergence schema with the independently audited Technical and ChatGPT Market contracts before defining score, confidence, disagreement, labels and versioning. No later item is promoted.
 
 ## Definition of Operational
 
