@@ -95,7 +95,7 @@ CONV-003 completes the v1 history and retry contract without changing the calcul
 
 History is source-date history. The result identity remains `(instrument_id, assessment_date, methodology_version)`, where `assessment_date` is the later source date. A new source date creates a new historical row; a retry for the same source identity updates only a materially changed payload and otherwise changes zero rows. Calendar days with no new eligible source pair do not create duplicate snapshot rows.
 
-Retries inherit the original cutoff, logical date and instrument scope. They are limited to three total attempts, require a failed parent, and cannot proceed when that parent already has a running or successful child. A freshness decision is therefore stable across retries.
+Retries inherit the original cutoff, logical date and instrument scope. They are limited to three total attempts and require a failed parent. Retry lineage is linear: a failed run may have at most one direct retry child regardless of that child's terminal status, every subsequent retry targets the latest failed leaf, and attempts advance exactly `1 -> 2 -> 3`. An ancestor that already has any child cannot be retried, and attempt 3 cannot be retried. The one-child rule is enforced both in `run_v1` and by a unique partial index on non-null `retry_of_run_id`. A freshness decision is therefore stable across retries.
 
 The canonical score, confidence, precedence, labels and summary remain unchanged. A formula-changing freshness adjustment requires a new methodology version.
 
