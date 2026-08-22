@@ -19,7 +19,7 @@ Project delivery state is controlled by [project-plan.md](project-plan.md).
 
 The platform contains two analytically independent assessment systems:
 
-- **Short-term Market Assessment** — asks whether a tracked instrument is attractive now. The independent ChatGPT Market branch has persisted assessment results. The independent Technical Engine persists versioned indicators and technical scores under recurring monitored ownership; the canonical Market Convergence methodology is defined, while population remains a later stage.
+- **Short-term Market Assessment** — asks whether a tracked instrument is attractive now. The independent ChatGPT Market branch has persisted assessment results. The independent Technical Engine persists versioned indicators and technical scores under recurring monitored ownership; the canonical Market Convergence methodology now has a trusted current-state population pipeline with real lineage-backed results.
 - **Long-term Opportunity Assessment** — asks what structural or technological changes could become important over months or years. Structural Opportunity and Technology Inflection signals are assessed independently before Opportunity Assessment / Opportunity Convergence is calculated. Themes, signals, assessments, exposures and Research & Evidence are persisted.
 
 The two systems may be displayed together only after each has independently produced its result. Neither system's score, rating or conclusion may be used to form the other.
@@ -47,6 +47,7 @@ Start with [Assessment System Overview](assessment-system-overview.md) for the a
 - [Technical Engine Scheduling and Monitoring](pipelines/technical-engine-operations.md) — daily frequency, trusted ownership, durable errors, bounded retries and Admin visibility.
 - [Technical Engine Independence Verification](pipelines/technical-engine-independence.md) — permitted inputs, prohibited cross-system dependencies, live dependency evidence and the rollback-only contamination test.
 - [Market Convergence Specification](specifications/market-convergence-specification.md) — equal-weight score, confidence, disagreement, labels, lineage and versioning for the two independent Market branches.
+- [Market Convergence Population Pipeline](pipelines/market-convergence-pipeline.md) — trusted source selection, persistence, lineage, access and live verification for `market-convergence-v1`.
 - [Market Assessment Pipeline](pipelines/market-assessment-pipeline.md) — AI Market Assessment records, lifecycle and known gaps.
 - [Opportunity Assessment Pipeline](pipelines/opportunity-assessment-pipeline.md) — Structural Signal, Technology Inflection, Opportunity Convergence, exposure, Research & Evidence, retries and Operational definition.
 - [Daily Market Assessment Specification](../automation/daily-market-assessment.md) — canonical short-term AI Market Assessment methodology and independence rules.
