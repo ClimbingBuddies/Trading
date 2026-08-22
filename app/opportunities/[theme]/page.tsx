@@ -276,12 +276,14 @@ function SynergiesView({ data }: { data: OpportunityDetailData }) {
 function ExposureView({ data }: { data: OpportunityDetailData }) {
   const top = data.exposures[0]
   const exposureTypes = Array.from(new Set(data.exposures.map((row) => titleCase(row.exposure_type))))
+  const trackedExposures = data.exposures.filter((row) => row.source_kind === 'tracked')
+  const trackedWithMarket = trackedExposures.filter((row) => row.currentMarket).length
 
   return (
     <>
       <section className={styles.sectionIntro}>
-        <h2>Top Exposed Instruments</h2>
-        <p>Companies and ETFs with the greatest mapped exposure to this long-term theme. Exposure scores are theme relevance measures, not trading recommendations.</p>
+        <h2>Opportunity Exposure and Current Market</h2>
+        <p>Long-term exposure and the independently completed current Market Convergence result are displayed together for research. Neither result is an analytical input to the other.</p>
       </section>
 
       <section className={styles.exposureLayout}>
@@ -289,12 +291,33 @@ function ExposureView({ data }: { data: OpportunityDetailData }) {
           {data.exposures.length ? data.exposures.map((exposure) => exposure.instruments?.symbol ? (
             <article className={styles.exposureRow} key={`${exposure.instrument_id}-${exposure.exposure_type}`}>
               <div className={styles.instrumentIdentity}><span className={styles.instrumentBadge}>{exposure.instruments.symbol.slice(0, 4)}</span><div><strong>{exposure.instruments.symbol}</strong><span>{exposure.instruments.instrument_name}</span></div></div>
-              <div className={styles.exposureScoreBlock}><span>Exposure Score</span><strong>{fmtScore(exposure.exposure_score)}<small>/100</small></strong></div>
+              <div className={styles.exposureScoreBlock}><span>Opportunity Exposure</span><strong>{fmtScore(exposure.exposure_score)}<small>/100</small></strong><small>Long-term relevance</small></div>
               <div className={styles.exposureTypeBlock}><span>Type</span><strong>{titleCase(exposure.exposure_type)}</strong></div>
-              <div className={styles.exposureRationale}><span>Rationale</span><p>{exposure.rationale ?? 'No exposure rationale supplied.'}</p></div>
-              <Link className={styles.viewButton} href={`/markets/${symbolSlug(exposure.instruments.symbol)}`}>View market ↗</Link>
+              <div className={styles.marketResultBlock}>
+                <span>Current Market Result</span>
+                {exposure.currentMarket ? (
+                  <>
+                    <Link href={`/assessments/${symbolSlug(exposure.instruments.symbol)}`}>
+                      <strong>{titleCase(exposure.currentMarket.convergence_label)}</strong>
+                      <small>{fmtScore(exposure.currentMarket.convergence_score)}/100</small>
+                    </Link>
+                    <small>{Math.round(exposure.currentMarket.convergence_confidence)}% confidence · {fmtDate(exposure.currentMarket.assessment_date)}</small>
+                  </>
+                ) : (
+                  <>
+                    <strong className={styles.marketUnavailable}>{exposure.source_kind === 'tracked' ? 'Not available' : 'Not tracked'}</strong>
+                    <small>{exposure.source_kind === 'tracked' ? 'No completed Market Convergence result' : 'Outside the tracked Market universe'}</small>
+                  </>
+                )}
+              </div>
+              <div className={styles.exposureRationale}><span>Exposure Rationale</span><p>{exposure.rationale ?? 'No exposure rationale supplied.'}</p></div>
+              {exposure.source_kind === 'tracked' ? (
+                <Link className={styles.viewButton} href={`/markets/${symbolSlug(exposure.instruments.symbol)}`}>View market ↗</Link>
+              ) : exposure.external_market_url ? (
+                <a className={styles.viewButton} href={exposure.external_market_url} target="_blank" rel="noreferrer noopener">External quote ↗</a>
+              ) : null}
             </article>
-          ) : null) : <div className={styles.darkEmpty}>No tracked instruments are currently linked to this theme.</div>}
+          ) : null) : <div className={styles.darkEmpty}>No mapped instruments are currently linked to this theme.</div>}
         </div>
 
         <aside className={styles.exposureTakeaway}>
@@ -305,7 +328,10 @@ function ExposureView({ data }: { data: OpportunityDetailData }) {
           <span>Mapped types</span>
           <p>{exposureTypes.length ? exposureTypes.join(' · ') : '—'}</p>
           <span>Tracked instruments</span>
-          <p>{data.exposures.length}</p>
+          <p>{trackedExposures.length}</p>
+          <span>Tracked with current Market result</span>
+          <p>{trackedWithMarket}/{trackedExposures.length}</p>
+          <div className={styles.independenceNote}>Opportunity exposure is not adjusted by the Market result. Market Convergence is not adjusted by Opportunity exposure.</div>
         </aside>
       </section>
     </>
