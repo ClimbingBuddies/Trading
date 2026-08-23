@@ -192,7 +192,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
 | MON-001 | **DONE** | Decide watchlist/auth model | Ownership and access rules are defined before enabling writes. |
-| MON-002 | **IN PROGRESS** | Activate watchlists | Real user-owned lists can be maintained securely. |
+| MON-002 | **IN REVIEW** | Activate watchlists | Real user-owned lists can be maintained securely. |
 | MON-003 | **PLANNED** | Define alerts | Approved price, freshness, assessment, opportunity, convergence and technical triggers are documented. |
 | MON-004 | **PLANNED** | Implement alerts and event history | Trigger lifecycle is persisted and visible. |
 | RES-001 | **PLANNED** | Review external opinion model | Its role relative to Market Assessment is explicit and evidence is not double-counted. |
@@ -246,7 +246,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `MON-002 — Activate watchlists` is **IN PROGRESS**. The Builder is implementing the audited MON-001 ownership/access contract: permanent-user Supabase Auth sessions, mandatory ownership, minimal grants, owner-scoped RLS, explicit legacy fixture handling, default-list integrity and secure user-owned watchlist flows. MON-003 and all later items remain `PLANNED`.
+**Current work:** `MON-002 — Activate watchlists` is **IN REVIEW** after Builder implementation. The reviewed repository/documentation state is `154040b4a20152f380d0921878f8e4cecdcde1b5` plus the subsequent policy-optimization migration commit `3cd8b5dfbd4629509973e0abe06a637b457d9263`; current `main` should be treated as the reviewed artefact excluding this controller-only handoff. Live Supabase now has mandatory watchlist ownership, no ownerless fixture, minimal authenticated grants, no anon grants, four owner-scoped RLS policies on each watchlist table, permanent-user/anonymous-auth separation, default-list integrity, updated-at maintenance and the owner-checked `set_watchlist_default` RPC. The final rollback-only two-user matrix passed cross-user isolation, owner-forgery denial, anonymous-auth denial, item CRUD/reorder, duplicate rejection, default switching and Auth-user cascade; no test users or rows remain. `documentation/watchlist-activation.md` records the implementation and evidence. The authenticated `/watchlists` browser workspace, separate persistent publishable-key auth client and navigation entry are committed. Current public production remains healthy (`/markets` HTTP 200; no error/fatal logs in the preceding hour), but Vercel has not built the frontend state because the Hobby project reports `build-rate-limit`; the last READY production deployment is `dpl_DyULS4PDB5cfhzVhVUJBLzm65vZY` on `c420a440343934b50735b7757162edd48a7f7724`. A local build could not be run because the execution environment could not resolve `github.com`, so no compilation result is claimed. The Auditor should deploy the exact unchanged reviewed `main` state once Vercel permits, then verify build/type/palette checks, `/watchlists`, email-auth redirect/session return, authenticated CRUD and signed-out public-route behavior. MON-003 and all later items remain `PLANNED`.
 
 ## Definition of Operational
 
