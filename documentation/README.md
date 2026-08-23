@@ -58,6 +58,7 @@ Start with [Assessment System Overview](assessment-system-overview.md) for the a
 - [Strategy Framework](strategy-framework.md) — strategy/test tables and the standard decision tree.
 - [Frontend Route Map](frontend-route-map.md) — Next.js routes and the Supabase data each page uses.
 - [Market Assessment Access Classification](security/market-assessment-access-classification.md) — canonical public-output and internal-control access decision for the Market Assessment system.
+- [Watchlist Authentication and Ownership Model](security/watchlist-auth-model.md) — canonical Supabase Auth identity, private ownership and RLS/write boundary required before watchlist activation.
 - [Security and Operational Notes](security-and-operational-notes.md) — RLS, public dashboard access, secrets and known technical debt.
 
 ## Current platform status
