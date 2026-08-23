@@ -21,6 +21,11 @@
     scroll-snap-align: start;
   }
 
+  /* The globally visible palette remains usable on mobile. */
+  .globalPaletteDock select {
+    min-height: 44px;
+  }
+
   /* Native horizontal table scrolling is the mobile table interaction. */
   .tableScroll {
     max-width: 100%;
@@ -51,13 +56,30 @@
     scroll-snap-align: start;
   }
 
-  /* Selects used inside content pages must meet the mobile tap-target floor. */
+  /* Form controls and primary actions must meet the mobile tap-target floor. */
   main select,
   .filterTab,
   .primaryLinkButton,
   .secondaryButton,
-  .searchBox input {
+  .searchBox input,
+  main a[class*="viewButton"],
+  main a[class*="inlineAction"],
+  main a[class*="tickerChip"],
+  main [class*="sourceChips"] a,
+  main [class*="exposureStripTickers"] a,
+  .oppInspectorTabs button,
+  .oppTrendRanges button,
+  .oppInspectorAction {
     min-height: 44px;
+  }
+
+  main a[class*="viewButton"],
+  main a[class*="inlineAction"],
+  main a[class*="tickerChip"],
+  main [class*="sourceChips"] a,
+  main [class*="exposureStripTickers"] a,
+  .oppInspectorAction {
+    align-items: center;
   }
 
   /* Back/navigation links in detail headers should not require precision tapping. */
