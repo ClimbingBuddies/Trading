@@ -192,7 +192,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
 | MON-001 | **DONE** | Decide watchlist/auth model | Ownership and access rules are defined before enabling writes. |
-| MON-002 | **NEXT** | Activate watchlists | Real user-owned lists can be maintained securely. |
+| MON-002 | **IN PROGRESS** | Activate watchlists | Real user-owned lists can be maintained securely. |
 | MON-003 | **PLANNED** | Define alerts | Approved price, freshness, assessment, opportunity, convergence and technical triggers are documented. |
 | MON-004 | **PLANNED** | Implement alerts and event history | Trigger lifecycle is persisted and visible. |
 | RES-001 | **PLANNED** | Review external opinion model | Its role relative to Market Assessment is explicit and evidence is not double-counted. |
@@ -246,7 +246,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `MON-002 — Activate watchlists` is **NEXT** after MON-001 passed independent audit. The canonical ownership/access model is `documentation/security/watchlist-auth-model.md`; MON-002 must implement and verify permanent-user Supabase Auth sessions, mandatory owner identity, minimal grants, owner-scoped RLS, legacy fixture handling, default-list integrity and secure user-owned watchlist flows before activation. MON-002 is the only promoted item; all later items remain `PLANNED`.
+**Current work:** `MON-002 — Activate watchlists` is **IN PROGRESS**. The Builder is implementing the audited MON-001 ownership/access contract: permanent-user Supabase Auth sessions, mandatory ownership, minimal grants, owner-scoped RLS, explicit legacy fixture handling, default-list integrity and secure user-owned watchlist flows. MON-003 and all later items remain `PLANNED`.
 
 ## Definition of Operational
 
