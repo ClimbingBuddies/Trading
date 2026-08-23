@@ -378,13 +378,19 @@ The Market Assessment policy boundary is implemented under `SEC-002`. The wider 
 
 ### `watchlists` / `watchlist_items`
 
-User-owned instrument lists and membership.
+User-owned instrument lists and membership. `watchlists.owner_user_id` already references `auth.users(id)` and `watchlist_items` inherits parent lifecycle through its `watchlist_id` foreign key.
 
-Status: **Partial**.
+**Live MON-001 verification on 23 August 2026:** both tables have RLS enabled but no policies; `auth.users` has zero rows; one historical `Starter Watchlist` remains ownerless with one item; and browser roles still hold broad table grants even though the no-policy RLS state currently blocks API row access.
+
+The canonical ownership/access decision is `documentation/security/watchlist-auth-model.md`: Supabase Auth permanent users own private watchlists by `auth.users.id`; unauthenticated and anonymous-auth users have no watchlist access; normal authenticated users may eventually read/write only their own watchlists/items; and trusted service access remains backend-only. MON-002 must remove or deliberately migrate the ownerless test fixture, make ownership mandatory, reduce grants and implement/test owner-scoped RLS before enabling writes.
+
+Status: **Partial / access model defined; writes deliberately disabled pending MON-002**.
 
 ### `alerts` / `alert_events`
 
-Alert definitions and trigger history.
+Alert definitions and trigger history. `alerts.owner_user_id` already references the same `auth.users(id)` identity model and may target either an instrument or a watchlist.
+
+MON-003/MON-004 should reuse the MON-001 permanent-user ownership model rather than introduce a second user identity system.
 
 Status: **Scaffolded**.
 
