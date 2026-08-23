@@ -118,7 +118,7 @@ export default function OpportunityCarousel({
               ) : null)}
               {!row.exposures.length && <span className={styles.noTicker}>No mapped exposure yet</span>}
             </div>
-            <div style={{ marginTop: 14, paddingTop: 12, borderTop: '1px solid rgba(90, 163, 255, .18)', display: 'flex', justifyContent: 'flex-end' }}>
+            <div className={dailyStyles.cardFooterAction}>
               <Link href={href} className={styles.viewButton}>Open opportunity <span aria-hidden="true">→</span></Link>
             </div>
           </article>
