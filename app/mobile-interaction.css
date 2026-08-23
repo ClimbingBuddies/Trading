@@ -1,0 +1,89 @@
+/* UX-003 — mobile interaction hardening.
+   This layer intentionally contains interaction/responsiveness only; it does not
+   introduce palette values or change analytical presentation. */
+
+@media (max-width: 900px) {
+  /* Primary navigation becomes a touch-friendly horizontal rail. */
+  .sideNav nav {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+    touch-action: pan-x pan-y;
+  }
+
+  .sideNav nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .navItem {
+    min-height: 44px;
+    scroll-snap-align: start;
+  }
+
+  /* Native horizontal table scrolling is the mobile table interaction. */
+  .tableScroll {
+    max-width: 100%;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    touch-action: pan-x pan-y;
+  }
+}
+
+@media (max-width: 760px) {
+  /* Opportunity tabs are intentionally swipe-scrollable instead of wrapping. */
+  nav[aria-label="Opportunity analysis views"] {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+    touch-action: pan-x pan-y;
+  }
+
+  nav[aria-label="Opportunity analysis views"]::-webkit-scrollbar {
+    display: none;
+  }
+
+  nav[aria-label="Opportunity analysis views"] > a {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    scroll-snap-align: start;
+  }
+
+  /* Selects used inside content pages must meet the mobile tap-target floor. */
+  main select,
+  .filterTab,
+  .primaryLinkButton,
+  .secondaryButton,
+  .searchBox input {
+    min-height: 44px;
+  }
+
+  /* Back/navigation links in detail headers should not require precision tapping. */
+  .detailTopline > a {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+}
+
+@media (max-width: 640px) {
+  /* Prevent action groups from forcing header-level horizontal overflow. */
+  .pageHeader,
+  .headerActions {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .headerActions > *,
+  .pageHeader > .primaryLinkButton,
+  .pageHeader > .secondaryButton {
+    max-width: 100%;
+  }
+
+  /* Dense filter controls remain usable without shrinking below a tap target. */
+  .filterTabs {
+    gap: 8px;
+  }
+}
