@@ -1,0 +1,349 @@
+.shell {
+  display: grid;
+  gap: 20px;
+}
+
+.hero {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.hero h1,
+.panel h2,
+.panel h3 {
+  margin: 0;
+  color: var(--theme-text);
+}
+
+.hero p,
+.muted,
+.helper {
+  color: var(--theme-muted);
+}
+
+.hero p {
+  margin: 6px 0 0;
+}
+
+.authCard,
+.panel,
+.listRail {
+  border: 1px solid var(--theme-border);
+  background: var(--theme-panel);
+  border-radius: 16px;
+}
+
+.authCard {
+  max-width: 640px;
+  padding: 22px;
+}
+
+.authCard h2 {
+  margin-top: 0;
+  color: var(--theme-text);
+}
+
+.authCard p {
+  color: var(--theme-text-secondary);
+}
+
+.formGrid {
+  display: grid;
+  gap: 12px;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+  color: var(--theme-text-secondary);
+  font-size: 0.88rem;
+}
+
+.input,
+.select,
+.textarea {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 44px;
+  border: 1px solid var(--theme-border);
+  border-radius: 10px;
+  background: var(--theme-input);
+  color: var(--theme-text);
+  padding: 10px 12px;
+  font: inherit;
+}
+
+.textarea {
+  min-height: 76px;
+  resize: vertical;
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus {
+  outline: 2px solid var(--theme-accent);
+  outline-offset: 1px;
+}
+
+.buttonRow,
+.toolbar,
+.itemActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.primaryButton,
+.secondaryButton,
+.dangerButton,
+.iconButton {
+  min-height: 44px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  padding: 9px 13px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.primaryButton {
+  background: var(--theme-accent);
+  border-color: var(--theme-accent);
+  color: var(--theme-bg);
+}
+
+.secondaryButton,
+.iconButton {
+  background: var(--theme-panel-2);
+  border-color: var(--theme-border);
+  color: var(--theme-text);
+}
+
+.dangerButton {
+  background: var(--theme-danger-soft);
+  border-color: var(--theme-danger);
+  color: var(--theme-danger);
+}
+
+.primaryButton:disabled,
+.secondaryButton:disabled,
+.dangerButton:disabled,
+.iconButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.status {
+  margin: 0;
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: var(--theme-accent-soft);
+  color: var(--theme-text-secondary);
+}
+
+.error {
+  margin: 0;
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: var(--theme-danger-soft);
+  color: var(--theme-danger);
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(230px, 0.72fr) minmax(0, 2fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.listRail {
+  padding: 14px;
+  display: grid;
+  gap: 10px;
+}
+
+.listRailHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+}
+
+.listRailHeader h2 {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--theme-text);
+}
+
+.listButton {
+  width: 100%;
+  text-align: left;
+  border: 1px solid var(--theme-border-soft);
+  border-radius: 12px;
+  background: var(--theme-panel-2);
+  color: var(--theme-text);
+  padding: 12px;
+  cursor: pointer;
+}
+
+.listButtonActive {
+  border-color: var(--theme-accent);
+  background: var(--theme-accent-soft);
+}
+
+.listButton strong,
+.listButton span {
+  display: block;
+}
+
+.listButton span {
+  margin-top: 4px;
+  color: var(--theme-muted);
+  font-size: 0.78rem;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  border-radius: 999px;
+  padding: 3px 8px;
+  background: var(--theme-success-soft);
+  color: var(--theme-success);
+  font-size: 0.74rem;
+  font-weight: 800;
+}
+
+.panel {
+  padding: 18px;
+  display: grid;
+  gap: 16px;
+}
+
+.panelHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.panelHeader p {
+  margin: 5px 0 0;
+  color: var(--theme-muted);
+}
+
+.section {
+  display: grid;
+  gap: 12px;
+  padding-top: 14px;
+  border-top: 1px solid var(--theme-border-soft);
+}
+
+.section:first-of-type {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.addRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: end;
+}
+
+.itemList {
+  display: grid;
+  gap: 10px;
+}
+
+.itemCard {
+  display: grid;
+  grid-template-columns: minmax(120px, 0.5fr) minmax(160px, 1fr) minmax(170px, 1.2fr) auto;
+  gap: 12px;
+  align-items: center;
+  border: 1px solid var(--theme-border-soft);
+  border-radius: 12px;
+  background: var(--theme-panel-2);
+  padding: 12px;
+}
+
+.instrument strong,
+.instrument span {
+  display: block;
+}
+
+.instrument span {
+  margin-top: 3px;
+  color: var(--theme-muted);
+  font-size: 0.8rem;
+}
+
+.empty {
+  border: 1px dashed var(--theme-border);
+  border-radius: 12px;
+  padding: 18px;
+  color: var(--theme-muted);
+  text-align: center;
+}
+
+.signedIn {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.signedIn span {
+  color: var(--theme-muted);
+  font-size: 0.82rem;
+}
+
+@media (max-width: 900px) {
+  .hero,
+  .panelHeader {
+    flex-direction: column;
+  }
+
+  .workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .listRail {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+
+  .listRailHeader {
+    grid-column: 1 / -1;
+  }
+
+  .itemCard {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .itemActions {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 640px) {
+  .addRow {
+    grid-template-columns: 1fr;
+  }
+
+  .primaryButton,
+  .secondaryButton,
+  .dangerButton,
+  .iconButton {
+    width: 100%;
+  }
+
+  .signedIn {
+    width: 100%;
+    justify-content: stretch;
+  }
+}
