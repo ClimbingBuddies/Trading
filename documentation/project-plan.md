@@ -4,7 +4,7 @@
 **Supabase:** `glvbqcplgjdfgjyknzsa`  
 **Production:** `https://discoverbouldersmarkets.vercel.app`  
 **Vercel project:** `boulders-market`  
-**Last reviewed:** 22 August 2026
+**Last reviewed:** 23 August 2026
 
 ## Purpose
 
@@ -183,8 +183,8 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
 | UX-001 | **DONE** | Show current Market result beside Opportunity exposure | The UI combines independently completed views without using one as an analytical input to the other. |
-| UX-002 | **IN REVIEW** | Add Opportunity themes to Market instrument pages | Relevant long-term themes and exposure scores are visible for tracked instruments. |
-| UX-003 | **PLANNED** | Complete mobile interaction review | Headers, tabs, swipe, touch targets and responsive tables are verified. |
+| UX-002 | **DONE** | Add Opportunity themes to Market instrument pages | Relevant long-term themes and exposure scores are visible for tracked instruments. |
+| UX-003 | **NEXT** | Complete mobile interaction review | Headers, tabs, swipe, touch targets and responsive tables are verified. |
 | UX-004 | **PLANNED** | Maintain palette compliance | New components use semantic theme/chart tokens rather than fixed page colours. |
 
 ## Phase 6 — Monitoring and research ingestion
@@ -246,7 +246,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `UX-002 — Add Opportunity themes to Market instrument pages` is **IN REVIEW**. Builder implementation is complete at commit `71d22b382b51d6526a9950d51c200db6f24b6ace`. Production remains on `ae9cbf3dda6c3c45b1a6b067374634e7525c1485` because Vercel reported a build-rate-limit failure. The Auditor must deploy the exact reviewed commit, verify the tracked Market instrument flow in production, and then record PASS, REWORK or BLOCKED. UX-003 and all later items remain `PLANNED`.
+**Current work:** `UX-003 — Complete mobile interaction review` is **NEXT** after UX-002 passed independent audit. UX-004 and all later items remain `PLANNED`.
 
 ## Definition of Operational
 
@@ -287,3 +287,4 @@ A workflow is Operational only when its schema and implementation exist, schedul
 | 22-Aug-2026 | CONV-003 | `documentation/project-audits/CONV-003.md` | Independent re-audit PASS; source-date history, four-day/five-day freshness, linear `1 -> 2 -> 3` retry lineage, database sibling prevention, fourth-attempt rejection, real service-role execution and idempotency verified; CONV-004 promoted. |
 | 22-Aug-2026 | CONV-004 | `documentation/project-audits/CONV-004.md` | Independent audit PASS WITH ADVICE; distinct Technical, AI and Market Convergence display, live lineage, public read boundary, healthy production deployment and browser journey verified; UX-001 promoted. |
 | 22-Aug-2026 | UX-001 | `documentation/project-audits/UX-001.md` | Independent audit PASS; distinct Opportunity Exposure and current Market Convergence presentation, live data parity, analytical independence, truthful external handling and healthy production navigation verified; UX-002 promoted. |
+| 23-Aug-2026 | UX-002 | `documentation/project-audits/UX-002.md` | Independent audit PASS; database-backed long-term Opportunity themes and exposure scores, multiple-theme rendering, truthful empty state, working cross-navigation, unchanged reviewed implementation in READY production and healthy routes verified; UX-003 promoted. |
