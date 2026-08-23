@@ -2,8 +2,8 @@
 .oppExposureInspector > *:not(.oppExposureMount) { display: none !important; }
 .oppExposureMount { height: 100%; }
 .oppExposureSelectable { cursor: pointer; grid-template-columns: 145px 76px 76px minmax(145px, 1fr) auto !important; gap: 9px !important; padding: 9px 10px !important; transition: border-color .15s ease, background .15s ease; }
-.oppExposureSelectable:hover { border-color: #4777a6 !important; background: #0d2742 !important; }
-.oppExposureSelected { border-color: #5e9fe2 !important; background: #0c2947 !important; box-shadow: inset 3px 0 0 #62a7ef; }
+.oppExposureSelectable:hover { border-color: color-mix(in srgb, var(--theme-accent) 55%, var(--theme-border)) !important; background: var(--theme-panel-2) !important; }
+.oppExposureSelected { border-color: var(--theme-accent) !important; background: var(--theme-accent-soft) !important; box-shadow: inset 3px 0 0 var(--theme-accent); }
 .oppExposureSelectable [class*="instrumentBadge"] { width: 40px !important; height: 40px !important; }
 .oppExposureSelectable [class*="instrumentIdentity"] { gap: 9px !important; }
 .oppExposureSelectable [class*="instrumentIdentity"] strong { font-size: 14px !important; }
@@ -13,49 +13,49 @@
 .oppExposureSelectable [class*="viewButton"] { padding: 7px 9px !important; font-size: 9px !important; }
 
 .oppExposureInspectorInner { min-height: 100%; display: flex; flex-direction: column; }
-.oppInspectorTabs { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid rgba(120,159,199,.22); padding: 0 16px; }
-.oppInspectorTabs button { appearance: none; border: 0; border-bottom: 3px solid transparent; background: transparent; color: #91a8bf; padding: 12px 10px 11px; font: inherit; font-size: 16px; line-height: 1.15; font-weight: 850; cursor: pointer; white-space: nowrap; }
-.oppInspectorTabs button:hover { color: #d6e5f6; }
-.oppInspectorTabs button.active { color: #f3f8ff; border-bottom-color: #65a9ef; }
+.oppInspectorTabs { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--theme-border-soft); padding: 0 16px; }
+.oppInspectorTabs button { appearance: none; border: 0; border-bottom: 3px solid transparent; background: transparent; color: var(--theme-muted); padding: 12px 10px 11px; font: inherit; font-size: 16px; line-height: 1.15; font-weight: 850; cursor: pointer; white-space: nowrap; }
+.oppInspectorTabs button:hover { color: var(--theme-text-secondary); }
+.oppInspectorTabs button.active { color: var(--theme-text); border-bottom-color: var(--theme-accent); }
 .oppTrendPanel, .oppTakeawayOriginal { padding: 15px 20px 16px; }
 .oppTrendHeading { display: flex; justify-content: space-between; gap: 16px; align-items: start; }
-.oppTrendHeading span { color: #82baff; font-size: 10px; font-weight: 800; letter-spacing: .03em; }
+.oppTrendHeading span { color: var(--theme-accent); font-size: 10px; font-weight: 800; letter-spacing: .03em; }
 .oppTrendHeading h3 { margin: 4px 0 0; font-size: 20px; line-height: 1.2; }
-.oppTrendHeading > strong { color: #7fe05f; font-size: 27px; text-align: right; line-height: 1; }
-.oppTrendHeading > strong small { display: block; margin-top: 4px; color: #91a5ba; font-size: 8px; font-weight: 500; }
-.oppTrendPriceLine { display: flex; justify-content: space-between; gap: 14px; align-items: end; margin-top: 12px; padding-top: 11px; border-top: 1px solid rgba(120,159,199,.18); }
+.oppTrendHeading > strong { color: var(--theme-success); font-size: 27px; text-align: right; line-height: 1; }
+.oppTrendHeading > strong small { display: block; margin-top: 4px; color: var(--theme-muted); font-size: 8px; font-weight: 500; }
+.oppTrendPriceLine { display: flex; justify-content: space-between; gap: 14px; align-items: end; margin-top: 12px; padding-top: 11px; border-top: 1px solid var(--theme-border-soft); }
 .oppTrendPrice { display: flex; align-items: baseline; gap: 7px; }
-.oppTrendPrice > strong { font-size: 31px; color: #f2f7fd; line-height: 1; }
-.oppTrendPrice > span { font-size: 10px; color: #9fb3c7; }
+.oppTrendPrice > strong { font-size: 31px; color: var(--theme-text); line-height: 1; }
+.oppTrendPrice > span { font-size: 10px; color: var(--theme-muted); }
 .oppTrendChange { display: flex; gap: 4px; align-items: baseline; font-size: 11px; font-weight: 750; }
-.oppTrendChange.positive { color: #79dc5b; }
-.oppTrendChange.negative { color: #ff7373; }
-.oppTrendObserved { margin-top: 5px; color: #7f96ad; font-size: 8px; }
+.oppTrendChange.positive { color: var(--theme-success); }
+.oppTrendChange.negative { color: var(--theme-danger); }
+.oppTrendObserved { margin-top: 5px; color: var(--theme-muted-2); font-size: 8px; }
 .oppTrendRanges { display: flex; gap: 6px; margin-top: 9px; }
-.oppTrendRanges button { appearance: none; border: 0; border-radius: 6px; background: transparent; color: #8ea5bb; padding: 5px 8px; font: inherit; font-size: 9px; font-weight: 750; cursor: pointer; }
-.oppTrendRanges button:hover { color: #d9e8f8; background: rgba(91,151,211,.1); }
-.oppTrendRanges button.active { color: #fff; background: #214f7c; }
+.oppTrendRanges button { appearance: none; border: 0; border-radius: 6px; background: transparent; color: var(--theme-muted); padding: 5px 8px; font: inherit; font-size: 9px; font-weight: 750; cursor: pointer; }
+.oppTrendRanges button:hover { color: var(--theme-text-secondary); background: var(--theme-accent-soft); }
+.oppTrendRanges button.active { color: var(--theme-text); background: var(--theme-accent-strong); }
 .oppTrendChartWrap { margin-top: 5px; }
 .oppTrendChart { width: 100%; height: clamp(130px, 17vh, 165px); overflow: visible; }
-.oppTrendChart .grid { stroke: rgba(137,167,196,.15); stroke-width: .5; vector-effect: non-scaling-stroke; }
+.oppTrendChart .grid { stroke: var(--chart-grid); stroke-width: .5; vector-effect: non-scaling-stroke; }
 .oppTrendChart .line { stroke-width: 2; vector-effect: non-scaling-stroke; }
 .oppTrendChart .area { opacity: .12; }
-.oppTrendChartWrap.positive .line { stroke: #69b2f6; }
-.oppTrendChartWrap.positive .area { fill: #69b2f6; }
-.oppTrendChartWrap.negative .line { stroke: #ef6c6c; }
-.oppTrendChartWrap.negative .area { fill: #ef6c6c; }
-.oppTrendRange { display: flex; justify-content: space-between; margin-top: -4px; color: #70879e; font-size: 8px; }
-.oppTrendStats { display: grid; grid-template-columns: 1fr 1fr; gap: 0 20px; margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(120,159,199,.18); }
+.oppTrendChartWrap.positive .line { stroke: var(--chart-1); }
+.oppTrendChartWrap.positive .area { fill: var(--chart-1); }
+.oppTrendChartWrap.negative .line { stroke: var(--chart-6); }
+.oppTrendChartWrap.negative .area { fill: var(--chart-6); }
+.oppTrendRange { display: flex; justify-content: space-between; margin-top: -4px; color: var(--theme-muted-2); font-size: 8px; }
+.oppTrendStats { display: grid; grid-template-columns: 1fr 1fr; gap: 0 20px; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--theme-border-soft); }
 .oppTrendStats > div { display: flex; justify-content: space-between; gap: 12px; padding: 4px 0; }
-.oppTrendStats span { color: #849bb2; font-size: 9px; }
-.oppTrendStats strong { color: #dce8f5; font-size: 9px; }
-.oppTrendEmpty { margin-top: 12px; min-height: 125px; display: grid; place-items: center; padding: 16px; border: 1px dashed rgba(108,151,194,.35); border-radius: 9px; color: #91a6bb; font-size: 10px; text-align: center; }
-.oppInspectorAction { display: inline-flex; margin-top: 9px; padding: 7px 10px; border: 1px solid #3d6d9b; border-radius: 6px; color: #86bcf7 !important; font-size: 9px; font-weight: 750; }
-.oppInspectorAction:hover { background: #0d3155; }
+.oppTrendStats span { color: var(--theme-muted); font-size: 9px; }
+.oppTrendStats strong { color: var(--theme-text-secondary); font-size: 9px; }
+.oppTrendEmpty { margin-top: 12px; min-height: 125px; display: grid; place-items: center; padding: 16px; border: 1px dashed var(--theme-border); border-radius: 9px; background: var(--theme-bg-alt); color: var(--theme-muted); font-size: 10px; text-align: center; }
+.oppInspectorAction { display: inline-flex; margin-top: 9px; padding: 7px 10px; border: 1px solid color-mix(in srgb, var(--theme-accent) 55%, var(--theme-border)); border-radius: 6px; color: var(--theme-accent) !important; font-size: 9px; font-weight: 750; }
+.oppInspectorAction:hover { background: var(--theme-accent-soft); }
 .oppTakeawayOriginal > [class*="roundIcon"] { display: grid !important; }
 .oppTakeawayOriginal h3 { margin: 15px 0 10px; font-size: 22px; }
-.oppTakeawayOriginal p { margin: 6px 0 14px; color: #becadb; font-size: 13px; line-height: 1.55; }
-.oppTakeawayOriginal > span:not([class*="roundIcon"]) { color: #8196ac; font-size: 10px; text-transform: uppercase; }
+.oppTakeawayOriginal p { margin: 6px 0 14px; color: var(--theme-text-secondary); font-size: 13px; line-height: 1.55; }
+.oppTakeawayOriginal > span:not([class*="roundIcon"]) { color: var(--theme-muted); font-size: 10px; text-transform: uppercase; }
 
 @media (max-width: 1380px) {
   .oppExposureInspectorLayout { grid-template-columns: minmax(0, 3fr) minmax(400px, 2fr) !important; }
