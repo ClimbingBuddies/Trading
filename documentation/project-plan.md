@@ -191,7 +191,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
-| MON-001 | **IN PROGRESS** | Decide watchlist/auth model | Ownership and access rules are defined before enabling writes. |
+| MON-001 | **IN REVIEW** | Decide watchlist/auth model | Ownership and access rules are defined before enabling writes. |
 | MON-002 | **PLANNED** | Activate watchlists | Real user-owned lists can be maintained securely. |
 | MON-003 | **PLANNED** | Define alerts | Approved price, freshness, assessment, opportunity, convergence and technical triggers are documented. |
 | MON-004 | **PLANNED** | Implement alerts and event history | Trigger lifecycle is persisted and visible. |
@@ -246,7 +246,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `MON-001 — Decide watchlist/auth model` is **IN PROGRESS**. The Builder is inspecting the current watchlist-related schema/source and live Supabase authentication/RLS state to define ownership and access rules before any watchlist writes are enabled. No later project-plan item is promoted.
+**Current work:** `MON-001 — Decide watchlist/auth model` is **IN REVIEW** after Builder implementation. The reviewed documentation state is `7b9f0fae626eb3bcf6404d7ffe9b44ac973090be`. The canonical contract is `documentation/security/watchlist-auth-model.md`: permanent Supabase Auth users own private watchlists by `auth.users.id`; unauthenticated, anonymous-auth and cross-user access are denied; trusted service access remains backend-only; and MON-002 must harden ownership, grants and RLS before enabling writes. Live Supabase verification found zero Auth users, one ownerless legacy Starter Watchlist with one item, RLS enabled with no watchlist policies, and broad legacy table grants. Role probes for both `anon` and `authenticated` saw zero watchlists/items, confirming writes/read access remain closed. The current public frontend client still has session persistence disabled. No database mutation or watchlist write path was enabled by MON-001. The Auditor should independently verify the ownership/access decision. MON-002 and all later items remain `PLANNED`.
 
 ## Definition of Operational
 
