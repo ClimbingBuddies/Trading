@@ -184,7 +184,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 |---|---|---|---|
 | UX-001 | **DONE** | Show current Market result beside Opportunity exposure | The UI combines independently completed views without using one as an analytical input to the other. |
 | UX-002 | **DONE** | Add Opportunity themes to Market instrument pages | Relevant long-term themes and exposure scores are visible for tracked instruments. |
-| UX-003 | **IN PROGRESS** | Complete mobile interaction review | Headers, tabs, swipe, touch targets and responsive tables are verified. |
+| UX-003 | **IN REVIEW** | Complete mobile interaction review | Headers, tabs, swipe, touch targets and responsive tables are verified. |
 | UX-004 | **PLANNED** | Maintain palette compliance | New components use semantic theme/chart tokens rather than fixed page colours. |
 
 ## Phase 6 — Monitoring and research ingestion
@@ -246,7 +246,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `UX-003 — Complete mobile interaction review` is **IN PROGRESS** after independent audit REWORK. The audit at `documentation/project-audits/UX-003.md` verified the responsive header, navigation/tab swipe rails and table-scroll implementation, but production `/markets/ANET` still exposes Price History period buttons with `min-height: 32px` at the mobile breakpoint instead of the documented 44px touch-target floor. The Builder must remediate the touch-target gap, re-review representative narrow-viewport controls and overflow behaviour, record repeatable mobile verification evidence, and return UX-003 to `IN REVIEW`. UX-004 and all later items remain `PLANNED`.
+**Current work:** `UX-003 — Complete mobile interaction review` is **IN REVIEW** after Builder rework. The corrected implementation/documentation state is `ed190d337bc6a73f365c1be47cb90f130ced3590`, deployed to Vercel production as `dpl_8iuHY1GN1UTj9dzk1myi3dCNpK8Y` in `READY` state. The failed `/markets/ANET` Price History mobile controls now retain the seven-option grid while using `min-height: 44px` at `<=720px`. The re-review also applies the 44px mobile target floor to the global palette selector, Opportunity theme select/action/chip links and client inspector tab/range/action controls; primary nav/tab swipe rails and table scrolling remain contained. `/markets/ANET`, `/assessments/anet`, `/opportunities/ai_datacentre_power_cooling?view=exposure` and `/opportunities` returned HTTP 200, and no production error/fatal logs were found in the preceding hour. `documentation/mobile-interaction-review.md` records the repeatable verification matrix. The Auditor should independently re-verify UX-003; UX-004 and all later items remain `PLANNED`.
 
 ## Definition of Operational
 
@@ -268,7 +268,7 @@ A workflow is Operational only when its schema and implementation exist, schedul
 | 18-Aug-2026 | OPS-001 | `documentation/project-audits/OPS-001.md` | Independent audit PASS WITH ADVICE; unattended Opportunity Assessment execution verified from canonical GitHub spec and live Supabase evidence; OPS-002 promoted. |
 | 18-Aug-2026 | OPS-002 | `documentation/project-audits/OPS-002.md` | Independent audit PASS; live Scheduled Task verified as a thin runner that retrieves the canonical GitHub Market specification; OPS-003 promoted. |
 | 18-Aug-2026 | OPS-003 | `documentation/project-audits/OPS-003.md` | Independent audit PASS WITH ADVICE; Market AI independence metadata standardised in the canonical spec and live persistence contract; OPS-004 promoted. |
-| 18-Aug-2026 | OPS-004 | `documentation/project-audits/OPS-004.md` | Independent audit PASS WITH ADVICE; weekday Market Assessment task verified enabled with the canonical thin runner; OPS-005 promoted. |
+| 19-Aug-2026 | OPS-004 | `documentation/project-audits/OPS-004.md` | Independent audit PASS WITH ADVICE; weekday Market Assessment task verified enabled with the canonical thin runner; OPS-005 promoted. |
 | 19-Aug-2026 | OPS-005 | `documentation/project-audits/OPS-005.md` | Independent audit PASS WITH ADVICE; first unattended Market Assessment verified with 30/30 active instruments, 68 evidence rows and terminal run/queue state; OPS-006 promoted. |
 | 19-Aug-2026 | OPS-006 | `documentation/project-audits/OPS-006.md` | Independent audit PASS WITH ADVICE; completed and resumable same-date retries reused the existing run without assessment/evidence duplicates; OPS-007 promoted. |
 | 19-Aug-2026 | OPS-007 | `documentation/project-audits/OPS-007.md` | Independent audit PASS WITH ADVICE; legacy test lifecycle finalised and seven obsolete queue rows terminally superseded without replay; SEC-001 promoted. |
