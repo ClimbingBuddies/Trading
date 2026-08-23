@@ -184,8 +184,8 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 |---|---|---|---|
 | UX-001 | **DONE** | Show current Market result beside Opportunity exposure | The UI combines independently completed views without using one as an analytical input to the other. |
 | UX-002 | **DONE** | Add Opportunity themes to Market instrument pages | Relevant long-term themes and exposure scores are visible for tracked instruments. |
-| UX-003 | **IN REVIEW** | Complete mobile interaction review | Headers, tabs, swipe, touch targets and responsive tables are verified. |
-| UX-004 | **PLANNED** | Maintain palette compliance | New components use semantic theme/chart tokens rather than fixed page colours. |
+| UX-003 | **DONE** | Complete mobile interaction review | Headers, tabs, swipe, touch targets and responsive tables are verified. |
+| UX-004 | **NEXT** | Maintain palette compliance | New components use semantic theme/chart tokens rather than fixed page colours. |
 
 ## Phase 6 — Monitoring and research ingestion
 
@@ -246,7 +246,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `UX-003 — Complete mobile interaction review` is **IN REVIEW** after Builder rework. The corrected implementation/documentation state is `ed190d337bc6a73f365c1be47cb90f130ced3590`, deployed to Vercel production as `dpl_8iuHY1GN1UTj9dzk1myi3dCNpK8Y` in `READY` state. The failed `/markets/ANET` Price History mobile controls now retain the seven-option grid while using `min-height: 44px` at `<=720px`. The re-review also applies the 44px mobile target floor to the global palette selector, Opportunity theme select/action/chip links and client inspector tab/range/action controls; primary nav/tab swipe rails and table scrolling remain contained. `/markets/ANET`, `/assessments/anet`, `/opportunities/ai_datacentre_power_cooling?view=exposure` and `/opportunities` returned HTTP 200, and no production error/fatal logs were found in the preceding hour. `documentation/mobile-interaction-review.md` records the repeatable verification matrix. The Auditor should independently re-verify UX-003; UX-004 and all later items remain `PLANNED`.
+**Current work:** `UX-004 — Maintain palette compliance` is **NEXT** after UX-003 passed independent re-audit with advice. The UX-003 audit at `documentation/project-audits/UX-003.md` independently verified responsive headers, swipe/scroll rails, 44px mobile touch targets including the remediated Price History controls, deliberate responsive table scrolling, unchanged reviewed implementation in production, healthy representative routes and no production error/fatal logs in the preceding hour. UX-004 is the only promoted item; all later items remain `PLANNED`.
 
 ## Definition of Operational
 
@@ -288,3 +288,4 @@ A workflow is Operational only when its schema and implementation exist, schedul
 | 22-Aug-2026 | CONV-004 | `documentation/project-audits/CONV-004.md` | Independent audit PASS WITH ADVICE; distinct Technical, AI and Market Convergence display, live lineage, public read boundary, healthy production deployment and browser journey verified; UX-001 promoted. |
 | 22-Aug-2026 | UX-001 | `documentation/project-audits/UX-001.md` | Independent audit PASS; distinct Opportunity Exposure and current Market Convergence presentation, live data parity, analytical independence, truthful external handling and healthy production navigation verified; UX-002 promoted. |
 | 23-Aug-2026 | UX-002 | `documentation/project-audits/UX-002.md` | Independent audit PASS; database-backed long-term Opportunity themes and exposure scores, multiple-theme rendering, truthful empty state, working cross-navigation, unchanged reviewed implementation in READY production and healthy routes verified; UX-003 promoted. |
+| 23-Aug-2026 | UX-003 | `documentation/project-audits/UX-003.md` | Independent re-audit PASS WITH ADVICE; responsive headers, swipe/scroll rails, 44px mobile touch targets, responsive table containment, production parity and route/runtime health verified; UX-004 promoted. |
