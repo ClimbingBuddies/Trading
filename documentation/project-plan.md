@@ -191,8 +191,8 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
-| MON-001 | **IN REVIEW** | Decide watchlist/auth model | Ownership and access rules are defined before enabling writes. |
-| MON-002 | **PLANNED** | Activate watchlists | Real user-owned lists can be maintained securely. |
+| MON-001 | **DONE** | Decide watchlist/auth model | Ownership and access rules are defined before enabling writes. |
+| MON-002 | **NEXT** | Activate watchlists | Real user-owned lists can be maintained securely. |
 | MON-003 | **PLANNED** | Define alerts | Approved price, freshness, assessment, opportunity, convergence and technical triggers are documented. |
 | MON-004 | **PLANNED** | Implement alerts and event history | Trigger lifecycle is persisted and visible. |
 | RES-001 | **PLANNED** | Review external opinion model | Its role relative to Market Assessment is explicit and evidence is not double-counted. |
@@ -246,7 +246,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `MON-001 — Decide watchlist/auth model` is **IN REVIEW** after Builder implementation. The reviewed documentation state is `7b9f0fae626eb3bcf6404d7ffe9b44ac973090be`. The canonical contract is `documentation/security/watchlist-auth-model.md`: permanent Supabase Auth users own private watchlists by `auth.users.id`; unauthenticated, anonymous-auth and cross-user access are denied; trusted service access remains backend-only; and MON-002 must harden ownership, grants and RLS before enabling writes. Live Supabase verification found zero Auth users, one ownerless legacy Starter Watchlist with one item, RLS enabled with no watchlist policies, and broad legacy table grants. Role probes for both `anon` and `authenticated` saw zero watchlists/items, confirming writes/read access remain closed. The current public frontend client still has session persistence disabled. No database mutation or watchlist write path was enabled by MON-001. The Auditor should independently verify the ownership/access decision. MON-002 and all later items remain `PLANNED`.
+**Current work:** `MON-002 — Activate watchlists` is **NEXT** after MON-001 passed independent audit. The canonical ownership/access model is `documentation/security/watchlist-auth-model.md`; MON-002 must implement and verify permanent-user Supabase Auth sessions, mandatory owner identity, minimal grants, owner-scoped RLS, legacy fixture handling, default-list integrity and secure user-owned watchlist flows before activation. MON-002 is the only promoted item; all later items remain `PLANNED`.
 
 ## Definition of Operational
 
@@ -290,3 +290,4 @@ A workflow is Operational only when its schema and implementation exist, schedul
 | 23-Aug-2026 | UX-002 | `documentation/project-audits/UX-002.md` | Independent audit PASS; database-backed long-term Opportunity themes and exposure scores, multiple-theme rendering, truthful empty state, working cross-navigation, unchanged reviewed implementation in READY production and healthy routes verified; UX-003 promoted. |
 | 23-Aug-2026 | UX-003 | `documentation/project-audits/UX-003.md` | Independent re-audit PASS WITH ADVICE; responsive headers, swipe/scroll rails, 44px mobile touch targets, responsive table containment, production parity and route/runtime health verified; UX-004 promoted. |
 | 23-Aug-2026 | UX-004 | `documentation/project-audits/UX-004.md` | Independent audit PASS WITH ADVICE; semantic theme/chart token usage, five-palette definitions, Opportunity compatibility mapping, active production build guard and healthy representative routes verified; MON-001 promoted. |
+| 23-Aug-2026 | MON-001 | `documentation/project-audits/MON-001.md` | Independent audit PASS; permanent-user Supabase Auth ownership, private access matrix, pre-write schema/grant/RLS boundary, live closed-access baseline and alert-identity compatibility verified; MON-002 promoted. |
