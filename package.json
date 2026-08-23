@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "check:palette": "node scripts/check-palette-compliance.mjs",
+    "prebuild": "npm run check:palette",
     "build": "next build",
     "start": "next start"
   },
