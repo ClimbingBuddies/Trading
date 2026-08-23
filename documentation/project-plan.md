@@ -184,7 +184,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 |---|---|---|---|
 | UX-001 | **DONE** | Show current Market result beside Opportunity exposure | The UI combines independently completed views without using one as an analytical input to the other. |
 | UX-002 | **DONE** | Add Opportunity themes to Market instrument pages | Relevant long-term themes and exposure scores are visible for tracked instruments. |
-| UX-003 | **NEXT** | Complete mobile interaction review | Headers, tabs, swipe, touch targets and responsive tables are verified. |
+| UX-003 | **IN REVIEW** | Complete mobile interaction review | Headers, tabs, swipe, touch targets and responsive tables are verified. |
 | UX-004 | **PLANNED** | Maintain palette compliance | New components use semantic theme/chart tokens rather than fixed page colours. |
 
 ## Phase 6 — Monitoring and research ingestion
@@ -246,7 +246,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `UX-003 — Complete mobile interaction review` is **NEXT** after UX-002 passed independent audit. UX-004 and all later items remain `PLANNED`.
+**Current work:** `UX-003 — Complete mobile interaction review` is **IN REVIEW**. Builder implementation is complete at repository state `741e1f1fa57b4d70f76013b2bb49c7acaeba869b`; the mobile interaction layer is loaded by commit `4b9587d5ac5356bc8cde55087f89f6e7118469f8`, which reached Vercel deployment `dpl_E2t2yPYPk961ZHvsehaX12sqbJvh` in `READY` state with no build errors. `documentation/mobile-interaction-review.md` records the mobile verification contract and representative routes. The Auditor should independently verify narrow-viewport headers, swipeable primary navigation and Opportunity tabs, 44px touch targets, deliberate horizontal table scrolling, and absence of unintended page-level horizontal overflow. UX-004 and all later items remain `PLANNED`.
 
 ## Definition of Operational
 
