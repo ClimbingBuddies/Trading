@@ -192,7 +192,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
 | MON-001 | **DONE** | Decide watchlist/auth model | Ownership and access rules are defined before enabling writes. |
-| MON-002 | **BLOCKED** | Activate watchlists | Real user-owned lists can be maintained securely. |
+| MON-002 | **IN REVIEW** | Activate watchlists | Real user-owned lists can be maintained securely. |
 | MON-003 | **PLANNED** | Define alerts | Approved price, freshness, assessment, opportunity, convergence and technical triggers are documented. |
 | MON-004 | **PLANNED** | Implement alerts and event history | Trigger lifecycle is persisted and visible. |
 | RES-001 | **PLANNED** | Review external opinion model | Its role relative to Market Assessment is explicit and evidence is not double-counted. |
@@ -246,7 +246,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `MON-002 — Activate watchlists` is **BLOCKED** by external deployment verification, not Builder remediation. The reviewed application state is `154040b4a20152f380d0921878f8e4cecdcde1b5`; the subsequent handoff changed only `documentation/project-plan.md`. Live Supabase security and the Auditor's rollback-only two-user matrix passed, but production `/watchlists` still returns HTTP 404 because Vercel has not built the frontend implementation. GitHub's Vercel status for the reviewed and handoff commits reports the Hobby `build-rate-limit`, and the available deployment connector cannot currently issue a valid exact-state deployment because its advertised deployment action is internally mis-specified. Unblock by deploying the unchanged reviewed application state once Vercel permits, then re-run the Auditor to verify build/type/palette checks, production `/watchlists`, email-auth redirect/session return, authenticated browser CRUD and signed-out public-route health. MON-003 and all later items remain `PLANNED`; nothing is promoted while MON-002 is blocked.
+**Current work:** `MON-002 — Activate watchlists` is **IN REVIEW** for a clean deployment retry; no Builder remediation or application-code change is authorised. The reviewed application state is `154040b4a20152f380d0921878f8e4cecdcde1b5`; the subsequent handoff changed only `documentation/project-plan.md`. Live Supabase security and the Auditor's rollback-only two-user matrix passed, but production `/watchlists` still returns HTTP 404 because Vercel has not built the frontend implementation. GitHub's Vercel status for the reviewed and handoff commits reports the Hobby `build-rate-limit`, and the available deployment connector cannot currently issue a valid exact-state deployment because its advertised deployment action is internally mis-specified. Unblock by deploying the unchanged reviewed application state once Vercel permits, then re-run the Auditor to verify build/type/palette checks, production `/watchlists`, email-auth redirect/session return, authenticated browser CRUD and signed-out public-route health. MON-003 and all later items remain `PLANNED`; nothing is promoted while MON-002 is blocked.
 
 ## Definition of Operational
 
