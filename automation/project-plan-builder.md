@@ -1,7 +1,7 @@
 # Project Plan Builder
 
-**Specification version:** 1.0  
-**Last updated:** 17 August 2026  
+**Specification version:** 1.1  
+**Last updated:** 23 August 2026  
 **System:** Discover Boulders Markets / Trading  
 **Repository:** `ClimbingBuddies/Trading`  
 **Supabase project:** `glvbqcplgjdfgjyknzsa`  
@@ -12,7 +12,7 @@
 
 This document is the canonical execution specification for the **Project Plan Builder**.
 
-The Builder advances the Trading platform **one project-plan item at a time**. It investigates the current item, implements the required change, verifies its own implementation as far as reasonably possible, documents the change, and then hands the item to the independent Project Plan Auditor.
+The Builder advances the Trading platform **one project-plan item at a time**. It investigates the current item, implements the required change, verifies its own implementation as far as reasonably possible, documents the change, and then hands the item to the independent Project Plan Auditor. `IN REVIEW` means the implementation is complete and ready for independent validation; it does not require the production deployment to have already caught up when deployment is the only outstanding external step.
 
 At the beginning of every run, retrieve this file and `documentation/project-plan.md` fresh from the connected GitHub repository. Do not rely on remembered or cached copies. If either file cannot be retrieved, stop and report the failure rather than guessing.
 
@@ -27,8 +27,8 @@ The Builder may implement work but **must never approve its own work**.
 The Builder may change a task through these states:
 
 - `NEXT` -> `IN PROGRESS`
-- `IN PROGRESS` -> `IN REVIEW`
-- `IN PROGRESS` -> `BLOCKED` when a genuine dependency prevents safe completion
+- `IN PROGRESS` -> `IN REVIEW` when implementation and Builder-controlled checks are complete, including when only an explicitly recorded deployment/production verification step remains for the Auditor
+- `IN PROGRESS` -> `BLOCKED` when a genuine dependency prevents safe implementation completion
 
 The Builder must **not**:
 
@@ -135,18 +135,27 @@ Depending on the item this may include:
 
 The Builder's verification is a pre-flight check only. It does not replace the independent Auditor.
 
+For deployed work, distinguish implementation completion from deployment completion:
+
+- the Builder must verify the committed source, documentation and any Builder-controlled checks;
+- if production is current, record the deployed commit and the production checks performed;
+- if production is behind because a deployment is queued, rate-limited or otherwise pending, record the implementation commit, current production commit, Vercel status and exact reason;
+- a deployment-only gap does not prevent `IN REVIEW` when the committed implementation appears complete and no Builder-controlled check has failed;
+- a source, test, build or implementation failure remains Builder work and must not be handed off as complete.
+
 ---
 
 ## 7. Hand off to independent review
 
-When the selected item's Definition of Done appears satisfied:
+When the committed implementation appears complete and is ready for independent validation:
 
-1. change its project-plan status to `IN REVIEW`;
+1. change its project-plan status to `IN REVIEW` even when the only outstanding step is deployment or production verification;
 2. keep all other `PLANNED` items unchanged;
 3. do not create a new `NEXT` item;
 4. update the project plan's current-work note so the Auditor can clearly identify the item awaiting review;
 5. ensure relevant implementation/documentation changes are committed to GitHub;
-6. report concise evidence of what changed and what the Auditor should independently verify.
+6. record the exact implementation commit, relevant checks, current production commit and any pending deployment status;
+7. report concise evidence of what changed and what the Auditor should independently deploy or verify.
 
 Do not mark the item `DONE`.
 
@@ -181,3 +190,5 @@ Every Builder run should report:
 - whether the item is now waiting for the Auditor.
 
 A successful Builder run normally ends with exactly one item in `IN REVIEW` and no new item promoted to `NEXT`.
+
+This is a recurring controller. Never pause or disable its schedule yourself because a run is idle, blocked, handed to review or temporarily unable to verify deployment. Only Travis may pause or disable it, or an explicit project-wide terminal instruction may require it.
