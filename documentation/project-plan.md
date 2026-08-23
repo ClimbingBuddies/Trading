@@ -142,7 +142,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
 | OPS-001 | **DONE** | Verify first unattended Opportunity Assessment run | GitHub spec is retrieved, Supabase is updated idempotently, Research & Evidence is updated and result verified. |
-| OPS-002 | **DONE** | Change Market Scheduled Task to use the GitHub Market specification | Scheduled Task becomes a thin runner that retrieves the current GitHub specification. |
+| OPS-002 | **DONE** | Change Market Scheduled Task to use the GitHub Market specification | Scheduled Task becomes a thin runner that retrieves the current GitHub Market specification. |
 | OPS-003 | **DONE** | Standardise Market AI independence metadata | New rows record a version such as `independent-market-ai-v1` and `technical_engine_input_used = false`. |
 | OPS-004 | **DONE** | Reactivate Daily Trading Market Assessment | Weekday task is enabled after the canonical specification is ready. |
 | OPS-005 | **DONE** | Verify first unattended Market Assessment run | Freshness check, full active universe, evidence, finalisation and report complete successfully. |
@@ -184,7 +184,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 |---|---|---|---|
 | UX-001 | **DONE** | Show current Market result beside Opportunity exposure | The UI combines independently completed views without using one as an analytical input to the other. |
 | UX-002 | **DONE** | Add Opportunity themes to Market instrument pages | Relevant long-term themes and exposure scores are visible for tracked instruments. |
-| UX-003 | **IN REVIEW** | Complete mobile interaction review | Headers, tabs, swipe, touch targets and responsive tables are verified. |
+| UX-003 | **IN PROGRESS** | Complete mobile interaction review | Headers, tabs, swipe, touch targets and responsive tables are verified. |
 | UX-004 | **PLANNED** | Maintain palette compliance | New components use semantic theme/chart tokens rather than fixed page colours. |
 
 ## Phase 6 — Monitoring and research ingestion
@@ -246,7 +246,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `UX-003 — Complete mobile interaction review` is **IN REVIEW**. Builder implementation is complete at repository state `741e1f1fa57b4d70f76013b2bb49c7acaeba869b`; the mobile interaction layer is loaded by commit `4b9587d5ac5356bc8cde55087f89f6e7118469f8`, which reached Vercel deployment `dpl_E2t2yPYPk961ZHvsehaX12sqbJvh` in `READY` state with no build errors. `documentation/mobile-interaction-review.md` records the mobile verification contract and representative routes. The Auditor should independently verify narrow-viewport headers, swipeable primary navigation and Opportunity tabs, 44px touch targets, deliberate horizontal table scrolling, and absence of unintended page-level horizontal overflow. UX-004 and all later items remain `PLANNED`.
+**Current work:** `UX-003 — Complete mobile interaction review` is **IN PROGRESS** after independent audit REWORK. The audit at `documentation/project-audits/UX-003.md` verified the responsive header, navigation/tab swipe rails and table-scroll implementation, but production `/markets/ANET` still exposes Price History period buttons with `min-height: 32px` at the mobile breakpoint instead of the documented 44px touch-target floor. The Builder must remediate the touch-target gap, re-review representative narrow-viewport controls and overflow behaviour, record repeatable mobile verification evidence, and return UX-003 to `IN REVIEW`. UX-004 and all later items remain `PLANNED`.
 
 ## Definition of Operational
 
