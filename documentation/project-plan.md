@@ -191,7 +191,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
-| MON-001 | **NEXT** | Decide watchlist/auth model | Ownership and access rules are defined before enabling writes. |
+| MON-001 | **IN PROGRESS** | Decide watchlist/auth model | Ownership and access rules are defined before enabling writes. |
 | MON-002 | **PLANNED** | Activate watchlists | Real user-owned lists can be maintained securely. |
 | MON-003 | **PLANNED** | Define alerts | Approved price, freshness, assessment, opportunity, convergence and technical triggers are documented. |
 | MON-004 | **PLANNED** | Implement alerts and event history | Trigger lifecycle is persisted and visible. |
@@ -246,11 +246,11 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `MON-001 — Decide watchlist/auth model` is **NEXT** after UX-004 passed independent audit with advice. UX-004 verified the semantic `--theme-*` / `--chart-*` contract across the shared/new frontend components, the Opportunity compatibility mapping, the active build-time palette guard and healthy production routes. MON-001 is the only promoted item; all later items remain `PLANNED`.
+**Current work:** `MON-001 — Decide watchlist/auth model` is **IN PROGRESS**. The Builder is inspecting the current watchlist-related schema/source and live Supabase authentication/RLS state to define ownership and access rules before any watchlist writes are enabled. No later project-plan item is promoted.
 
 ## Definition of Operational
 
-A workflow is Operational only when its schema and implementation exist, scheduling/trigger ownership is explicit, source data is validated, real results are persisted, lifecycle reaches a terminal state, errors are recorded, retries are idempotent, access policies are deliberate, the frontend does not require privileged secrets, an end-to-end run has been verified, and the actual flow is documented.
+A workflow is Operational only when its schema and implementation exist, scheduling/trigger ownership is explicit, source data is validated, real results are persisted, lifecycle reaches a terminal state, errors are recorded, retries are idempotent, access policies are deliberate, the frontend does not require privileged secrets, an end-to-end run has actually been verified, and the actual flow is documented.
 
 ## Completion log
 
