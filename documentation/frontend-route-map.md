@@ -1,6 +1,6 @@
 # Frontend Route Map and Design Behaviour
 
-**Last verified:** 22 August 2026  
+**Last verified:** 23 August 2026  
 **Application:** Discover Boulders Markets  
 **Production:** `https://discoverbouldersmarkets.vercel.app`  
 **Vercel project:** `boulders-market`
@@ -31,7 +31,7 @@ Shared presentation and interaction components include:
 - `components/OpportunityExposurePanel.tsx`
 - `components/ThemePaletteSelector.tsx`
 
-The root layout imports the shared theme layers plus the Opportunity-specific responsive and exposure-inspector styles.
+The root layout imports the shared theme layers plus the Opportunity-specific responsive, exposure-inspector and mobile-interaction styles.
 
 ---
 
@@ -390,24 +390,23 @@ The root layout currently imports:
 - `app/theme-compliance.css`
 - `app/opportunity-carousel-responsive.css`
 - `app/opportunity-exposure-inspector.css`
+- `app/mobile-interaction.css`
 
-The global theme system uses semantic tokens such as background, panel, border, text, accent, success, warning and danger variables. `theme-compliance.css` also defines palette-specific chart tokens (`--chart-1` through `--chart-6` and `--chart-grid`) so Recharts can remain visually consistent with the selected palette.
+The global theme system uses semantic tokens such as background, panel, border, text, accent, success, warning and danger variables. `theme-compliance.css` also defines palette-specific chart tokens (`--chart-1` through `--chart-6` and `--chart-grid`) so Recharts and custom SVG charts remain visually consistent with the selected palette.
 
-## Current Opportunity palette limitation
+## Current palette compliance boundary
 
-The Opportunity dashboard currently defines its own scoped dark tokens in `app/opportunities/opportunities.module.css`, including:
+The Opportunity dashboard retains historical `--opp-*` local defaults in `app/opportunities/opportunities.module.css`, but `app/theme.css` remaps those variables to the selected global semantic palette. The legacy module is therefore maintained through the compatibility mapping rather than being mechanically rewritten in one large change.
 
-- `--opp-bg`
-- `--opp-panel`
-- `--opp-panel-2`
-- `--opp-border`
-- `--opp-text`
-- `--opp-muted`
-- Opportunity blue/green/purple/cyan/orange/red accents
+UX-004 closes the remaining fixed-colour islands in shared/new component layers:
 
-The Exposure inspector also contains fixed dark-surface colours.
+- the Exposure inspector now uses `--theme-*` and `--chart-*` variables;
+- the Opportunity daily-status strip and card update treatments use semantic status/action tokens;
+- the Opportunity overview card footer separator no longer uses an inline fixed blue colour;
+- Price History controls and metadata now use semantic theme tokens while its chart uses `--chart-1`/`--chart-grid`;
+- mobile interaction styles contain no page colours.
 
-Therefore, the **global five-palette system is operational, but the current Opportunity surface is intentionally documented as a specialised dark design rather than being claimed as fully palette-semantic**. Full semantic palette compliance for new/current components remains governed by the later project-plan item `UX-004`.
+`npm run check:palette` scans shared component code plus the new app-level component styles for raw hex/rgb/hsl literals. `prebuild` runs that guard before `next build`, so guarded new/shared components cannot introduce fixed page colours without failing the production build. The detailed contract and Auditor matrix are recorded in `documentation/palette-compliance-review.md`.
 
 ---
 
