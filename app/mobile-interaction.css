@@ -22,7 +22,7 @@
   }
 
   /* The globally visible palette remains usable on mobile. */
-  .globalPaletteDock select {
+  .globalPaletteDock .themePaletteControl select {
     min-height: 44px;
   }
 
@@ -58,6 +58,7 @@
 
   /* Form controls and primary actions must meet the mobile tap-target floor. */
   main select,
+  main label[class*="themeSelect"] select,
   .filterTab,
   .primaryLinkButton,
   .secondaryButton,
