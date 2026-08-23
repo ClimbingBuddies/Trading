@@ -185,7 +185,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | UX-001 | **DONE** | Show current Market result beside Opportunity exposure | The UI combines independently completed views without using one as an analytical input to the other. |
 | UX-002 | **DONE** | Add Opportunity themes to Market instrument pages | Relevant long-term themes and exposure scores are visible for tracked instruments. |
 | UX-003 | **DONE** | Complete mobile interaction review | Headers, tabs, swipe, touch targets and responsive tables are verified. |
-| UX-004 | **NEXT** | Maintain palette compliance | New components use semantic theme/chart tokens rather than fixed page colours. |
+| UX-004 | **IN PROGRESS** | Maintain palette compliance | New components use semantic theme/chart tokens rather than fixed page colours. |
 
 ## Phase 6 — Monitoring and research ingestion
 
@@ -246,7 +246,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `UX-004 — Maintain palette compliance` is **NEXT** after UX-003 passed independent re-audit with advice. The UX-003 audit at `documentation/project-audits/UX-003.md` independently verified responsive headers, swipe/scroll rails, 44px mobile touch targets including the remediated Price History controls, deliberate responsive table scrolling, unchanged reviewed implementation in production, healthy representative routes and no production error/fatal logs in the preceding hour. UX-004 is the only promoted item; all later items remain `PLANNED`.
+**Current work:** `UX-004 — Maintain palette compliance` is **IN PROGRESS**. The Builder is reviewing components added through the Cross-system UX phase and associated mobile interaction work for fixed page colours that should resolve through the semantic theme/chart token system. No later project-plan item is promoted.
 
 ## Definition of Operational
 
