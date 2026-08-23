@@ -137,6 +137,14 @@
   border-color: color-mix(in srgb, var(--theme-purple) 30%, var(--theme-border));
 }
 
+.cardFooterAction {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--theme-border-soft);
+}
+
 @media (max-width: 1050px) {
   .dailyStrip {
     grid-template-columns: 1fr;
