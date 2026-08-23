@@ -142,7 +142,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
 | OPS-001 | **DONE** | Verify first unattended Opportunity Assessment run | GitHub spec is retrieved, Supabase is updated idempotently, Research & Evidence is updated and result verified. |
-| OPS-002 | **DONE** | Change Market Scheduled Task to use the GitHub Market specification | Scheduled Task becomes a thin runner that retrieves the current GitHub specification. |
+| OPS-002 | **DONE** | Change Market Scheduled Task to use the GitHub Market specification | Scheduled Task becomes a thin runner that retrieves the current GitHub Market specification. |
 | OPS-003 | **DONE** | Standardise Market AI independence metadata | New rows record a version such as `independent-market-ai-v1` and `technical_engine_input_used = false`. |
 | OPS-004 | **DONE** | Reactivate Daily Trading Market Assessment | Weekday task is enabled after the canonical specification is ready. |
 | OPS-005 | **DONE** | Verify first unattended Market Assessment run | Freshness check, full active universe, evidence, finalisation and report complete successfully. |
@@ -185,13 +185,13 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | UX-001 | **DONE** | Show current Market result beside Opportunity exposure | The UI combines independently completed views without using one as an analytical input to the other. |
 | UX-002 | **DONE** | Add Opportunity themes to Market instrument pages | Relevant long-term themes and exposure scores are visible for tracked instruments. |
 | UX-003 | **DONE** | Complete mobile interaction review | Headers, tabs, swipe, touch targets and responsive tables are verified. |
-| UX-004 | **IN REVIEW** | Maintain palette compliance | New components use semantic theme/chart tokens rather than fixed page colours. |
+| UX-004 | **DONE** | Maintain palette compliance | New components use semantic theme/chart tokens rather than fixed page colours. |
 
 ## Phase 6 — Monitoring and research ingestion
 
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
-| MON-001 | **PLANNED** | Decide watchlist/auth model | Ownership and access rules are defined before enabling writes. |
+| MON-001 | **NEXT** | Decide watchlist/auth model | Ownership and access rules are defined before enabling writes. |
 | MON-002 | **PLANNED** | Activate watchlists | Real user-owned lists can be maintained securely. |
 | MON-003 | **PLANNED** | Define alerts | Approved price, freshness, assessment, opportunity, convergence and technical triggers are documented. |
 | MON-004 | **PLANNED** | Implement alerts and event history | Trigger lifecycle is persisted and visible. |
@@ -246,7 +246,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `UX-004 — Maintain palette compliance` is **IN REVIEW** after Builder implementation. The reviewed implementation/documentation state is `42b0f22ada2ff3f0084f12fee02b6ebace4ed7f3`, deployed to Vercel production as `dpl_8hZhxrbn9dgd532rzBXZYkMNCHEZ` in `READY` state. The build-time palette guard passed for 16 shared/new component/style files before a clean Next.js/TypeScript build. Exposure inspector, Opportunity daily-status/card-footer and Price History component colours now resolve through semantic `--theme-*` / `--chart-*` tokens; legacy Opportunity defaults remain behind the documented `theme.css` compatibility mapping. `/markets/ANET`, `/opportunities` and `/opportunities/ai_datacentre_power_cooling?view=exposure` returned HTTP 200, and no production error/fatal logs were found in the preceding hour. The Auditor should independently verify UX-004. MON-001 and all later items remain `PLANNED`.
+**Current work:** `MON-001 — Decide watchlist/auth model` is **NEXT** after UX-004 passed independent audit with advice. UX-004 verified the semantic `--theme-*` / `--chart-*` contract across the shared/new frontend components, the Opportunity compatibility mapping, the active build-time palette guard and healthy production routes. MON-001 is the only promoted item; all later items remain `PLANNED`.
 
 ## Definition of Operational
 
@@ -289,3 +289,4 @@ A workflow is Operational only when its schema and implementation exist, schedul
 | 22-Aug-2026 | UX-001 | `documentation/project-audits/UX-001.md` | Independent audit PASS; distinct Opportunity Exposure and current Market Convergence presentation, live data parity, analytical independence, truthful external handling and healthy production navigation verified; UX-002 promoted. |
 | 23-Aug-2026 | UX-002 | `documentation/project-audits/UX-002.md` | Independent audit PASS; database-backed long-term Opportunity themes and exposure scores, multiple-theme rendering, truthful empty state, working cross-navigation, unchanged reviewed implementation in READY production and healthy routes verified; UX-003 promoted. |
 | 23-Aug-2026 | UX-003 | `documentation/project-audits/UX-003.md` | Independent re-audit PASS WITH ADVICE; responsive headers, swipe/scroll rails, 44px mobile touch targets, responsive table containment, production parity and route/runtime health verified; UX-004 promoted. |
+| 23-Aug-2026 | UX-004 | `documentation/project-audits/UX-004.md` | Independent audit PASS WITH ADVICE; semantic theme/chart token usage, five-palette definitions, Opportunity compatibility mapping, active production build guard and healthy representative routes verified; MON-001 promoted. |
