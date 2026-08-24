@@ -4,7 +4,7 @@
 
 The strategy layer moves a trading idea through definition, testing, review and promotion using persisted strategy rules, recorded test metrics and a database-driven decision tree.
 
-The first real strategy is defined under STRAT-001. STRAT-002 now defines the test-run ingestion, immutable provenance and metric contract; loading the first real result remains STRAT-003.
+The first real strategy is defined under STRAT-001. STRAT-002 defines the test-run ingestion, immutable provenance and metric contract. STRAT-003 has now produced the first real persisted backtest result; the Standard Strategy Review remains a separate STRAT-004 decision stage.
 
 ## Strategy lifecycle
 
@@ -78,7 +78,7 @@ Canonical methodology: `documentation/specifications/daily-trend-pullback-strate
 
 The strategy uses a fixed 24 August 2026 snapshot of 20 active US equities/ETFs with sufficient daily history. It is long-only and uses point-in-time SMA20/SMA50/SMA200/RSI14 trend-pullback rules, an 8% protective stop, an SMA50 trend exit, a 60-session time exit, 0.75% initial portfolio risk per trade, a 10% notional cap, four-position maximum and 40% gross-long cap.
 
-The strategy exists to be tested. No profitability claim is made by STRAT-001 and no automatic/live trade execution is authorised.
+The strategy exists to be tested. No automatic/live trade execution is authorised.
 
 ## `trading_test_runs` — STRAT-002 contract
 
@@ -92,7 +92,7 @@ Allowed test types remain:
 - `paper`
 - `live`
 
-The table now separates strategy identity, test lifecycle, source/execution provenance and result metrics.
+The table separates strategy identity, test lifecycle, source/execution provenance and result metrics.
 
 ### Test-run identity and lifecycle
 
@@ -139,7 +139,7 @@ Backtest, paper and live runs have distinct provenance requirements. Live-test s
 
 ### Result metrics
 
-Core result fields remain:
+Core result fields include:
 
 - `period_start`
 - `period_end`
@@ -158,7 +158,46 @@ Core result fields remain:
 
 `strategy-test-metrics-v1` defines these metrics precisely, including cost treatment, completed-trade counting, drawdown, Sharpe and out-of-sample semantics.
 
-STRAT-002 creates no real `trading_test_runs` rows. STRAT-003 is responsible for producing and loading the first real backtest evidence under this contract.
+STRAT-003 now provides the first real populated evidence row under this contract.
+
+## First real test run — STRAT-003
+
+Canonical locked design: `documentation/specifications/daily-trend-pullback-backtest-v1.md`.  
+Result evidence: `documentation/backtests/daily-trend-pullback-v1-baseline-result.md`.
+
+The first real run is a succeeded historical backtest for `DAILY_TREND_PULLBACK` v1 using:
+
+- engine `daily-trend-pullback-backtest-v1`;
+- Tiingo `1day` observations only;
+- 24,388 source rows across the fixed 20-symbol universe;
+- test period 1-Jun-2022 through 14-Aug-2026;
+- in-sample through 14-Aug-2025;
+- one-year out-of-sample period 15-Aug-2025 through 14-Aug-2026;
+- USD 100,000 initial equity;
+- immutable strategy snapshot/hash and source-row hash;
+- explicit cost, slippage, adjusted-OHLC, risk and portfolio-allocation conventions.
+
+Persisted metrics are:
+
+| Metric | Result |
+|---|---:|
+| Instruments | 20 |
+| Completed trades | 249 |
+| Ending equity | 128,219.93231051364 USD |
+| Net profit | 28,219.932310513635 USD |
+| Return | 28.219932310513638% |
+| Win rate | 30.923694779116467% |
+| Profit factor | 1.3230995409489577 |
+| Expectancy | 100.99840393194626 USD/trade |
+| Max drawdown | 16.290033842716177% |
+| Sharpe ratio | 0.5845107282938247 |
+| Out-of-sample return | -8.26559237643118% |
+
+Four positions remain open at the final cutoff and are marked to the final adjusted close; they are not counted as completed trades.
+
+These values are evidence, not a decision. STRAT-003 does not change strategy status, does not create a decision evaluation and does not enable live execution.
+
+The private runner `strategy_lab.run_daily_trend_pullback_v1(text)` is service-only and idempotent. The successful-backtest validation trigger also prevents `strategy-test-ingestion-v1` backtests from being marked `succeeded` without the required metrics, periods, immutable/source provenance and accounting consistency.
 
 ## Standard decision tree
 
@@ -282,13 +321,13 @@ Allowed outcome statuses:
 - `pause`
 - `reject`
 
-No decision evaluation exists yet because STRAT-003 has not loaded a real test run. STRAT-004 owns execution of the Standard Strategy Review after test evidence exists.
+No decision evaluation exists yet for the first real run. STRAT-004 owns execution of the Standard Strategy Review after STRAT-003 evidence passes independent audit.
 
 ## RLS and ownership
 
 Strategies, test runs and evaluations are authenticated, owner-specific data.
 
-Authenticated users can only access rows where `owner_user_id = auth.uid()`. The test-run provenance trigger derives `owner_user_id` from the selected strategy, and the existing RLS insert policy independently prevents cross-owner test attachment.
+Authenticated users can only access rows where `owner_user_id = auth.uid()`. The test-run provenance trigger derives `owner_user_id` from the selected strategy, and RLS prevents cross-owner test attachment/read access.
 
 The system decision-tree template can be read by authenticated users, and the public dashboard has read-only access to system-template trees, nodes and edges.
 
@@ -300,8 +339,8 @@ Routes already exist for strategy and test records:
 - `/strategies/[id]`
 - `/strategies/[id]/tests/[runId]`
 
-STRAT-002 does not redesign strategy UI. STRAT-005 remains the project-plan stage for surfacing real strategy results deliberately.
+The first real strategy and run remain private under owner RLS and are not deliberately surfaced by the public/server dashboard yet. STRAT-005 remains the project-plan stage for surfacing real strategy results.
 
 ## Next implementation step
 
-STRAT-003 must produce and persist the first real `DAILY_TREND_PULLBACK` v1 backtest under `strategy-test-ingestion-v1` and `strategy-test-metrics-v1`, including the immutable strategy hash, declared data cutoff, in/out-of-sample periods, cost assumptions and complete result provenance. It must not bypass the STRAT-002 evidence contract or fabricate missing metrics.
+After STRAT-003 passes independent audit, STRAT-004 should execute the existing `STANDARD_STRATEGY_REVIEW` against the immutable first real test-run evidence and persist the exact decision path/outcome without rewriting the historical metrics or changing the locked backtest design.
