@@ -195,7 +195,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | MON-002 | **DONE** | Activate watchlists | Real user-owned lists can be maintained securely. |
 | MON-003 | **DONE** | Define alerts | Approved price, freshness, assessment, opportunity, convergence and technical triggers are documented. |
 | MON-004 | **DONE** | Implement alerts and event history | Trigger lifecycle is persisted and visible. |
-| RES-001 | **IN PROGRESS** | Review external opinion model | Its role relative to Market Assessment is explicit and evidence is not double-counted. |
+| RES-001 | **IN REVIEW** | Review external opinion model | Its role relative to Market Assessment is explicit and evidence is not double-counted. |
 | RES-002 | **PLANNED** | Operationalise approved opinion sources | Collection, provenance, deduplication and consensus are automated and monitored. |
 
 ## Phase 7 — Strategy laboratory
@@ -246,7 +246,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `RES-001 — Review external opinion model` is **IN PROGRESS**. The Builder selected the single `NEXT` item on 24 August 2026 and is reviewing the existing external-opinion schema, current data, Market Assessment methodology and evidence lineage to define a non-double-counting contract. RES-002 and all later items remain `PLANNED`; nothing else is promoted.
+**Current work:** `RES-001 — Review external opinion model` is **IN REVIEW** after Builder review on 24 August 2026. The canonical `external-opinion-v1` contract is in `documentation/specifications/external-opinion-model.md`, and `automation/daily-market-assessment.md` v1.1 now requires that contract for all external-opinion use. The live model was verified as a non-operational scaffold: 5 source-registry rows, 1 successful review, 2 NVDA atomic opinion rows, 1 derived consensus row, no opinion-table triggers, no opinion cron jobs and no client RLS policies. The same StockAnalysis NVDA forecast URL is present in both `instrument_opinions` and `gpt_market_evidence`, providing a real example of the duplication risk addressed by the new rule. The contract defines `instrument_opinions` as atomic evidence, `instrument_opinion_consensus` as a derived summary rather than a second evidentiary vote, a canonical source-identity hierarchy, one logical contribution per underlying source/claim, syndication grouping, freshness handling and an explicit RES-002 implementation contract. No Supabase schema/data changes or frontend changes were made. Implementation/documentation commit `a3e1c1f5fc23be5ffff7a5d8045138feae2d3a3d` is in READY production deployment `dpl_6NUZTDixpKjB3SC1VUy8C8s6K4d5`. RES-002 and all later items remain `PLANNED`; the Builder has not promoted a next item.
 
 ## Definition of Operational
 
