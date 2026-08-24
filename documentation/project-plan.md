@@ -204,7 +204,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 |---|---|---|---|
 | STRAT-001 | **DONE** | Define first real strategy | Rules, universe, entry/exit logic, risk and version are persisted. |
 | STRAT-002 | **DONE** | Define test-run ingestion format | Backtest/paper/live provenance and metrics are documented. |
-| STRAT-003 | **NEXT** | Load first real test run | Real results populate `trading_test_runs`. |
+| STRAT-003 | **IN PROGRESS** | Load first real test run | Real results populate `trading_test_runs`. |
 | STRAT-004 | **PLANNED** | Execute Standard Strategy Review | Decision path and outcome are persisted. |
 | STRAT-005 | **PLANNED** | Surface real strategy results | Frontend displays real strategy evidence and decision outcomes. |
 
@@ -246,7 +246,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `STRAT-003 — Load first real test run` is **NEXT** after `STRAT-002 — Define test-run ingestion format` passed independent audit with advice on 24 August 2026. The STRAT-002 audit is recorded in `documentation/project-audits/STRAT-002.md`. The accepted `strategy-test-ingestion-v1` / `strategy-test-metrics-v1` contract requires stable owner-scoped run identity, immutable strategy snapshot/hash, data and execution provenance, declared input cutoff and in/out-of-sample periods, lifecycle/failure evidence, and versioned metric semantics across backtest, paper and live tests. STRAT-003 should now produce and persist the first real `DAILY_TREND_PULLBACK` v1 backtest under that contract. Carry forward the Auditor advice by using a trusted atomic prepare/upsert/finalise path that refuses `succeeded` unless the required backtest metrics and provenance are populated and internally consistent. STRAT-004 and all later items remain `PLANNED`.
+**Current work:** `STRAT-003 — Load first real test run` is **IN PROGRESS**. The Builder is producing the first real `DAILY_TREND_PULLBACK` v1 backtest under the accepted `strategy-test-ingestion-v1` / `strategy-test-metrics-v1` contract. The implementation must use a trusted atomic prepare/upsert/finalise path, real `market_observations` history only, immutable strategy provenance, explicit data cutoff and in/out-of-sample periods, and must refuse `succeeded` unless required metrics and provenance are populated and internally consistent. STRAT-004 and all later items remain `PLANNED`.
 
 ## Definition of Operational
 
