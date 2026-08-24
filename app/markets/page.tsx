@@ -1,5 +1,5 @@
 import MarketsTable from '@/components/MarketsTable'
-import { getMarketsData } from '@/lib/dashboard'
+import { getMarketsData } from '@/lib/markets-data'
 
 export const dynamic = 'force-dynamic'
 
