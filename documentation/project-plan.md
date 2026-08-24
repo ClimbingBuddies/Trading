@@ -192,7 +192,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
 | MON-001 | **DONE** | Decide watchlist/auth model | Ownership and access rules are defined before enabling writes. |
-| MON-002 | **BLOCKED** | Activate watchlists | Real user-owned lists can be maintained securely. |
+| MON-002 | **IN PROGRESS** | Activate watchlists | Real user-owned lists can be maintained securely. |
 | MON-003 | **PLANNED** | Define alerts | Approved price, freshness, assessment, opportunity, convergence and technical triggers are documented. |
 | MON-004 | **PLANNED** | Implement alerts and event history | Trigger lifecycle is persisted and visible. |
 | RES-001 | **PLANNED** | Review external opinion model | Its role relative to Market Assessment is explicit and evidence is not double-counted. |
@@ -246,7 +246,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `MON-002 — Activate watchlists` is **BLOCKED** on a supported hosted Supabase Auth configuration change that cannot be performed through the currently connected Supabase toolset. Production application code is deployed and healthy, but live Auth verification replaces the requested `https://discoverbouldersmarkets.vercel.app/watchlists` return with `http://localhost:3000`. Supabase requires the hosted Auth Site URL and redirect allow-list to be configured through its supported project configuration surface or Management API. The required values are Site URL `https://discoverbouldersmarkets.vercel.app` and Redirect URL `https://discoverbouldersmarkets.vercel.app/watchlists`. The connected Supabase app exposes no Auth-config write action; project Vault contains no Management API credential and the repository has no authorised Supabase CLI/config deployment path. `documentation/watchlist-activation.md` records the blocker. No RLS or browser-secret workaround is authorised. After the account-level Auth URL configuration is updated, resume MON-002, verify a production magic-link session return and real authenticated watchlist CRUD, then hand the same item back to the Auditor. MON-003 and all later items remain `PLANNED`; nothing is promoted while MON-002 is blocked.
+**Current work:** `MON-002 — Activate watchlists` is **IN PROGRESS** after manual unblock on 24 August 2026. The hosted Supabase Auth configuration dependency has been corrected by the project owner in Authentication → URL Configuration: Site URL is now `https://discoverbouldersmarkets.vercel.app` and the allowed Redirect URL remains `https://discoverbouldersmarkets.vercel.app/watchlists`. Resume the existing MON-002 rework only: verify a new production magic-link returns to `/watchlists` with a permanent authenticated session, exercise real authenticated watchlist CRUD, reconfirm the RLS/public-route/no-privileged-secret boundary, then return MON-002 to `IN REVIEW`. MON-003 and all later items remain `PLANNED`; nothing is promoted.
 
 ## Definition of Operational
 
