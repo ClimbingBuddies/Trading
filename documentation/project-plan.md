@@ -153,7 +153,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
-| SEC-001 | **DONE** | Define public/private Market Assessment access | Published assessment output and internal queue/run-control access are explicitly classified. |
+| SEC-001 | **DONE** | Define public/private Market Assessment access | Published assessment output and internal run/queue/control access are explicitly classified. |
 | SEC-002 | **DONE** | Apply deliberate RLS policies | Approved dashboard reads continue; anonymous writes are blocked; internal control tables are protected. |
 | SEC-003 | **DONE** | Harden helper-function search paths | Relevant functions use explicit safe search paths or fully qualified references. |
 | SEC-004 | **DONE** | Review `pg_net` warning | Placement/usage is remediated or explicitly accepted with rationale. |
@@ -194,7 +194,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | MON-001 | **DONE** | Decide watchlist/auth model | Ownership and access rules are defined before enabling writes. |
 | MON-002 | **DONE** | Activate watchlists | Real user-owned lists can be maintained securely. |
 | MON-003 | **DONE** | Define alerts | Approved price, freshness, assessment, opportunity, convergence and technical triggers are documented. |
-| MON-004 | **NEXT** | Implement alerts and event history | Trigger lifecycle is persisted and visible. |
+| MON-004 | **IN PROGRESS** | Implement alerts and event history | Trigger lifecycle is persisted and visible. |
 | RES-001 | **PLANNED** | Review external opinion model | Its role relative to Market Assessment is explicit and evidence is not double-counted. |
 | RES-002 | **PLANNED** | Operationalise approved opinion sources | Collection, provenance, deduplication and consensus are automated and monitored. |
 
@@ -246,7 +246,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `MON-004 — Implement alerts and event history` is **NEXT** after `MON-003 — Define alerts` passed independent audit with advice on 24 August 2026. The canonical trigger contract is `documentation/specifications/alert-trigger-specification.md` (`alert-trigger-v1`) and the audit is recorded in `documentation/project-audits/MON-003.md`. The next Builder run should implement the approved alert lifecycle against the existing `alerts`/`alert_events` scaffold, including permanent-user ownership/RLS hardening, relational theme targeting, deterministic event idempotency/provenance, all six real-source trigger families, rearm semantics and visible persisted event history. It should also keep freshness/session classification aligned with the Markets dashboard so the alert `no_observation` state and dashboard internal `no_data` state cannot drift. RES-001 and all later items remain `PLANNED`.
+**Current work:** `MON-004 — Implement alerts and event history` is **IN PROGRESS**. The Builder selected the single `NEXT` item on 24 August 2026 and is implementing the audited `alert-trigger-v1` contract. RES-001 and all later items remain `PLANNED`; nothing else is promoted.
 
 ## Definition of Operational
 
