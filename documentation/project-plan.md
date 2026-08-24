@@ -196,7 +196,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | MON-003 | **DONE** | Define alerts | Approved price, freshness, assessment, opportunity, convergence and technical triggers are documented. |
 | MON-004 | **DONE** | Implement alerts and event history | Trigger lifecycle is persisted and visible. |
 | RES-001 | **DONE** | Review external opinion model | Its role relative to Market Assessment is explicit and evidence is not double-counted. |
-| RES-002 | **NEXT** | Operationalise approved opinion sources | Collection, provenance, deduplication and consensus are automated and monitored. |
+| RES-002 | **IN PROGRESS** | Operationalise approved opinion sources | Collection, provenance, deduplication and consensus are automated and monitored. |
 
 ## Phase 7 — Strategy laboratory
 
@@ -246,7 +246,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `RES-002 — Operationalise approved opinion sources` is **NEXT** after `RES-001 — Review external opinion model` passed independent audit with advice on 24 August 2026. RES-002 must implement the audited `external-opinion-v1` contract, including approved-source collection, canonical source identity, idempotent ingestion, provenance, deduplicated consensus, coverage/freshness monitoring, and a deliberate client-access boundary. The Auditor specifically found that the existing scaffold still grants broad `anon`/`authenticated` privileges including `TRUNCATE`; RES-002 must not be called operational until unnecessary client privileges are revoked and access is explicitly designed. STRAT-001 and all later items remain `PLANNED`.
+**Current work:** `RES-002 — Operationalise approved opinion sources` is **IN PROGRESS**. The Builder selected the single `NEXT` item on 24 August 2026 and is implementing the audited `external-opinion-v1` contract. This run must automate approved-source collection, provenance, canonical deduplication, consensus and monitoring; it must also remove the unsafe broad client grants identified by the RES-001 Auditor. STRAT-001 and all later items remain `PLANNED`; nothing else is promoted.
 
 ## Definition of Operational
 
