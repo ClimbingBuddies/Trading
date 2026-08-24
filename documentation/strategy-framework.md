@@ -2,14 +2,14 @@
 
 ## Purpose
 
-The strategy layer is designed to move a trading idea through definition, testing, review and promotion using recorded test metrics and a database-driven decision tree.
+The strategy layer moves a trading idea through definition, testing, review and promotion using persisted strategy rules, recorded test metrics and a database-driven decision tree.
 
-The schema and decision framework are present, but no user strategy or test-run records have been created yet.
+The first real strategy is now defined under STRAT-001. Test-run ingestion and evaluation remain later project-plan stages.
 
 ## Strategy lifecycle
 
 ```text
-Define strategy
+Define versioned strategy
     |
     v
 Backtest / paper test / live test
@@ -26,15 +26,29 @@ Promote / continue testing / revise / pause / reject
 
 ## `trading_strategies`
 
-Purpose: user-owned strategy definitions.
+Purpose: user-owned, versioned strategy definitions.
 
-Important fields:
+Core identity fields:
 
 - `owner_user_id`
 - `strategy_code`
 - `strategy_name`
 - `description`
 - `status`
+- `strategy_version`
+- `methodology_version`
+
+Structured strategy-definition fields added for STRAT-001:
+
+- `universe_definition`
+- `entry_rules`
+- `exit_rules`
+- `risk_rules`
+- `execution_rules`
+- `data_requirements`
+- `live_execution_enabled`
+
+The uniqueness boundary is now `(owner_user_id, strategy_code, strategy_version)`, allowing later versions without overwriting the tested definition of an earlier version.
 
 Allowed strategy statuses:
 
@@ -44,9 +58,24 @@ Allowed strategy statuses:
 - `paused`
 - `retired`
 
-Ownership is tied to `auth.users` through `owner_user_id`.
+Ownership is tied to `auth.users` through `owner_user_id` and remains owner-scoped by RLS.
 
-Current records: 0.
+## First real strategy — STRAT-001
+
+The first persisted strategy is:
+
+- code: `DAILY_TREND_PULLBACK`
+- name: `Daily Trend Pullback — US Equities & ETFs`
+- version: `1`
+- methodology: `strategy-definition-v1`
+- status: `testing`
+- live execution: disabled
+
+Canonical methodology: `documentation/specifications/daily-trend-pullback-strategy.md`.
+
+The strategy uses a fixed 24 August 2026 snapshot of 20 active US equities/ETFs with sufficient daily history. It is long-only and uses point-in-time SMA20/SMA50/SMA200/RSI14 trend-pullback rules, an 8% protective stop, an SMA50 trend exit, a 60-session time exit, 0.75% initial portfolio risk per trade, a 10% notional cap, four-position maximum and 40% gross-long cap.
+
+The strategy exists to be tested. No profitability claim is made by STRAT-001 and no automatic/live trade execution is authorised.
 
 ## `trading_test_runs`
 
@@ -75,7 +104,7 @@ Important result fields:
 - `source_metadata`
 - `completed_at`
 
-Current records: 0.
+STRAT-001 deliberately creates no `trading_test_runs` rows. STRAT-002 defines the ingestion/provenance format and STRAT-003 loads the first real test result.
 
 ## Standard decision tree
 
@@ -99,8 +128,6 @@ The template is database-driven through:
 
 Metric: `trade_count`
 
-Rule:
-
 ```text
 trade_count >= 30
 ```
@@ -110,8 +137,6 @@ If false: `MORE_DATA` / continue testing.
 ### Gate 2 — Positive expectancy?
 
 Metric: `expectancy`
-
-Rule:
 
 ```text
 expectancy > 0
@@ -123,8 +148,6 @@ If false: `REVISE_EDGE` / revise entry or exit rules.
 
 Metric: `profit_factor`
 
-Rule:
-
 ```text
 profit_factor >= 1.2
 ```
@@ -135,8 +158,6 @@ If false: `REVISE_EFFICIENCY` / revise trade efficiency.
 
 Metric: `max_drawdown_pct`
 
-Rule:
-
 ```text
 max_drawdown_pct <= 20
 ```
@@ -146,8 +167,6 @@ If false: `REDUCE_RISK` / pause or reduce risk.
 ### Gate 5 — Out-of-sample result positive?
 
 Metric: `out_of_sample_return_pct`
-
-Rule:
 
 ```text
 out_of_sample_return_pct > 0
@@ -209,30 +228,26 @@ Allowed outcome statuses:
 - `pause`
 - `reject`
 
-Current records: 0.
+STRAT-001 creates no decision evaluation because no real test run exists yet.
 
 ## RLS and ownership
 
-Strategies, test runs and evaluations are designed as authenticated, owner-specific data.
+Strategies, test runs and evaluations are authenticated, owner-specific data.
 
-Authenticated users can only access rows where `owner_user_id = auth.uid()`.
+Authenticated users can only access rows where `owner_user_id = auth.uid()`. Builder verification for STRAT-001 confirmed the real strategy owner can read the strategy while the second permanent user cannot.
 
 The system decision-tree template can be read by authenticated users, and the public dashboard has read-only access to system-template trees, nodes and edges.
 
 ## Frontend status
 
-The Strategies dashboard currently:
-
-- shows the system decision framework;
-- reports zero real strategies and zero real test runs;
-- retains intentional empty-state messaging.
-
-Routes already exist for future populated records:
+Routes already exist for strategy and test records:
 
 - `/strategies`
 - `/strategies/[id]`
 - `/strategies/[id]/tests/[runId]`
 
-## Recommended next implementation step
+STRAT-001 does not redesign strategy UI. STRAT-005 remains the project-plan stage for surfacing real strategy results deliberately.
 
-The next meaningful strategy milestone is not additional UI. It is creating one real strategy and one real backtest record, then implementing evaluation logic that traverses the decision tree and writes `trading_decision_evaluations`.
+## Next implementation step
+
+STRAT-002 must define the first real test-run ingestion/provenance format against the immutable `DAILY_TREND_PULLBACK` version-1 strategy contract. STRAT-003 then loads real backtest results rather than fabricated performance rows.
