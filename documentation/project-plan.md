@@ -76,7 +76,7 @@ real-world research
                                               +--> Research & Evidence
 ```
 
-The two systems may be displayed together after they are independently produced, but one must be used to form the other.
+The two systems may be displayed together after they are independently produced, but one must not be used to form the other.
 
 ## Current baseline
 
