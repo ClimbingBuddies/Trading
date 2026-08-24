@@ -76,7 +76,7 @@ real-world research
                                               +--> Research & Evidence
 ```
 
-The two systems may be displayed together after they are independently produced, but one must not be used to form the other.
+The two systems may be displayed together after they are independently produced, but one must be used to form the other.
 
 ## Current baseline
 
@@ -196,7 +196,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | MON-003 | **DONE** | Define alerts | Approved price, freshness, assessment, opportunity, convergence and technical triggers are documented. |
 | MON-004 | **DONE** | Implement alerts and event history | Trigger lifecycle is persisted and visible. |
 | RES-001 | **DONE** | Review external opinion model | Its role relative to Market Assessment is explicit and evidence is not double-counted. |
-| RES-002 | **IN PROGRESS** | Operationalise approved opinion sources | Collection, provenance, deduplication and consensus are automated and monitored. |
+| RES-002 | **IN REVIEW** | Operationalise approved opinion sources | Collection, provenance, deduplication and consensus are automated and monitored. |
 
 ## Phase 7 — Strategy laboratory
 
@@ -246,7 +246,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `RES-002 — Operationalise approved opinion sources` is **IN PROGRESS**. The Builder selected the single `NEXT` item on 24 August 2026 and is implementing the audited `external-opinion-v1` contract. This run must automate approved-source collection, provenance, canonical deduplication, consensus and monitoring; it must also remove the unsafe broad client grants identified by the RES-001 Auditor. STRAT-001 and all later items remain `PLANNED`; nothing else is promoted.
+**Current work:** `RES-002 — Operationalise approved opinion sources` is **IN REVIEW** after Builder implementation and verification on 24 August 2026. The audited `external-opinion-v1` contract is implemented through `supabase/migrations/20260824143000_operationalise_external_opinion_v1.sql`, `20260824143500_fix_external_opinion_function_ambiguities.sql`, `20260824144000_fix_external_opinion_consensus_ambiguities.sql` and `20260824144500_index_external_opinion_foreign_keys.sql`; all four matching migrations are present in live Supabase history. The scheduled **External Opinion Review** is enabled Monday–Friday at 5:00 pm `America/New_York`, retrieves `automation/daily-external-opinion-review.md` fresh each run, and precedes the 6:15 pm New York Daily Trading Market Assessment. Live Supabase now enforces service-only trusted opinion persistence, canonical URL/source/claim identity, deterministic observation idempotency, exact consensus-member lineage, Market-evidence canonical-source uniqueness, cross-instrument lineage checks, per-source terminal telemetry and current/stale/none coverage. The historical broad `anon`/`authenticated` opinion grants, including `TRUNCATE`, are removed; current client grants on the opinion model are zero and external-opinion helpers are executable only by the service role. Rollback-only Builder matrices passed first-insert/exact-retry deduplication, consensus/finalisation, same-source Market-evidence rejection and cross-instrument lineage rejection. A real New York 24 August review then reached `succeeded` for 30 active instruments and all 5 source families with 4 real observations, 2 consensus rows, 2 current / 0 stale / 28 none coverage and zero source failures; a same-date retry returned the same completed review as `already_complete` without creating a duplicate review. No external-opinion helper depends on Technical Engine, Market Convergence or Opportunity Assessment outputs. Supabase Security Adviser reports no new RES-002 opinion-model security finding; two new foreign-key performance findings were indexed before handoff. Implementation/operations are documented in `documentation/pipelines/external-opinion-pipeline.md`. Production deployment `dpl_9xL3dVGDoza4NfCCQqbmBPc6dcxm` is READY on repository commit `e90383c6a8e1fa6e2dcbf73877301a93b82b3827`; palette check, Next.js compilation and TypeScript passed. No `SUPABASE_SERVICE_ROLE_KEY` is present in repository source. The Auditor should independently verify the enabled schedule, source/live migration parity, trusted access boundary, canonical identity/idempotency, consensus membership, Market-evidence lineage, terminal per-source/run telemetry, persisted 24 August review/coverage and cross-system independence. STRAT-001 and all later items remain `PLANNED`; the Builder has not promoted a next item.
 
 ## Definition of Operational
 
