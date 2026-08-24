@@ -142,7 +142,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
 | OPS-001 | **DONE** | Verify first unattended Opportunity Assessment run | GitHub spec is retrieved, Supabase is updated idempotently, Research & Evidence is updated and result verified. |
-| OPS-002 | **DONE** | Change Market Scheduled Task to use the GitHub Market specification | Scheduled Task becomes a thin runner that retrieves the current GitHub Market specification. |
+| OPS-002 | **DONE** | Change Market Scheduled Task to use the GitHub Market specification | Scheduled Task becomes a thin runner that retrieves the canonical GitHub Market specification. |
 | OPS-003 | **DONE** | Standardise Market AI independence metadata | New rows record a version such as `independent-market-ai-v1` and `technical_engine_input_used = false`. |
 | OPS-004 | **DONE** | Reactivate Daily Trading Market Assessment | Weekday task is enabled after the canonical specification is ready. |
 | OPS-005 | **DONE** | Verify first unattended Market Assessment run | Freshness check, full active universe, evidence, finalisation and report complete successfully. |
@@ -202,7 +202,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
-| STRAT-001 | **NEXT** | Define first real strategy | Rules, universe, entry/exit logic, risk and version are persisted. |
+| STRAT-001 | **IN PROGRESS** | Define first real strategy | Rules, universe, entry/exit logic, risk and version are persisted. |
 | STRAT-002 | **PLANNED** | Define test-run ingestion format | Backtest/paper/live provenance and metrics are documented. |
 | STRAT-003 | **PLANNED** | Load first real test run | Real results populate `trading_test_runs`. |
 | STRAT-004 | **PLANNED** | Execute Standard Strategy Review | Decision path and outcome are persisted. |
@@ -246,7 +246,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `STRAT-001 — Define first real strategy` is **NEXT** after `RES-002 — Operationalise approved opinion sources` passed independent audit with advice on 24 August 2026. The RES-002 audit is recorded in `documentation/project-audits/RES-002.md`. The external-opinion pipeline is now accepted as operational: approved-source collection ownership is scheduled, canonical provenance/idempotency and consensus-member lineage are enforced, per-source/run/coverage monitoring is persisted, client writes are denied, and a real current review completed end to end. Non-blocking follow-up: verify the first unattended `External Opinion Review` scheduled invocation reaches the same terminal path; its schedule is enabled but had not yet executed unattended at audit time. The next Builder run should define the first real strategy's rules, universe, entry/exit logic, risk controls and persisted version under STRAT-001. STRAT-002 and all later items remain `PLANNED`.
+**Current work:** `STRAT-001 — Define first real strategy` is **IN PROGRESS** after Builder selection on 24 August 2026. Define and persist one concrete versioned strategy with an explicit universe, deterministic entry and exit logic, risk controls and no automatic execution. STRAT-002 and all later items remain `PLANNED`.
 
 ## Definition of Operational
 
