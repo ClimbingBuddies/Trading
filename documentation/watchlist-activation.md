@@ -140,3 +140,51 @@ Supabase's supported hosted-project configuration requires the production origin
 The connected Supabase tool available to this Builder can inspect database/Auth logs, schema, policies and project metadata, but it does not expose a hosted Auth-config update action. The project contains no Supabase Management API credential in Vault and no repository Supabase CLI/config deployment path. Updating undocumented `auth` schema rows is not an acceptable substitute for the supported Auth configuration.
 
 Therefore the Builder cannot safely complete this rework from the currently connected toolset. No RLS, browser credential or application-code workaround has been introduced. Once the hosted Auth URL configuration is updated through a supported account-authorised path, MON-002 can resume with a production magic-link return test, permanent-session verification and real watchlist CRUD verification before returning to independent review.
+
+## Rework closure — 24 August 2026
+
+The hosted Auth configuration was corrected through the supported Supabase project configuration surface and the Builder then re-ran the production verification from primary evidence.
+
+### Production Auth/session evidence
+
+Fresh Supabase Auth logs now show the fixed flow:
+
+- a production `/otp` request at `2026-08-24T02:43:04Z` originated from `https://discoverbouldersmarkets.vercel.app/watchlists` and returned HTTP 200;
+- the subsequent `/verify` request at `2026-08-24T02:43:21Z` returned HTTP 303 with the production `/watchlists` URL as the referer rather than localhost;
+- the login event is for permanent Auth user `89b25c85-e64a-41f0-8421-80142c29e2db`;
+- `/user` returned HTTP 200 at `2026-08-24T02:43:22Z` from the production application, confirming the authenticated session was established after the redirect.
+
+### Real production-owned data
+
+The authenticated production UI persisted a real default watchlist after that login:
+
+- one watchlist named `Travis`;
+- owner `89b25c85-e64a-41f0-8421-80142c29e2db`, matching the successful Auth login;
+- `is_default = true`;
+- two real watchlist items with sort orders 1 and 2;
+- zero ownerless watchlists.
+
+Fresh live security checks still show `owner_user_id` is not nullable, four RLS policies on `watchlists`, four on `watchlist_items`, and zero `anon` table grants.
+
+### Rollback-only permanent-user CRUD check
+
+Using the real permanent user's authenticated JWT claims in a rollback-only transaction, the Builder verified that the live policies and operations permit:
+
+- editing watchlist details;
+- selecting the default through `set_watchlist_default`;
+- updating private item notes;
+- reordering the two items;
+- removing an item;
+- deleting the owned watchlist.
+
+The transaction was rolled back. Post-rollback verification confirmed the real watchlist and both real items were restored unchanged, with the original null description and notes retained.
+
+### Source and production parity
+
+The reviewed application state remains `154040b4a20152f380d0921878f8e4cecdcde1b5`. Comparing it with the resumed controller state `9a9a27ed141f4bd6f99b0b9b46d3fc46c27178fd` shows only `documentation/project-audits/MON-002.md`, `documentation/project-plan.md` and this document changed; no application or schema file drifted.
+
+Vercel production deployment `dpl_JC2jPwHG1QB459CjWZWmRRTgbRjJ` is `READY` on `9a9a27ed141f4bd6f99b0b9b46d3fc46c27178fd`. Production `/watchlists` and `/markets` both return HTTP 200, and no production `error` or `fatal` runtime logs were present in the inspected one-hour window.
+
+`lib/supabase-browser.ts` still uses only `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, with persistent session, refresh and URL-session detection enabled. No privileged browser credential was introduced.
+
+MON-002 is therefore ready for independent closure review. The Builder must return it to `IN REVIEW`; the Auditor remains responsible for the final PASS/REWORK decision, marking MON-002 DONE and promoting any next item.
