@@ -193,7 +193,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 |---|---|---|---|
 | MON-001 | **DONE** | Decide watchlist/auth model | Ownership and access rules are defined before enabling writes. |
 | MON-002 | **DONE** | Activate watchlists | Real user-owned lists can be maintained securely. |
-| MON-003 | **NEXT** | Define alerts | Approved price, freshness, assessment, opportunity, convergence and technical triggers are documented. |
+| MON-003 | **IN PROGRESS** | Define alerts | Approved price, freshness, assessment, opportunity, convergence and technical triggers are documented. |
 | MON-004 | **PLANNED** | Implement alerts and event history | Trigger lifecycle is persisted and visible. |
 | RES-001 | **PLANNED** | Review external opinion model | Its role relative to Market Assessment is explicit and evidence is not double-counted. |
 | RES-002 | **PLANNED** | Operationalise approved opinion sources | Collection, provenance, deduplication and consensus are automated and monitored. |
@@ -246,7 +246,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `MON-003 — Define alerts` is **NEXT** after `MON-002 — Activate watchlists` passed independent audit on 24 August 2026. MON-002 closure is recorded in `documentation/project-audits/MON-002.md`. The next Builder run should select MON-003, move it to `IN PROGRESS`, and define the approved price, freshness, assessment, opportunity, convergence and technical alert triggers. MON-004 and all later items remain `PLANNED`.
+**Current work:** `MON-003 — Define alerts` is **IN PROGRESS**. The Builder is defining the approved price, freshness, assessment, opportunity, convergence and technical alert triggers and their ownership/evaluation contract for MON-004. MON-004 and all later items remain `PLANNED`.
 
 ## Definition of Operational
 
