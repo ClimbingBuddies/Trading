@@ -50,6 +50,7 @@ Start with [Assessment System Overview](assessment-system-overview.md) for the a
 - [Market Convergence Population Pipeline](pipelines/market-convergence-pipeline.md) — trusted source selection, source-date history, stale-input handling, bounded retries, persistence, lineage and live verification for `market-convergence-v1`.
 - [Market Assessment Pipeline](pipelines/market-assessment-pipeline.md) — AI Market Assessment records, lifecycle and known gaps.
 - [External Opinion Model Specification](specifications/external-opinion-model.md) — normalized external-opinion evidence role, atomic-versus-consensus boundary and non-double-counting rules for the AI Market Assessment.
+- [External Opinion Pipeline](pipelines/external-opinion-pipeline.md) — approved-source scheduling, trusted ingestion, canonical source identity, consensus lineage, coverage monitoring and RES-002 verification.
 - [Opportunity Assessment Pipeline](pipelines/opportunity-assessment-pipeline.md) — Structural Signal, Technology Inflection, Opportunity Convergence, exposure, Research & Evidence, retries and Operational definition.
 - [Daily Market Assessment Specification](../automation/daily-market-assessment.md) — canonical short-term AI Market Assessment methodology and independence rules.
 - [Daily Opportunity Assessment Specification](../automation/daily-opportunity-assessment.md) — canonical long-term Opportunity Assessment execution specification.
@@ -94,7 +95,7 @@ Start with [Assessment System Overview](assessment-system-overview.md) for the a
 
 ### Other partial or future capability
 
-- External opinion/research capture has a reviewed `external-opinion-v1` evidence boundary; automated source collection, consensus generation and monitoring remain RES-002.
+- External opinion/research capture is implemented under RES-002 with a scheduled GitHub-spec runner, service-only ingestion, canonical deduplication, consensus lineage and coverage telemetry; independent project-plan audit is still required before RES-002 is complete.
 - Watchlists and alerts.
 - Strategy testing and evaluation workflow.
 - Trading strategies and test-run data remain unpopulated until the strategy laboratory is operationalised.
