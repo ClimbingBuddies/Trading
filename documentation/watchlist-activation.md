@@ -119,3 +119,24 @@ MON-002 should not be marked DONE until the Auditor confirms:
 4. the email-auth return flow is accepted by the project's configured Auth redirect policy;
 5. authenticated browser CRUD behaves consistently with the already-verified RLS matrix;
 6. no privileged frontend credential is introduced.
+
+## Rework attempt — 24 August 2026
+
+The deployment-only blocker has cleared. Production Vercel deployment `dpl_A5RqoAKgKfHy8Tvqdhh6yvuTEcJW` reached `READY` on commit `92aa5d2684f7f6439103b9d9554dd2a7ffa84f0b`; palette compliance, Next.js compilation and TypeScript checks passed, and production `/watchlists` is live.
+
+The remaining Auditor finding is a hosted Supabase Auth URL configuration problem. The browser correctly requests:
+
+`https://discoverbouldersmarkets.vercel.app/watchlists`
+
+as the magic-link return URL, but live Auth verification logs show the redirect being replaced by:
+
+`http://localhost:3000`
+
+Supabase's supported hosted-project configuration requires the production origin to be configured as the Auth **Site URL** and the watchlist return URL to be present in the allowed **Redirect URLs**. The required production values are:
+
+- Site URL: `https://discoverbouldersmarkets.vercel.app`
+- Redirect URL: `https://discoverbouldersmarkets.vercel.app/watchlists`
+
+The connected Supabase tool available to this Builder can inspect database/Auth logs, schema, policies and project metadata, but it does not expose a hosted Auth-config update action. The project contains no Supabase Management API credential in Vault and no repository Supabase CLI/config deployment path. Updating undocumented `auth` schema rows is not an acceptable substitute for the supported Auth configuration.
+
+Therefore the Builder cannot safely complete this rework from the currently connected toolset. No RLS, browser credential or application-code workaround has been introduced. Once the hosted Auth URL configuration is updated through a supported account-authorised path, MON-002 can resume with a production magic-link return test, permanent-session verification and real watchlist CRUD verification before returning to independent review.
