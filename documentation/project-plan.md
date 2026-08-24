@@ -102,7 +102,7 @@ Successful unattended scheduled runs are persisted for 15–17 August 2026. The 
 - Seven unattempted orphan queue records from 3–11 August were terminally closed as superseded legacy backlog under `OPS-007`; no historical GPT runs were created for them and the original schedule logs remain preserved.
 - The Daily Trading Market Assessment Scheduled Task exists and is currently enabled on its weekday schedule.
 - Canonical methodology exists at `automation/daily-market-assessment.md`.
-- The Scheduled Task prompt is the thin runner that retrieves the canonical GitHub specification fresh on every run.
+- The Scheduled Task prompt is the thin runner that retrieves the canonical GitHub Market specification fresh on every run.
 - Reactivation passed independent audit under `OPS-004`. The first unattended production run completed for the 18 August 2026 New York assessment date with 30/30 active instruments, 68 evidence rows and terminal `succeeded` run/queue state; it passed independent audit under `OPS-005`.
 - The same-date prepare helper now qualifies its queue/run references correctly. Completed and resumable retry paths passed independent audit under `OPS-006`, reusing the existing run without assessment or evidence duplicates.
 
@@ -195,7 +195,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | MON-002 | **DONE** | Activate watchlists | Real user-owned lists can be maintained securely. |
 | MON-003 | **DONE** | Define alerts | Approved price, freshness, assessment, opportunity, convergence and technical triggers are documented. |
 | MON-004 | **DONE** | Implement alerts and event history | Trigger lifecycle is persisted and visible. |
-| RES-001 | **NEXT** | Review external opinion model | Its role relative to Market Assessment is explicit and evidence is not double-counted. |
+| RES-001 | **IN PROGRESS** | Review external opinion model | Its role relative to Market Assessment is explicit and evidence is not double-counted. |
 | RES-002 | **PLANNED** | Operationalise approved opinion sources | Collection, provenance, deduplication and consensus are automated and monitored. |
 
 ## Phase 7 — Strategy laboratory
@@ -246,7 +246,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `RES-001 — Review external opinion model` is **NEXT** after `MON-004 — Implement alerts and event history` passed independent audit with advice on 24 August 2026. The MON-004 audit is recorded in `documentation/project-audits/MON-004.md`. The next Builder run should review the external opinion model, define its role relative to the independent Market Assessment, and make the evidence/deduplication boundary explicit so external opinions are not double-counted. RES-002 and all later items remain `PLANNED`.
+**Current work:** `RES-001 — Review external opinion model` is **IN PROGRESS**. The Builder selected the single `NEXT` item on 24 August 2026 and is reviewing the existing external-opinion schema, current data, Market Assessment methodology and evidence lineage to define a non-double-counting contract. RES-002 and all later items remain `PLANNED`; nothing else is promoted.
 
 ## Definition of Operational
 
