@@ -205,7 +205,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | STRAT-001 | **DONE** | Define first real strategy | Rules, universe, entry/exit logic, risk and version are persisted. |
 | STRAT-002 | **DONE** | Define test-run ingestion format | Backtest/paper/live provenance and metrics are documented. |
 | STRAT-003 | **DONE** | Load first real test run | Real results populate `trading_test_runs`. |
-| STRAT-004 | **NEXT** | Execute Standard Strategy Review | Decision path and outcome are persisted. |
+| STRAT-004 | **IN PROGRESS** | Execute Standard Strategy Review | Decision path and outcome are persisted. |
 | STRAT-005 | **PLANNED** | Surface real strategy results | Frontend displays real strategy evidence and decision outcomes. |
 
 ## Phase 8 — Quality and maintainability
@@ -246,7 +246,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `STRAT-004 — Execute Standard Strategy Review` is **NEXT** after `STRAT-003 — Load first real test run` passed independent audit with advice on 24 August 2026. The STRAT-003 audit is recorded in `documentation/project-audits/STRAT-003.md`. The accepted first real `DAILY_TREND_PULLBACK` v1 baseline backtest is the immutable succeeded run keyed `DAILY_TREND_PULLBACK:v1:backtest:2022-06-01_2026-08-14:daily-trend-pullback-backtest-v1:baseline`, with independently verified source hash, provenance, accounting, idempotency and owner isolation. STRAT-004 should now execute the existing database-driven Standard Strategy Review against that exact persisted run without changing its strategy rules, test/holdout periods or historical metrics. In particular, the persisted out-of-sample return of `-8.26559237643118%` must be evaluated as evidence rather than replaced by a more favourable rerun. STRAT-005 and all later items remain `PLANNED`.
+**Current work:** `STRAT-004 — Execute Standard Strategy Review` is **IN PROGRESS**. The Builder is executing the existing database-driven Standard Strategy Review against the exact immutable `DAILY_TREND_PULLBACK` v1 baseline backtest accepted under STRAT-003. The persisted strategy rules, test/holdout periods and historical metrics must not be changed or rerun to improve the outcome; in particular the persisted out-of-sample return of `-8.26559237643118%` remains evidence to be evaluated by the decision tree. STRAT-005 and all later items remain `PLANNED`.
 
 ## Definition of Operational
 
