@@ -1,0 +1,2 @@
+create index if not exists instrument_opinion_consensus_review_idx on public.instrument_opinion_consensus(review_id) where review_id is not null;
+create index if not exists opinion_source_review_results_source_idx on public.opinion_source_review_results(source_id);
