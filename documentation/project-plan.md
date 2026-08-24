@@ -195,8 +195,8 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | MON-002 | **DONE** | Activate watchlists | Real user-owned lists can be maintained securely. |
 | MON-003 | **DONE** | Define alerts | Approved price, freshness, assessment, opportunity, convergence and technical triggers are documented. |
 | MON-004 | **DONE** | Implement alerts and event history | Trigger lifecycle is persisted and visible. |
-| RES-001 | **IN REVIEW** | Review external opinion model | Its role relative to Market Assessment is explicit and evidence is not double-counted. |
-| RES-002 | **PLANNED** | Operationalise approved opinion sources | Collection, provenance, deduplication and consensus are automated and monitored. |
+| RES-001 | **DONE** | Review external opinion model | Its role relative to Market Assessment is explicit and evidence is not double-counted. |
+| RES-002 | **NEXT** | Operationalise approved opinion sources | Collection, provenance, deduplication and consensus are automated and monitored. |
 
 ## Phase 7 — Strategy laboratory
 
@@ -246,7 +246,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `RES-001 — Review external opinion model` is **IN REVIEW** after Builder review on 24 August 2026. The canonical `external-opinion-v1` contract is in `documentation/specifications/external-opinion-model.md`, and `automation/daily-market-assessment.md` v1.1 now requires that contract for all external-opinion use. The live model was verified as a non-operational scaffold: 5 source-registry rows, 1 successful review, 2 NVDA atomic opinion rows, 1 derived consensus row, no opinion-table triggers, no opinion cron jobs and no client RLS policies. The same StockAnalysis NVDA forecast URL is present in both `instrument_opinions` and `gpt_market_evidence`, providing a real example of the duplication risk addressed by the new rule. The contract defines `instrument_opinions` as atomic evidence, `instrument_opinion_consensus` as a derived summary rather than a second evidentiary vote, a canonical source-identity hierarchy, one logical contribution per underlying source/claim, syndication grouping, freshness handling and an explicit RES-002 implementation contract. No Supabase schema/data changes or frontend changes were made. Implementation/documentation commit `a3e1c1f5fc23be5ffff7a5d8045138feae2d3a3d` is in READY production deployment `dpl_6NUZTDixpKjB3SC1VUy8C8s6K4d5`. RES-002 and all later items remain `PLANNED`; the Builder has not promoted a next item.
+**Current work:** `RES-002 — Operationalise approved opinion sources` is **NEXT** after `RES-001 — Review external opinion model` passed independent audit with advice on 24 August 2026. RES-002 must implement the audited `external-opinion-v1` contract, including approved-source collection, canonical source identity, idempotent ingestion, provenance, deduplicated consensus, coverage/freshness monitoring, and a deliberate client-access boundary. The Auditor specifically found that the existing scaffold still grants broad `anon`/`authenticated` privileges including `TRUNCATE`; RES-002 must not be called operational until unnecessary client privileges are revoked and access is explicitly designed. STRAT-001 and all later items remain `PLANNED`.
 
 ## Definition of Operational
 
@@ -294,3 +294,4 @@ A workflow is Operational only when its schema and implementation exist, schedul
 | 24-Aug-2026 | MON-002 | `documentation/project-audits/MON-002.md` | Independent audit PASS; production Auth return, real user-owned watchlist CRUD, owner isolation, RLS/grants, build and production routes verified; MON-003 promoted. |
 | 24-Aug-2026 | MON-003 | `documentation/project-audits/MON-003.md` | Independent audit PASS WITH ADVICE; all six alert trigger families, real-source mappings, ownership, lifecycle, idempotency and MON-004 acceptance contract verified; MON-004 promoted. |
 | 24-Aug-2026 | MON-004 | `documentation/project-audits/MON-004.md` | Independent audit PASS WITH ADVICE; persisted six-source alert lifecycle, owner isolation, idempotency/rearm, provenance, evaluator scheduling/telemetry and deployed Alerts/event-history visibility verified; RES-001 promoted. |
+| 24-Aug-2026 | RES-001 | `documentation/project-audits/RES-001.md` | Independent audit PASS WITH ADVICE; external opinion role, atomic-versus-consensus boundary, canonical source identity and same-source non-double-counting verified against live Supabase evidence; RES-002 promoted. |
