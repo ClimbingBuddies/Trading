@@ -142,7 +142,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
 | OPS-001 | **DONE** | Verify first unattended Opportunity Assessment run | GitHub spec is retrieved, Supabase is updated idempotently, Research & Evidence is updated and result verified. |
-| OPS-002 | **DONE** | Change Market Scheduled Task to use the GitHub Market specification | Scheduled Task becomes a thin runner that retrieves the canonical GitHub Market specification. |
+| OPS-002 | **DONE** | Change Market Scheduled Task to use the GitHub Market specification | Scheduled Task becomes a thin runner that retrieves the current GitHub Market specification. |
 | OPS-003 | **DONE** | Standardise Market AI independence metadata | New rows record a version such as `independent-market-ai-v1` and `technical_engine_input_used = false`. |
 | OPS-004 | **DONE** | Reactivate Daily Trading Market Assessment | Weekday task is enabled after the canonical specification is ready. |
 | OPS-005 | **DONE** | Verify first unattended Market Assessment run | Freshness check, full active universe, evidence, finalisation and report complete successfully. |
@@ -203,8 +203,8 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
 | STRAT-001 | **DONE** | Define first real strategy | Rules, universe, entry/exit logic, risk and version are persisted. |
-| STRAT-002 | **IN REVIEW** | Define test-run ingestion format | Backtest/paper/live provenance and metrics are documented. |
-| STRAT-003 | **PLANNED** | Load first real test run | Real results populate `trading_test_runs`. |
+| STRAT-002 | **DONE** | Define test-run ingestion format | Backtest/paper/live provenance and metrics are documented. |
+| STRAT-003 | **NEXT** | Load first real test run | Real results populate `trading_test_runs`. |
 | STRAT-004 | **PLANNED** | Execute Standard Strategy Review | Decision path and outcome are persisted. |
 | STRAT-005 | **PLANNED** | Surface real strategy results | Frontend displays real strategy evidence and decision outcomes. |
 
@@ -246,7 +246,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `STRAT-002 — Define test-run ingestion format` is **IN REVIEW** after Builder implementation and verification on 24 August 2026. Canonical format `documentation/specifications/strategy-test-run-ingestion.md` defines `strategy-test-ingestion-v1` and `strategy-test-metrics-v1` across backtest, paper and live tests. Live Supabase migrations `20260824154000_define_strategy_test_run_ingestion_v1.sql`, `20260824154500_add_strategy_test_run_idempotency_v1.sql` and `20260824154700_require_strategy_test_run_provenance_v1.sql` add lifecycle, data/execution provenance, in/out-of-sample periods, capital/accounting fields, required owner-scoped `run_key`, optional source run identity, and an immutable SHA-256 snapshot/hash of the exact strategy definition captured at insertion. Builder rollback matrices verified required and unique run keys, automatic 64-character strategy hash, immutable strategy provenance, terminal-state validation, owner insert path and cross-owner denial. Live schema/migration parity is confirmed, browser roles cannot execute the provenance helper, no new STRAT-002 security adviser finding exists, and `public.trading_test_runs` still contains zero real rows. `documentation/strategy-framework.md` is updated to reference the new contract. Latest production deployment `dpl_ER1vtn5qgkbzsRLKUmKFqfNPvu9q` is READY on commit `596f7b4f05160f193031bcf86b96ce768b888436`; palette, build and TypeScript checks pass and `/strategies` remains HTTP 200. The Auditor should independently verify the live provenance/idempotency/lifecycle contract, exact metric semantics, type-specific backtest/paper/live provenance requirements, owner RLS and the deliberate zero-row boundary. STRAT-003 and all later items remain `PLANNED`; the Builder has not promoted a next item.
+**Current work:** `STRAT-003 — Load first real test run` is **NEXT** after `STRAT-002 — Define test-run ingestion format` passed independent audit with advice on 24 August 2026. The STRAT-002 audit is recorded in `documentation/project-audits/STRAT-002.md`. The accepted `strategy-test-ingestion-v1` / `strategy-test-metrics-v1` contract requires stable owner-scoped run identity, immutable strategy snapshot/hash, data and execution provenance, declared input cutoff and in/out-of-sample periods, lifecycle/failure evidence, and versioned metric semantics across backtest, paper and live tests. STRAT-003 should now produce and persist the first real `DAILY_TREND_PULLBACK` v1 backtest under that contract. Carry forward the Auditor advice by using a trusted atomic prepare/upsert/finalise path that refuses `succeeded` unless the required backtest metrics and provenance are populated and internally consistent. STRAT-004 and all later items remain `PLANNED`.
 
 ## Definition of Operational
 
@@ -297,3 +297,4 @@ A workflow is Operational only when its schema and implementation exist, schedul
 | 24-Aug-2026 | RES-001 | `documentation/project-audits/RES-001.md` | Independent audit PASS WITH ADVICE; external opinion role, atomic-versus-consensus boundary, canonical source identity and same-source non-double-counting verified against live Supabase evidence; RES-002 promoted. |
 | 24-Aug-2026 | RES-002 | `documentation/project-audits/RES-002.md` | Independent audit PASS WITH ADVICE; automated approved-source collection, service-only persistence, canonical provenance/idempotency, consensus lineage, monitoring, real current review and cross-system independence verified; STRAT-001 promoted. |
 | 24-Aug-2026 | STRAT-001 | `documentation/project-audits/STRAT-001.md` | Independent audit PASS WITH ADVICE; first real strategy's persisted rules, fixed universe, deterministic entry/exit logic, risk controls, version identity, owner isolation and live-execution denial verified; STRAT-002 promoted. |
+| 24-Aug-2026 | STRAT-002 | `documentation/project-audits/STRAT-002.md` | Independent audit PASS WITH ADVICE; backtest/paper/live provenance, immutable strategy snapshot/hash, run-key idempotency, lifecycle validation, metric semantics, owner isolation and deliberate zero-result boundary verified; STRAT-003 promoted. |
