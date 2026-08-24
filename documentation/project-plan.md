@@ -192,8 +192,8 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
 | MON-001 | **DONE** | Decide watchlist/auth model | Ownership and access rules are defined before enabling writes. |
-| MON-002 | **IN REVIEW** | Activate watchlists | Real user-owned lists can be maintained securely. |
-| MON-003 | **PLANNED** | Define alerts | Approved price, freshness, assessment, opportunity, convergence and technical triggers are documented. |
+| MON-002 | **DONE** | Activate watchlists | Real user-owned lists can be maintained securely. |
+| MON-003 | **NEXT** | Define alerts | Approved price, freshness, assessment, opportunity, convergence and technical triggers are documented. |
 | MON-004 | **PLANNED** | Implement alerts and event history | Trigger lifecycle is persisted and visible. |
 | RES-001 | **PLANNED** | Review external opinion model | Its role relative to Market Assessment is explicit and evidence is not double-counted. |
 | RES-002 | **PLANNED** | Operationalise approved opinion sources | Collection, provenance, deduplication and consensus are automated and monitored. |
@@ -246,7 +246,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `MON-002 — Activate watchlists` is **IN REVIEW** after Builder rework closure on 24 August 2026. The hosted Supabase Auth URL configuration is corrected. Fresh production Auth logs show a `/watchlists` OTP request, successful `/verify` return to the production `/watchlists` URL, a permanent-user login and `/user` HTTP 200. That same permanent user then persisted one default watchlist with two real items. Live checks reconfirm `owner_user_id` is mandatory, there are four owner RLS policies on each watchlist table, zero ownerless watchlists and zero `anon` table grants. A rollback-only authenticated check against the real user's watchlist verified edit, default selection, private notes, reorder, item removal and list deletion, with the original one watchlist/two items restored after rollback. Reviewed application state remains `154040b4a20152f380d0921878f8e4cecdcde1b5`; comparison through resumed controller state `9a9a27ed141f4bd6f99b0b9b46d3fc46c27178fd` shows documentation-only drift. Production deployment `dpl_JC2jPwHG1QB459CjWZWmRRTgbRjJ` is READY, `/watchlists` and `/markets` return HTTP 200, and no production error/fatal logs were found in the inspected hour. Closure evidence is recorded in `documentation/watchlist-activation.md`. The Auditor should independently validate MON-002 and decide PASS/REWORK. MON-003 and all later items remain `PLANNED`; the Builder has not promoted a next item.
+**Current work:** `MON-003 — Define alerts` is **NEXT** after `MON-002 — Activate watchlists` passed independent audit on 24 August 2026. MON-002 closure is recorded in `documentation/project-audits/MON-002.md`. The next Builder run should select MON-003, move it to `IN PROGRESS`, and define the approved price, freshness, assessment, opportunity, convergence and technical alert triggers. MON-004 and all later items remain `PLANNED`.
 
 ## Definition of Operational
 
@@ -291,3 +291,4 @@ A workflow is Operational only when its schema and implementation exist, schedul
 | 23-Aug-2026 | UX-003 | `documentation/project-audits/UX-003.md` | Independent re-audit PASS WITH ADVICE; responsive headers, swipe/scroll rails, 44px mobile touch targets, responsive table containment, production parity and route/runtime health verified; UX-004 promoted. |
 | 23-Aug-2026 | UX-004 | `documentation/project-audits/UX-004.md` | Independent audit PASS WITH ADVICE; semantic theme/chart token usage, five-palette definitions, Opportunity compatibility mapping, active production build guard and healthy representative routes verified; MON-001 promoted. |
 | 23-Aug-2026 | MON-001 | `documentation/project-audits/MON-001.md` | Independent audit PASS; permanent-user Supabase Auth ownership, private access matrix, pre-write schema/grant/RLS boundary, live closed-access baseline and alert-identity compatibility verified; MON-002 promoted. |
+| 24-Aug-2026 | MON-002 | `documentation/project-audits/MON-002.md` | Independent audit PASS; production Auth return, real user-owned watchlist CRUD, owner isolation, RLS/grants, build and production routes verified; MON-003 promoted. |
