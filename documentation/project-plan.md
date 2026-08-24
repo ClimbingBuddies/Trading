@@ -194,7 +194,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | MON-001 | **DONE** | Decide watchlist/auth model | Ownership and access rules are defined before enabling writes. |
 | MON-002 | **DONE** | Activate watchlists | Real user-owned lists can be maintained securely. |
 | MON-003 | **DONE** | Define alerts | Approved price, freshness, assessment, opportunity, convergence and technical triggers are documented. |
-| MON-004 | **IN PROGRESS** | Implement alerts and event history | Trigger lifecycle is persisted and visible. |
+| MON-004 | **IN REVIEW** | Implement alerts and event history | Trigger lifecycle is persisted and visible. |
 | RES-001 | **PLANNED** | Review external opinion model | Its role relative to Market Assessment is explicit and evidence is not double-counted. |
 | RES-002 | **PLANNED** | Operationalise approved opinion sources | Collection, provenance, deduplication and consensus are automated and monitored. |
 
@@ -246,7 +246,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `MON-004 — Implement alerts and event history` is **IN PROGRESS**. The Builder selected the single `NEXT` item on 24 August 2026 and is implementing the audited `alert-trigger-v1` contract. RES-001 and all later items remain `PLANNED`; nothing else is promoted.
+**Current work:** `MON-004 — Implement alerts and event history` is **IN REVIEW** after Builder implementation and verification on 24 August 2026. The audited `alert-trigger-v1` contract is implemented through migrations `20260824122500`, `20260824124500`, `20260824125200` and `20260824130000`. Live Supabase has mandatory permanent-user alert ownership, owner-scoped RLS, read-only browser event history, relational Opportunity-theme targeting, deterministic `(alert_id,event_key)` idempotency, persisted evaluator state/run telemetry, producer hooks and an active 15-minute freshness cron. A rollback-only real-source matrix passed all six trigger families, exact-source dedupe, freshness rearm and event provenance; the A/B/anonymous/event-forgery RLS matrix passed; and no test alerts, events or evaluator-state rows remain. `public.latest_market_status` now shares the canonical session/freshness classifier with Alerts; weekend equity market-closed precedence and active-market stale behaviour were verified. Implementation evidence is recorded in `documentation/alert-lifecycle.md`. Production deployment `dpl_BZ2CxG3gvCN5hU286Kz2o1Q25h51` is READY on `5f3a25033dd4dc2f0206f3312bb7cba0b456f34a`; `/alerts` and `/markets` return HTTP 200 and production error/fatal logs were empty in the inspected hour. The direct signed-out `/alerts` magic-link return was not independently exercised by the Builder; the Auditor should verify the authenticated Alerts browser path, as well as source/live migration parity, six-source/idempotency/rearm behaviour, RLS, evaluator telemetry and absence of privileged frontend credentials. RES-001 and all later items remain `PLANNED`; the Builder has not promoted a next item.
 
 ## Definition of Operational
 
