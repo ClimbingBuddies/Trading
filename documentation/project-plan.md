@@ -4,7 +4,7 @@
 **Supabase:** `glvbqcplgjdfgjyknzsa`  
 **Production:** `https://discoverbouldersmarkets.vercel.app`  
 **Vercel project:** `boulders-market`  
-**Last reviewed:** 23 August 2026
+**Last reviewed:** 24 August 2026
 
 ## Purpose
 
@@ -192,7 +192,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
 | MON-001 | **DONE** | Decide watchlist/auth model | Ownership and access rules are defined before enabling writes. |
-| MON-002 | **IN REVIEW** | Activate watchlists | Real user-owned lists can be maintained securely. |
+| MON-002 | **IN PROGRESS** | Activate watchlists | Real user-owned lists can be maintained securely. |
 | MON-003 | **PLANNED** | Define alerts | Approved price, freshness, assessment, opportunity, convergence and technical triggers are documented. |
 | MON-004 | **PLANNED** | Implement alerts and event history | Trigger lifecycle is persisted and visible. |
 | RES-001 | **PLANNED** | Review external opinion model | Its role relative to Market Assessment is explicit and evidence is not double-counted. |
@@ -246,7 +246,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `MON-002 — Activate watchlists` is **IN REVIEW** for a clean deployment retry; no Builder remediation or application-code change is authorised. The reviewed application state is `154040b4a20152f380d0921878f8e4cecdcde1b5`; the subsequent handoff changed only `documentation/project-plan.md`. Live Supabase security and the Auditor's rollback-only two-user matrix passed, but production `/watchlists` still returns HTTP 404 because Vercel has not built the frontend implementation. GitHub's Vercel status for the reviewed and handoff commits reports the Hobby `build-rate-limit`, and the available deployment connector cannot currently issue a valid exact-state deployment because its advertised deployment action is internally mis-specified. Unblock by deploying the unchanged reviewed application state once Vercel permits, then re-run the Auditor to verify build/type/palette checks, production `/watchlists`, email-auth redirect/session return, authenticated browser CRUD and signed-out public-route health. MON-003 and all later items remain `PLANNED`; nothing is promoted while MON-002 is blocked.
+**Current work:** `MON-002 — Activate watchlists` is **IN PROGRESS** after independent Auditor REWORK on 24 August 2026. Vercel deployment `dpl_A5RqoAKgKfHy8Tvqdhh6yvuTEcJW` is READY on `92aa5d2684f7f6439103b9d9554dd2a7ffa84f0b`; the reviewed application code is unchanged from `154040b4a20152f380d0921878f8e4cecdcde1b5`, and palette, Next.js and TypeScript build checks pass with production `/watchlists` live. The remaining defect is production Supabase Auth URL configuration: the browser correctly requests `redirect_to=https://discoverbouldersmarkets.vercel.app/watchlists`, but real verification requests fall back to `http://localhost:3000`. The Builder must correct the supported Supabase Site URL / Redirect URLs configuration, verify the production magic-link session returns to `/watchlists`, exercise real authenticated watchlist CRUD, preserve the existing RLS/public-route/security boundary, then return the same MON-002 item to `IN REVIEW`. MON-003 and all later items remain `PLANNED`; nothing is promoted while this rework is open.
 
 ## Definition of Operational
 
@@ -285,7 +285,7 @@ A workflow is Operational only when its schema and implementation exist, schedul
 | 22-Aug-2026 | CONV-001 | `documentation/project-audits/CONV-001.md` | Independent audit PASS WITH ADVICE; score, confidence, disagreement precedence, labels, input boundary, lineage and `market-convergence-v1` versioning verified against live schema and exhaustive calculation cases; CONV-002 promoted. |
 | 22-Aug-2026 | CONV-002 | `documentation/project-audits/CONV-002.md` | Independent audit PASS WITH ADVICE; 30 eligible pairs and persisted rows, deterministic source selection, exact formula parity, mandatory lineage, missing-branch behavior, client-denial boundary and unchanged trusted retry verified; CONV-003 promoted. |
 | 22-Aug-2026 | CONV-003 | `documentation/project-audits/CONV-003.md` | Independent re-audit PASS; source-date history, four-day/five-day freshness, linear `1 -> 2 -> 3` retry lineage, database sibling prevention, fourth-attempt rejection, real service-role execution and idempotency verified; CONV-004 promoted. |
-| 22-Aug-2026 | CONV-004 | `documentation/project-audits/CONV-004.md` | Independent audit PASS WITH ADVICE; distinct Technical, AI and Market Convergence display, live lineage, public read boundary, healthy production deployment and browser journey verified; UX-001 promoted. |
+| 22-Aug-2026 | CONV-004 | `documentation/project-audits/CONV-004.md` | Independent audit PASS WITH ADVICE; distinct Technical, AI and Market Convergence display, live lineage, public read boundary, healthy production deployment and browser navigation verified; UX-001 promoted. |
 | 22-Aug-2026 | UX-001 | `documentation/project-audits/UX-001.md` | Independent audit PASS; distinct Opportunity Exposure and current Market Convergence presentation, live data parity, analytical independence, truthful external handling and healthy production navigation verified; UX-002 promoted. |
 | 23-Aug-2026 | UX-002 | `documentation/project-audits/UX-002.md` | Independent audit PASS; database-backed long-term Opportunity themes and exposure scores, multiple-theme rendering, truthful empty state, working cross-navigation, unchanged reviewed implementation in READY production and healthy routes verified; UX-003 promoted. |
 | 23-Aug-2026 | UX-003 | `documentation/project-audits/UX-003.md` | Independent re-audit PASS WITH ADVICE; responsive headers, swipe/scroll rails, 44px mobile touch targets, responsive table containment, production parity and route/runtime health verified; UX-004 promoted. |
