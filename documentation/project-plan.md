@@ -193,7 +193,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 |---|---|---|---|
 | MON-001 | **DONE** | Decide watchlist/auth model | Ownership and access rules are defined before enabling writes. |
 | MON-002 | **DONE** | Activate watchlists | Real user-owned lists can be maintained securely. |
-| MON-003 | **IN PROGRESS** | Define alerts | Approved price, freshness, assessment, opportunity, convergence and technical triggers are documented. |
+| MON-003 | **IN REVIEW** | Define alerts | Approved price, freshness, assessment, opportunity, convergence and technical triggers are documented. |
 | MON-004 | **PLANNED** | Implement alerts and event history | Trigger lifecycle is persisted and visible. |
 | RES-001 | **PLANNED** | Review external opinion model | Its role relative to Market Assessment is explicit and evidence is not double-counted. |
 | RES-002 | **PLANNED** | Operationalise approved opinion sources | Collection, provenance, deduplication and consensus are automated and monitored. |
@@ -246,7 +246,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `MON-003 — Define alerts` is **IN PROGRESS**. The Builder is defining the approved price, freshness, assessment, opportunity, convergence and technical alert triggers and their ownership/evaluation contract for MON-004. MON-004 and all later items remain `PLANNED`.
+**Current work:** `MON-003 — Define alerts` is **IN REVIEW**. The Builder created `documentation/specifications/alert-trigger-specification.md` (`alert-trigger-v1`) at implementation commit `f769fb567a59d25e0b0f9eb17da14b4108b43cb5`. The specification defines all six required trigger families — price, Market-data freshness, independent ChatGPT Market Assessment, Opportunity Assessment, Market Convergence and independent Technical Engine — against current persisted source tables and live canonical values. It also defines instrument/watchlist/theme target scope, crossing/enter-state/rearm semantics, source eligibility, producer-aligned evaluation timing, event idempotency/provenance, permanent-user ownership/RLS expectations and the MON-004 acceptance matrix. Live baseline inspection confirmed the existing `alerts`/`alert_events` scaffold has zero rows, nullable alert ownership, no RLS policies, broad scaffold grants and no relational Opportunity theme target; MON-003 intentionally makes no database/frontend changes and specifies those hardening requirements for MON-004. MON-004 and all later items remain `PLANNED`; no next item is promoted. The Auditor should independently verify the specification against the live schema and project architecture.
 
 ## Definition of Operational
 
