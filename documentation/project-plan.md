@@ -192,7 +192,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
 | MON-001 | **DONE** | Decide watchlist/auth model | Ownership and access rules are defined before enabling writes. |
-| MON-002 | **IN PROGRESS** | Activate watchlists | Real user-owned lists can be maintained securely. |
+| MON-002 | **IN REVIEW** | Activate watchlists | Real user-owned lists can be maintained securely. |
 | MON-003 | **PLANNED** | Define alerts | Approved price, freshness, assessment, opportunity, convergence and technical triggers are documented. |
 | MON-004 | **PLANNED** | Implement alerts and event history | Trigger lifecycle is persisted and visible. |
 | RES-001 | **PLANNED** | Review external opinion model | Its role relative to Market Assessment is explicit and evidence is not double-counted. |
@@ -246,7 +246,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `MON-002 — Activate watchlists` is **IN PROGRESS** after manual unblock on 24 August 2026. The hosted Supabase Auth configuration dependency has been corrected by the project owner in Authentication → URL Configuration: Site URL is now `https://discoverbouldersmarkets.vercel.app` and the allowed Redirect URL remains `https://discoverbouldersmarkets.vercel.app/watchlists`. Resume the existing MON-002 rework only: verify a new production magic-link returns to `/watchlists` with a permanent authenticated session, exercise real authenticated watchlist CRUD, reconfirm the RLS/public-route/no-privileged-secret boundary, then return MON-002 to `IN REVIEW`. MON-003 and all later items remain `PLANNED`; nothing is promoted.
+**Current work:** `MON-002 — Activate watchlists` is **IN REVIEW** after Builder rework closure on 24 August 2026. The hosted Supabase Auth URL configuration is corrected. Fresh production Auth logs show a `/watchlists` OTP request, successful `/verify` return to the production `/watchlists` URL, a permanent-user login and `/user` HTTP 200. That same permanent user then persisted one default watchlist with two real items. Live checks reconfirm `owner_user_id` is mandatory, there are four owner RLS policies on each watchlist table, zero ownerless watchlists and zero `anon` table grants. A rollback-only authenticated check against the real user's watchlist verified edit, default selection, private notes, reorder, item removal and list deletion, with the original one watchlist/two items restored after rollback. Reviewed application state remains `154040b4a20152f380d0921878f8e4cecdcde1b5`; comparison through resumed controller state `9a9a27ed141f4bd6f99b0b9b46d3fc46c27178fd` shows documentation-only drift. Production deployment `dpl_JC2jPwHG1QB459CjWZWmRRTgbRjJ` is READY, `/watchlists` and `/markets` return HTTP 200, and no production error/fatal logs were found in the inspected hour. Closure evidence is recorded in `documentation/watchlist-activation.md`. The Auditor should independently validate MON-002 and decide PASS/REWORK. MON-003 and all later items remain `PLANNED`; the Builder has not promoted a next item.
 
 ## Definition of Operational
 
