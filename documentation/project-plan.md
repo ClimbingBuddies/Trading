@@ -203,7 +203,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
 | STRAT-001 | **DONE** | Define first real strategy | Rules, universe, entry/exit logic, risk and version are persisted. |
-| STRAT-002 | **NEXT** | Define test-run ingestion format | Backtest/paper/live provenance and metrics are documented. |
+| STRAT-002 | **IN PROGRESS** | Define test-run ingestion format | Backtest/paper/live provenance and metrics are documented. |
 | STRAT-003 | **PLANNED** | Load first real test run | Real results populate `trading_test_runs`. |
 | STRAT-004 | **PLANNED** | Execute Standard Strategy Review | Decision path and outcome are persisted. |
 | STRAT-005 | **PLANNED** | Surface real strategy results | Frontend displays real strategy evidence and decision outcomes. |
@@ -246,7 +246,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `STRAT-002 — Define test-run ingestion format` is **NEXT** after `STRAT-001 — Define first real strategy` passed independent audit with advice on 24 August 2026. The STRAT-001 audit is recorded in `documentation/project-audits/STRAT-001.md`. The first real strategy, `DAILY_TREND_PULLBACK` v1, is accepted as a persisted deterministic testing definition with a fixed 20-symbol universe, explicit entry/exit logic, portfolio risk controls, version identity and live execution disabled. STRAT-002 should define the backtest/paper/live ingestion and provenance contract without loading a real result yet. It should also carry forward the Auditor advice by persisting an immutable snapshot or deterministic hash of the exact strategy definition used by each test run so later edits cannot detach historical results from the rules actually tested. STRAT-003 and all later items remain `PLANNED`.
+**Current work:** `STRAT-002 — Define test-run ingestion format` is **IN PROGRESS**. The Builder is defining the backtest/paper/live ingestion and provenance contract without loading a real result. The implementation must carry forward the STRAT-001 Auditor advice by persisting an immutable snapshot or deterministic hash of the exact strategy definition used by each test run so later edits cannot detach historical results from the rules actually tested. STRAT-003 and all later items remain `PLANNED`.
 
 ## Definition of Operational
 
