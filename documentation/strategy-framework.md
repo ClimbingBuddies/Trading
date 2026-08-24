@@ -4,7 +4,7 @@
 
 The strategy layer moves a trading idea through definition, testing, review and promotion using persisted strategy rules, recorded test metrics and a database-driven decision tree.
 
-The first real strategy is defined under STRAT-001. STRAT-002 defines the test-run ingestion, immutable provenance and metric contract. STRAT-003 has now produced the first real persisted backtest result; the Standard Strategy Review remains a separate STRAT-004 decision stage.
+The first real strategy is defined under STRAT-001. STRAT-002 defines the test-run ingestion, immutable provenance and metric contract. STRAT-003 produced the first real persisted backtest result. STRAT-004 has now executed the first database-driven Standard Strategy Review and persisted its exact decision path/outcome; deliberate frontend surfacing remains STRAT-005.
 
 ## Strategy lifecycle
 
@@ -158,7 +158,7 @@ Core result fields include:
 
 `strategy-test-metrics-v1` defines these metrics precisely, including cost treatment, completed-trade counting, drawdown, Sharpe and out-of-sample semantics.
 
-STRAT-003 now provides the first real populated evidence row under this contract.
+STRAT-003 provides the first real populated evidence row under this contract.
 
 ## First real test run — STRAT-003
 
@@ -195,7 +195,7 @@ Persisted metrics are:
 
 Four positions remain open at the final cutoff and are marked to the final adjusted close; they are not counted as completed trades.
 
-These values are evidence, not a decision. STRAT-003 does not change strategy status, does not create a decision evaluation and does not enable live execution.
+These values are evidence, not a decision. STRAT-003 does not change strategy status and does not enable live execution.
 
 The private runner `strategy_lab.run_daily_trend_pullback_v1(text)` is service-only and idempotent. The successful-backtest validation trigger also prevents `strategy-test-ingestion-v1` backtests from being marked `succeeded` without the required metrics, periods, immutable/source provenance and accounting consistency.
 
@@ -298,6 +298,31 @@ OUT_OF_SAMPLE --No--> VALIDATE_ROBUSTNESS
 PROMOTE
 ```
 
+## First Standard Strategy Review — STRAT-004
+
+Canonical result evidence: `documentation/strategy-reviews/daily-trend-pullback-v1-standard-review.md`.
+
+STRAT-004 executed the active `STANDARD_STRATEGY_REVIEW` v1 tree against the exact immutable STRAT-003 baseline run. The trusted service-only evaluator `strategy_lab.evaluate_standard_strategy_review_v1(uuid)` traversed the persisted nodes and edges and stored the ordered path in `trading_decision_evaluations`.
+
+The path is:
+
+```text
+START
+  -> MIN_TRADES          249 >= 30              PASS
+  -> EXPECTANCY          100.9984 > 0           PASS
+  -> PROFIT_FACTOR       1.3231 >= 1.2          PASS
+  -> DRAWDOWN            16.2900 <= 20          PASS
+  -> OUT_OF_SAMPLE       -8.2656 > 0            FAIL
+  -> VALIDATE_ROBUSTNESS / continue_testing
+```
+
+The persisted outcome is therefore:
+
+- `outcome_code = VALIDATE_ROBUSTNESS`;
+- `outcome_status = continue_testing`.
+
+The negative holdout result is not replaced or rerun. The strategy remains `testing`, live execution remains disabled and STRAT-004 does not promote the strategy itself.
+
 ## `trading_decision_evaluations`
 
 Purpose: stores the result of applying a decision tree to a test run.
@@ -321,13 +346,17 @@ Allowed outcome statuses:
 - `pause`
 - `reject`
 
-No decision evaluation exists yet for the first real run. STRAT-004 owns execution of the Standard Strategy Review after STRAT-003 evidence passes independent audit.
+There is now one real persisted Standard Strategy Review evaluation for the first real test run. The `decision_path` retains each node's metric, value, operator, threshold, result and selected edge plus the tree version, test-run key and immutable strategy snapshot hash.
+
+The evaluator is idempotent: retrying the same test-run/tree identity returns the existing evaluation rather than creating a duplicate.
 
 ## RLS and ownership
 
 Strategies, test runs and evaluations are authenticated, owner-specific data.
 
-Authenticated users can only access rows where `owner_user_id = auth.uid()`. The test-run provenance trigger derives `owner_user_id` from the selected strategy, and RLS prevents cross-owner test attachment/read access.
+Authenticated users can only read rows where `owner_user_id = auth.uid()`. The test-run provenance trigger derives `owner_user_id` from the selected strategy, and RLS prevents cross-owner test access.
+
+STRAT-004 hardens decision evaluations as system-generated evidence. Authenticated clients have owner-scoped `SELECT` only; they cannot insert, update, delete or truncate evaluation rows. `anon` has no evaluation-table privileges. The trusted service/database evaluator creates the Standard Strategy Review evidence.
 
 The system decision-tree template can be read by authenticated users, and the public dashboard has read-only access to system-template trees, nodes and edges.
 
@@ -339,8 +368,8 @@ Routes already exist for strategy and test records:
 - `/strategies/[id]`
 - `/strategies/[id]/tests/[runId]`
 
-The first real strategy and run remain private under owner RLS and are not deliberately surfaced by the public/server dashboard yet. STRAT-005 remains the project-plan stage for surfacing real strategy results.
+The first real strategy, run and decision evaluation remain private under owner RLS and are not deliberately surfaced by the public/server dashboard yet. STRAT-005 remains the project-plan stage for surfacing real strategy results.
 
 ## Next implementation step
 
-After STRAT-003 passes independent audit, STRAT-004 should execute the existing `STANDARD_STRATEGY_REVIEW` against the immutable first real test-run evidence and persist the exact decision path/outcome without rewriting the historical metrics or changing the locked backtest design.
+After STRAT-004 passes independent audit, STRAT-005 should deliberately surface the accepted real strategy, backtest evidence and persisted Standard Strategy Review outcome in the owner-facing frontend without weakening the private evidence boundary.
