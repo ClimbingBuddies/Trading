@@ -193,8 +193,8 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 |---|---|---|---|
 | MON-001 | **DONE** | Decide watchlist/auth model | Ownership and access rules are defined before enabling writes. |
 | MON-002 | **DONE** | Activate watchlists | Real user-owned lists can be maintained securely. |
-| MON-003 | **IN REVIEW** | Define alerts | Approved price, freshness, assessment, opportunity, convergence and technical triggers are documented. |
-| MON-004 | **PLANNED** | Implement alerts and event history | Trigger lifecycle is persisted and visible. |
+| MON-003 | **DONE** | Define alerts | Approved price, freshness, assessment, opportunity, convergence and technical triggers are documented. |
+| MON-004 | **NEXT** | Implement alerts and event history | Trigger lifecycle is persisted and visible. |
 | RES-001 | **PLANNED** | Review external opinion model | Its role relative to Market Assessment is explicit and evidence is not double-counted. |
 | RES-002 | **PLANNED** | Operationalise approved opinion sources | Collection, provenance, deduplication and consensus are automated and monitored. |
 
@@ -246,7 +246,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `MON-003 — Define alerts` is **IN REVIEW**. The Builder created `documentation/specifications/alert-trigger-specification.md` (`alert-trigger-v1`) at implementation commit `f769fb567a59d25e0b0f9eb17da14b4108b43cb5`. The specification defines all six required trigger families — price, Market-data freshness, independent ChatGPT Market Assessment, Opportunity Assessment, Market Convergence and independent Technical Engine — against current persisted source tables and live canonical values. It also defines instrument/watchlist/theme target scope, crossing/enter-state/rearm semantics, source eligibility, producer-aligned evaluation timing, event idempotency/provenance, permanent-user ownership/RLS expectations and the MON-004 acceptance matrix. Live baseline inspection confirmed the existing `alerts`/`alert_events` scaffold has zero rows, nullable alert ownership, no RLS policies, broad scaffold grants and no relational Opportunity theme target; MON-003 intentionally makes no database/frontend changes and specifies those hardening requirements for MON-004. MON-004 and all later items remain `PLANNED`; no next item is promoted. The Auditor should independently verify the specification against the live schema and project architecture.
+**Current work:** `MON-004 — Implement alerts and event history` is **NEXT** after `MON-003 — Define alerts` passed independent audit with advice on 24 August 2026. The canonical trigger contract is `documentation/specifications/alert-trigger-specification.md` (`alert-trigger-v1`) and the audit is recorded in `documentation/project-audits/MON-003.md`. The next Builder run should implement the approved alert lifecycle against the existing `alerts`/`alert_events` scaffold, including permanent-user ownership/RLS hardening, relational theme targeting, deterministic event idempotency/provenance, all six real-source trigger families, rearm semantics and visible persisted event history. It should also keep freshness/session classification aligned with the Markets dashboard so the alert `no_observation` state and dashboard internal `no_data` state cannot drift. RES-001 and all later items remain `PLANNED`.
 
 ## Definition of Operational
 
@@ -292,3 +292,4 @@ A workflow is Operational only when its schema and implementation exist, schedul
 | 23-Aug-2026 | UX-004 | `documentation/project-audits/UX-004.md` | Independent audit PASS WITH ADVICE; semantic theme/chart token usage, five-palette definitions, Opportunity compatibility mapping, active production build guard and healthy representative routes verified; MON-001 promoted. |
 | 23-Aug-2026 | MON-001 | `documentation/project-audits/MON-001.md` | Independent audit PASS; permanent-user Supabase Auth ownership, private access matrix, pre-write schema/grant/RLS boundary, live closed-access baseline and alert-identity compatibility verified; MON-002 promoted. |
 | 24-Aug-2026 | MON-002 | `documentation/project-audits/MON-002.md` | Independent audit PASS; production Auth return, real user-owned watchlist CRUD, owner isolation, RLS/grants, build and production routes verified; MON-003 promoted. |
+| 24-Aug-2026 | MON-003 | `documentation/project-audits/MON-003.md` | Independent audit PASS WITH ADVICE; all six alert trigger families, real-source mappings, ownership, lifecycle, idempotency and MON-004 acceptance contract verified; MON-004 promoted. |
