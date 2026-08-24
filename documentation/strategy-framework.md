@@ -4,7 +4,7 @@
 
 The strategy layer moves a trading idea through definition, testing, review and promotion using persisted strategy rules, recorded test metrics and a database-driven decision tree.
 
-The first real strategy is now defined under STRAT-001. Test-run ingestion and evaluation remain later project-plan stages.
+The first real strategy is defined under STRAT-001. STRAT-002 now defines the test-run ingestion, immutable provenance and metric contract; loading the first real result remains STRAT-003.
 
 ## Strategy lifecycle
 
@@ -12,10 +12,13 @@ The first real strategy is now defined under STRAT-001. Test-run ingestion and e
 Define versioned strategy
     |
     v
+Capture immutable strategy snapshot/hash
+    |
+    v
 Backtest / paper test / live test
     |
     v
-Record trading_test_runs metrics
+Record versioned trading_test_runs evidence
     |
     v
 Evaluate against decision tree
@@ -48,7 +51,7 @@ Structured strategy-definition fields added for STRAT-001:
 - `data_requirements`
 - `live_execution_enabled`
 
-The uniqueness boundary is now `(owner_user_id, strategy_code, strategy_version)`, allowing later versions without overwriting the tested definition of an earlier version.
+The uniqueness boundary is `(owner_user_id, strategy_code, strategy_version)`, allowing later versions without overwriting the tested definition of an earlier version.
 
 Allowed strategy statuses:
 
@@ -77,17 +80,66 @@ The strategy uses a fixed 24 August 2026 snapshot of 20 active US equities/ETFs 
 
 The strategy exists to be tested. No profitability claim is made by STRAT-001 and no automatic/live trade execution is authorised.
 
-## `trading_test_runs`
+## `trading_test_runs` — STRAT-002 contract
 
-Purpose: stores measurable results from a strategy test.
+Purpose: stores reproducible evidence from a strategy test.
 
-Allowed test types:
+Canonical specification: `documentation/specifications/strategy-test-run-ingestion.md`.
+
+Allowed test types remain:
 
 - `backtest`
 - `paper`
 - `live`
 
-Important result fields:
+The table now separates strategy identity, test lifecycle, source/execution provenance and result metrics.
+
+### Test-run identity and lifecycle
+
+Key fields include:
+
+- `run_key` — required owner-scoped idempotency key;
+- `source_run_id` — optional engine/paper/broker run identity;
+- `ingestion_version = strategy-test-ingestion-v1`;
+- `run_status` — `draft`, `running`, `succeeded`, `failed`, `cancelled`;
+- `started_at`;
+- `completed_at`;
+- `failure_message`.
+
+A retry of the same logical test reuses the same `run_key` instead of creating duplicate evidence.
+
+### Immutable strategy provenance
+
+At test-run insert time, `capture_trading_test_run_provenance_v1` snapshots the exact strategy definition into:
+
+- `strategy_code`;
+- `strategy_version`;
+- `strategy_methodology_version`;
+- `strategy_snapshot`;
+- `strategy_snapshot_hash`;
+- `strategy_hash_method = sha256-jsonb-v1`;
+- `strategy_snapshot_captured_at`.
+
+These fields cannot be changed afterward. Historical results therefore remain tied to the exact rules tested even if the current strategy row is edited later.
+
+### Data and execution provenance
+
+The test-run contract also stores:
+
+- `engine_version`;
+- `input_data_cutoff`;
+- in-sample and out-of-sample date ranges;
+- `base_currency`;
+- `initial_equity` and `ending_equity`;
+- structured `data_provenance`;
+- structured `execution_provenance`;
+- `metric_definition_version = strategy-test-metrics-v1`.
+
+Backtest, paper and live runs have distinct provenance requirements. Live-test schema support does not enable or authorise live trading.
+
+### Result metrics
+
+Core result fields remain:
 
 - `period_start`
 - `period_end`
@@ -101,10 +153,12 @@ Important result fields:
 - `max_drawdown_pct`
 - `sharpe_ratio`
 - `out_of_sample_return_pct`
+- `notes`
 - `source_metadata`
-- `completed_at`
 
-STRAT-001 deliberately creates no `trading_test_runs` rows. STRAT-002 defines the ingestion/provenance format and STRAT-003 loads the first real test result.
+`strategy-test-metrics-v1` defines these metrics precisely, including cost treatment, completed-trade counting, drawdown, Sharpe and out-of-sample semantics.
+
+STRAT-002 creates no real `trading_test_runs` rows. STRAT-003 is responsible for producing and loading the first real backtest evidence under this contract.
 
 ## Standard decision tree
 
@@ -228,13 +282,13 @@ Allowed outcome statuses:
 - `pause`
 - `reject`
 
-STRAT-001 creates no decision evaluation because no real test run exists yet.
+No decision evaluation exists yet because STRAT-003 has not loaded a real test run. STRAT-004 owns execution of the Standard Strategy Review after test evidence exists.
 
 ## RLS and ownership
 
 Strategies, test runs and evaluations are authenticated, owner-specific data.
 
-Authenticated users can only access rows where `owner_user_id = auth.uid()`. Builder verification for STRAT-001 confirmed the real strategy owner can read the strategy while the second permanent user cannot.
+Authenticated users can only access rows where `owner_user_id = auth.uid()`. The test-run provenance trigger derives `owner_user_id` from the selected strategy, and the existing RLS insert policy independently prevents cross-owner test attachment.
 
 The system decision-tree template can be read by authenticated users, and the public dashboard has read-only access to system-template trees, nodes and edges.
 
@@ -246,8 +300,8 @@ Routes already exist for strategy and test records:
 - `/strategies/[id]`
 - `/strategies/[id]/tests/[runId]`
 
-STRAT-001 does not redesign strategy UI. STRAT-005 remains the project-plan stage for surfacing real strategy results deliberately.
+STRAT-002 does not redesign strategy UI. STRAT-005 remains the project-plan stage for surfacing real strategy results deliberately.
 
 ## Next implementation step
 
-STRAT-002 must define the first real test-run ingestion/provenance format against the immutable `DAILY_TREND_PULLBACK` version-1 strategy contract. STRAT-003 then loads real backtest results rather than fabricated performance rows.
+STRAT-003 must produce and persist the first real `DAILY_TREND_PULLBACK` v1 backtest under `strategy-test-ingestion-v1` and `strategy-test-metrics-v1`, including the immutable strategy hash, declared data cutoff, in/out-of-sample periods, cost assumptions and complete result provenance. It must not bypass the STRAT-002 evidence contract or fabricate missing metrics.
