@@ -1,7 +1,7 @@
 # Daily Trading Market Assessment
 
-**Specification version:** 1.0  
-**Last updated:** 17 August 2026  
+**Specification version:** 1.1  
+**Last updated:** 24 August 2026  
 **System:** Discover Boulders Markets / Trading  
 **Supabase project:** `glvbqcplgjdfgjyknzsa`
 
@@ -66,6 +66,16 @@ The independent AI Market Assessment may use:
 - reputable current web research where it materially improves the assessment
 
 External opinion is evidence, not an automatic rating. Distinguish sourced opinion from fact and from the AI's own judgement.
+
+External opinion must follow `documentation/specifications/external-opinion-model.md` (`external-opinion-v1`). In particular:
+
+- `public.instrument_opinions` is the atomic normalized opinion-evidence layer;
+- `public.instrument_opinion_consensus` is a derived summary, not an additional independent source;
+- `public.opinion_sources` is source-registry metadata, not evidence;
+- `public.opinion_reviews` is collection/review telemetry, not evidence;
+- the same underlying external source or claim must contribute to evidence breadth/confidence at most once, even when it appears in both Supabase opinion data and direct web research;
+- do not mechanically map an external stance, rating, target price or `consensus_score` into the AI Market rating/score;
+- a dated opinion snapshot may be historical context, but it must not be described as current consensus unless its source dates support that description.
 
 ---
 
@@ -193,6 +203,8 @@ Store:
 
 The score and confidence are separate. A strong directional view with weak or conflicting evidence should not receive artificially high confidence.
 
+Evidence breadth is the number and quality of distinct underlying sources/claims, not the number of internal rows representing them. A derived external-opinion consensus plus its constituent observations must not inflate confidence as though they were independent confirmations.
+
 ### Required assessment fields
 
 Upsert into `public.gpt_market_assessments` for the current `(run_id, instrument_id)`:
@@ -243,6 +255,23 @@ Evidence may include:
 - credible external opinion or consensus material.
 
 Do not create fake URLs or unsupported evidence.
+
+### External-opinion deduplication
+
+Before treating external opinion/web research as separate evidence, apply `external-opinion-v1` source identity in this order:
+
+1. normalized canonical source URL;
+2. `(source_id, external_reference)` when using `instrument_opinions`;
+3. `content_hash`;
+4. deterministic source + publication time/date + normalized headline/claim fallback when stronger identifiers are unavailable.
+
+If the same underlying source is found in both `instrument_opinions` and direct web research, it is one logical evidence item. Prefer the representation with the clearest provenance/freshness and do not count the duplicate path as corroboration.
+
+If `instrument_opinion_consensus` is used as a summary, do not also count the constituent `instrument_opinions` as additional evidence breadth for the same claim set. If the constituents are assessed individually, the consensus is a summary/display aid rather than a further evidentiary vote.
+
+Use `evidence_type = 'external_opinion'` for analyst ratings, target-price context, sentiment and sourced commentary. Preserve the actual canonical source URL where available and make the source/as-of date explicit when recency matters.
+
+Multiple URLs do not automatically mean independent evidence: syndicated copies of one wire story, press release or analyst note should be grouped rather than used to inflate confidence.
 
 On retry, do not blindly append duplicate evidence. Reuse, replace or deduplicate evidence associated with the assessment as appropriate.
 
@@ -297,7 +326,7 @@ A retry for the same New York assessment date must:
 2. reuse the existing queue/run where present;
 3. inspect already persisted assessments;
 4. process only missing instruments;
-5. avoid duplicate evidence;
+5. avoid duplicate evidence, including duplicate external-opinion/direct-web representations of the same source;
 6. keep `tickers_completed` aligned with actual assessment rows;
 7. finalise the reused run.
 
@@ -363,6 +392,8 @@ It must not:
 - alter Technical Engine methodology;
 - calculate a combined AI + Technical score.
 
+External opinion is consumed, when useful, only inside this independent AI branch. Market Convergence must not ingest the same external-opinion data again as a third analytical branch, because that would double-count evidence already reflected in the AI Market Assessment.
+
 Those are separate project-plan stages.
 
 The intended future architecture is:
@@ -372,13 +403,16 @@ Raw market observations
       |                       |
       v                       v
 Technical Engine      Independent AI Market Assessment
+                              ^
+                              |
+                     External opinion evidence
       |                       |
       +-----------+-----------+
                   v
           Market Convergence
 ```
 
-Independence is valuable because disagreement between the two branches is itself useful information.
+Independence is valuable because disagreement between the two analytical branches is itself useful information.
 
 ---
 
@@ -393,11 +427,12 @@ Supabase is the system of record for:
 - run/queue lifecycle;
 - AI Market Assessment rows;
 - supporting evidence;
-- persisted completion state.
+- persisted completion state;
+- normalized external-opinion observations/consensus where available.
 
 ### GitHub
 
-GitHub is the system of record for this methodology and future revisions to it.
+GitHub is the system of record for this methodology and future revisions to it. External-opinion interpretation and deduplication are governed by `documentation/specifications/external-opinion-model.md`.
 
 ### Scheduled Task
 
@@ -417,4 +452,4 @@ Verified on 17 August 2026:
 - its current prompt still embeds the methodology directly rather than retrieving this GitHub file;
 - changing that Scheduled Task into a thin GitHub-spec runner remains `OPS-002`, not part of this documentation task.
 
-This specification therefore establishes the canonical methodology without prematurely claiming that the production scheduled loop has been migrated or reactivated.
+RES-001 review on 24 August 2026 adds the authoritative external-opinion evidence boundary without claiming that the external-opinion collection subsystem itself is operational. Operational collection, provenance, consensus generation, monitoring and machine-verifiable deduplication remain RES-002.
