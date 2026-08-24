@@ -202,7 +202,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
-| STRAT-001 | **IN PROGRESS** | Define first real strategy | Rules, universe, entry/exit logic, risk and version are persisted. |
+| STRAT-001 | **IN REVIEW** | Define first real strategy | Rules, universe, entry/exit logic, risk and version are persisted. |
 | STRAT-002 | **PLANNED** | Define test-run ingestion format | Backtest/paper/live provenance and metrics are documented. |
 | STRAT-003 | **PLANNED** | Load first real test run | Real results populate `trading_test_runs`. |
 | STRAT-004 | **PLANNED** | Execute Standard Strategy Review | Decision path and outcome are persisted. |
@@ -246,7 +246,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `STRAT-001 — Define first real strategy` is **IN PROGRESS** after Builder selection on 24 August 2026. Define and persist one concrete versioned strategy with an explicit universe, deterministic entry and exit logic, risk controls and no automatic execution. STRAT-002 and all later items remain `PLANNED`.
+**Current work:** `STRAT-001 — Define first real strategy` is **IN REVIEW** after Builder implementation and verification on 24 August 2026. The first real strategy is persisted in `public.trading_strategies` as `DAILY_TREND_PULLBACK` version 1 (`strategy-definition-v1`), status `testing`, with `live_execution_enabled = false`. Its structured persisted contract includes a fixed 20-symbol active US equity/ETF universe, deterministic SMA20/SMA50/SMA200/RSI14 entry rules, next-session execution timing, 8% protective stop, SMA50 trend exit, 60-session time exit, 0.75% portfolio risk per trade, 10% position cap, four-position/40% gross exposure limits, data-quality rules and conservative test-cost assumptions. Migration `supabase/migrations/20260824151000_define_strategy_contract_v1.sql` adds the versioned structured strategy fields and `(owner_user_id, strategy_code, strategy_version)` uniqueness boundary. Canonical methodology is documented in `documentation/specifications/daily-trend-pullback-strategy.md` and `documentation/strategy-framework.md`. Builder verification confirmed one persisted v1 row, zero test-run rows, 20/20 universe symbols valid with minimum 543 daily bars, 24,388 daily universe observations with no missing OHLC/adjusted-close fields, owner visibility and second-user RLS isolation, existing four owner policies retained, and no new strategy-model Supabase security adviser finding. The signed-out `/strategies` production route remains healthy at HTTP 200 and correctly shows zero private strategies because STRAT-005, not STRAT-001, owns deliberate real-strategy frontend surfacing. Latest implementation/documentation deployment `dpl_Gf8Tt62FYGxtMtztK2ESxCcLrWLa` is READY on commit `a3128f048369f9d386f9e25cc5dd73c964879acd`. The Auditor should independently verify the persisted strategy version/rules/universe/risk contract, schema/migration parity, universe/data quality, owner RLS, live-execution denial and the boundary that STRAT-002/STRAT-003 remain unimplemented. STRAT-002 and all later items remain `PLANNED`; the Builder has not promoted a next item.
 
 ## Definition of Operational
 
