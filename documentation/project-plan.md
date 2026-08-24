@@ -203,7 +203,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
 | STRAT-001 | **DONE** | Define first real strategy | Rules, universe, entry/exit logic, risk and version are persisted. |
-| STRAT-002 | **IN PROGRESS** | Define test-run ingestion format | Backtest/paper/live provenance and metrics are documented. |
+| STRAT-002 | **IN REVIEW** | Define test-run ingestion format | Backtest/paper/live provenance and metrics are documented. |
 | STRAT-003 | **PLANNED** | Load first real test run | Real results populate `trading_test_runs`. |
 | STRAT-004 | **PLANNED** | Execute Standard Strategy Review | Decision path and outcome are persisted. |
 | STRAT-005 | **PLANNED** | Surface real strategy results | Frontend displays real strategy evidence and decision outcomes. |
@@ -246,7 +246,7 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `STRAT-002 — Define test-run ingestion format` is **IN PROGRESS**. The Builder is defining the backtest/paper/live ingestion and provenance contract without loading a real result. The implementation must carry forward the STRAT-001 Auditor advice by persisting an immutable snapshot or deterministic hash of the exact strategy definition used by each test run so later edits cannot detach historical results from the rules actually tested. STRAT-003 and all later items remain `PLANNED`.
+**Current work:** `STRAT-002 — Define test-run ingestion format` is **IN REVIEW** after Builder implementation and verification on 24 August 2026. Canonical format `documentation/specifications/strategy-test-run-ingestion.md` defines `strategy-test-ingestion-v1` and `strategy-test-metrics-v1` across backtest, paper and live tests. Live Supabase migrations `20260824154000_define_strategy_test_run_ingestion_v1.sql`, `20260824154500_add_strategy_test_run_idempotency_v1.sql` and `20260824154700_require_strategy_test_run_provenance_v1.sql` add lifecycle, data/execution provenance, in/out-of-sample periods, capital/accounting fields, required owner-scoped `run_key`, optional source run identity, and an immutable SHA-256 snapshot/hash of the exact strategy definition captured at insertion. Builder rollback matrices verified required and unique run keys, automatic 64-character strategy hash, immutable strategy provenance, terminal-state validation, owner insert path and cross-owner denial. Live schema/migration parity is confirmed, browser roles cannot execute the provenance helper, no new STRAT-002 security adviser finding exists, and `public.trading_test_runs` still contains zero real rows. `documentation/strategy-framework.md` is updated to reference the new contract. Latest production deployment `dpl_ER1vtn5qgkbzsRLKUmKFqfNPvu9q` is READY on commit `596f7b4f05160f193031bcf86b96ce768b888436`; palette, build and TypeScript checks pass and `/strategies` remains HTTP 200. The Auditor should independently verify the live provenance/idempotency/lifecycle contract, exact metric semantics, type-specific backtest/paper/live provenance requirements, owner RLS and the deliberate zero-row boundary. STRAT-003 and all later items remain `PLANNED`; the Builder has not promoted a next item.
 
 ## Definition of Operational
 
