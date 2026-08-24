@@ -3,6 +3,17 @@ import { getSupabase } from './supabase'
 export type MarketSessionStatus = 'open' | 'closed' | '24h'
 export type MarketDataStatus = 'current' | 'due' | 'stale' | 'market_closed' | 'no_data'
 
+type CanonicalStatusRow = {
+  instrument_id: string
+  close: number | null
+  observed_at: string | null
+  loaded_at: string | null
+  currency_code: string | null
+  age_minutes: number | null
+  session_status: MarketSessionStatus
+  data_status: MarketDataStatus
+}
+
 export type MarketRow = {
   id: string
   symbol: string
@@ -51,30 +62,11 @@ export async function getMarketsData() {
     })
   }
 
-  const statusMap = new Map<string, {
-    close: number | null
-    observed_at: string | null
-    loaded_at: string | null
-    currency_code: string | null
-    age_minutes: number | null
-    session_status: MarketSessionStatus
-    data_status: MarketDataStatus
-  }>()
-  for (const row of statusRes.data ?? []) {
-    statusMap.set(row.instrument_id, row as unknown as ReturnType<typeof statusMap.get> extends infer _T ? never : never)
-  }
+  const statusMap = new Map<string, CanonicalStatusRow>()
+  for (const row of (statusRes.data ?? []) as unknown as CanonicalStatusRow[]) statusMap.set(row.instrument_id, row)
 
-  // Type the map values explicitly without trusting generated view typings.
   const rows: MarketRow[] = (instrumentsRes.data ?? []).map((instrument) => {
-    const canonical = (statusRes.data ?? []).find((row) => row.instrument_id === instrument.id) as unknown as {
-      close: number | null
-      observed_at: string | null
-      loaded_at: string | null
-      currency_code: string | null
-      age_minutes: number | null
-      session_status: MarketSessionStatus
-      data_status: MarketDataStatus
-    } | undefined
+    const canonical = statusMap.get(instrument.id)
     const provider = providerMap.get(instrument.id)
     return {
       id: instrument.id,
