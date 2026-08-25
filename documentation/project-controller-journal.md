@@ -2,6 +2,20 @@
 
 This file is the persistent write-first checkpoint shared by the Trading Project Plan Builder and Auditor. It is operational controller state, not audit approval.
 
+## QUAL-004 PR-link verification checkpoint — 25 Aug 2026, 18:37 AWST
+
+- protocol_version: 1.3
+- builder_run_id: manual-20260825-1824-qual004
+- event: BUILD_CHECKPOINT
+- task_id: QUAL-004
+- current_status: IN PROGRESS
+- completed_layer: GitHub/development review usability
+- implementation_commit: 08ccdfb26474ba0b69623759e2967dda9f741ada
+- implemented: replaced the PR-template relative checklist link with the canonical GitHub URL so the workflow document remains directly reachable from a populated pull-request body
+- current_owner: BUILDER
+- next_action: fresh-read all QUAL-004 artifacts and controller state, verify the Definition of Done, then prepare the Auditor handoff if complete
+- safety_boundary: GitHub workflow/documentation changes only; no Supabase data/schema, production behaviour, trading logic or live-trading state changed
+
 ## QUAL-004 root-entry checkpoint — 25 Aug 2026, 18:35 AWST
 
 - protocol_version: 1.3
