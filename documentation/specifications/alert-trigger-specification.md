@@ -27,17 +27,17 @@ MON-003 is a definition task only. It does not activate alert writes, create ale
 
 The live database already contains empty `public.alerts` and `public.alert_events` tables, but they are not production-ready alert infrastructure.
 
-Verified live baseline at MON-003 start:
+Current production boundary after MON-004:
 
-- `alerts`: 0 rows;
-- `alert_events`: 0 rows;
-- `alerts.owner_user_id` is nullable;
-- `alerts` and `alert_events` have RLS enabled but currently have **zero RLS policies**;
-- `anon` currently has broad scaffold grants on both tables;
-- `authenticated` currently has broad scaffold grants including `TRUNCATE`, `TRIGGER` and `REFERENCES`;
-- `alerts` can currently target `instrument_id` and `watchlist_id`, but there is no relational `theme_id` target for Opportunity alerts.
+- `alerts.owner_user_id` is mandatory and references a permanent Supabase Auth user;
+- owners can manage only their own alert definitions through owner-scoped RLS;
+- `alert_events` are owner-readable and evaluator-written, so browser users cannot forge history;
+- anonymous and authenticated-anonymous access is denied;
+- exactly one instrument, watchlist or Opportunity-theme target is required according to alert type;
+- internal evaluator state and run telemetry are not client-write surfaces;
+- deterministic event keys and persisted state provide deduplication and re-arm behaviour.
 
-MON-004 must harden this scaffold before enabling writes.
+Zero user alert or event rows is a valid production state and does not mean the lifecycle is unimplemented.
 
 ## Alert target model
 
