@@ -2,6 +2,20 @@
 
 This file is the persistent write-first checkpoint shared by the Trading Project Plan Builder and Auditor. It is operational controller state, not audit approval.
 
+## Manual audit continued — 25 Aug 2026, 16:44 AWST
+
+- protocol_version: 1.3
+- auditor_run_id: manual-20260825-1640-qual002
+- event: AUDIT_CONTINUE
+- task_id: QUAL-002
+- implementation_commit: e7a54d452e26e784e41fefb359a532a56d5c7ca8
+- completed_evidence_group: Vercel/deployment
+- verified_result: production deployment dpl_HEwx9WtekyUE13AQiXbkBWvcHs4K is READY at deployed code commit 622ed826c65ada0bd326f3afdfc2829f40d8bb6d; palette, Next.js and TypeScript build passed; /api/performance-waterfall is deployed and resolves as the POST-only receiver; no deployment-scoped error/fatal runtime logs were found in the preceding two hours
+- remaining_evidence_group: browser/user-flow
+- current_status: IN REVIEW
+- current_owner: AUDITOR
+- next_action: independently verify the persisted performance-waterfall-v1 samples for /markets, /opportunities and /strategies against the documented timings/resource counts; make the terminal PASS/REWORK decision only after that final group
+
 ## Manual audit started — 25 Aug 2026, 16:40 AWST
 
 - protocol_version: 1.3
