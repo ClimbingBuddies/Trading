@@ -2,6 +2,18 @@
 
 This file is the persistent write-first checkpoint shared by the Trading Project Plan Builder and Auditor. It is operational controller state, not audit approval.
 
+## Manual build started — 25 Aug 2026, 17:36 AWST
+
+- protocol_version: 1.3
+- builder_run_id: manual-20260825-1736-qual003
+- event: BUILD_ATTEMPT_STARTED
+- task_id: QUAL-003
+- task_title: Create operational runbook
+- starting_status: NEXT
+- intended_bounded_increment: create the smallest complete operational runbook covering market-data, assessment, stale-data and deployment failure procedures using current verified production architecture and controller boundaries; documentation-only unless primary evidence reveals a factual gap
+- current_owner: BUILDER
+- safety_boundary: documentation/controller changes only; do not alter Supabase data, production application behaviour, trading logic or live-trading state
+
 ## Manual audit completed — 25 Aug 2026, 16:58 AWST
 
 - protocol_version: 1.3
@@ -73,7 +85,7 @@ This file is the persistent write-first checkpoint shared by the Trading Project
 - remaining_evidence_groups: Vercel/deployment; browser/user-flow
 - current_status: IN REVIEW
 - current_owner: AUDITOR
-- next_action: independently verify Vercel deployment/build/commit identity and production runtime health for the deployed telemetry code; do not start browser/user-flow evidence in the same bounded run
+- next_action: independently verify Vercel deployment/build/commit identity and production runtime health for the deployed telemetry code; do not start browser/user-flow evidence in the same bounded group
 
 ## Manual audit started — 25 Aug 2026, 16:31 AWST
 
