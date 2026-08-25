@@ -2,6 +2,25 @@
 
 This file is the persistent write-first checkpoint shared by the Trading Project Plan Builder and Auditor. It is operational controller state, not audit approval.
 
+## Manual audit completed — 25 Aug 2026, 14:38 AWST
+
+- protocol_version: 1.3
+- auditor_run_id: manual-20260825-1431-qual001
+- terminal_outcome: AUDIT_PASS
+- completed_task: QUAL-001
+- completed_status: DONE
+- implementation_commit: 0f73a6b8401e23d6bd80ce20913d675fe65e8bfa
+- audit_record: documentation/project-audits/QUAL-001.md
+- audit_decision_commit: 22fbd4c08c6e260ca089cd18ec943941ddf36fd1
+- project_plan_commit: a59776da0e1b1898b563211e1dba355cfa5a0110
+- verified_evidence_groups: GitHub/source; Vercel/deployment
+- verified_result: deterministic tests directly exercise production-used calculation, market-loader and strategy empty-state helpers; independent execution passed 4/4; exact reviewed deployment is READY with successful palette/TypeScript/Next.js build, three representative HTTP 200 routes and no error/fatal deployment logs
+- promoted_task: QUAL-002
+- promoted_status: NEXT
+- current_owner: BUILDER
+- builder_next_action: measure current SQL/query timing and frontend/network behaviour using repeatable instrumentation before proposing optimisation
+- safety_boundary: no implementation code, Supabase data or live-trading state was changed during audit
+
 ## Manual audit started — 25 Aug 2026, 14:31 AWST
 
 - protocol_version: 1.3
@@ -169,7 +188,7 @@ This file is the persistent write-first checkpoint shared by the Trading Project
 - starting_status: NEXT
 - intended_bounded_increment: inspect the owner-facing strategy routes, implement the smallest complete real strategy/results/review display, run Builder-controlled checks, and hand off to the Auditor if complete
 - current_owner: BUILDER
-- safety_boundary: preserve owner-scoped evidence, leave live trading disabled and do not alter the accepted STRAT-004 evaluation
+- safety_boundary: preserve owner-scoped data, leave live trading disabled and do not alter the accepted STRAT-004 evaluation
 
 ## Manual audit completed — 25 Aug 2026, 12:48 AWST
 
