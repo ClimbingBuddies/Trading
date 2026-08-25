@@ -214,7 +214,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 |---|---|---|---|
 | QUAL-001 | **DONE** | Add automated tests for critical calculations/data access | Key calculations, data loaders and empty states have repeatable tests. |
 | QUAL-002 | **DONE** | Add performance budgets/query monitoring | SQL time and network waterfalls are measured before optimisation. |
-| QUAL-003 | **NEXT** | Create operational runbook | Market-data, assessment, stale-data and deployment failure procedures are documented. |
+| QUAL-003 | **IN PROGRESS** | Create operational runbook | Market-data, assessment, stale-data and deployment failure procedures are documented. |
 | QUAL-004 | **PLANNED** | Add documentation checklist to development workflow | Significant architecture/schema changes include documentation updates. |
 
 ## Recommended execution order
@@ -246,20 +246,23 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `QUAL-003 — Create operational runbook` is **NEXT** after QUAL-002 passed independent audit. The Builder owns the next action.
+**Current work:** `QUAL-003 — Create operational runbook` is **IN PROGRESS** under Builder run `manual-20260825-1736-qual003`. The bounded increment is documentation-only: create and verify procedures for market-data, assessment, stale-data and deployment failures against the current verified architecture.
 
 ## Active controller handoff
 
 ```yaml
 task_id: QUAL-003
 handoff_owner: BUILDER
-handoff_status: READY_TO_BUILD
-current_status: NEXT
+handoff_status: BUILDING
+builder_run_id: manual-20260825-1736-qual003
+starting_status: NEXT
+current_status: IN PROGRESS
 definition_of_done: Market-data, assessment, stale-data and deployment failure procedures are documented.
-next_action: create the operational runbook covering market-data, assessment, stale-data and deployment failure procedures using the current production architecture and verified operational boundaries
+bounded_increment: create the operational runbook from current canonical specifications, production architecture and audited operational boundaries
+next_action: inspect current operational specifications and write the smallest complete runbook without changing production behaviour
 ```
 
-Exactly one item is `NEXT`. The Builder owns QUAL-003.
+Exactly one item is `IN PROGRESS`. The Builder owns QUAL-003.
 
 ## Definition of Operational
 
