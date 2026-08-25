@@ -206,7 +206,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | STRAT-002 | **DONE** | Define test-run ingestion format | Backtest/paper/live provenance and metrics are documented. |
 | STRAT-003 | **DONE** | Load first real test run | Real results populate `trading_test_runs`. |
 | STRAT-004 | **DONE** | Execute Standard Strategy Review | Decision path and outcome are persisted. |
-| STRAT-005 | **NEXT** | Surface real strategy results | Frontend displays real strategy evidence and decision outcomes. |
+| STRAT-005 | **IN PROGRESS** | Surface real strategy results | Frontend displays real strategy evidence and decision outcomes. |
 
 ## Phase 8 — Quality and maintainability
 
@@ -246,15 +246,17 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `STRAT-005 — Surface real strategy results` is **NEXT** after STRAT-004 passed independent audit on 25 Aug 2026. The audit verified the exact live seven-step Standard Strategy Review path, the persisted `VALIDATE_ROBUSTNESS / continue_testing` outcome, one-row idempotency, service-only execution, owner-scoped read access and the unchanged `testing` / live-disabled strategy state. STRAT-005 may now implement owner-facing display of the accepted strategy, backtest evidence and review outcome without weakening the private evidence boundary.
+**Current work:** `STRAT-005 — Surface real strategy results` is **IN PROGRESS** in manual Builder run `manual-20260825-1256-strat005` after STRAT-004 passed independent audit on 25 Aug 2026. The audit verified the exact live seven-step Standard Strategy Review path, the persisted `VALIDATE_ROBUSTNESS / continue_testing` outcome, one-row idempotency, service-only execution, owner-scoped read access and the unchanged `testing` / live-disabled strategy state. STRAT-005 may now implement owner-facing display of the accepted strategy, backtest evidence and review outcome without weakening the private evidence boundary.
 
 ## Active controller handoff
 
 ```yaml
 task_id: STRAT-005
 handoff_owner: BUILDER
-handoff_status: READY_TO_BUILD
+handoff_status: BUILD_ATTEMPT_STARTED
 starting_status: NEXT
+current_status: IN PROGRESS
+builder_run_id: manual-20260825-1256-strat005
 definition_of_done: Frontend displays real strategy evidence and decision outcomes.
 preceding_audit: documentation/project-audits/STRAT-004.md
 preceding_audit_commit: bc64f3c0133b75dc237a943e86f782e2fecc8d0c
@@ -265,7 +267,7 @@ required_boundary:
 builder_next_action: inspect existing owner-facing strategy routes and implement the smallest complete STRAT-005 frontend solution
 ```
 
-There is no item in `IN REVIEW`. The Builder owns STRAT-005 until it persists a complete audit handoff.
+There is no item in `IN REVIEW`. The Builder owns STRAT-005 while it replaces the unauthenticated strategy read path with an owner-authenticated frontend and then persists a complete audit handoff.
 
 ## Definition of Operational
 
