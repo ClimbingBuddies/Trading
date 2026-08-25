@@ -2,6 +2,18 @@
 
 This file is the persistent write-first checkpoint shared by the Trading Project Plan Builder and Auditor. It is operational controller state, not audit approval.
 
+## Manual build started — 25 Aug 2026, 18:24 AWST
+
+- protocol_version: 1.3
+- builder_run_id: manual-20260825-1824-qual004
+- event: BUILD_ATTEMPT_STARTED
+- task_id: QUAL-004
+- task_title: Add documentation checklist to development workflow
+- starting_status: NEXT
+- intended_bounded_increment: inspect the current repository development/contribution workflow and add the smallest enforceable documentation checklist so significant architecture, schema, security, automation and operational changes explicitly include required canonical documentation updates; verify the checklist is discoverable and actionable
+- current_owner: BUILDER
+- safety_boundary: GitHub workflow/documentation changes only unless primary evidence reveals a required implementation dependency; do not alter Supabase data/schema, production behaviour, trading logic or live-trading state
+
 ## Manual audit completed — 25 Aug 2026, 18:01 AWST
 
 - protocol_version: 1.3
