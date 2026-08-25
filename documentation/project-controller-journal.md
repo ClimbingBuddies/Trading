@@ -2,6 +2,18 @@
 
 This file is the persistent write-first checkpoint shared by the Trading Project Plan Builder and Auditor. It is operational controller state, not audit approval.
 
+## Manual audit started — 25 Aug 2026, 16:31 AWST
+
+- protocol_version: 1.3
+- auditor_run_id: manual-20260825-1631-qual002
+- event: AUDIT_ATTEMPT_STARTED
+- task_id: QUAL-002
+- implementation_commit: e7a54d452e26e784e41fefb359a532a56d5c7ca8
+- selected_evidence_group: Supabase/schema-data-security
+- current_status: IN REVIEW
+- current_owner: AUDITOR
+- next_action: independently reproduce the representative production pg_stat_statements timing evidence and confirm the recorded query surfaces correspond to live PostgREST activity; do not perform Vercel or browser evidence work in this bounded group
+
 ## Manual audit started — 25 Aug 2026, 16:23 AWST
 
 - protocol_version: 1.3
@@ -235,7 +247,7 @@ This file is the persistent write-first checkpoint shared by the Trading Project
 - sql_baseline: latest_market_status 4 calls mean 65.399 ms max 98.956 ms; provider metadata 89 calls mean 1.719 ms max 12.397 ms; strategy/test/review owner reads all below 1.6 ms mean in the observed 4-call sample
 - production_request_baseline: /markets, /opportunities and /strategies returned HTTP 200 in production runtime logs with cache MISS; fresh /markets response is private/no-cache and exposes the current Next.js stylesheet/script resource set
 - measurement_boundary: connected Vercel tools do not expose browser Navigation Timing / Resource Timing timestamps, so the current request/resource evidence is not falsely labelled a complete browser waterfall
-- exact_remaining_work: capture and persist a repeatable browser/resource-timing waterfall for fixed representative routes, at minimum /markets, /opportunities and /strategies, including cache/authentication state; then define performance budgets from measured evidence and run Builder checks
+- exact_remaining_work: capture and persist a repeatable browser/resource-timing waterfall for fixed representative routes, at minimum /markets, /opportunities` and `/strategies`, including cache/authentication state; then define performance budgets from measured evidence and run Builder checks
 - next_safe_action: resume QUAL-002 from this checkpoint and use a browser-capable measurement path to record actual navigation/resource timing; do not optimise before all required measurements exist
 - current_owner: BUILDER
 - terminal_outcome: REWORK_IN_PROGRESS
@@ -295,7 +307,7 @@ This file is the persistent write-first checkpoint shared by the Trading Project
 - implementation_commit: 0f73a6b8401e23d6bd80ce20913d675fe65e8bfa
 - selected_evidence_group: Vercel/deployment
 - current_owner: AUDITOR
-- next_action: independently verify deployment/build and representative production route health; make no source changes
+- next_action: independently verify the implementation deployment, build result and representative production route health; make no source changes
 
 ## Manual audit continued — 25 Aug 2026, 14:17 AWST
 
