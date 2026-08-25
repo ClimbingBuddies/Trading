@@ -2,6 +2,28 @@
 
 This file is the persistent write-first checkpoint shared by the Trading Project Plan Builder and Auditor. It is operational controller state, not audit approval.
 
+## Manual audit completed — 25 Aug 2026, 18:50 AWST
+
+- protocol_version: 1.3
+- auditor_run_id: manual-20260825-1844-qual004
+- terminal_outcome: AUDIT_PASS
+- completed_task: QUAL-004
+- completed_status: DONE
+- decision: PASS
+- implementation_commit: 08ccdfb26474ba0b69623759e2967dda9f741ada
+- audit_record: documentation/project-audits/QUAL-004.md
+- audit_decision_commit: 10792059f1e64583de278c84adbd2f0c3bb0c2b9
+- audit_reconciliation_commit: 43f32d46cf23c2713d9997d30290b39071986143
+- project_plan_commit: 31992ce890dd288beff842bb05bad0910b18a05c
+- verified_evidence_groups: GitHub/source
+- verified_result: Development Workflow and PR template independently enforce the architecture/schema documentation-impact gate, canonical trigger mapping, reviewer rework path and repository discoverability required by QUAL-004
+- promoted_task: none
+- successor_reason: no eligible `PLANNED` successor exists in the current authorised project plan; no task was invented or promoted
+- controller_state: PROJECT_PLAN_COMPLETE
+- current_owner: NONE
+- next_action: wait for an explicitly authorised new project-plan item; recurring Builder/Auditor schedules must not invent work and must not self-disable
+- safety_boundary: GitHub workflow/documentation/controller changes only; no Supabase data/schema, production behaviour, trading logic or live-trading state changed during audit
+
 ## Manual audit started — 25 Aug 2026, 18:44 AWST
 
 - protocol_version: 1.3
@@ -151,4 +173,4 @@ This file is the persistent write-first checkpoint shared by the Trading Project
 - builder_next_action: add the smallest enforceable documentation checklist to the development workflow so significant architecture/schema changes explicitly include required documentation updates
 - safety_boundary: documentation/controller changes only; no Supabase data, production behaviour, trading logic or live-trading state changed during audit
 
-The next eligible controller is the Trading Project Plan Auditor working on QUAL-004.
+The current authorised project plan is complete. No Builder or Auditor task is eligible until a new project-plan item is explicitly authorised.
