@@ -1,5 +1,30 @@
 # QUAL-002 — Add performance budgets/query monitoring
 
+## Terminal audit decision — 25 Aug 2026, 16:56 AWST
+
+- protocol_version: 1.3
+- auditor_run_id: manual-20260825-1651-qual002
+- implementation_commit: e7a54d452e26e784e41fefb359a532a56d5c7ca8
+- project_plan_status_before_decision: IN REVIEW
+- definition_of_done: SQL time and network waterfalls are measured before optimisation.
+- evidence_groups_completed:
+  - GitHub/source — VERIFIED
+  - Supabase/schema-data-security — VERIFIED
+  - Vercel/deployment — VERIFIED
+  - browser/user-flow — VERIFIED
+- material_check_sql_timing_measured_before_optimisation: VERIFIED
+- material_check_network_waterfalls_measured_before_optimisation: VERIFIED
+- material_check_repeatable_monitoring_method_persisted: VERIFIED
+- material_check_no_optimisation_applied_during_baseline: VERIFIED
+- decision: PASS WITH ADVICE
+- decision_reason: every material Definition-of-Done requirement is independently verified from primary evidence. Production SQL/PostgREST timing is reproducible, genuine browser Navigation/Resource Timing waterfalls exist for all three representative routes, the telemetry deployment is healthy and tied to the expected code commit, and repository history confirms no optimisation was introduced while establishing the baseline.
+- non_blocking_advice:
+  1. Treat the current browser values as first-sample regression/investigation thresholds, not percentile SLAs; collect additional comparable samples before tuning thresholds or choosing an optimisation.
+  2. If future work specifically optimises authenticated strategy-page loading, add a privacy-preserving authenticated/unauthenticated boolean dimension rather than inferring session state from identity-bearing telemetry.
+- required_remediation: none
+- final_project_plan_status: PENDING_RECONCILIATION_TO_DONE
+- next_promoted_task: PENDING_RECONCILIATION_TO_QUAL-003
+
 ## Audit attempt started — 25 Aug 2026, 16:51 AWST
 
 - protocol_version: 1.3
