@@ -2,6 +2,21 @@
 
 This file is the persistent write-first checkpoint shared by the Trading Project Plan Builder and Auditor. It is operational controller state, not audit approval.
 
+## QUAL-004 documentation workflow checkpoint — 25 Aug 2026, 18:29 AWST
+
+- protocol_version: 1.3
+- builder_run_id: manual-20260825-1824-qual004
+- event: BUILD_CHECKPOINT
+- task_id: QUAL-004
+- current_status: IN PROGRESS
+- completed_layer: GitHub/documentation workflow policy
+- implementation_commit: bb01678df685c8bae63741c5705781fbcfd0e98a
+- implemented: `documentation/development-workflow.md` with mandatory documentation-impact classification, explicit architecture/schema documentation requirement, canonical target map, review checklist and review gate
+- verified_rule: significant architecture or schema changes cannot select `No canonical documentation change required`; relevant canonical documentation must be updated in the same change set
+- current_owner: BUILDER
+- next_action: add the pull-request template that exposes this checklist during normal development review, then link/verify the workflow document
+- safety_boundary: GitHub workflow/documentation changes only; no Supabase data/schema, production behaviour, trading logic or live-trading state changed
+
 ## QUAL-004 state claimed — 25 Aug 2026, 18:26 AWST
 
 - protocol_version: 1.3
