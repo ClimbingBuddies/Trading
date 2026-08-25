@@ -2,6 +2,24 @@
 
 This file is the persistent write-first checkpoint shared by the Trading Project Plan Builder and Auditor. It is operational controller state, not audit approval.
 
+## QUAL-002 bounded increment continued — 25 Aug 2026, 14:55 AWST
+
+- protocol_version: 1.3
+- builder_run_id: manual-20260825-1446-qual002
+- event: BUILD_CONTINUE
+- task_id: QUAL-002
+- current_status: IN PROGRESS
+- completed_work: identified production-used Markets and Strategies query surfaces; captured live PostgREST pg_stat_statements baseline; separated dashboard traffic from one-off audit/backtest SQL; captured representative production Vercel route/cache/resource evidence; persisted documentation/performance/qual-002-pre-optimisation-baseline.md
+- evidence_commit: bcaaeb99d2b825e9b2da645e823eba02f03c3bbd
+- sql_baseline: latest_market_status 4 calls mean 65.399 ms max 98.956 ms; provider metadata 89 calls mean 1.719 ms max 12.397 ms; strategy/test/review owner reads all below 1.6 ms mean in the observed 4-call sample
+- production_request_baseline: /markets, /opportunities and /strategies returned HTTP 200 in production runtime logs with cache MISS; fresh /markets response is private/no-cache and exposes the current Next.js stylesheet/script resource set
+- measurement_boundary: connected Vercel tools do not expose browser Navigation Timing / Resource Timing timestamps, so the current request/resource evidence is not falsely labelled a complete browser waterfall
+- exact_remaining_work: capture and persist a repeatable browser/resource-timing waterfall for fixed representative routes, at minimum /markets, /opportunities and /strategies, including cache/authentication state; then define performance budgets from measured evidence and run Builder checks
+- next_safe_action: resume QUAL-002 from this checkpoint and use a browser-capable measurement path to record actual navigation/resource timing; do not optimise before that measurement exists
+- current_owner: BUILDER
+- terminal_outcome: REWORK_IN_PROGRESS
+- safety_boundary: measurement only; no production query/schema/frontend optimisation, trading-data mutation or live-trading enablement occurred
+
 ## QUAL-002 state claimed — 25 Aug 2026, 14:48 AWST
 
 - protocol_version: 1.3
