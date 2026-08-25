@@ -216,7 +216,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
-| DOC-RECON-001 | **IN REVIEW** | Reconcile completed platform documentation | Current architecture, routes, data model, operations and strategy documentation agree with the completed platform; obsolete status narratives are removed; durable specifications and audit history are preserved; documentation indexes expose the current useful set. |
+| DOC-RECON-001 | **DONE** | Reconcile completed platform documentation | Current architecture, routes, data model, operations and strategy documentation agree with the completed platform; obsolete status narratives are removed; durable specifications and audit history are preserved; documentation indexes expose the current useful set. |
 
 ## Recommended execution order
 
@@ -247,38 +247,23 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** DOC-RECON-001 is **IN REVIEW** after the Builder addressed the complete Auditor correction set. The independent Trading Auditor is next.
+**Current work:** PROJECT_PLAN_COMPLETE. DOC-RECON-001 passed independent re-audit and every authorised project-plan item is DONE. No successor is authorised.
 
 ## Active controller handoff
 
 ```yaml
-task_id: DOC-RECON-001
-handoff_owner: AUDITOR
-handoff_status: READY_FOR_AUDIT
-current_status: IN REVIEW
+task_id: none
+handoff_owner: NONE
+handoff_status: PROJECT_PLAN_COMPLETE
+current_status: PROJECT_PLAN_COMPLETE
+completed_task: DOC-RECON-001
 implementation_commit: e3e88a5d16f7c36cae15d5cdf67974bf186c6729
-implementation_range: 4cfa6d62ea3770edba661e5a24877686f3c45712..e3e88a5d16f7c36cae15d5cdf67974bf186c6729
-affected_layers:
-  - GitHub
-builder_checks:
-  route_coverage: PASS_14_OF_14
-  relative_links: PASS_118_OF_118
-  stale_completed_delivery_claims: PASS_ZERO
-  phase2_progress_absent: PASS
-  audit_history_preserved: PASS_48
-  specifications_preserved: PASS_8
-  representative_supabase_truth: PASS_READ_ONLY
-deployment_required: no
-deployment_status: NOT_APPLICABLE_DOCUMENTATION_ONLY
-auditor_checks_required: independently reproduce compare, routes, links, stale-state scan, preservation and representative Supabase agreement
-known_gaps: none
 audit_record: documentation/project-audits/DOC-RECON-001.md
-audit_record_commit: 035248144909bedb50c33d24975372e71dc90bdb
-handoff_at: 25 Aug 2026, 19:54 AWST
-builder_run_id: manual-20260825-1942-doc-recon-001-rework
+audit_decision_commit: 0c24ba31db8f5bfa4abaaeb6183ca8ab34f379c5
+next_action: wait for an explicitly authorised new project-plan item; Builder and Auditor must not invent a successor
 ```
 
-DOC-RECON-001 remains the sole active item in review. No successor was promoted. All previously completed project-plan items and audit records remain preserved.
+DOC-RECON-001 is DONE. Every authorised project-plan item is complete; no successor was promoted or invented.
 
 ## Definition of Operational
 
@@ -337,3 +322,4 @@ A workflow is Operational only when its schema and implementation exist, schedul
 | 25-Aug-2026 | QUAL-002 | `documentation/project-audits/QUAL-002.md` | Independent audit PASS WITH ADVICE; live SQL/PostgREST timing, READY telemetry deployment and genuine browser Navigation/Resource Timing waterfalls independently verified; QUAL-003 promoted. |
 | 25-Aug-2026 | QUAL-003 | `documentation/project-audits/QUAL-003.md` | Independent audit PASS; market-data, assessment, stale-data and deployment recovery procedures verified against canonical GitHub specifications; QUAL-004 promoted. |
 | 25-Aug-2026 | QUAL-004 | `documentation/project-audits/QUAL-004.md` | Independent audit PASS; documentation-impact workflow, architecture/schema mandatory documentation gate, canonical trigger mapping, PR-review rework gate and repository discoverability independently verified; current authorised project plan complete. |
+| 25-Aug-2026 | DOC-RECON-001 | `documentation/project-audits/DOC-RECON-001.md` | Independent re-audit PASS; 16-document correction set, 14/14 routes, 118/118 links, zero stale completed-task claims, preserved 48 audits and 8 specifications, deliberate obsolete-file absence and representative Supabase agreement verified; project plan complete. |
