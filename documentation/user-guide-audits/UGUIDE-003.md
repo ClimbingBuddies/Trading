@@ -34,9 +34,9 @@ Current default-branch source and canonical references were fetched:
 | `components/WatchlistsClient.tsx` | `65872f60fa4ad22648c2c028c46bcbcd746162b7` |
 | `app/alerts/page.tsx` | `aa53b3e82c29fb425a21f1bdffc444fca9cd87a3` |
 | `components/AlertsClient.tsx` | `5ce359fb7745413cf22d44b8244f23009f2ee483` |
-| `documentation/security/watchlist-auth-model.md` | `58d5ff6249443427c45331368333aa7eecf327d6` |
-| `documentation/watchlist-activation.md` | `4bca6421f526531f792600f6456506cd57da6531` |
-| `documentation/specifications/alert-trigger-specification.md` | `47d77b32766b0caad35bda91c707b70e218ba26f` |
+| `documentation/security/watchlist-auth-model.md` | `38022b972872b15aba150c869524b4b47aee98a5` |
+| `documentation/watchlist-activation.md` | `206eac8c79d9e2393a8568a2443bb5619823e597` |
+| `documentation/specifications/alert-trigger-specification.md` | `f69fb7c457084f62916a1bcaa6006407b9e158b4` |
 | `documentation/alert-lifecycle.md` | `0ea5bd1402ff8b245a0548ecd2c9880a7136180d` |
 
 The exact implementation commit was independently fetched: its diff changes only `documentation/user-guide.md`.
