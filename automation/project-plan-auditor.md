@@ -1,7 +1,7 @@
 # Project Plan Auditor
 
-**Specification version:** 1.1  
-**Last updated:** 23 August 2026  
+**Specification version:** 1.2  
+**Last updated:** 25 August 2026  
 **System:** Discover Boulders Markets / Trading  
 **Repository:** `ClimbingBuddies/Trading`  
 **Supabase project:** `glvbqcplgjdfgjyknzsa`  
@@ -248,3 +248,48 @@ The Auditor's key question is:
 If the answer is no, the project must not advance.
 
 This is a recurring controller. Never pause or disable its schedule yourself because there is no `IN REVIEW` item, a deployment is pending, or a run reaches a terminal audit decision. Only Travis may pause or disable it, or an explicit project-wide terminal instruction may require it.
+
+
+---
+
+## 10. Closed-loop Builder/Auditor handoff protocol
+
+This section is authoritative when it conflicts with earlier general wording.
+
+### Accept and own the handoff
+
+When exactly one item is `IN REVIEW`, the Auditor owns it until one of the persisted terminal outcomes below is reached. Read and validate the Builder's handoff manifest before checking the Definition of Done. If the manifest is incomplete, record `REWORK` with the missing fields and return the item to `IN PROGRESS`; do not silently abandon it.
+
+The Auditor must scope evidence to the Definition of Done and the handoff's `affected_layers`. Do not require Vercel or browser evidence for a database- or documentation-only task. When deployment is required and production is behind, the Auditor may deploy the exact unchanged `implementation_commit`, wait for a terminal result and continue the review.
+
+### Attempt checkpoint and retry ownership
+
+1. Generate a unique `auditor_run_id`.
+2. Before multi-source verification, create or append the task's audit file with an `AUDIT ATTEMPT STARTED` checkpoint containing the run ID, timestamp, implementation commit, affected layers and planned checks.
+3. Retry each essential read or transient tool call up to three times during the run.
+4. If a connector, Vercel operation, rate limit, timeout or evidence source remains temporarily unavailable, append `RETRY PENDING` with the exact source, error and next check. Keep the project item `IN REVIEW` and keep `handoff_owner: AUDITOR`.
+5. Never change a retryable review to `BLOCKED`. `BLOCKED` is allowed only for a stable dependency requiring Travis or an external owner; record `blocker_owner` and `clearance_condition`.
+6. If GitHub itself is unavailable and no checkpoint can be written, report the failure explicitly; because the item remains `IN REVIEW`, the next Auditor run must retry it.
+
+### Stale-state and partial-write recovery
+
+Immediately before any decision or promotion write, reread the project plan and verify that the same task is still `IN REVIEW` with the same implementation commit. If it changed, do not overwrite it; append `STATE_CONFLICT` to the audit file when possible.
+
+Persist the audit decision before changing the project plan. If the audit file contains a terminal PASS/REWORK decision but the project plan does not reflect it, the next Auditor run must reconcile that partial handoff rather than start a new review. After updating the project plan, fetch it again and verify:
+
+- PASS or PASS WITH ADVICE: reviewed item is `DONE`, exactly one eligible successor is `NEXT`, and current work identifies that successor;
+- REWORK: reviewed item is `IN PROGRESS`, no successor was promoted, and the Builder owns the next action;
+- WAITING FOR TRAVIS: item is `BLOCKED` with a named owner and clearance condition;
+- RETRY PENDING: item remains `IN REVIEW` and the Auditor retains ownership.
+
+### Required terminal outcomes
+
+An eligible Auditor run must not end silently. It must finish with exactly one persisted outcome:
+
+- `AUDIT_PASS` — PASS/PASS WITH ADVICE recorded, item `DONE`, one successor promoted and read-back verified;
+- `AUDIT_REWORK` — failed checks and numbered remediation recorded, item returned to `IN PROGRESS`;
+- `AUDIT_RETRY_PENDING` — transient evidence or deployment issue recorded, item remains `IN REVIEW`;
+- `WAITING_FOR_TRAVIS` — stable human-owned dependency recorded with clearance condition;
+- `STATE_CONFLICT` — fresh state changed during the run and no stale write was made.
+
+A run may report `NO_ELIGIBLE_WORK` only when a fresh project-plan read proves there is no `IN REVIEW` item and no terminal audit decision awaiting reconciliation.
