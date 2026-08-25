@@ -2,6 +2,19 @@
 
 This file is the persistent write-first checkpoint shared by the Trading Project Plan Builder and Auditor. It is operational controller state, not audit approval.
 
+## Manual build started — 25 Aug 2026, 15:33 AWST
+
+- protocol_version: 1.3
+- builder_run_id: manual-20260825-1533-qual002
+- event: BUILD_ATTEMPT_STARTED
+- task_id: QUAL-002
+- task_title: Add performance budgets/query monitoring
+- starting_status: IN PROGRESS
+- intended_bounded_increment: verify deployment/build of the committed production browser waterfall instrumentation; if live, collect genuine `[performance-waterfall-v1]` samples for the fixed representative routes and persist one complete measured evidence layer; do not optimise production behaviour
+- current_owner: BUILDER
+- resume_from: telemetry implementation commits eef149d94b83797f7520210ec507f57c6ac9ab18, fe272e36da4f46ae63e7e60447895e61337d442b, 3a60284d36060d604a741c65cdd0d76bec8bdd10 and SQL baseline bcaaeb99d2b825e9b2da645e823eba02f03c3bbd
+- safety_boundary: measurement/monitoring only; do not optimise queries, alter trading logic/data, or enable live trading
+
 ## QUAL-002 bounded increment continued — 25 Aug 2026, 15:31 AWST
 
 - protocol_version: 1.3
@@ -120,7 +133,7 @@ This file is the persistent write-first checkpoint shared by the Trading Project
 - production_request_baseline: /markets, /opportunities and /strategies returned HTTP 200 in production runtime logs with cache MISS; fresh /markets response is private/no-cache and exposes the current Next.js stylesheet/script resource set
 - measurement_boundary: connected Vercel tools do not expose browser Navigation Timing / Resource Timing timestamps, so the current request/resource evidence is not falsely labelled a complete browser waterfall
 - exact_remaining_work: capture and persist a repeatable browser/resource-timing waterfall for fixed representative routes, at minimum /markets, /opportunities and /strategies, including cache/authentication state; then define performance budgets from measured evidence and run Builder checks
-- next_safe_action: resume QUAL-002 from this checkpoint and use a browser-capable measurement path to record actual navigation/resource timing; do not optimise before that measurement exists
+- next_safe_action: resume QUAL-002 from this checkpoint and use a browser-capable measurement path to record actual navigation/resource timing; do not optimise before all required measurements exist
 - current_owner: BUILDER
 - terminal_outcome: REWORK_IN_PROGRESS
 - safety_boundary: measurement only; no production query/schema/frontend optimisation, trading-data mutation or live-trading enablement occurred
@@ -145,7 +158,7 @@ This file is the persistent write-first checkpoint shared by the Trading Project
 - builder_run_id: manual-20260825-1446-qual002
 - event: BUILD_ATTEMPT_STARTED
 - task_id: QUAL-002
-- task_title: Add automated tests for critical calculations/data access
+- task_title: Add performance budgets/query monitoring
 - starting_status: NEXT
 - intended_bounded_increment: establish a repeatable pre-optimisation baseline for representative SQL/query timing and frontend/network waterfall behaviour, persist the measurement method/results, and leave optimisation changes out of scope
 - current_owner: BUILDER
