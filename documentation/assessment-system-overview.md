@@ -116,19 +116,14 @@ The trusted [Market Convergence Population Pipeline](pipelines/market-convergenc
 
 ## Current Market maturity
 
-As verified against live Supabase on 22 August 2026:
+The Market system is operational under the completed OPS, TECH and CONV audit gates:
 
-- Market observations are populated and operational as the price-data foundation.
-- `gpt_market_runs`, `gpt_market_assessments` and `gpt_market_evidence` contain real persisted assessment/test data.
-- The most recent Market test run in Supabase completed successfully for 30/30 requested instruments.
-- An older historical test run remains incorrectly `running` with `tickers_completed = 0`; that legacy state is still scheduled for deliberate cleanup.
-- `technical_indicators` contains 1,136 versioned daily/weekly `technical-engine-v1` rows across 71 instruments.
-- `market_scores` contains 71 independent `technical-score-v1` rows: 61 complete and 10 partial.
-- Technical recurring ownership/monitoring is operational, and the canonical Market Convergence methodology is implemented by a private service-only population function.
-- `market_convergence_assessments` contains 30 real `market-convergence-v1` rows with complete Technical/AI lineage and source snapshots.
-- The Daily Trading Market Assessment Scheduled Task is not yet considered fully operational under the project plan; the canonical GitHub methodology and unattended-run verification remain planned work.
-
-Therefore the two independent Market branches now combine into persisted current-state Market Convergence results. History/stale-input rules and frontend presentation remain planned before the full convergence phase is operational.
+- market observations provide the price-data foundation;
+- the independent ChatGPT Market workflow is specification-driven, scheduled, terminal and idempotent;
+- the independent Technical Engine persists versioned indicators and scores under monitored recurring ownership;
+- Market Convergence persists source-date history, lineage, freshness decisions and bounded retry state;
+- the frontend presents Technical, AI and Convergence views distinctly;
+- historical legacy run/backlog state has been deliberately resolved without replaying it as current work.
 
 ---
 
@@ -496,7 +491,7 @@ Under `documentation/project-plan.md`, a workflow is Operational only when, wher
 - an end-to-end run has been verified;
 - documentation reflects the real flow.
 
-This is why parts of both assessment architectures may be visible or populated while still being classified as partial, scaffolded or awaiting verification.
+Operational labels are evidence-based. When a gate changes, current reference documentation must be reconciled rather than leaving an earlier partial or scaffolded label in place.
 
 ---
 
@@ -510,9 +505,11 @@ This is why parts of both assessment architectures may be visible or populated w
 - Project Builder: `automation/project-plan-builder.md`
 - Project Auditor: `automation/project-plan-auditor.md`
 
-Planned follow-on documentation includes:
+Detailed lifecycle and execution contracts are maintained in:
 
-- `documentation/pipelines/opportunity-assessment-pipeline.md` (`DOC-002`)
-- `automation/daily-market-assessment.md` (`DOC-003`)
+- `documentation/pipelines/opportunity-assessment-pipeline.md`
+- `documentation/pipelines/market-assessment-pipeline.md`
+- `automation/daily-market-assessment.md`
+- `automation/daily-opportunity-assessment.md`
 
-Those documents should deepen lifecycle and execution detail without changing the independence boundaries defined here.
+These documents preserve the independence boundaries defined here.
