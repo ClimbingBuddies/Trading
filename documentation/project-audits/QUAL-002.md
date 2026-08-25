@@ -21,6 +21,39 @@
 - current_owner: AUDITOR
 - decision: PENDING
 
+### Evidence group result — Vercel/deployment
+
+- result: VERIFIED
+- deployment_identity: VERIFIED — deployment `dpl_HEwx9WtekyUE13AQiXbkBWvcHs4K` is `READY`, targets `production`, aliases `discoverbouldersmarkets.vercel.app`, and reports GitHub commit `622ed826c65ada0bd326f3afdfc2829f40d8bb6d` exactly.
+- reviewed_vs_deployed_scope: VERIFIED FROM PRIOR GITHUB EVIDENCE — reviewed commit `e7a54d452e26e784e41fefb359a532a56d5c7ca8` contains only performance-baseline/controller-documentation changes after deployed telemetry commit `622ed826c65ada0bd326f3afdfc2829f40d8bb6d`; no later application source is missing from production.
+- build_pipeline: VERIFIED — Vercel cloned commit `622ed82`; palette compliance passed for 22 component/style files; Next.js compiled successfully; TypeScript completed successfully; page/static generation completed; build and deployment completed successfully.
+- receiver_route_in_build: VERIFIED — build route manifest includes dynamic route `/api/performance-waterfall` together with the fixed measurement routes `/markets`, `/opportunities` and `/strategies`.
+- production_receiver_presence: VERIFIED — a production GET to `/api/performance-waterfall` matched that route and returned HTTP 405 Method Not Allowed, which is consistent with the source-defined POST-only receiver and independently proves the route is deployed rather than 404/missing.
+- runtime_health: VERIFIED — no `error` or `fatal` runtime logs were found for deployment `dpl_HEwx9WtekyUE13AQiXbkBWvcHs4K` over the preceding two hours.
+- deployment_action_required: NO — the required telemetry code is already the READY production deployment.
+- browser_sample_content: NOT EVALUATED IN THIS GROUP — sample timings/resource counts are intentionally reserved for the separate browser/user-flow evidence group under the v1.3 one-group-per-run rule.
+
+### AUDIT_CONTINUE — 25 Aug 2026, 16:44 AWST
+
+- auditor_run_id: manual-20260825-1640-qual002
+- event: AUDIT_CONTINUE
+- completed_evidence_groups:
+  - GitHub/source
+  - Supabase/schema-data-security
+  - Vercel/deployment
+- verified_checks:
+  - reviewed implementation/baseline identity and no optimisation source drift
+  - repeatable live SQL/PostgREST timing evidence and query identities
+  - exact READY production telemetry deployment and deployed commit identity
+  - successful palette/Next.js/TypeScript build and deployed telemetry route
+  - no deployment-scoped error/fatal runtime evidence
+- remaining_evidence_groups:
+  - browser/user-flow — independently verify persisted `performance-waterfall-v1` samples for `/markets`, `/opportunities` and `/strategies` match the documented timings/resource counts and represent real browser Navigation/Resource Timing evidence
+- next_evidence_group: browser/user-flow
+- project_plan_status: IN REVIEW
+- handoff_owner: AUDITOR
+- decision: PENDING
+
 ## Persisted prior evidence — Supabase/schema-data-security
 
 - auditor_run_id: manual-20260825-1631-qual002
@@ -44,15 +77,3 @@
 - Reporter uses browser Navigation Timing / Resource Timing on `/markets`, `/opportunities`, `/strategies`, caps resources at 100, strips query strings/fragments, and posts structured timing data.
 - Receiver validates fixed routes/version/numerics, bounds fields, logs no cookies/tokens/user IDs/emails/session identity, and returns HTTP 204 with `no-store` for accepted POSTs.
 - Baseline document records SQL timing, three browser waterfall samples, repeatability, privacy/authentication boundary, and conservative regression/investigation budgets explicitly not presented as SLAs.
-
-## Current audit state
-
-- completed_evidence_groups:
-  - GitHub/source
-  - Supabase/schema-data-security
-- current_evidence_group: Vercel/deployment
-- remaining_after_this_group:
-  - browser/user-flow
-- project_plan_status: IN REVIEW
-- handoff_owner: AUDITOR
-- decision: PENDING
