@@ -21,6 +21,12 @@ The [canonical project plan](project-plan.md) controls authorised work. The [dev
 - [Mobile interaction review](mobile-interaction-review.md)
 - [Palette compliance review](palette-compliance-review.md)
 
+## User guide
+
+- [Platform user guide](user-guide.md) — canonical deliverable under construction
+- [User guide project plan](user-guide-project-plan.md)
+- [User guide controller journal](user-guide-controller-journal.md)
+
 ## Market data and short-term assessment
 
 - [Market data pipeline](pipelines/market-data-pipeline.md)
@@ -75,5 +81,7 @@ The first strategy review outcome is `VALIDATE_ROBUSTNESS / continue_testing`. L
 - [Canonical project plan](project-plan.md)
 - [Controller journal](project-controller-journal.md)
 - [Independent task audits](project-audits/)
+- [User guide delivery plan](user-guide-project-plan.md)
+- [User guide controller journal](user-guide-controller-journal.md)
 
 Audit records and completed plan entries are retained as durable evidence. They are not current-work instructions.
