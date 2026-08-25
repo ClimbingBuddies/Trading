@@ -384,4 +384,4 @@ The STRAT-002 Auditor should independently verify:
 7. Owner RLS still permits the owner path and denies cross-owner attachment.
 8. No real test-result row was created by STRAT-002.
 9. This specification defines backtest/paper/live provenance and the metric semantics used by the Standard Strategy Review.
-10. STRAT-003 remains the next implementation stage for loading the first real test run.
+10. STRAT-003 loaded the first real test run; STRAT-004 persisted its review and STRAT-005 deployed the owner-scoped result.
