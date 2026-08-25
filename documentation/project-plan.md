@@ -206,13 +206,13 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | STRAT-002 | **DONE** | Define test-run ingestion format | Backtest/paper/live provenance and metrics are documented. |
 | STRAT-003 | **DONE** | Load first real test run | Real results populate `trading_test_runs`. |
 | STRAT-004 | **DONE** | Execute Standard Strategy Review | Decision path and outcome are persisted. |
-| STRAT-005 | **IN REVIEW** | Surface real strategy results | Frontend displays real strategy evidence and decision outcomes. |
+| STRAT-005 | **DONE** | Surface real strategy results | Frontend displays real strategy evidence and decision outcomes. |
 
 ## Phase 8 — Quality and maintainability
 
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
-| QUAL-001 | **PLANNED** | Add automated tests for critical calculations/data access | Key calculations, data loaders and empty states have repeatable tests. |
+| QUAL-001 | **NEXT** | Add automated tests for critical calculations/data access | Key calculations, data loaders and empty states have repeatable tests. |
 | QUAL-002 | **PLANNED** | Add performance budgets/query monitoring | SQL time and network waterfalls are measured before optimisation. |
 | QUAL-003 | **PLANNED** | Create operational runbook | Market-data, assessment, stale-data and deployment failure procedures are documented. |
 | QUAL-004 | **PLANNED** | Add documentation checklist to development workflow | Significant architecture/schema changes include documentation updates. |
@@ -246,48 +246,35 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `STRAT-005 — Surface real strategy results` is **IN REVIEW** after Builder implementation commit `614d16764411b3b9ab479f16138c1402087206ec` deployed successfully to production on 25 Aug 2026. The new owner-authenticated Strategies view reads the real strategy, succeeded test run, persisted Standard Strategy Review outcome and exact decision path through Supabase RLS, while keeping live trading disabled. The Auditor owns the next action.
+**Current work:** `QUAL-001 — Add automated tests for critical calculations/data access` is **NEXT** after STRAT-005 passed independent production audit on 25 Aug 2026. The Builder owns the next bounded implementation.
 
 ## Active controller handoff
 
 ```yaml
-task_id: STRAT-005
-handoff_owner: AUDITOR
-handoff_status: READY_FOR_AUDIT
+task_id: QUAL-001
+handoff_owner: BUILDER
+handoff_status: READY_TO_BUILD
 starting_status: NEXT
-current_status: IN REVIEW
-builder_run_id: manual-20260825-1256-strat005
-definition_of_done: Frontend displays real strategy evidence and decision outcomes.
-implementation_commit: 614d16764411b3b9ab479f16138c1402087206ec
+current_status: NEXT
+definition_of_done: Key calculations, data loaders and empty states have repeatable tests.
+promoted_by_audit: STRAT-005
+audit_record: documentation/project-audits/STRAT-005.md
+audit_commit: 472ef95cbfdddd7de9fbcd50a4e1530f42111126
 affected_layers:
   - GitHub
-  - Supabase
-  - Vercel
-  - browser
-builder_checks:
-  - Vercel production deployment dpl_9YJXYYdU9TkhZsszS4VfZUrSFe8f is READY at the implementation commit
-  - production /strategies returns HTTP 200 and serves the authenticated StrategyResultsClient bundle
-  - authenticated owner RLS simulation returns 1 strategy, 1 test run and 1 decision evaluation
-  - non-owner authenticated RLS simulation returns 0 strategies, 0 test runs and 0 decision evaluations
-  - frontend uses the publishable browser client and performs no privileged writes or service-role calls
-  - live strategy state remains testing with live_execution_enabled false
-deployment_required: yes
-deployed_commit: 614d16764411b3b9ab479f16138c1402087206ec
-deployment_status: READY
-production_url: https://discoverbouldersmarkets.vercel.app/strategies
-auditor_checks_required:
-  - authenticate as the strategy owner and verify the real strategy identity and live-disabled indicator
-  - verify the succeeded baseline metrics and evidence/provenance fields against Supabase
-  - verify the persisted VALIDATE_ROBUSTNESS / continue_testing outcome and exact seven-step decision path
-  - verify signed-out and non-owner sessions cannot see private evidence
-  - check responsive layout and palette compliance in the production browser
-known_gaps:
-  - classification: auditor_verifiable
-    detail: authenticated production rendering was not independently exercised in the Builder tool session; source, deployment and role-scoped database reads passed
-handoff_at: 25 Aug 2026, 13:03 AWST
+  - test suite
+builder_checks_required:
+  - identify the smallest high-risk calculation, loader and empty-state surfaces lacking repeatable coverage
+  - add deterministic tests without changing accepted production behaviour
+  - run the relevant test suite and preserve exact evidence
+  - move QUAL-001 to IN REVIEW only after the bounded Definition of Done is met
+safety_boundary:
+  - do not enable live trading
+  - do not modify persisted strategy results or the accepted STRAT-004 decision
+handoff_at: 25 Aug 2026
 ```
 
-Exactly one item is in `IN REVIEW`. The Auditor owns STRAT-005 and the Builder must wait.
+Exactly one item is in `NEXT`. The Builder owns QUAL-001 and the Auditor must wait.
 
 ## Definition of Operational
 
@@ -341,3 +328,4 @@ A workflow is Operational only when its schema and implementation exist, schedul
 | 24-Aug-2026 | STRAT-002 | `documentation/project-audits/STRAT-002.md` | Independent audit PASS WITH ADVICE; backtest/paper/live provenance, immutable strategy snapshot/hash, run-key idempotency, lifecycle validation, metric semantics, owner isolation and deliberate zero-result boundary verified; STRAT-003 promoted. |
 | 24-Aug-2026 | STRAT-003 | `documentation/project-audits/STRAT-003.md` | Independent audit PASS WITH ADVICE; first real baseline backtest, locked source hash, immutable provenance, accounting/event reconciliation, idempotent retry, success gate, owner isolation and STRAT-004 boundary verified; STRAT-004 promoted. |
 | 25-Aug-2026 | STRAT-004 | `documentation/project-audits/STRAT-004.md` | Independent audit PASS; live decision path/outcome, exact metrics, idempotent retry, service-only execution, owner isolation and live-disabled boundary verified; STRAT-005 promoted. |
+| 25-Aug-2026 | STRAT-005 | `documentation/project-audits/STRAT-005.md` | Independent audit PASS; owner-authenticated mobile production rendering, exact real metrics/outcome, owner isolation, deployment health and live-disabled boundary verified; QUAL-001 promoted. |
