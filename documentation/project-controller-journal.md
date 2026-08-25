@@ -2,6 +2,24 @@
 
 This file is the persistent write-first checkpoint shared by the Trading Project Plan Builder and Auditor. It is operational controller state, not audit approval.
 
+## Manual build completed — 25 Aug 2026, 17:49 AWST
+
+- protocol_version: 1.3
+- builder_run_id: manual-20260825-1736-qual003
+- terminal_outcome: HANDOFF_COMPLETE
+- completed_task: QUAL-003
+- completed_builder_status: IN REVIEW
+- implementation_commit: d3f4a80557d26503d8e208b8f87c2b7347460cc9
+- project_plan_commit: 3c0300c07d62c2d98f51db9a4ea78a23ea4b5324
+- primary_deliverable: documentation/operational-runbook.md
+- documentation_map: documentation/README.md
+- verified_result: runbook explicitly documents market-data failure, assessment failure, stale-data and deployment/production-route failure procedures; recovery evidence, retry/idempotency, timezone, security and analytical-independence boundaries are included; runbook/index read back successfully
+- affected_layers: GitHub only
+- not_applicable_layers: Supabase mutation/schema; Vercel deployment; browser; external evidence
+- current_owner: AUDITOR
+- auditor_next_action: independently compare the runbook against current canonical operational specifications and verify the QUAL-003 Definition of Done without modifying implementation
+- safety_boundary: documentation/controller changes only; no Supabase data, production behaviour, trading logic or live-trading state changed
+
 ## QUAL-003 documentation map checkpoint — 25 Aug 2026, 17:46 AWST
 
 - protocol_version: 1.3
@@ -45,25 +63,4 @@ This file is the persistent write-first checkpoint shared by the Trading Project
 - current_owner: BUILDER
 - safety_boundary: documentation/controller changes only; do not alter Supabase data, production application behaviour, trading logic or live-trading state
 
-## Manual audit completed — 25 Aug 2026, 16:58 AWST
-
-- protocol_version: 1.3
-- auditor_run_id: manual-20260825-1651-qual002
-- terminal_outcome: AUDIT_PASS
-- completed_task: QUAL-002
-- completed_status: DONE
-- decision: PASS WITH ADVICE
-- implementation_commit: e7a54d452e26e784e41fefb359a532a56d5c7ca8
-- audit_record: documentation/project-audits/QUAL-002.md
-- audit_decision_commit: c169f72c58dd1e358847763bca0319cf12910769
-- project_plan_commit: f497a2303ae7380d85ab33f1f443cc2dea2e4345
-- verified_evidence_groups: GitHub/source; Supabase/schema-data-security; Vercel/deployment; browser/user-flow
-- verified_result: production SQL/PostgREST timing was independently reproduced; the exact telemetry deployment is READY and healthy; genuine browser Navigation/Resource Timing samples for /markets, /opportunities and /strategies exactly match the reviewed baseline; no optimisation was applied while establishing the baseline
-- promoted_task: QUAL-003
-- promoted_status: NEXT
-- current_owner: BUILDER
-- builder_next_action: create the operational runbook covering market-data, assessment, stale-data and deployment failure procedures using the current production architecture and verified operational boundaries
-- non_blocking_advice: collect additional comparable browser samples before treating current thresholds as percentile targets; if authenticated strategy-load optimisation is later required, use a privacy-preserving boolean session classification rather than identity-bearing telemetry
-- safety_boundary: no query optimisation, trading-data mutation, trading-decision change or live-trading enablement occurred during audit
-
-The next eligible controller is the Trading Project Plan Builder working on QUAL-003.
+The next eligible controller is the Trading Project Plan Auditor working on QUAL-003.
