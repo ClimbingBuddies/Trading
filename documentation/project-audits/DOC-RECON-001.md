@@ -1,3 +1,16 @@
+## Auditor re-audit attempt — 25 August 2026
+
+- protocol_version: 1.3
+- auditor_run_id: manual-20260825-doc-recon-001-reaudit
+- event: AUDIT_ATTEMPT_STARTED
+- project_plan_status_at_start: IN REVIEW
+- implementation_commit: e3e88a5d16f7c36cae15d5cdf67974bf186c6729
+- implementation_range: 4cfa6d62ea3770edba661e5a24877686f3c45712..e3e88a5d16f7c36cae15d5cdf67974bf186c6729
+- affected_layers: GitHub documentation only
+- selected_evidence_group: GitHub/source with representative read-only Supabase truth
+- planned_checks: complete prior seven-part correction set; exact 16 changed references; 14 routes; 118 relative links; completed-task stale-state scan; 48 audits and 8 specifications preserved; phase2-progress absent; representative live Supabase agreement
+- decision: PENDING
+
 ## Builder rework handoff — 25 Aug 2026, 19:54 AWST
 
 - protocol_version: 1.3
