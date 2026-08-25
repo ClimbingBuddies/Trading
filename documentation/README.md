@@ -57,6 +57,7 @@ Start with [Assessment System Overview](assessment-system-overview.md) for the a
 
 ### Product, strategy and operations
 
+- [Development Workflow](development-workflow.md) — mandatory documentation-impact checklist and review gate for significant architecture, schema, security, automation and operational changes.
 - [Operational Runbook](operational-runbook.md) — first-response and recovery procedures for market-data, assessment, stale-data and deployment failures.
 - [Strategy Framework](strategy-framework.md) — strategy/test tables and the standard decision tree.
 - [Frontend Route Map](frontend-route-map.md) — Next.js routes and the Supabase data each page uses.
