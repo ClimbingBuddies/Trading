@@ -212,7 +212,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
-| QUAL-001 | **NEXT** | Add automated tests for critical calculations/data access | Key calculations, data loaders and empty states have repeatable tests. |
+| QUAL-001 | **IN PROGRESS** | Add automated tests for critical calculations/data access | Key calculations, data loaders and empty states have repeatable tests. |
 | QUAL-002 | **PLANNED** | Add performance budgets/query monitoring | SQL time and network waterfalls are measured before optimisation. |
 | QUAL-003 | **PLANNED** | Create operational runbook | Market-data, assessment, stale-data and deployment failure procedures are documented. |
 | QUAL-004 | **PLANNED** | Add documentation checklist to development workflow | Significant architecture/schema changes include documentation updates. |
@@ -246,35 +246,28 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `QUAL-001 — Add automated tests for critical calculations/data access` is **NEXT** after STRAT-005 passed independent production audit on 25 Aug 2026. The Builder owns the next bounded implementation.
+**Current work:** `QUAL-001 — Add automated tests for critical calculations/data access` is **IN PROGRESS** under Builder run `manual-20260825-1321-qual001`. The bounded increment is inspecting the current test framework and adding deterministic coverage for the smallest high-risk calculation, loader and empty-state surfaces.
 
 ## Active controller handoff
 
 ```yaml
 task_id: QUAL-001
 handoff_owner: BUILDER
-handoff_status: READY_TO_BUILD
+handoff_status: BUILDING
 starting_status: NEXT
-current_status: NEXT
+current_status: IN PROGRESS
+builder_run_id: manual-20260825-1321-qual001
 definition_of_done: Key calculations, data loaders and empty states have repeatable tests.
-promoted_by_audit: STRAT-005
-audit_record: documentation/project-audits/STRAT-005.md
-audit_commit: 472ef95cbfdddd7de9fbcd50a4e1530f42111126
 affected_layers:
   - GitHub
   - test suite
-builder_checks_required:
-  - identify the smallest high-risk calculation, loader and empty-state surfaces lacking repeatable coverage
-  - add deterministic tests without changing accepted production behaviour
-  - run the relevant test suite and preserve exact evidence
-  - move QUAL-001 to IN REVIEW only after the bounded Definition of Done is met
 safety_boundary:
   - do not enable live trading
-  - do not modify persisted strategy results or the accepted STRAT-004 decision
-handoff_at: 25 Aug 2026
+  - do not modify persisted strategy results or accepted audit evidence
+checkpoint_at: 25 Aug 2026, 13:21 AWST
 ```
 
-Exactly one item is in `NEXT`. The Builder owns QUAL-001 and the Auditor must wait.
+Exactly one item is in `IN PROGRESS`. The Builder owns QUAL-001 and the Auditor must wait.
 
 ## Definition of Operational
 
