@@ -6,7 +6,8 @@
 **Screenshot directory:** `documentation/images/user-guide/`  
 **Controller journal:** `documentation/user-guide-controller-journal.md`  
 **Audit records:** `documentation/user-guide-audits/<TASK-ID>.md`  
-**Authorised:** 25 August 2026
+**Authorised:** 25 August 2026  
+**Last updated:** 25 August 2026
 
 ## Objective
 
@@ -53,9 +54,9 @@ Authenticated screenshots may be captured only from an already-authorised owner 
 
 Only one gate may be active at a time.
 
-| ID | Initial status | Gate | Definition of done |
+| ID | Status | Gate | Definition of done |
 |---|---|---|---|
-| UGUIDE-001 | **NEXT** | Establish guide structure and evidence inventory | Create the guide skeleton with audience, boundaries, task sequence and screenshot manifest; map every section to current routes and canonical documentation; record public/authenticated access needs; remove any superseded user-guide draft found at the canonical path. |
+| UGUIDE-001 | **IN REVIEW** | Establish guide structure and evidence inventory | Create the guide skeleton with audience, boundaries, task sequence and screenshot manifest; map every section to current routes and canonical documentation; record public/authenticated access needs; remove any superseded user-guide draft found at the canonical path. |
 | UGUIDE-002 | **PLANNED** | Document public navigation and assessment dashboards | Explain navigation, Markets, instrument detail, Market Assessment, Technical/AI/Convergence interpretation and Opportunity themes; add current production screenshots for the dashboard/Markets/Assessment/Opportunity flows; verify all statements against source, production and persisted data where relevant. |
 | UGUIDE-003 | **PLANNED** | Document signed-in monitoring workspaces | Explain sign-in boundaries, Watchlists, Alerts and event history with owner-isolation and safe-use notes; add current authenticated screenshots where access exists; otherwise record a precise `AUTH_REQUIRED` blocker without inventing content. |
 | UGUIDE-004 | **PLANNED** | Document strategy, operations and support | Explain strategy results including `continue_testing`, Admin/data-health indicators, data freshness, status colours, empty states and common troubleshooting; add the strategy/Admin and one representative mobile screenshot; add a compact glossary. |
@@ -147,8 +148,10 @@ The project is complete only when:
 
 ```yaml
 task_id: UGUIDE-001
-handoff_owner: PRODUCER
-handoff_status: AUTHORISED
-current_status: NEXT
-next_action: create the guide structure and evidence inventory, then hand UGUIDE-001 to the Auditor
+handoff_owner: AUDITOR
+handoff_status: READY_FOR_AUDIT
+current_status: IN REVIEW
+implementation_commit_or_range: 11077ab56cf3718fcbc30584fe2c3363636b36f3^..d14d17ca6454dbf38876b115c4085a427371b40c
+audit_record: documentation/user-guide-audits/UGUIDE-001.md
+next_action: independently audit UGUIDE-001; Producer must not advance or promote UGUIDE-002
 ```
