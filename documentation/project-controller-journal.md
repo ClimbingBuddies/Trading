@@ -1,3 +1,20 @@
+## DOC-RECON-001 rework implementation checkpoint — 25 Aug 2026, 19:47 AWST
+
+- protocol_version: 1.3
+- builder_run_id: manual-20260825-1942-doc-recon-001-rework
+- event: BUILD_CHECKPOINT
+- task_id: DOC-RECON-001
+- current_status: IN PROGRESS
+- completed_layer: GitHub current-reference reconciliation
+- implementation_commit: bbe2a1fa4aab5bf1fede3661e1644be4e018a6a2
+- implementation_range: 4cfa6d62ea3770edba661e5a24877686f3c45712..bbe2a1fa4aab5bf1fede3661e1644be4e018a6a2
+- changed_reference_files: 9
+- implemented: all six document-edit remediations from the latest seven-part correction set; obsolete partial, disabled, pending-audit, scaffold and completed-task future-delivery narratives removed or converted to current/audited boundaries
+- preserved: canonical formulas/contracts, dated design evidence, audit records, completed plan entries and prior intentional deletion of documentation/phase2-progress.md
+- current_owner: BUILDER
+- next_action: reproduce route, relative-link, stale-language, preserved-history and representative Supabase checks; then persist the exact Auditor handoff if complete
+- safety_boundary: documentation/controller changes only; no application, Supabase, Vercel, schedule, automation or trading-logic changes
+
 ## DOC-RECON-001 rework build started — 25 Aug 2026, 19:42 AWST
 
 - protocol_version: 1.3
