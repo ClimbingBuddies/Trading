@@ -17,6 +17,29 @@
 - current_owner: AUDITOR
 - decision: PENDING
 
+### Evidence group result — Vercel/deployment
+
+- result: VERIFIED
+- deployment_identity: VERIFIED — production deployment `dpl_6MSTJWX8o52VRHeEt3GKQeiAYSph` is `READY`, targets production, aliases `discoverbouldersmarkets.vercel.app`, and identifies GitHub commit `0f73a6b8401e23d6bd80ce20913d675fe65e8bfa` exactly.
+- build_pipeline: VERIFIED — Vercel cloned commit `0f73a6b`; the palette prebuild check passed for 21 component/style files; Next.js compiled successfully; TypeScript completed successfully; page-data/static generation completed; the build finished in 9 seconds and deployment completed.
+- markets_route: VERIFIED — production `/markets` returned HTTP 200 and rendered the current instrument overview.
+- opportunities_route: VERIFIED — production `/opportunities` returned HTTP 200 and rendered the Opportunity Assessment overview and current daily status.
+- strategies_route: VERIFIED — production `/strategies` returned HTTP 200 and rendered the expected authenticated-client session bootstrap state.
+- runtime_health: VERIFIED — no `error` or `fatal` runtime logs were found for this deployment in the preceding two hours.
+- deployment_action_required: NO — the exact reviewed implementation is already the production deployment.
+
+### Evidence completion checkpoint — 25 Aug 2026, 14:34 AWST
+
+- auditor_run_id: manual-20260825-1431-qual001
+- completed_evidence_groups:
+  - GitHub/source
+  - Vercel/deployment
+- remaining_evidence_groups: []
+- definition_of_done_evidence_complete: true
+- next_action: reread the project plan, verify QUAL-001 is still `IN REVIEW` at implementation commit `0f73a6b8401e23d6bd80ce20913d675fe65e8bfa`, then persist the audit decision before any plan transition
+- current_owner: AUDITOR
+- decision: PENDING
+
 ## Audit attempt started — 25 Aug 2026, 14:14 AWST
 
 - auditor_run_id: manual-20260825-1414-qual001
