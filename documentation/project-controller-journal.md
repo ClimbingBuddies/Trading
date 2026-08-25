@@ -2,6 +2,25 @@
 
 This file is the persistent write-first checkpoint shared by the Trading Project Plan Builder and Auditor. It is operational controller state, not audit approval.
 
+## Manual build completed — 25 Aug 2026, 16:20 AWST
+
+- protocol_version: 1.3
+- builder_run_id: manual-20260825-1607-qual002
+- terminal_outcome: HANDOFF_COMPLETE
+- completed_task: QUAL-002
+- completed_builder_status: IN REVIEW
+- implementation_commit: e7a54d452e26e784e41fefb359a532a56d5c7ca8
+- project_plan_commit: ba6fb3683292249a40b85c838ba2316278f31d4b
+- performance_baseline: documentation/performance/qual-002-pre-optimisation-baseline.md
+- production_deployment: dpl_HEwx9WtekyUE13AQiXbkBWvcHs4K
+- deployed_code_commit: 622ed826c65ada0bd326f3afdfc2829f40d8bb6d
+- deployment_status: READY
+- verified_result: live pg_stat_statements baseline plus genuine browser Navigation/Resource Timing samples for `/markets`, `/opportunities` and `/strategies` are persisted with conservative pre-optimisation regression budgets; telemetry build is healthy; no optimisation was applied
+- browser_samples: `/markets` 1448.9 ms / 19 resources; `/opportunities` 1901.0 ms / 16 resources; `/strategies` 412.5 ms / 25 resources
+- current_owner: AUDITOR
+- auditor_next_action: independently verify the reviewed implementation/baseline, live pg_stat_statements values, READY telemetry deployment and genuine performance-waterfall-v1 samples; decide PASS/PASS WITH ADVICE or REWORK
+- safety_boundary: no query optimisation, trading-data mutation, trading-decision change or live-trading enablement occurred
+
 ## QUAL-002 measurement baseline completed — 25 Aug 2026, 16:12 AWST
 
 - protocol_version: 1.3
@@ -319,4 +338,4 @@ This file is the persistent write-first checkpoint shared by the Trading Project
 - auditor_next_action: independently rerun tests, verify production-used helper coverage and check representative production routes
 - safety_boundary: no live-trading change and no Supabase data mutation
 
-The next eligible controller is the Trading Project Plan Builder working on QUAL-002.
+The next eligible controller is the Trading Project Plan Auditor working on QUAL-002.
