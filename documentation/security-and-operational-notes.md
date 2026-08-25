@@ -1,159 +1,63 @@
 # Security and Operational Notes
 
-This document records Supabase access and operational findings first observed on 12 August 2026 and re-verified where noted on 19 August 2026.
+**Last reconciled:** 25 August 2026
 
-No remediation in this document should be applied blindly. RLS changes can immediately change what the public dashboard can read.
+This document summarises the durable Trading platform security and operational boundaries. Detailed decisions and dated evidence remain in the linked specifications, pipelines and audit records.
 
-The canonical Market Assessment public/private decision is now [Market Assessment Access Classification](security/market-assessment-access-classification.md).
+## Frontend credential model
 
-## 1. Frontend credential model
+The Next.js frontend uses the Supabase project URL and publishable key from deployment environment variables.
 
-The Next.js frontend uses:
+It does not use a Supabase service-role/secret key or the Twelve Data API key. Backend credentials remain in trusted Supabase/Vercel execution paths. SEC-005 removed hard-coded frontend fallbacks and independently verified fallback-free production routes.
 
-- the Supabase project URL;
-- the Supabase publishable key.
+## Public read surfaces
 
-It does **not** use:
+Unauthenticated users may read the deliberately published Market, Assessment and Opportunity outputs required by the public dashboard.
 
-- `SUPABASE_SERVICE_ROLE_KEY`;
-- `TWELVE_DATA_API_KEY`.
+The Market Assessment boundary is defined in [Market Assessment Access Classification](security/market-assessment-access-classification.md):
 
-The service-role key and Twelve Data API key are used only in Supabase Edge Functions.
+- only approved terminal non-test output and linked evidence are public read-only;
+- run control, queues, schedule logs, writes and orchestration remain internal;
+- client writes are denied;
+- orchestration functions remain trusted-backend-only.
 
-The publishable key is not a privileged secret, but environment configuration should still be preferred over hard-coding environment-specific values in source code.
+## Private owner workspaces
 
-## 2. Edge Function authentication
+Watchlists, alerts and strategies are permanent-user private workspaces.
 
-Both active Trading Edge Functions currently have JWT verification enabled:
+- `watchlists` and `watchlist_items` use owner and parent-owner RLS.
+- `alerts` uses owner-scoped CRUD while evaluator-generated `alert_events` is owner-readable and not browser-writable.
+- strategy definitions, test runs and decision evaluations are owner-scoped.
+- anonymous and authenticated-anonymous identities are not accepted as v1 owners.
+- no privileged credential is exposed to the frontend.
 
-- `full-twelve-data-load`
-- `test-twelve-data-load`
+See [Watchlist Authentication and Ownership Model](security/watchlist-auth-model.md), [Watchlist Activation](watchlist-activation.md), [Alert Lifecycle](alert-lifecycle.md) and [Strategy Framework](strategy-framework.md).
 
-The scheduled market-data job calls `full-twelve-data-load` using the project publishable key stored in Supabase Vault.
+## Internal analytical and orchestration boundaries
 
-## 3. Public dashboard read policies
+- The Technical Engine and Market Convergence write paths are service-only; public/client writes remain denied.
+- External-opinion collection, consensus and lineage are service-only and cannot write Technical, Convergence or Opportunity conclusions.
+- Market AI, Technical Engine and Opportunity Assessment retain their documented analytical-independence boundaries.
+- Retryable workflows use explicit lifecycle state and deterministic/idempotent identities.
 
-The following RLS-enabled tables currently have explicit read policies for the public dashboard:
+## Database hardening
 
-- `data_providers`
-- `instruments`
-- `provider_instruments`
-- `market_observations`
-- `sync_runs`
+SEC-003 applied empty fixed search paths and qualified application references to the application-owned helper functions. The independent audit confirmed preserved execution grants and live smoke paths.
 
-These policies allow `SELECT` to `anon` and `authenticated` roles.
+SEC-004 reviewed the non-relocatable `pg_net` extension. Its supported `net` schema placement and remaining advisory warning are explicitly accepted with documented rationale.
 
-This is why the unauthenticated public dashboard can display market and loader information.
+Relevant records:
 
-The strategy decision-tree tables expose only the system template to anonymous users:
+- [Helper-function search-path hardening](security/helper-function-search-path-hardening.md)
+- [pg_net extension review](security/pg-net-extension-review.md)
+- [SEC-003 audit](project-audits/SEC-003.md)
+- [SEC-004 audit](project-audits/SEC-004.md)
+- [SEC-005 audit](project-audits/SEC-005.md)
 
-- `trading_decision_trees`
-- `trading_decision_nodes`
-- `trading_decision_edges`
+## Historical Market backlog
 
-## 4. Owner-specific strategy policies
+OPS-007 resolved the orphan queue backlog and stale test-run lifecycle non-destructively. Historical assessment/evidence content and schedule logs remain preserved; the rows are not replayed as current work.
 
-The strategy layer is designed for authenticated user ownership.
+## Trading safety boundary
 
-Tables include:
-
-- `trading_strategies`
-- `trading_test_runs`
-- `trading_decision_evaluations`
-
-Owner-specific policies use `owner_user_id = auth.uid()`.
-
-System decision-tree templates can be read by authenticated users, while user-owned trees/nodes/edges remain owner-specific.
-
-## 5. Market Assessment access — applied and verified 19 August 2026
-
-`SEC-002` applies the canonical [Market Assessment Access Classification](security/market-assessment-access-classification.md):
-
-- RLS remains enabled on all five Market Assessment output/control tables;
-- `anon` and `authenticated` can read only completed terminal `scheduled` runs and linked assessment/evidence rows;
-- explicit column grants expose the approved run envelope and approved assessment/evidence fields, leaving future columns private by default;
-- no client write privileges exist on the five tables;
-- queue and schedule-log tables have no client grants and retain deny policies;
-- all seven orchestration functions are executable by `service_role` and not by `PUBLIC`, `anon` or `authenticated`.
-
-Live role verification returned 1 run, 30 assessments and 68 evidence rows to `anon`; internal run columns and both test datasets were inaccessible. The public frontend query requests only the approved run envelope.
-
-## 6. RLS enabled but no policies
-
-Supabase Security Advisor reports RLS enabled with no policies on:
-
-- `alert_events`
-- `alerts`
-- `app_settings`
-- `instrument_opinion_consensus`
-- `instrument_opinions`
-- `opinion_reviews`
-- `opinion_sources`
-- `technical_indicators`
-- `watchlist_items`
-- `watchlists`
-
-Reference:
-
-https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy
-
-For the publishable-key frontend, these tables are effectively unavailable unless a service-role process writes/reads them or appropriate policies are deliberately added.
-
-This is not necessarily wrong for scaffolded features, but it must be considered when implementing their UI.
-
-## 7. Function search-path warnings
-
-Supabase Security Advisor reports mutable `search_path` warnings for:
-
-- `queue_daily_market_assessment()`
-- `process_market_assessment_queue()`
-
-Reference:
-
-https://supabase.com/docs/guides/database/database-linter?lint=0011_function_search_path_mutable
-
-These functions should eventually set an explicit safe search path and/or fully qualify referenced tables.
-
-## 8. `pg_net` extension warning
-
-Supabase Security Advisor reports that `pg_net` is installed in the public schema.
-
-Reference:
-
-https://supabase.com/docs/guides/database/database-linter?lint=0014_extension_in_public
-
-This should be reviewed before production hardening.
-
-## 9. Historical Market backlog — resolved
-
-The earlier seven-row orphan queue backlog and stale 1 August test-run lifecycle were resolved non-destructively under `OPS-007`.
-
-The test run is terminal at 30/30 from its persisted assessment rows. The seven unattempted queues are terminally superseded without replay or replacement GPT runs, and their schedule logs remain preserved. See `documentation/project-audits/OPS-007.md`.
-
-
-## 10. Current GitHub configuration note
-
-`lib/supabase.ts` contains fallback literals for the Supabase URL and publishable key.
-
-The publishable key is intended for public client use, but storing environment-specific fallback values in source code makes project separation and key rotation harder.
-
-Recommended direction:
-
-- use `NEXT_PUBLIC_SUPABASE_URL`;
-- use `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`;
-- remove environment-specific fallback values once deployment variables are confirmed.
-
-## 11. Security review priority
-
-Recommended order:
-
-1. Independently audit the applied Market Assessment boundary under `SEC-002`.
-2. Harden helper-function search paths under `SEC-003`.
-3. Review the `pg_net` extension placement under `SEC-004`.
-4. Move frontend Supabase configuration fully to environment variables under `SEC-005`.
-5. Add policies only when corresponding watchlist/opinion/alert features are implemented.
-
-
-## Operational principle
-
-Do not weaken RLS simply to make a new dashboard page populate. Decide the feature's audience first, then create the narrowest read/write policy required for that audience.
+The platform stores strategy evidence and review decisions but does not authorise live trading. The first persisted strategy remains `VALIDATE_ROBUSTNESS / continue_testing` with live execution disabled.
