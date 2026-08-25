@@ -1,5 +1,27 @@
 # QUAL-002 — Add performance budgets/query monitoring
 
+## Audit attempt started — 25 Aug 2026, 16:31 AWST
+
+- protocol_version: 1.3
+- auditor_run_id: manual-20260825-1631-qual002
+- event: AUDIT_ATTEMPT_STARTED
+- project_plan_status_at_start: IN REVIEW
+- implementation_commit: e7a54d452e26e784e41fefb359a532a56d5c7ca8
+- affected_layers:
+  - GitHub
+  - Supabase
+  - Vercel
+  - browser
+- definition_of_done: SQL time and network waterfalls are measured before optimisation.
+- selected_evidence_group: Supabase/schema-data-security
+- planned_checks:
+  - independently query live `pg_stat_statements` for the representative PostgREST query surfaces named in the baseline
+  - confirm the live statements correspond to `latest_market_status`, Markets provider metadata and owner strategy/test/review reads
+  - compare live calls/mean/max timing with the persisted pre-optimisation baseline without requiring exact equality after subsequent traffic
+  - verify no Supabase schema/data mutation is required for this measurement-only audit group
+- current_owner: AUDITOR
+- decision: PENDING
+
 ## Audit attempt started — 25 Aug 2026, 16:23 AWST
 
 - protocol_version: 1.3
