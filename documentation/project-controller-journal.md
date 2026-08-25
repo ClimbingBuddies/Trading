@@ -1,3 +1,27 @@
+## DOC-RECON-001 rework handoff completed — 25 Aug 2026, 19:55 AWST
+
+- protocol_version: 1.3
+- builder_run_id: manual-20260825-1942-doc-recon-001-rework
+- event: BUILD_HANDOFF_COMPLETE
+- terminal_outcome: HANDOFF_COMPLETE
+- task_id: DOC-RECON-001
+- current_status: IN REVIEW
+- implementation_commit: e3e88a5d16f7c36cae15d5cdf67974bf186c6729
+- implementation_range: 4cfa6d62ea3770edba661e5a24877686f3c45712..e3e88a5d16f7c36cae15d5cdf67974bf186c6729
+- exact_changed_reference_files: 16
+- controller_checkpoint_files_in_range: documentation/project-controller-journal.md
+- audit_record: documentation/project-audits/DOC-RECON-001.md
+- audit_record_commit: 035248144909bedb50c33d24975372e71dc90bdb
+- project_plan_handoff_commit: 3eab6aa1a47eb5c0091070ea5faab5c79d1b7558
+- builder_checks: 14/14 routes; 118/118 relative links; zero completed-task stale-state hits; phase2-progress absent; 48 audits and 8 specifications preserved; representative Supabase counts and RLS confirmed read-only
+- data_schema_effects: none
+- application_effects: none
+- deployment_required: no
+- known_gaps: none
+- current_owner: AUDITOR
+- next_action: independently audit DOC-RECON-001 against the persisted handoff; PASS or return one complete correction set
+- safety_boundary: documentation/controller changes only; no application, Supabase, Vercel, schedule, automation or trading-logic changes
+
 ## DOC-RECON-001 rework implementation checkpoint — 25 Aug 2026, 19:47 AWST
 
 - protocol_version: 1.3
