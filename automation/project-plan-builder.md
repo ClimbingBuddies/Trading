@@ -1,7 +1,7 @@
 # Project Plan Builder
 
-**Specification version:** 1.1  
-**Last updated:** 23 August 2026  
+**Specification version:** 1.2  
+**Last updated:** 25 August 2026  
 **System:** Discover Boulders Markets / Trading  
 **Repository:** `ClimbingBuddies/Trading`  
 **Supabase project:** `glvbqcplgjdfgjyknzsa`  
@@ -192,3 +192,56 @@ Every Builder run should report:
 A successful Builder run normally ends with exactly one item in `IN REVIEW` and no new item promoted to `NEXT`.
 
 This is a recurring controller. Never pause or disable its schedule yourself because a run is idle, blocked, handed to review or temporarily unable to verify deployment. Only Travis may pause or disable it, or an explicit project-wide terminal instruction may require it.
+
+
+---
+
+## 10. Closed-loop Builder/Auditor handoff protocol
+
+This section is authoritative when it conflicts with earlier general wording.
+
+### State ownership
+
+- The Builder owns exactly one item in `NEXT` or `IN PROGRESS`.
+- The Auditor owns exactly one item in `IN REVIEW`.
+- A transient connector, deployment, rate-limit, timeout or verification failure must not create an unowned state.
+- `BLOCKED` is reserved for a stable dependency that cannot be cleared by either controller and requires Travis or an external owner. Every `BLOCKED` entry must name that owner and the exact clearance condition.
+- Neither controller may pause or disable itself.
+
+### Mandatory handoff manifest
+
+Before changing an item to `IN REVIEW`, the Builder must persist a machine-readable handoff in the project plan's current-work section containing:
+
+- `task_id`;
+- `handoff_owner: AUDITOR`;
+- `handoff_status: READY_FOR_AUDIT`;
+- `implementation_commit`;
+- `affected_layers` selected from GitHub, Supabase, Vercel, browser and external evidence;
+- `builder_checks` and their results;
+- `deployment_required: yes|no`, plus deployed commit/status when relevant;
+- `auditor_checks_required`;
+- `known_gaps`, classified as `auditor_verifiable`, `builder_rework` or `travis_dependency`;
+- `handoff_at` in Australia/Perth;
+- a unique `builder_run_id`.
+
+A database- or documentation-only item must explicitly say that Vercel/browser verification is not applicable. A deployment still catching up is `auditor_verifiable` and does not prevent the handoff when the reviewed commit is otherwise complete.
+
+### Reliable execution
+
+1. Retry each essential read or transient tool call up to three times in the same run.
+2. Before the first state-changing write, reread the project plan and confirm the selected task, status and latest audit decision are unchanged. If stale, stop without overwriting and report `STATE_CONFLICT`.
+3. When rework exists, address every numbered remediation item from the latest audit before returning the task to review.
+4. After writing the handoff, fetch the project plan again and verify the task is `IN REVIEW`, the manifest names the same implementation commit and the Auditor owns the next action.
+5. If the final read-back does not match, retry the state write once. If it still fails, leave the item `IN PROGRESS` and persist the exact failure in the current-work note when GitHub remains writable.
+
+### Required terminal outcomes
+
+An eligible Builder run must not end silently. It must finish with exactly one of these outcomes:
+
+- `HANDOFF_COMPLETE` — implementation is committed, the manifest is complete and read-back confirms `IN REVIEW`;
+- `REWORK_IN_PROGRESS` — concrete implementation work or required tests remain, with the next step persisted;
+- `WAITING_FOR_TRAVIS` — a stable human-owned dependency is recorded with owner and clearance condition;
+- `RETRY_PENDING` — a transient failure is recorded while the task remains Builder-owned;
+- `STATE_CONFLICT` — fresh state changed during the run and no stale write was made.
+
+A run may report `NO_ELIGIBLE_WORK` only when a fresh project-plan read proves there is no `NEXT` or `IN PROGRESS` item.
