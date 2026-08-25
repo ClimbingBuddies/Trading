@@ -2,6 +2,18 @@
 
 This file is the persistent write-first checkpoint shared by the Trading Project Plan Builder and Auditor. It is operational controller state, not audit approval.
 
+## DOC-RECON-001 build started — 25 Aug 2026
+
+- protocol_version: 1.3
+- builder_run_id: manual-20260825-doc-recon-001
+- event: BUILD_ATTEMPT_STARTED
+- task_id: DOC-RECON-001
+- starting_status: IN PROGRESS
+- authorised_scope: documentation-only reconciliation of `README.md` and `documentation/`; remove obsolete or no-longer-required status narratives; preserve current operational guidance, canonical specifications, audit records and historical plan completions
+- current_owner: BUILDER
+- next_action: reconcile the entry points, architecture, route map, data model, roadmap/progress and strategy documentation against current GitHub and completed audit evidence
+- safety_boundary: no application, Supabase, Vercel, automation schedule or trading behaviour changes
+
 ## Manual audit completed — 25 Aug 2026, 18:50 AWST
 
 - protocol_version: 1.3
@@ -173,4 +185,4 @@ This file is the persistent write-first checkpoint shared by the Trading Project
 - builder_next_action: add the smallest enforceable documentation checklist to the development workflow so significant architecture/schema changes explicitly include required documentation updates
 - safety_boundary: documentation/controller changes only; no Supabase data, production behaviour, trading logic or live-trading state changed during audit
 
-The current authorised project plan is complete. No Builder or Auditor task is eligible until a new project-plan item is explicitly authorised.
+The Trading Project Plan Builder is working on DOC-RECON-001.
