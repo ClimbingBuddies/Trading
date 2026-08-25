@@ -6,12 +6,14 @@ This journal is the sole persisted communication channel for the scheduled User 
 
 ```yaml
 project_status: ACTIVE
-active_task: UGUIDE-001
-active_task_status: IN REVIEW
-handoff_owner: AUDITOR
-handoff_status: READY_FOR_AUDIT
-last_updated: 2026-08-26T01:03:29+08:00
-next_action: Auditor independently audits the unchanged guide implementation at commit 8bd5e7105922f3aaf344f314a5f697c96b2eccb0
+active_task: UGUIDE-002
+active_task_status: NEXT
+handoff_owner: PRODUCER
+handoff_status: AUTHORISED
+last_updated: 2026-08-26T02:04:04+08:00
+completed_task: UGUIDE-001
+audit_decision: PASS_WITH_ADVICE
+next_action: Producer reads the latest plan and journal, records BUILD_ATTEMPT_STARTED, and implements only UGUIDE-002
 ```
 
 ## State invariants
@@ -239,6 +241,36 @@ acceptance_criteria_evidence:
   audit_record: documentation/user-guide-audits/UGUIDE-001.md
   handoff_identity: plan, audit record and this journal all name 8bd5e7105922f3aaf344f314a5f697c96b2eccb0
 exact_next_action: Auditor independently audits UGUIDE-001 at commit 8bd5e7105922f3aaf344f314a5f697c96b2eccb0; Producer must not edit IN REVIEW work or promote UGUIDE-002
+```
+
+### 2026-08-26T02:04:04+08:00 — AUDIT_DECISION
+
+```yaml
+event: AUDIT_DECISION
+task_id: UGUIDE-001
+controller: AUDITOR
+decision: PASS_WITH_ADVICE
+implementation_commit_or_range_reviewed: 8bd5e7105922f3aaf344f314a5f697c96b2eccb0
+audit_record: documentation/user-guide-audits/UGUIDE-001.md
+audit_record_decision_commit: e101560bf47239a0deeb6fffa5e2344ca9ada124
+checks_performed:
+  - validated the corrected complete Producer handoff and explicit HANDOFF_ANSWER
+  - confirmed the exact implementation commit adds only documentation/user-guide.md
+  - confirmed the implementation guide and current default-branch guide are byte-for-byte identical at blob 066e05f8648eb06e0c195f75e44e6d50fc6869a2
+  - fetched 17 of 17 unique linked canonical documentation targets
+  - verified the root redirect and 10 representative production route states at 1363x936 CSS pixels, device-pixel-ratio 1
+  - checked all nine screenshot-manifest entries and confirmed screenshots are correctly deferred beyond this structure-only gate
+  - corroborated guide claims with read-only production evidence: 30 active instruments, 30 convergence rows, 10 active/watch themes, strategy outcome VALIDATE_ROBUSTNESS/continue_testing and live execution disabled
+  - confirmed public versus authenticated boundaries, no-live-trading and non-advice wording
+  - scanned the guide for email addresses and common secret/token patterns; none found
+  - confirmed no superseded canonical guide, duplicate image or temporary artifact was introduced
+findings:
+  - all UGUIDE-001 acceptance criteria pass
+  - non_blocking_advice: production / redirects to /admin while documentation/frontend-route-map.md says /markets; the guide correctly follows production truth and the stale route-map statement must be reconciled no later than UGUIDE-005
+  - authenticated owner screenshots remain correctly deferred to later gates under AUTH_REQUIRED
+complete_correction_set: none
+next_task_promoted: UGUIDE-002
+exact_next_action: Producer reads the updated authoritative records, records BUILD_ATTEMPT_STARTED, and implements only UGUIDE-002; Auditor does not implement that gate
 ```
 
 ## Required entry templates
