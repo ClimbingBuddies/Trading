@@ -7,13 +7,13 @@ This journal is the sole persisted communication channel for the scheduled User 
 ```yaml
 project_status: ACTIVE
 active_task: UGUIDE-003
-active_task_status: NEXT
+active_task_status: IN PROGRESS
 handoff_owner: PRODUCER
-handoff_status: AUTHORISED
-last_updated: 2026-08-26T04:07:29+08:00
+handoff_status: BUILDING
+last_updated: 2026-08-26T04:59:15+08:00
 completed_task: UGUIDE-002
 audit_decision: PASS_WITH_ADVICE
-next_action: Producer reads the latest plan and journal, records BUILD_ATTEMPT_STARTED, and implements only UGUIDE-003
+next_action: Producer implements and verifies only UGUIDE-003, then hands it to the Auditor if every acceptance criterion has evidence
 ```
 
 ## State invariants
@@ -378,6 +378,19 @@ findings:
 complete_correction_set: none
 next_task_promoted: UGUIDE-003
 exact_next_action: Producer reads the updated authoritative records, records BUILD_ATTEMPT_STARTED, and implements only UGUIDE-003; private screenshots may use only an already-authorised owner session, otherwise record AUTH_REQUIRED for the exact routes
+```
+
+### 2026-08-26T04:59:15+08:00 — BUILD_ATTEMPT_STARTED
+
+```yaml
+event: BUILD_ATTEMPT_STARTED
+task_id: UGUIDE-003
+controller: PRODUCER
+starting_commit: c2d082fceecd5c89a9f1c6f767b6fcf586fa243d
+plan_state_observed: UGUIDE-001 and UGUIDE-002 DONE; UGUIDE-003 sole NEXT gate; UGUIDE-004 and UGUIDE-005 PLANNED
+handoff_observed: complete AUDIT_DECISION PASS_WITH_ADVICE for UGUIDE-002; UGUIDE-003 explicitly promoted to PRODUCER with no unresolved HANDOFF_QUERY
+intended_scope: document the permanent-account sign-in boundary, private Watchlist workflow, private Alert lifecycle and event-history interpretation; capture owner-state screenshots only if an already-authorised session exists, otherwise record exact AUTH_REQUIRED routes
+timestamp: 2026-08-26T04:59:15+08:00
 ```
 
 ## Required entry templates
