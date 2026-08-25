@@ -221,7 +221,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
-| DOC-RECON-001 | **IN PROGRESS** | Reconcile completed platform documentation | Current architecture, routes, data model, operations and strategy documentation agree with the completed platform; obsolete status narratives are removed; durable specifications and audit history are preserved; documentation indexes expose the current useful set. |
+| DOC-RECON-001 | **IN REVIEW** | Reconcile completed platform documentation | Current architecture, routes, data model, operations and strategy documentation agree with the completed platform; obsolete status narratives are removed; durable specifications and audit history are preserved; documentation indexes expose the current useful set. |
 
 ## Recommended execution order
 
@@ -252,16 +252,18 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** DOC-RECON-001 is **IN PROGRESS** as an explicitly authorised documentation-only reconciliation. No application, Supabase, Vercel or trading behaviour may change.
+**Current work:** DOC-RECON-001 is **IN REVIEW** after the documentation-only Builder implementation and exact handoff were persisted. The independent Auditor is next.
 
 ## Active controller handoff
 
 ```yaml
 task_id: DOC-RECON-001
-handoff_owner: BUILDER
-handoff_status: IMPLEMENTATION_ACTIVE
-current_status: IN PROGRESS
-next_action: reconcile and simplify the current GitHub documentation, then persist an exact IN REVIEW handoff for independent audit
+handoff_owner: AUDITOR
+handoff_status: IMPLEMENTATION_COMPLETE
+current_status: IN REVIEW
+implementation_commit: c2c88005ef3eca3b67e44f343b52edb2e62de247
+audit_record: documentation/project-audits/DOC-RECON-001.md
+next_action: independently audit the reconciliation against current GitHub and representative Supabase production truth; PASS or return the complete correction set
 ```
 
 DOC-RECON-001 is the sole active item. All previously completed project-plan items and audit records remain preserved.
