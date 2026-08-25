@@ -2,8 +2,8 @@
 
 **Production:** https://discoverbouldersmarkets.vercel.app  
 **Audience:** first-time users with general market knowledge  
-**Guide status:** structured for task-by-task completion under the User Guide project  
-**Last production check:** 25 August 2026
+**Guide status:** public navigation and assessment workflows documented; private and operations sections remain in progress  
+**Last production check:** 26 August 2026
 
 ## Before you begin
 
@@ -69,45 +69,91 @@ Historical daily data must not be mistaken for a current quote. A successful loa
 
 ## 2. Browse markets and open an instrument
 
-**Primary routes:** `/markets`, `/markets/[symbol]`
+**Primary routes:** `/markets`, `/markets/[symbol]`  
+**Access:** public and read-only
 
-Markets provides the tracked-instrument overview, search, asset-class filters, latest prices and session-aware freshness states. Selecting a symbol opens its price history, recent observations, current short-term assessment summary and any stored long-term Opportunity exposure.
+Use the left navigation on any page to open **Markets**. The active workspace is highlighted, and the same navigation takes you to Assessments and Opportunities without requiring sign-in.
 
-Keep the displayed systems separate:
+### Find an instrument
 
-- a current Market result concerns the instrument now;
-- an Opportunity exposure measures relevance to a long-term theme;
-- exposure strength does not predict short-term return.
+1. Check **Latest market observation** before using any displayed price.
+2. Use an asset-class filter—All, Equities, ETFs, Forex or Crypto—or enter a symbol/name in **Search instruments**.
+3. Read the row across: symbol, asset class, exchange, latest price, observation time, market state, data status and provider.
+4. Treat **Market Closed** as different from **Stale**. A closed US equity/ETF session can legitimately have an older observation; stale data during an active session needs caution.
+5. Select the symbol to open its detail page.
 
-<!-- UGUIDE-002 adds the audited step sequence and Markets/instrument screenshots. -->
+![Markets dashboard with the persistent navigation, asset-class filters, search field, instrument rows and freshness status](images/user-guide/markets-overview-desktop.png)
 
-## 3. Compare Technical, AI and Market Convergence
+*The Markets overview is the public starting point for choosing an instrument and checking whether its latest observation is current enough to interpret.*
 
-**Primary routes:** `/assessments`, `/assessments/[symbol]`
+### Read the instrument page
 
-The assessment overview summarises the latest independent AI assessment set and the persisted convergence population. An instrument detail page keeps three results visibly separate:
+Read from the top down:
 
-1. **Technical Engine** — reproducible market/indicator calculation; AI conclusions are not inputs.
-2. **AI Market Assessment** — independent research result with evidence; Technical results are not inputs.
-3. **Market Convergence** — a versioned combination of eligible persisted Technical and AI source snapshots.
+1. **Latest price**, **Latest observation** and **Loaded at** establish what the displayed market value is and when it entered the platform.
+2. **Assessment** is the latest short-term AI Market rating and confidence available for the instrument. Use **View latest assessment** to inspect its sources and the separate Technical and Convergence results.
+3. **Long-term Opportunity Themes** lists only stored thematic exposures. Read **Exposure** as relevance/materiality to the theme and **Opportunity** as the theme's long-term score; neither predicts the instrument's near-term return.
+4. Use the period controls above **Price History** to change the visible history window.
+5. Use **Recent Observations** to inspect the timestamped underlying rows rather than assuming the chart is a live quote.
 
-Read the score and confidence together. Also inspect source dates, methodology versions, disagreement labels and evidence. A combined score must not hide a meaningful conflict between the independent branches.
+![AMD instrument detail showing observation timestamps, current Market result, separate Opportunity theme exposures and the price-history chart](images/user-guide/instrument-detail-desktop.png)
 
-<!-- UGUIDE-002 adds the audited interpretation procedure and assessment screenshot. -->
+*The instrument page deliberately presents the current Market result separately from long-term Opportunity exposure; one must not be used as a substitute for the other.*
+
+## 3. Read a Market Assessment: Technical, AI and Market Convergence
+
+**Primary routes:** `/assessments`, `/assessments/[symbol]`  
+**Access:** public and read-only
+
+Open **Assessments** from the left navigation. The overview first reports three distinct persisted populations—Technical Engine source snapshots, AI Market Assessments and Market Convergence results—then shows the latest assessment set, rating distribution and a row-by-row comparison. Select an instrument to inspect its exact source dates, methodology and evidence.
+
+On the detail page, read the three cards in this order:
+
+1. **Technical Engine** — a deterministic 0–100 score derived from eligible persisted market indicators. Its confidence measures intended input coverage, not the probability of a future return. The card identifies the immutable source row and states that the AI result was not used.
+2. **AI Market Assessment** — an independent research rating, 0–100 score and confidence supported by its own market evidence, catalysts and risks. The card states that the Technical result was not used.
+3. **Market Convergence** — the versioned downstream combination produced only when both eligible branches exist. The current methodology gives the two scores equal weight, snapshots their lineage and reduces/caps confidence when the branches disagree.
+
+Do not read only the combined number. Compare:
+
+- assessment and source dates;
+- the two independent scores and confidence values;
+- methodology versions and source IDs;
+- the disagreement label and score gap in the Convergence summary;
+- the AI bull case, bear case, evidence and risks.
+
+If an eligible source branch is missing or stale under the convergence contract, the system must not invent a neutral value or copy the available branch. A **Mixed** or **Conflict** result is useful evidence of disagreement, not an error to ignore.
+
+![GLD assessment detail with separate Technical Engine, AI Market Assessment and Market Convergence cards plus their source boundaries](images/user-guide/assessment-detail-desktop.png)
+
+*The assessment detail keeps the two independent inputs and their downstream Convergence result visible together, including dates, confidence, methodology and disagreement context.*
 
 ## 4. Research long-term Opportunities
 
-**Primary routes:** `/opportunities`, `/opportunities/[theme]`
+**Primary routes:** `/opportunities`, `/opportunities/[theme]`  
+**Access:** public and read-only
 
-Opportunities is the long-term research system. Theme detail separates:
+Open **Opportunities** for multi-month and multi-year research. The overview shows the latest run status, assessed-theme coverage, score changes, newly recorded events and one card per active/watch theme. A theme card includes its current Opportunity score/level, latest-update state, short description and highest stored public-market exposures.
 
-- **Structural Opportunity** — adoption, demand, investment, constraints and economics;
-- **Technology Inflection** — bottleneck removal, evidence quality, maturity and commercialisation;
-- **Opportunity Convergence** — the within-system combination of the two independent long-term signals.
+Select **Open opportunity** to read a theme. The detail page separates six views:
 
-The current detail tabs include Overview, Investment Case, Synergies, Exposure, Events and AI Recommendation. Exposure measures theme relevance/materiality; it is not a trading instruction. Review the independent current Market Assessment separately before making a market decision.
+- **Overview** — independent Structural, Technology and Opportunity Convergence cards plus the current profile;
+- **Investment Case** — the longer-form thesis and risk context;
+- **Synergies** — relationships with other themes;
+- **Exposure** — tracked and external listed entities ranked by theme relevance;
+- **Events** — material Technology Inflection evidence;
+- **AI Recommendation** — the persisted long-term research conclusion and supporting explanation.
 
-<!-- UGUIDE-002 adds the audited task sequence and Opportunity screenshot. -->
+Read the Overview cards independently:
+
+1. **Structural Opportunity** evaluates demand, adoption, capital investment, capacity constraints and economics.
+2. **Technology Inflection** evaluates bottleneck removal, evidence quality, commercialisation and impact, including the maturity stage.
+3. **Opportunity Convergence** combines the completed Structural and Technology scores. Confidence is assessed separately and must account for disagreement, freshness and evidence independence.
+
+![Advanced Packaging for AI Compute detail showing separate Structural Opportunity, Technology Inflection and Opportunity Convergence cards](images/user-guide/opportunity-detail-desktop.png)
+
+*The Opportunity detail presents the two independent long-term signals before their combined score, with confidence, readiness and time horizon shown separately.*
+
+A high Opportunity score means the theme deserves long-term research attention. It is not a Buy/Sell signal. An exposure score means an instrument or external listing is relevant to the theme; it is not expected return or short-term conviction. Return to **Markets** or **Assessments** when you need the independent current instrument view.
 
 ## 5. Maintain private Watchlists
 
