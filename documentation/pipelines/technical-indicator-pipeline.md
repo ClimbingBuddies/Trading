@@ -91,4 +91,4 @@ After Auditor rework, the exact trusted caller path was exercised with `SET LOCA
 
 ## Current operational boundary
 
-TECH-002 implements and populates the calculation engine. TECH-003 consumes these outputs through the independent [Technical Market Scoring Pipeline](technical-market-scoring-pipeline.md). Frontend exposure and recurring refresh ownership remain controlled by later project-plan items.
+TECH-002 implemented and populated the calculation engine. TECH-003 consumes these outputs through the independent [Technical Market Scoring Pipeline](technical-market-scoring-pipeline.md); TECH-004 added recurring refresh and monitoring, and TECH-005 independently verified the input boundary.
