@@ -88,28 +88,23 @@ The two systems may be displayed together after they are independently produced,
 - US equity/ETF market-hours logic exists.
 - `market_observations` and `sync_runs` support monitoring.
 
-### Opportunity Assessment — Partial / advanced
+### Opportunity Assessment — Operational
 
-Current populated data includes 3 themes, 3 Structural Signals, 3 Technology Inflection Signals, 3 Opportunity Assessments, 4 Technology Inflection Events, 3 Research documents and 16 Research embeds.
+- The scheduled Daily Opportunity Assessment retrieves `automation/daily-opportunity-assessment.md` fresh from GitHub and persists Structural, Technology, Opportunity, exposure and Research & Evidence outputs idempotently.
+- Runs use explicit lifecycle state and terminal completion, and update the complete active/watch theme set without using short-term Market or Technical outputs.
+- OPS-001 independently verified unattended specification retrieval, production persistence, Research & Evidence updates and idempotent resume behaviour.
 
-Canonical specification: `automation/daily-opportunity-assessment.md`.
+### ChatGPT Market Assessment — Operational
 
-Successful unattended scheduled runs are persisted for 15–17 August 2026. The 17 August run used canonical specification v1.3, completed 10/10 themes and updated Research & Evidence. The Daily Opportunity Assessment task exists but was disabled at Builder verification time on 18 August 2026, so historical unattended success must not be confused with current schedule activation.
-
-### ChatGPT Market Assessment — Partial
-
-- The 1 August historical test dataset remains preserved with 30 Market Assessment rows and 30 evidence rows. Its stale lifecycle was deliberately finalised under `OPS-007` at `succeeded` and 30/30 from persisted rows, without replaying or rewriting assessment/evidence content.
-- Seven unattempted orphan queue records from 3–11 August were terminally closed as superseded legacy backlog under `OPS-007`; no historical GPT runs were created for them and the original schedule logs remain preserved.
-- The Daily Trading Market Assessment Scheduled Task exists and is currently enabled on its weekday schedule.
-- Canonical methodology exists at `automation/daily-market-assessment.md`.
-- The Scheduled Task prompt is the thin runner that retrieves the canonical GitHub Market specification fresh on every run.
-- Reactivation passed independent audit under `OPS-004`. The first unattended production run completed for the 18 August 2026 New York assessment date with 30/30 active instruments, 68 evidence rows and terminal `succeeded` run/queue state; it passed independent audit under `OPS-005`.
-- The same-date prepare helper now qualifies its queue/run references correctly. Completed and resumable retry paths passed independent audit under `OPS-006`, reusing the existing run without assessment or evidence duplicates.
+- The weekday Daily Trading Market Assessment is a thin scheduled runner that retrieves `automation/daily-market-assessment.md` fresh from GitHub.
+- Results persist methodology and analytical-independence metadata, including `independent-market-ai-v1` and `technical_engine_input_used = false`.
+- OPS-004 through OPS-006 independently verified schedule activation, a complete unattended production run, terminal lifecycle, evidence persistence and duplicate-free same-date retry/resume behaviour.
+- OPS-007 deliberately finalised the preserved historical test run and superseded orphan backlog without replaying either as current assessment work.
 
 ### Technical Engine — Operational
 
-- `technical_indicators`: 1,136 `technical-engine-v1` daily/weekly rows across 71 instruments; 1,121 complete and 15 explicit insufficient-history results.
-- `market_scores`: 71 `technical-score-v1` rows across 71 instruments; 61 complete and 10 explicit partial results.
+- `technical_indicators` persists versioned `technical-engine-v1` daily/weekly calculations with explicit incomplete and insufficient-history outcomes.
+- `market_scores` persists reproducible `technical-score-v1` component, overall and confidence results with explicit complete/partial status.
 - Canonical calculation methodology: `documentation/specifications/technical-calculation-specification.md` (`technical-engine-v1`).
 - Canonical scoring methodology: `documentation/specifications/technical-market-scoring-specification.md` (`technical-score-v1`).
 - Implementation and verification: `documentation/pipelines/technical-indicator-pipeline.md` and `documentation/pipelines/technical-market-scoring-pipeline.md`. Recurring refresh is operational at 07:15 AWST with a bounded 07:45 AWST retry watcher and production Admin telemetry. TECH-005 passed independent audit after source, live function dependencies, relationships, persisted provenance and a rollback-only GPT-contamination test confirmed the Technical Engine input boundary.
@@ -117,7 +112,7 @@ Successful unattended scheduled runs are persisted for 15–17 August 2026. The 
 
 ### Market Convergence — Operational
 
-- `market_convergence_assessments`: 30 retained `market-convergence-v1` rows across 30 instruments, with complete Technical/AI source lineage and independently verified calculations.
+- `market_convergence_assessments` persists `market-convergence-v1` history across the eligible tracked universe with complete Technical/AI source lineage and independently verified calculations.
 - CONV-003 passed independent re-audit after immutable-cutoff source-date history, four-calendar-day freshness, one-child retry lineage, exact `1 -> 2 -> 3` progression, fourth-attempt rejection, real service-role execution, formula parity and idempotency were verified. CONV-004 passed independent audit with advice after distinct Technical, AI and Market Convergence presentation, live lineage, deliberate public access, production deployment and browser navigation were verified.
 
 ### Security — Hardened through SEC-005
