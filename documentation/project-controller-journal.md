@@ -2,6 +2,20 @@
 
 This file is the persistent write-first checkpoint shared by the Trading Project Plan Builder and Auditor. It is operational controller state, not audit approval.
 
+## QUAL-004 documentation map checkpoint — 25 Aug 2026, 18:33 AWST
+
+- protocol_version: 1.3
+- builder_run_id: manual-20260825-1824-qual004
+- event: BUILD_CHECKPOINT
+- task_id: QUAL-004
+- current_status: IN PROGRESS
+- completed_layer: GitHub/documentation discoverability
+- implementation_commit: ecb62bacca7b8e277e3bb6802cc65f9cba19cc69
+- implemented: linked `documentation/development-workflow.md` from `documentation/README.md` under Product, strategy and operations
+- current_owner: BUILDER
+- next_action: add the root README entry, read back the workflow/template/index, and verify the QUAL-004 Definition of Done before handoff
+- safety_boundary: GitHub workflow/documentation changes only; no Supabase data/schema, production behaviour, trading logic or live-trading state changed
+
 ## QUAL-004 pull-request gate checkpoint — 25 Aug 2026, 18:31 AWST
 
 - protocol_version: 1.3
@@ -78,35 +92,5 @@ This file is the persistent write-first checkpoint shared by the Trading Project
 - current_owner: BUILDER
 - builder_next_action: add the smallest enforceable documentation checklist to the development workflow so significant architecture/schema changes explicitly include required documentation updates
 - safety_boundary: documentation/controller changes only; no Supabase data, production behaviour, trading logic or live-trading state changed during audit
-
-## Manual audit started — 25 Aug 2026, 17:58 AWST
-
-- protocol_version: 1.3
-- auditor_run_id: manual-20260825-1758-qual003
-- event: AUDIT_ATTEMPT_STARTED
-- task_id: QUAL-003
-- implementation_commit: d3f4a80557d26503d8e208b8f87c2b7347460cc9
-- selected_evidence_group: GitHub/source
-- current_status: IN REVIEW
-- current_owner: AUDITOR
-- next_action: independently verify the operational runbook against the current canonical GitHub pipeline/specification files; Supabase, Vercel, browser and external evidence are not applicable to this documentation-only task
-
-## Manual build completed — 25 Aug 2026, 17:49 AWST
-
-- protocol_version: 1.3
-- builder_run_id: manual-20260825-1736-qual003
-- terminal_outcome: HANDOFF_COMPLETE
-- completed_task: QUAL-003
-- completed_builder_status: IN REVIEW
-- implementation_commit: d3f4a80557d26503d8e208b8f87c2b7347460cc9
-- project_plan_commit: 3c0300c07d62c2d98f51db9a4ea78a23ea4b5324
-- primary_deliverable: documentation/operational-runbook.md
-- documentation_map: documentation/README.md
-- verified_result: runbook explicitly documents market-data failure, assessment failure, stale-data and deployment/production-route failure procedures; recovery evidence, retry/idempotency, timezone, security and analytical-independence boundaries are included; runbook/index read back successfully
-- affected_layers: GitHub only
-- not_applicable_layers: Supabase mutation/schema; Vercel deployment; browser; external evidence
-- current_owner: AUDITOR
-- auditor_next_action: independently compare the runbook against current canonical operational specifications and verify the QUAL-003 Definition of Done without modifying implementation
-- safety_boundary: documentation/controller changes only; no Supabase data, production behaviour, trading logic or live-trading state changed
 
 The next eligible controller is the Trading Project Plan Builder working on QUAL-004.
