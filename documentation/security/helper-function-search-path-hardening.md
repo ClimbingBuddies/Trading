@@ -43,4 +43,4 @@ Fresh live verification after applying the migration established:
 - fresh Supabase Security Advisor output contains no `function_search_path_mutable` finding;
 - the live migration history contains `harden_helper_function_search_paths`.
 
-The existing `pg_net` extension warning is outside SEC-003 and remains explicitly planned as SEC-004.
+The separate `pg_net` extension warning was reviewed and explicitly accepted under completed task SEC-004; see [pg-net-extension-review.md](pg-net-extension-review.md).
