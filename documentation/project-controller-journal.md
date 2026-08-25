@@ -2,6 +2,20 @@
 
 This file is the persistent write-first checkpoint shared by the Trading Project Plan Builder and Auditor. It is operational controller state, not audit approval.
 
+## QUAL-004 state claimed — 25 Aug 2026, 18:26 AWST
+
+- protocol_version: 1.3
+- builder_run_id: manual-20260825-1824-qual004
+- event: BUILD_CHECKPOINT
+- task_id: QUAL-004
+- current_status: IN PROGRESS
+- project_plan_commit: d14ae499734349beecd0e14204824a3bfe223493
+- completed_layer: GitHub/controller state
+- verified_result: QUAL-004 is the sole IN PROGRESS item; all prior project-plan items are DONE and no successor was promoted
+- current_owner: BUILDER
+- next_action: inspect current repository development/contribution/PR workflow files and add the smallest actionable documentation-update checklist
+- safety_boundary: GitHub workflow/documentation changes only; no Supabase data/schema, production behaviour, trading logic or live-trading state changed
+
 ## Manual build started — 25 Aug 2026, 18:24 AWST
 
 - protocol_version: 1.3
