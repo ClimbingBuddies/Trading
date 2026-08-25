@@ -2,6 +2,27 @@
 
 This file is the persistent write-first checkpoint shared by the Trading Project Plan Builder and Auditor. It is operational controller state, not audit approval.
 
+## QUAL-002 measurement baseline completed — 25 Aug 2026, 16:12 AWST
+
+- protocol_version: 1.3
+- builder_run_id: manual-20260825-1607-qual002
+- event: BUILD_CHECKPOINT
+- task_id: QUAL-002
+- current_status: IN PROGRESS
+- completed_layer: Supabase SQL/query timing plus genuine production browser Navigation/Resource Timing
+- production_deployment: dpl_HEwx9WtekyUE13AQiXbkBWvcHs4K
+- deployed_commit: 622ed826c65ada0bd326f3afdfc2829f40d8bb6d
+- browser_samples: `/markets` 1448.9 ms / 19 resources; `/opportunities` 1901.0 ms / 16 resources; `/strategies` 412.5 ms / 25 resources
+- sql_final_read: `latest_market_status` 8 calls mean 78.036 ms max 121.355 ms; Markets provider metadata 93 calls mean 1.849 ms max 12.397 ms; owner strategy/test/review reads all <=1.666 ms mean and <=6.692 ms max
+- baseline_document_commit: 6e70bed2402fefdcd2c838c92bf107ac2b437041
+- baseline_document: documentation/performance/qual-002-pre-optimisation-baseline.md
+- budgets_persisted: conservative regression/investigation thresholds for the three browser routes and representative SQL surfaces; explicitly not SLAs
+- authentication_boundary: telemetry records no identity/session data; `/strategies` sample proves route navigation/resource timing only, while owner-scoped SQL timing is independently measured from PostgREST statements
+- optimisation_applied: no
+- current_owner: BUILDER
+- next_action: run final source/documentation/deployment/state checks; if complete, commit the exact handoff manifest and move QUAL-002 to IN REVIEW without promoting QUAL-003
+- safety_boundary: measurement/monitoring and documentation only; no query optimisation, trading-data mutation, trading-decision change or live-trading enablement occurred
+
 ## Manual build started — 25 Aug 2026, 16:07 AWST
 
 - protocol_version: 1.3
