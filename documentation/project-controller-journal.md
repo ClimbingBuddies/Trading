@@ -2,6 +2,18 @@
 
 This file is the persistent write-first checkpoint shared by the Trading Project Plan Builder and Auditor. It is operational controller state, not audit approval.
 
+## Manual audit started — 25 Aug 2026, 16:51 AWST
+
+- protocol_version: 1.3
+- auditor_run_id: manual-20260825-1651-qual002
+- event: AUDIT_ATTEMPT_STARTED
+- task_id: QUAL-002
+- implementation_commit: e7a54d452e26e784e41fefb359a532a56d5c7ca8
+- selected_evidence_group: browser/user-flow
+- current_status: IN REVIEW
+- current_owner: AUDITOR
+- next_action: independently verify the persisted performance-waterfall-v1 browser samples for /markets, /opportunities and /strategies against the documented timings/resource counts; if all four evidence groups are complete, make the terminal PASS/REWORK decision under the closed-loop protocol
+
 ## Manual audit continued — 25 Aug 2026, 16:44 AWST
 
 - protocol_version: 1.3
