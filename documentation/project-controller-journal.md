@@ -2,6 +2,17 @@
 
 This file is the persistent write-first checkpoint shared by the Trading Project Plan Builder and Auditor. It is operational controller state, not audit approval.
 
+## Manual audit started — 25 Aug 2026, 14:14 AWST
+
+- protocol_version: 1.3
+- auditor_run_id: manual-20260825-1414-qual001
+- event: AUDIT_ATTEMPT_STARTED
+- task_id: QUAL-001
+- implementation_commit: 0f73a6b8401e23d6bd80ce20913d675fe65e8bfa
+- selected_evidence_group: GitHub/source
+- current_owner: AUDITOR
+- next_action: independently verify the QUAL-001 source/test implementation and persist this evidence group before any later evidence group
+
 ## Manual audit started — 25 Aug 2026, 13:27 AWST
 
 - protocol_version: 1.3
@@ -106,7 +117,6 @@ This file is the persistent write-first checkpoint shared by the Trading Project
 - current_owner: AUDITOR
 - next_action: independently verify every material Definition of Done requirement and persist PASS, REWORK or retry evidence
 
-
 ## Manual build completed — 25 Aug 2026, 13:03 AWST
 
 - protocol_version: 1.3
@@ -123,7 +133,6 @@ This file is the persistent write-first checkpoint shared by the Trading Project
 - current_owner: AUDITOR
 - auditor_next_action: authenticate as the strategy owner and independently verify the real strategy, baseline metrics, provenance, VALIDATE_ROBUSTNESS / continue_testing outcome and seven-step decision path
 - safety_boundary: live trading remains disabled; no strategy, test-run or accepted STRAT-004 evaluation data was modified
-
 
 ## Manual build started — 25 Aug 2026, 12:56 AWST
 
