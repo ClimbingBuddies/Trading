@@ -213,7 +213,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
 | QUAL-001 | **DONE** | Add automated tests for critical calculations/data access | Key calculations, data loaders and empty states have repeatable tests. |
-| QUAL-002 | **IN PROGRESS** | Add performance budgets/query monitoring | SQL time and network waterfalls are measured before optimisation. |
+| QUAL-002 | **IN REVIEW** | Add performance budgets/query monitoring | SQL time and network waterfalls are measured before optimisation. |
 | QUAL-003 | **PLANNED** | Create operational runbook | Market-data, assessment, stale-data and deployment failure procedures are documented. |
 | QUAL-004 | **PLANNED** | Add documentation checklist to development workflow | Significant architecture/schema changes include documentation updates. |
 
@@ -246,24 +246,50 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `QUAL-002 — Add performance budgets/query monitoring` is **IN PROGRESS** under Builder run `manual-20260825-1446-qual002`. This bounded increment measures representative SQL/query timing and frontend/network waterfall behaviour before any optimisation is proposed or applied.
+**Current work:** `QUAL-002 — Add performance budgets/query monitoring` is **IN REVIEW** after Builder implementation commit `e7a54d452e26e784e41fefb359a532a56d5c7ca8`. Production SQL/PostgREST timing and genuine browser Navigation/Resource Timing waterfalls for `/markets`, `/opportunities` and `/strategies` are persisted with initial evidence-based regression budgets. No optimisation was applied. The Auditor owns the next action.
 
 ## Active controller handoff
 
 ```yaml
 task_id: QUAL-002
-handoff_owner: BUILDER
-handoff_status: BUILDING
-builder_run_id: manual-20260825-1446-qual002
-starting_status: NEXT
-current_status: IN PROGRESS
+handoff_owner: AUDITOR
+handoff_status: READY_FOR_AUDIT
+builder_run_id: manual-20260825-1607-qual002
+starting_status: IN PROGRESS
+current_status: IN REVIEW
 definition_of_done: SQL time and network waterfalls are measured before optimisation.
-bounded_increment: establish a repeatable pre-optimisation SQL/query and frontend/network baseline and persist the measurement method/results
-optimisation_allowed_this_increment: no
-next_action: inspect the current production-used query surfaces and establish repeatable timing/waterfall measurements
+implementation_commit: e7a54d452e26e784e41fefb359a532a56d5c7ca8
+affected_layers:
+  - GitHub
+  - Supabase
+  - Vercel
+  - browser
+builder_checks:
+  - "documentation/performance/qual-002-pre-optimisation-baseline.md read-back contains the final SQL baseline, all three genuine browser samples, monitoring method and initial regression budgets"
+  - "live pg_stat_statements final read: latest_market_status 8 calls mean 78.036 ms max 121.355 ms; Markets provider metadata 93 calls mean 1.849 ms max 12.397 ms; owner strategy/test/review reads <=1.666 ms mean and <=6.692 ms max"
+  - "Vercel deployment dpl_HEwx9WtekyUE13AQiXbkBWvcHs4K is READY at deployed code commit 622ed826c65ada0bd326f3afdfc2829f40d8bb6d; palette, Next.js and TypeScript build passed and /api/performance-waterfall is deployed"
+  - "genuine performance-waterfall-v1 samples received: /markets 1448.9 ms / 19 resources; /opportunities 1901.0 ms / 16 resources; /strategies 412.5 ms / 25 resources"
+  - "telemetry uses browser Navigation Timing / Resource Timing, strips resource query strings/fragments, bounds resources and does not log cookies, tokens, user IDs or email"
+  - "no query/schema/trading/application optimisation was applied while establishing the baseline"
+deployment_required: yes
+deployed_commit: 622ed826c65ada0bd326f3afdfc2829f40d8bb6d
+deployment_status: READY
+deployment_gap: none; the reviewed implementation commit adds measurement documentation/controller history after the already-deployed telemetry code and does not change application code
+auditor_checks_required:
+  - independently inspect the reviewed diff and performance baseline document
+  - independently re-query production pg_stat_statements for the representative PostgREST surfaces
+  - independently verify deployment dpl_HEwx9WtekyUE13AQiXbkBWvcHs4K build/commit identity and the three production performance-waterfall-v1 samples
+  - confirm the reporter/receiver use genuine Navigation/Resource Timing and preserve the documented privacy boundary
+  - confirm the measured baseline predates any optimisation and the initial budgets are regression/investigation thresholds rather than claimed SLAs
+known_gaps:
+  - classification: auditor_verifiable
+    detail: the first complete browser baseline contains one desktop_or_other navigate sample per fixed route, so budgets are deliberately conservative rather than percentile SLAs
+  - classification: auditor_verifiable
+    detail: telemetry deliberately omits identity/session state; the /strategies sample proves route navigation/resource timing while owner-scoped strategy SQL is measured independently
+handoff_at: 25 Aug 2026, 16:16 AWST
 ```
 
-Exactly one item is `IN PROGRESS`. The Builder owns QUAL-002.
+Exactly one item is in `IN REVIEW`. The Auditor owns QUAL-002 and the Builder must wait.
 
 ## Definition of Operational
 
