@@ -9,11 +9,11 @@
 
 ## Purpose
 
-Define one reproducible persistence contract for strategy **backtest**, **paper** and **live** test evidence before the first real result is loaded.
+Define the reproducible persistence contract used for strategy **backtest**, **paper** and **live** test evidence.
 
 A `trading_test_runs` row is an evidence record. It must identify exactly which strategy definition was tested, where its data/fills came from, which calculation conventions produced its metrics, and whether the run reached a terminal state.
 
-STRAT-002 defines the format only. It does **not** load a real backtest, claim profitability, perform a strategy review, enable live trading or change the `DAILY_TREND_PULLBACK` strategy rules.
+STRAT-002 established the format without authorising live trading or changing the `DAILY_TREND_PULLBACK` rules. STRAT-003 subsequently loaded the first real backtest, STRAT-004 persisted its review decision and STRAT-005 exposed the owner-scoped evidence.
 
 ## 1. Test types
 
@@ -341,7 +341,7 @@ If the run cannot be completed reliably, persist `failed` with `failure_message`
 - Strategy snapshot/hash never changes after insertion.
 - If strategy rules changed, use a new strategy version and a new test run.
 - If a terminal result is later found invalid, retain enough history to explain the correction; do not silently reinterpret it under a changed strategy definition.
-- STRAT-003 is responsible for the concrete upsert/finalisation path for the first real result.
+- The concrete upsert/finalisation path and first real result were implemented under STRAT-003.
 
 ## 12. Ownership and access
 
@@ -353,11 +353,9 @@ Existing owner RLS remains authoritative:
 
 The provenance trigger copies `owner_user_id` from the selected strategy, and the existing insert policy independently enforces owner identity.
 
-## 13. STRAT-002 implementation boundary
+## 13. Implemented persistence boundary
 
-STRAT-002 changes the persistence/format contract only.
-
-It adds:
+STRAT-002 added:
 
 - explicit ingestion and metric versions;
 - lifecycle state;
@@ -369,11 +367,11 @@ It adds:
 - structured data and execution provenance;
 - lifecycle/provenance validation constraints.
 
-It does **not** insert a real `trading_test_runs` row. That remains STRAT-003.
+STRAT-002 itself did **not** insert a real `trading_test_runs` row. STRAT-003 subsequently loaded the first real row using this contract.
 
-## 14. Auditor acceptance matrix
+## 14. Completed audit evidence
 
-The STRAT-002 Auditor should independently verify:
+The independent STRAT-002 audit verified:
 
 1. `trading_test_runs` still supports exactly `backtest`, `paper`, `live` test types.
 2. The new provenance/version/lifecycle fields exist in live Supabase.
@@ -385,3 +383,10 @@ The STRAT-002 Auditor should independently verify:
 8. No real test-result row was created by STRAT-002.
 9. This specification defines backtest/paper/live provenance and the metric semantics used by the Standard Strategy Review.
 10. STRAT-003 loaded the first real test run; STRAT-004 persisted its review and STRAT-005 deployed the owner-scoped result.
+
+Related completion evidence:
+
+- [STRAT-002 audit](../project-audits/STRAT-002.md)
+- [STRAT-003 audit](../project-audits/STRAT-003.md)
+- [STRAT-004 audit](../project-audits/STRAT-004.md)
+- [Strategy framework and persisted result boundary](../strategy-framework.md)
