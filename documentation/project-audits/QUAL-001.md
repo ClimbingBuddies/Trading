@@ -1,5 +1,22 @@
 # QUAL-001 — Add automated tests for critical calculations/data access
 
+## Audit attempt started — 25 Aug 2026, 14:31 AWST
+
+- auditor_run_id: manual-20260825-1431-qual001
+- event: AUDIT_ATTEMPT_STARTED
+- project_plan_status_at_start: IN REVIEW
+- implementation_commit: 0f73a6b8401e23d6bd80ce20913d675fe65e8bfa
+- affected_layers: GitHub, Vercel
+- definition_of_done: Key calculations, data loaders and empty states have repeatable tests.
+- selected_evidence_group: Vercel/deployment
+- planned_checks:
+  - verify deployment `dpl_6MSTJWX8o52VRHeEt3GKQeiAYSph` is READY and tied to the implementation commit
+  - inspect build logs for successful palette/prebuild, TypeScript and Next.js build completion
+  - verify representative production Markets, Opportunities and Strategies routes remain healthy
+  - verify no relevant production runtime errors
+- current_owner: AUDITOR
+- decision: PENDING
+
 ## Audit attempt started — 25 Aug 2026, 14:14 AWST
 
 - auditor_run_id: manual-20260825-1414-qual001
