@@ -2,6 +2,23 @@
 
 This file is the persistent write-first checkpoint shared by the Trading Project Plan Builder and Auditor. It is operational controller state, not audit approval.
 
+## Manual build completed — 25 Aug 2026, 13:24 AWST
+
+- protocol_version: 1.3
+- builder_run_id: manual-20260825-1321-qual001
+- terminal_outcome: HANDOFF_COMPLETE
+- completed_task: QUAL-001
+- completed_builder_status: IN REVIEW
+- implementation_commit: 0f73a6b8401e23d6bd80ce20913d675fe65e8bfa
+- project_plan_commit: 067f35ab140e6be77c1677b3b47391ee7d72d34b
+- test_result: 4 passed, 0 failed
+- deployment_id: dpl_6MSTJWX8o52VRHeEt3GKQeiAYSph
+- deployment_status: READY
+- verified_layers: GitHub source/readback, deterministic Node test execution and Vercel production build
+- current_owner: AUDITOR
+- auditor_next_action: independently rerun tests, verify production-used helper coverage and check representative production routes
+- safety_boundary: no live-trading change and no Supabase data mutation
+
 ## QUAL-001 implementation verified — 25 Aug 2026, 13:23 AWST
 
 - protocol_version: 1.3
