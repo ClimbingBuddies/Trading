@@ -1,5 +1,42 @@
 # QUAL-001 — Add automated tests for critical calculations/data access
 
+## Terminal audit decision — 25 Aug 2026, 14:35 AWST
+
+- auditor_run_id: manual-20260825-1431-qual001
+- event: AUDIT_DECISION
+- implementation_commit: 0f73a6b8401e23d6bd80ce20913d675fe65e8bfa
+- project_plan_status_before_decision: IN REVIEW
+- definition_of_done: Key calculations, data loaders and empty states have repeatable tests.
+- decision: PASS
+- terminal_outcome_pending_plan_reconciliation: AUDIT_PASS
+
+### Definition of Done checks
+
+- key_calculations_repeatable_tests: VERIFIED — `scoreDelta` is directly tested through the same production helper imported by `lib/opportunity-daily-summary.ts`, including numeric and missing-data behaviour.
+- data_loader_repeatable_tests: VERIFIED — `buildMarketRows` and `summariseMarketRows` are directly tested through the same production helpers imported by `lib/markets-data.ts`, including canonical mapping, provider/no-data fallbacks, status/asset summaries and latest-observation selection.
+- empty_states_repeatable_tests: VERIFIED — `shouldShowEmptyState` is directly tested through the same production helper imported by `components/StrategyResultsClient.tsx`, including loading, empty and populated branches.
+- repeatability_and_execution: VERIFIED — repository test wiring is deterministic and independent of live mutable data; independent execution passed 4/4 tests with 0 failures and 0 skips.
+- type_and_build_compatibility: VERIFIED — the active `.d.mts` declaration matches the `.mjs` helper module; the exact implementation commit passed palette prebuild, Next.js compilation, TypeScript and production build.
+- production_health: VERIFIED — the exact implementation deployment is READY; `/markets`, `/opportunities` and `/strategies` each returned HTTP 200; no error/fatal runtime logs were found for the deployment in the preceding two hours.
+
+### Primary evidence inspected
+
+- GitHub: project handoff manifest, implementation commit, `package.json`, `tests/quality-critical.test.mjs`, `lib/quality-critical.mjs`, `lib/quality-critical.d.mts`, `lib/markets-data.ts`, `lib/opportunity-daily-summary.ts`, `components/StrategyResultsClient.tsx`.
+- Independent test execution: exact retrieved helper and test code, Node built-in test runner, 4 passed / 0 failed / 0 skipped.
+- Vercel: deployment `dpl_6MSTJWX8o52VRHeEt3GKQeiAYSph`, build logs, production route responses and deployment-scoped runtime logs.
+
+### Decision rationale
+
+Every material QUAL-001 Definition of Done condition is independently verified. The tests exercise production-used logic rather than duplicate-only test implementations, are repeatable without mutable production data, and the exact implementation remains build-compatible and healthy in production. No corrective work remains for QUAL-001.
+
+### Required controller transition
+
+- QUAL-001: `IN REVIEW` -> `DONE`
+- promote exactly one eligible successor: QUAL-002 -> `NEXT`
+- QUAL-003 and QUAL-004 remain `PLANNED`
+- current owner after successful read-back: BUILDER
+- project plan update/read-back: PENDING
+
 ## Audit attempt started — 25 Aug 2026, 14:31 AWST
 
 - auditor_run_id: manual-20260825-1431-qual001
