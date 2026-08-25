@@ -47,7 +47,7 @@ MON-002 should introduce a normal Supabase Auth session for users who choose to 
 
 Preferred v1 sign-in is email-based Supabase Auth (magic link / OTP or an equivalent permanent email identity). OAuth may be added later without changing the ownership model because all providers resolve to the same `auth.users.id`.
 
-Because the application is Next.js and currently server-rendered, MON-002 should use request-safe authenticated session handling rather than converting the existing module-level public data client into a shared persistent session client. The current public dashboard read path must remain usable without login.
+The implemented Next.js workspace uses request-safe authenticated session handling rather than converting the module-level public data client into a shared persistent session client. Public dashboard reads remain usable without login.
 
 ### Ownership
 
@@ -87,7 +87,7 @@ MON-002 should implement this contract before enabling any watchlist write contr
 5. Ensure `updated_at` is maintained on watchlist updates if the UI relies on it.
 6. Retain the existing `(watchlist_id, instrument_id)` primary key so an instrument cannot be duplicated within one list.
 
-A user may temporarily have zero watchlists. The first successfully created list should become default if the user has no default list. If a default list is deleted, MON-002 should either promote another owned list transactionally or leave the user with no default until the next list is created; it must never create two defaults.
+A user may temporarily have zero watchlists. The first successfully created list becomes the default when no default exists. Deleting a default either promotes another owned list transactionally or leaves no default until the next list is created; two defaults are never permitted.
 
 ### Grants
 
