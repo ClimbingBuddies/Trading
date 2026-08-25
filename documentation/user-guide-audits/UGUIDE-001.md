@@ -1,7 +1,7 @@
 # UGUIDE-001 — Producer Evidence
 
 **Task:** Establish guide structure and evidence inventory  
-**Status:** Awaiting independent audit  
+**Status:** PASS WITH ADVICE — independently audited  
 **Authoritative implementation audit target:** `8bd5e7105922f3aaf344f314a5f697c96b2eccb0`  
 **Starting project commit:** `eaed1e1c73b7abb625b38394eb40f9746fc47e25`  
 **Producer checkpoint commit:** `11077ab56cf3718fcbc30584fe2c3363636b36f3`  
@@ -120,3 +120,48 @@ The Auditor should:
 4. verify the screenshot count is exactly nine and every access dependency is explicit;
 5. verify the guide does not imply live trading or investment advice;
 6. issue PASS, PASS WITH ADVICE or one complete REWORK correction set without editing Producer work.
+
+
+## Independent Auditor decision — 26 August 2026
+
+**Decision:** PASS WITH ADVICE  
+**Implementation commit reviewed:** `8bd5e7105922f3aaf344f314a5f697c96b2eccb0`  
+**Audit scope:** UGUIDE-001 only  
+**Data or schema effects:** none
+
+### Evidence independently checked
+
+- Validated the corrected Producer handoff and the explicit `HANDOFF_ANSWER`; the plan, journal and this audit record now consistently identify `8bd5e7105922f3aaf344f314a5f697c96b2eccb0` as the sole implementation target.
+- Inspected the exact commit: it adds only `documentation/user-guide.md` (206 lines) and no application, schema, policy, schedule, deployment or production-data changes.
+- Compared the guide at the implementation commit with the current default branch; both resolve to blob `066e05f8648eb06e0c195f75e44e6d50fc6869a2` and are byte-for-byte identical.
+- Re-fetched all 17 unique canonical documentation targets linked by the guide; 17/17 resolved.
+- Independently inspected the current production UI at a stable 1363 × 936 CSS-pixel viewport, device-pixel ratio 1: root redirect plus `/admin`, `/markets`, `/markets/amd`, `/assessments`, `/assessments/gld`, `/opportunities`, `/opportunities/ai_advanced_packaging`, and the signed-out states of `/watchlists`, `/alerts` and `/strategies`.
+- Confirmed the guide's public-versus-authenticated access descriptions against visible production behaviour.
+- Confirmed the nine-row screenshot manifest has a unique, descriptive filename, responsible gate, route/state, access requirement and teaching purpose for each image. UGUIDE-001 appropriately adds no screenshots; image, alt-text, caption and privacy QA remains assigned to the gates that capture them.
+- Confirmed the guide contains prominent boundaries for no live-trade placement, non-personalised financial advice, short-term Market versus long-term Opportunity assessment, Technical/AI independence and `VALIDATE_ROBUSTNESS` / `continue_testing`.
+- Used read-only production evidence to corroborate current visible populations: 30 active instruments, 30 Market Convergence rows and 10 active/watch Opportunity themes. The current strategy decision is `VALIDATE_ROBUSTNESS` with `continue_testing`, and live execution is disabled.
+- Scanned the guide for email addresses and common token/secret patterns; none were found. No screenshots or private owner data were introduced by this gate.
+- Confirmed no superseded canonical guide existed before the implementation commit and no duplicate image or temporary guide artifact was introduced.
+
+### Findings
+
+1. The complete UGUIDE-001 Definition of Done is satisfied.
+2. The guide is truthful to the observed production landing behaviour: `/` redirects to `/admin`.
+3. Non-blocking advice: `documentation/frontend-route-map.md` still says `/` redirects to `/markets`. Reconcile that canonical route-map statement during final publication QA (UGUIDE-005), unless it is corrected earlier under separate authority. Do not change the accurate guide to match the stale statement.
+4. Authenticated owner screenshots are not evidence required by UGUIDE-001 and remain correctly deferred to UGUIDE-003/UGUIDE-004 under the recorded `AUTH_REQUIRED` rule.
+
+### Decision trace
+
+| Definition-of-Done item | Auditor result |
+|---|---|
+| Guide skeleton, audience and boundaries | PASS |
+| Task sequence and section scaffolding | PASS |
+| Current routes and canonical-document map | PASS WITH ADVICE — one stale root-redirect statement exists in the older route map |
+| Public/authenticated access requirements | PASS |
+| Exactly nine planned screenshots with responsibilities | PASS |
+| Superseded canonical draft cleanup | PASS — none existed |
+| Documentation-only scope | PASS |
+
+**Complete correction set:** none; no rework is required for UGUIDE-001.  
+**Successor authorised:** UGUIDE-002 — Document public navigation and assessment dashboards.  
+**Exact next action:** Producer begins only UGUIDE-002 after reading the updated plan and controller journal; UGUIDE-001 must not be reopened unless new contradictory primary evidence appears.
