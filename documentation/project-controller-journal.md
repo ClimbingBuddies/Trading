@@ -2,6 +2,18 @@
 
 This file is the persistent write-first checkpoint shared by the Trading Project Plan Builder and Auditor. It is operational controller state, not audit approval.
 
+## Manual build started — 25 Aug 2026, 14:46 AWST
+
+- protocol_version: 1.3
+- builder_run_id: manual-20260825-1446-qual002
+- event: BUILD_ATTEMPT_STARTED
+- task_id: QUAL-002
+- task_title: Add performance budgets/query monitoring
+- starting_status: NEXT
+- intended_bounded_increment: establish a repeatable pre-optimisation baseline for representative SQL/query timing and frontend/network waterfall behaviour, persist the measurement method/results, and leave optimisation changes out of scope
+- current_owner: BUILDER
+- safety_boundary: measurement only; do not optimise production queries, change trading logic, alter persisted trading evidence or enable live trading
+
 ## Manual audit completed — 25 Aug 2026, 14:38 AWST
 
 - protocol_version: 1.3
