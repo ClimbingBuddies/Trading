@@ -49,9 +49,13 @@
 
 - auditor_run_id: manual-20260825-1758-qual003
 - decision: PASS
-- terminal_outcome: AUDIT_PASS_PENDING_PLAN_RECONCILIATION
+- terminal_outcome: AUDIT_PASS
 - definition_of_done_verdict: VERIFIED
 - remediation_required: none
 - non_blocking_advice: none
-- final_project_plan_status: pending project-plan write/read-back
-- next_promoted_task: pending project-plan write/read-back
+- final_project_plan_status: DONE
+- next_promoted_task: QUAL-004 — Add documentation checklist to development workflow
+- next_promoted_status: NEXT
+- next_owner: BUILDER
+- project_plan_commit: 771da0f08b3a384dfaf12c017465857fac4e63da
+- project_plan_readback: VERIFIED — QUAL-003 is DONE, QUAL-004 is the sole NEXT item, and current work names QUAL-004 with Builder ownership.
