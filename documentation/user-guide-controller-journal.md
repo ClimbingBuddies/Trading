@@ -6,13 +6,14 @@ This journal is the sole persisted communication channel for the scheduled User 
 
 ```yaml
 project_status: ACTIVE
-active_task: UGUIDE-002
-active_task_status: IN REVIEW
-handoff_owner: AUDITOR
-handoff_status: READY_FOR_AUDIT
-last_updated: 2026-08-26T03:14:07+08:00
-completed_task: UGUIDE-001
-next_action: Auditor independently audits only UGUIDE-002 at the exact functional range and current evidence record
+active_task: UGUIDE-003
+active_task_status: NEXT
+handoff_owner: PRODUCER
+handoff_status: AUTHORISED
+last_updated: 2026-08-26T04:07:29+08:00
+completed_task: UGUIDE-002
+audit_decision: PASS_WITH_ADVICE
+next_action: Producer reads the latest plan and journal, records BUILD_ATTEMPT_STARTED, and implements only UGUIDE-003
 ```
 
 ## State invariants
@@ -345,6 +346,38 @@ acceptance_criteria_evidence:
   exact_functional_range: 41b8f433f4302fb755566f02d336374a3df8b0b4^..9d405c7bb519c1ef203821d079e8f77bcdc74c6d
   documentation_only: final functional diff contains guide and image files only; no application or database effect
 exact_next_action: Auditor fetches the latest authoritative records, compares 41b8f433f4302fb755566f02d336374a3df8b0b4^..9d405c7bb519c1ef203821d079e8f77bcdc74c6d, opens every screenshot, re-verifies the six public routes and source/data claims, and issues PASS/PASS WITH ADVICE or one complete correction set; Producer does not edit UGUIDE-002 or promote UGUIDE-003
+```
+
+### 2026-08-26T04:07:29+08:00 — AUDIT_DECISION
+
+```yaml
+event: AUDIT_DECISION
+task_id: UGUIDE-002
+controller: AUDITOR
+decision: PASS_WITH_ADVICE
+implementation_commit_or_range_reviewed: 41b8f433f4302fb755566f02d336374a3df8b0b4^..9d405c7bb519c1ef203821d079e8f77bcdc74c6d
+audit_record: documentation/user-guide-audits/UGUIDE-002.md
+audit_record_decision_commit: 6da8dc01fe6e7be5bc8e5cf5611673f216a3cac4
+checks_performed:
+  - validated the complete Producer handoff and consistent exact implementation range
+  - compared the three-commit range; final diff contains only documentation/user-guide.md and four screenshot files
+  - confirmed the implementation guide and current guide are byte-for-byte identical
+  - fetched 17 of 17 linked canonical documents plus all UGUIDE-002 page/query source files
+  - verified root plus 10 current production workspace/detail states at 1363x936 CSS pixels, device-pixel-ratio 1
+  - confirmed dynamic Admin and Strategy detail route source files exist
+  - matched every local screenshot byte-for-byte to its exact Git blob and opened all four at original resolution
+  - confirmed screenshots are current-production, useful, non-repetitive, legible, privacy-safe and paired with unique meaningful alt text and concise captions
+  - independently corroborated screenshot prices, scores, counts and exposures against read-only persisted production records
+  - confirmed no fabricated state, personal information, token, secret, application change or data/schema effect
+  - confirmed public/authenticated, no-live-trading, non-advice and Market-versus-Opportunity boundaries are prominent
+  - confirmed no superseded guide draft, duplicate image candidate or temporary reconciliation artifact
+findings:
+  - all UGUIDE-002 acceptance criteria pass
+  - non_blocking_advice: production / redirects to /admin while documentation/frontend-route-map.md says /markets; the guide follows production truth and the stale route-map statement remains due no later than UGUIDE-005
+  - dynamic market values advanced after capture as expected; the screenshot rows remain genuine persisted records and the layout has not materially changed
+complete_correction_set: none
+next_task_promoted: UGUIDE-003
+exact_next_action: Producer reads the updated authoritative records, records BUILD_ATTEMPT_STARTED, and implements only UGUIDE-003; private screenshots may use only an already-authorised owner session, otherwise record AUTH_REQUIRED for the exact routes
 ```
 
 ## Required entry templates
