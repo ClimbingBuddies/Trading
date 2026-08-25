@@ -217,6 +217,12 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | QUAL-003 | **DONE** | Create operational runbook | Market-data, assessment, stale-data and deployment failure procedures are documented. |
 | QUAL-004 | **DONE** | Add documentation checklist to development workflow | Significant architecture/schema changes include documentation updates. |
 
+## Phase 9 — Documentation reconciliation
+
+| ID | Status | Task | Definition of done |
+|---|---|---|---|
+| DOC-RECON-001 | **IN PROGRESS** | Reconcile completed platform documentation | Current architecture, routes, data model, operations and strategy documentation agree with the completed platform; obsolete status narratives are removed; durable specifications and audit history are preserved; documentation indexes expose the current useful set. |
+
 ## Recommended execution order
 
 ```text
@@ -246,19 +252,19 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** All currently authorised project-plan items are **DONE** after QUAL-004 passed independent audit. No `NEXT`, `IN PROGRESS` or `IN REVIEW` task remains.
+**Current work:** DOC-RECON-001 is **IN PROGRESS** as an explicitly authorised documentation-only reconciliation. No application, Supabase, Vercel or trading behaviour may change.
 
 ## Active controller handoff
 
 ```yaml
-task_id: null
-handoff_owner: NONE
-handoff_status: PROJECT_PLAN_COMPLETE
-current_status: COMPLETE
-next_action: wait for an explicitly authorised new project-plan item; do not invent successor work
+task_id: DOC-RECON-001
+handoff_owner: BUILDER
+handoff_status: IMPLEMENTATION_ACTIVE
+current_status: IN PROGRESS
+next_action: reconcile and simplify the current GitHub documentation, then persist an exact IN REVIEW handoff for independent audit
 ```
 
-No item is `NEXT`, `IN PROGRESS` or `IN REVIEW`. The current authorised project plan is complete.
+DOC-RECON-001 is the sole active item. All previously completed project-plan items and audit records remain preserved.
 
 ## Definition of Operational
 
