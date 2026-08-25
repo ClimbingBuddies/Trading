@@ -7,13 +7,13 @@ This journal is the sole persisted communication channel for the scheduled User 
 ```yaml
 project_status: ACTIVE
 active_task: UGUIDE-003
-active_task_status: IN PROGRESS
-handoff_owner: PRODUCER
-handoff_status: BUILDING
-last_updated: 2026-08-26T04:59:15+08:00
+active_task_status: IN REVIEW
+handoff_owner: AUDITOR
+handoff_status: READY_FOR_AUDIT
+last_updated: 2026-08-26T05:06:13+08:00
 completed_task: UGUIDE-002
-audit_decision: PASS_WITH_ADVICE
-next_action: Producer implements and verifies only UGUIDE-003, then hands it to the Auditor if every acceptance criterion has evidence
+audit_decision: PENDING
+next_action: Auditor independently audits only UGUIDE-003 at implementation commit 173672b067ca8a4a37fd55a4515b5395b82b02c0; UGUIDE-004 remains PLANNED
 ```
 
 ## State invariants
@@ -391,6 +391,64 @@ plan_state_observed: UGUIDE-001 and UGUIDE-002 DONE; UGUIDE-003 sole NEXT gate; 
 handoff_observed: complete AUDIT_DECISION PASS_WITH_ADVICE for UGUIDE-002; UGUIDE-003 explicitly promoted to PRODUCER with no unresolved HANDOFF_QUERY
 intended_scope: document the permanent-account sign-in boundary, private Watchlist workflow, private Alert lifecycle and event-history interpretation; capture owner-state screenshots only if an already-authorised session exists, otherwise record exact AUTH_REQUIRED routes
 timestamp: 2026-08-26T04:59:15+08:00
+```
+
+### 2026-08-26T05:06:13+08:00 — PRODUCER_HANDOFF
+
+```yaml
+event: PRODUCER_HANDOFF
+task_id: UGUIDE-003
+handoff_from: PRODUCER
+handoff_to: AUDITOR
+handoff_status: READY_FOR_AUDIT
+implementation_commit_or_range: 173672b067ca8a4a37fd55a4515b5395b82b02c0
+files_changed:
+  implementation:
+    - documentation/user-guide.md
+  current_delivery_control:
+    - documentation/user-guide-audits/UGUIDE-003.md
+    - documentation/user-guide-project-plan.md
+    - documentation/user-guide-controller-journal.md
+screenshots_added_or_replaced: none; AUTH_REQUIRED recorded for /watchlists owner state and /alerts owner definition/event-history state because no already-authorised permanent-owner session was available
+routes_and_viewports_verified:
+  production: https://discoverbouldersmarkets.vercel.app
+  deployment: dpl_A6KPQBpua8Zk4QY4QWaDMj6FbckE READY at implementation commit 173672b067ca8a4a37fd55a4515b5395b82b02c0
+  viewport: 1363x936 CSS pixels at device-pixel-ratio 1
+  routes:
+    - /watchlists signed-out state with permanent-email boundary
+    - /alerts signed-out state with shared permanent-identity boundary
+  authenticated_owner_state: not observed; exact AUTH_REQUIRED limitation is explicit in the guide and audit record
+data_or_schema_effects: none
+tests_and_checks:
+  - fetched the authoritative plan, journal, documentation index, guide and absent pre-gate UGUIDE-003 audit record fresh
+  - validated UGUIDE-002 PASS_WITH_ADVICE and sole promotion of UGUIDE-003 with no unresolved HANDOFF_QUERY
+  - fetched current Watchlists/Alerts pages, client components and four canonical ownership/lifecycle documents
+  - verified current production signed-out behaviour for both private routes at the stable viewport
+  - verified the latest implementation deployment is production and READY
+  - used read-only Supabase queries to confirm RLS and all owner/event policies on watchlists, watchlist_items, alerts and alert_events
+  - used only aggregate persisted counts; no owner ID, email, name, note, alert or event payload entered the guide
+  - verified 17/17 guide Markdown targets resolve
+  - confirmed the exact implementation commit changes only documentation/user-guide.md
+  - confirmed both reserved owner screenshot paths return NOT_FOUND and are not counted as delivered
+  - scanned the guide for email addresses and common credential/token patterns; none found
+  - added no screenshot, fabricated row, value, alert, event, authenticated state, application change or database change
+known_limitations:
+  - AUTH_REQUIRED: /watchlists authenticated owner state was not observed and watchlists-owner-desktop.png was not captured
+  - AUTH_REQUIRED: /alerts authenticated owner definition/event-history state was not observed and alerts-owner-desktop.png was not captured
+  - authenticated control instructions are verified against current source, canonical contracts and live RLS evidence, not an owner-session browser workflow
+  - production / redirects to /admin while documentation/frontend-route-map.md still says /markets; prior Auditor advice remains due by UGUIDE-005
+  - Strategy, Admin, troubleshooting, glossary and representative mobile guidance remain assigned to UGUIDE-004
+acceptance_criteria_evidence:
+  sign_in_boundaries: documentation/user-guide.md sections 5 and 6 plus current signed-out production route checks
+  watchlists: section 5 covers create, edit, default, add, notes, reorder, remove, delete, empty state and owner isolation
+  alerts: section 6 covers all six v1 types, targets, conditions, create/edit/disable/enable/delete, baseline, rearm and idempotency
+  event_history: section 6 explains read-only system evidence, displayed provenance, valid empty state and not_requested delivery status
+  owner_isolation: current pg_policies evidence and canonical ownership/lifecycle documents
+  safe_use: permanent-account privacy, no sharing, monitoring-not-execution and non-advice boundaries
+  screenshot_alternative: exact AUTH_REQUIRED routes and absent reserved files recorded without inventing content
+  audit_record: documentation/user-guide-audits/UGUIDE-003.md at current blob 02e4771406266fd8fc0b92a5d3d6f67a60a60a8f
+  documentation_only: functional commit contains only documentation/user-guide.md; data_or_schema_effects none
+exact_next_action: Auditor fetches the latest authoritative records and exact commit 173672b067ca8a4a37fd55a4515b5395b82b02c0, independently verifies UGUIDE-003 source/RLS/production/AUTH_REQUIRED evidence, and issues PASS/PASS WITH ADVICE or one complete correction set; Producer does not edit this IN REVIEW gate, mark it DONE or promote UGUIDE-004
 ```
 
 ## Required entry templates
