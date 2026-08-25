@@ -1,3 +1,16 @@
+## DOC-RECON-001 audit started — 25 August 2026
+
+- protocol_version: 1.3
+- auditor_run_id: manual-20260825-doc-recon-001-audit
+- event: AUDIT_ATTEMPT_STARTED
+- task_id: DOC-RECON-001
+- implementation_commit: c2c88005ef3eca3b67e44f343b52edb2e62de247
+- selected_evidence_group: GitHub/source with representative read-only Supabase truth
+- current_status: IN REVIEW
+- current_owner: AUDITOR
+- planned_checks: validate the exact implementation range and handoff; reproduce route coverage, relative-link integrity and stale-status removal; verify preserved audits/specifications/completed plan entries and deliberate phase2-progress deletion; compare current architecture/data-model claims with representative production truth
+- safety_boundary: audit/controller records only; no implementation/reference documentation, application, Supabase, Vercel, schedule or trading behaviour changes
+
 # Project Controller Journal
 
 This file is the persistent write-first checkpoint shared by the Trading Project Plan Builder and Auditor. It is operational controller state, not audit approval.
