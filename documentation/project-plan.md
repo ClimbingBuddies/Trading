@@ -248,6 +248,44 @@ DOC-001 Assessment system overview
 
 **Current work:** `STRAT-004 — Execute Standard Strategy Review` is **IN REVIEW** after Builder implementation and verification on 24 August 2026. The Builder implemented the service-only idempotent evaluator `strategy_lab.evaluate_standard_strategy_review_v1(uuid)` in `supabase/migrations/20260824172500_execute_standard_strategy_review_v1.sql` (commit `3eca49d33222ede256666fdd9f9a44fb89133c0c`) and executed the live `STANDARD_STRATEGY_REVIEW` v1 tree against the exact immutable STRAT-003 baseline run. One evaluation is persisted with path `START -> MIN_TRADES -> EXPECTANCY -> PROFIT_FACTOR -> DRAWDOWN -> OUT_OF_SAMPLE -> VALIDATE_ROBUSTNESS`; the first four gates pass and the out-of-sample gate fails because `-8.26559237643118 > 0` is false. The resulting persisted outcome is `VALIDATE_ROBUSTNESS / continue_testing`. The strategy remains `testing`, live execution remains disabled and the source backtest is unchanged. Builder retry verification returned `already_complete` with the same evaluation and exactly one row. STRAT-004 also hardened `public.trading_decision_evaluations` in `supabase/migrations/20260824173500_harden_strategy_review_evidence_v1.sql` (commit `60d8c27e01459c260abedc48c48af4c734e32f7d`): `anon` has no table privileges, authenticated clients have owner-scoped SELECT only, browser writes/TRUNCATE are denied, and the evaluator is executable only by `service_role`. Real-role RLS verification confirmed the owner sees the evaluation and a second permanent user sees none. The result is documented in `documentation/strategy-reviews/daily-trend-pullback-v1-standard-review.md` (commit `3a01509c79826cb3539e593f8c38569625de97db`) and `documentation/strategy-framework.md` (commit `372eef49b2472e64ed64d255483020b2abf737c3`). Supabase security advisers show no new STRAT-004 finding. Latest visible production deployment at Builder verification time is `dpl_2zFDZWJMiFAuesNANUWTpevRmgDi`, READY on state-start commit `ec48a978b14e0dd7d9841de95626a31010721e60`; later STRAT-004 commits are database/documentation-only and do not alter frontend behaviour. The Auditor should independently verify the live tree traversal, exact persisted metrics/path/outcome, retry identity, system-generated evidence security and the boundary that STRAT-005 frontend surfacing has not been implemented. STRAT-005 and all later items remain `PLANNED`; the Builder has not promoted a next item.
 
+
+## Active controller handoff
+
+```yaml
+task_id: STRAT-004
+handoff_owner: AUDITOR
+handoff_status: READY_FOR_AUDIT
+implementation_commit: 372eef49b2472e64ed64d255483020b2abf737c3
+reviewed_commits:
+  - 3eca49d33222ede256666fdd9f9a44fb89133c0c
+  - 60d8c27e01459c260abedc48c48af4c734e32f7d
+  - 3a01509c79826cb3539e593f8c38569625de97db
+  - 372eef49b2472e64ed64d255483020b2abf737c3
+affected_layers:
+  - GitHub
+  - Supabase
+deployment_required: no
+not_applicable:
+  - Vercel
+  - browser
+builder_checks:
+  - live decision tree executed against the immutable STRAT-003 baseline
+  - outcome persisted as VALIDATE_ROBUSTNESS / continue_testing
+  - identical retry returned already_complete with one evaluation row
+  - service-role execution and owner-scoped read boundary verified
+  - live execution remained disabled
+auditor_checks_required:
+  - independently verify exact metrics, path and outcome in Supabase
+  - independently verify retry identity and single-row persistence
+  - independently verify service-only execution and owner isolation
+  - verify STRAT-005 frontend surfacing was not implemented
+known_gaps: []
+handoff_at: 2026-08-25 Australia/Perth
+builder_run_id: recovery-20260825-strat-004
+```
+
+The handoff is database/documentation-only. Production deployment and browser checks are outside STRAT-004's Definition of Done. The Auditor must reach a persisted `AUDIT_PASS`, `AUDIT_REWORK` or `AUDIT_RETRY_PENDING` outcome; it must not exit silently.
+
 ## Definition of Operational
 
 A workflow is Operational only when its schema and implementation exist, scheduling/trigger ownership is explicit, source data is validated, real results are persisted, lifecycle reaches a terminal state, errors are recorded, retries are idempotent, access policies are deliberate, the frontend does not require privileged secrets, an end-to-end run has actually been verified, and the actual flow is documented.
