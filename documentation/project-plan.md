@@ -216,7 +216,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
-| DOC-RECON-001 | **IN PROGRESS** | Reconcile completed platform documentation | Current architecture, routes, data model, operations and strategy documentation agree with the completed platform; obsolete status narratives are removed; durable specifications and audit history are preserved; documentation indexes expose the current useful set. |
+| DOC-RECON-001 | **IN REVIEW** | Reconcile completed platform documentation | Current architecture, routes, data model, operations and strategy documentation agree with the completed platform; obsolete status narratives are removed; durable specifications and audit history are preserved; documentation indexes expose the current useful set. |
 
 ## Recommended execution order
 
@@ -247,21 +247,38 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** DOC-RECON-001 is **IN PROGRESS** after independent audit returned a complete documentation correction set. The Builder is next and must address the recorded REWORK findings before another handoff.
+**Current work:** DOC-RECON-001 is **IN REVIEW** after the Builder addressed the complete Auditor correction set. The independent Trading Auditor is next.
 
 ## Active controller handoff
 
 ```yaml
 task_id: DOC-RECON-001
-handoff_owner: BUILDER
-handoff_status: REWORK_REQUIRED
-current_status: IN PROGRESS
-implementation_commit: c2c88005ef3eca3b67e44f343b52edb2e62de247
+handoff_owner: AUDITOR
+handoff_status: READY_FOR_AUDIT
+current_status: IN REVIEW
+implementation_commit: e3e88a5d16f7c36cae15d5cdf67974bf186c6729
+implementation_range: 4cfa6d62ea3770edba661e5a24877686f3c45712..e3e88a5d16f7c36cae15d5cdf67974bf186c6729
+affected_layers:
+  - GitHub
+builder_checks:
+  route_coverage: PASS_14_OF_14
+  relative_links: PASS_118_OF_118
+  stale_completed_delivery_claims: PASS_ZERO
+  phase2_progress_absent: PASS
+  audit_history_preserved: PASS_48
+  specifications_preserved: PASS_8
+  representative_supabase_truth: PASS_READ_ONLY
+deployment_required: no
+deployment_status: NOT_APPLICABLE_DOCUMENTATION_ONLY
+auditor_checks_required: independently reproduce compare, routes, links, stale-state scan, preservation and representative Supabase agreement
+known_gaps: none
 audit_record: documentation/project-audits/DOC-RECON-001.md
-next_action: address every numbered remediation in documentation/project-audits/DOC-RECON-001.md, rerun the documentation checks and persist a new exact implementation handoff
+audit_record_commit: 035248144909bedb50c33d24975372e71dc90bdb
+handoff_at: 25 Aug 2026, 19:54 AWST
+builder_run_id: manual-20260825-1942-doc-recon-001-rework
 ```
 
-DOC-RECON-001 remains the sole active item. No successor was promoted. All previously completed project-plan items and audit records remain preserved.
+DOC-RECON-001 remains the sole active item in review. No successor was promoted. All previously completed project-plan items and audit records remain preserved.
 
 ## Definition of Operational
 
