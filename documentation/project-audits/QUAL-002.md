@@ -22,6 +22,41 @@
 - current_owner: AUDITOR
 - decision: PENDING
 
+### Evidence group result — Supabase/schema-data-security
+
+- result: VERIFIED
+- statistics_window: VERIFIED — `pg_stat_statements_info.stats_reset` is `2026-07-25 02:48:24.972248+00`, which predates the QUAL-002 Builder measurements. The Auditor therefore reproduced the same cumulative statistics window rather than a reset/recreated sample.
+- latest_market_status: VERIFIED — the live PostgREST statement selecting the documented market status columns remains at 8 calls, mean 78.036 ms, max 121.355 ms, exactly matching the persisted final Builder baseline.
+- markets_provider_metadata: VERIFIED — the live `provider_instruments` + `data_providers` PostgREST statement remains at 93 calls, mean 1.849 ms, max 12.397 ms, exactly matching the persisted final Builder baseline.
+- trading_test_runs_owner_read: VERIFIED — the live owner-scoped PostgREST statement is present with `owner_user_id` and `strategy_id` references at 14 calls, mean 1.666 ms, max 6.692 ms, exactly matching the persisted final Builder baseline.
+- trading_decision_evaluations_owner_read: VERIFIED — the live owner-scoped PostgREST statement is present with `owner_user_id` and `test_run_id` references at 14 calls, mean 1.510 ms, max 6.617 ms, exactly matching the persisted final Builder baseline.
+- trading_strategies_owner_read: VERIFIED — the live owner-scoped PostgREST statement is present with `owner_user_id` at 14 calls, mean 0.786 ms, max 3.826 ms, exactly matching the persisted final Builder baseline.
+- provider_mapping_reference: VERIFIED WITH EXPECTED CUMULATIVE DRIFT — the live `provider_instruments` + `instruments` PostgREST statement is now 2,983 calls, mean 1.945 ms, max 16.753 ms versus the persisted baseline of 2,981 calls, mean 1.944 ms, max 16.753 ms. The two additional calls and 0.001 ms mean change are consistent with normal traffic after the baseline and the unchanged statistics-reset window.
+- query_surface_identity: VERIFIED — the inspected statements are generated PostgREST `pgrst_source` reads against the exact public tables/views documented by QUAL-002; the strategy statements independently show the owner-scoping predicates expected by the production owner view.
+- mutation_boundary: VERIFIED — all Auditor Supabase operations in this evidence group were read-only `SELECT` statements against statistics metadata; no schema, data, policy, function or trading-state mutation was performed or required.
+- pre_optimisation_measurement_claim: VERIFIED FOR SUPABASE EVIDENCE — live cumulative statistics remain consistent with the persisted pre-optimisation baseline, and no optimisation was introduced by this audit group.
+
+### AUDIT_CONTINUE — 25 Aug 2026, 16:35 AWST
+
+- auditor_run_id: manual-20260825-1631-qual002
+- event: AUDIT_CONTINUE
+- completed_evidence_groups:
+  - GitHub/source
+  - Supabase/schema-data-security
+- verified_checks:
+  - reviewed implementation/baseline identity and no optimisation source drift
+  - repeatable live SQL/PostgREST timing evidence for Markets and owner strategy surfaces
+  - cumulative statistics continuity through an unchanged `pg_stat_statements` reset window
+  - owner-scoped strategy/test/review query identities
+  - no Supabase mutation required for the measurement-only audit
+- remaining_evidence_groups:
+  - Vercel/deployment — independently verify deployment `dpl_HEwx9WtekyUE13AQiXbkBWvcHs4K`, build/commit identity, `/api/performance-waterfall` deployment and production runtime health
+  - browser/user-flow — independently verify persisted `performance-waterfall-v1` samples for `/markets`, `/opportunities` and `/strategies` match the documented timings/resource counts and represent real browser Navigation/Resource Timing evidence
+- next_evidence_group: Vercel/deployment
+- project_plan_status: IN REVIEW
+- handoff_owner: AUDITOR
+- decision: PENDING
+
 ## Audit attempt started — 25 Aug 2026, 16:23 AWST
 
 - protocol_version: 1.3
