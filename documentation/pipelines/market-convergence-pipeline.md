@@ -174,6 +174,6 @@ Client privilege verification confirmed:
 - `anon`: read allowed, execute/write denied;
 - `authenticated`: read allowed, execute/write denied.
 
-## Deliberate next-stage boundaries
+## Completed delivery boundary
 
 CONV-002 established current-state persistence, CONV-003 added deterministic source-date history, stale-input decisions and bounded retries, and CONV-004 deployed distinct Technical, AI and Convergence presentation.
