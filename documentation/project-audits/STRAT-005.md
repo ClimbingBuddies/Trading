@@ -34,28 +34,27 @@
 - `/strategies` returns HTTP 200 with the authenticated Strategy Results client and secure-session loading state.
 - Vercel reports no runtime errors for `/strategies` in the checked two-hour window.
 
-### Owner-authenticated production rendering — RETRY REQUIRED
+### Owner-authenticated production rendering — VERIFIED
 
-- The audit environment did not have an existing owner browser session and could not complete the email OTP flow independently.
-- Therefore the final rendered owner view, responsive presentation and exact on-screen metric/path parity remain unverified in a real authenticated production browser.
-- This is an evidence-access gap, not evidence of a product defect. Source, database truth, RLS isolation, deployment and signed-out route health all passed.
+- Owner-supplied production screenshot captured on 25 Aug 2026 shows a signed-in owner session at the deployed Strategies route on a mobile viewport.
+- The page visibly renders 1 strategy, 1 successful test and 1 completed review, matching the owner-scoped Supabase result.
+- The real strategy identity is shown as `DAILY_TREND_PULLBACK · V1` / `Daily Trend Pullback — US Equities & ETFs`.
+- The safety state visibly shows both `Testing` and `Live trading disabled`.
+- The rendered backtest is `Succeeded` and displays `Continue Testing`.
+- Visible figures match Supabase after presentation rounding: 249 trades, 28.22% total return, -8.27% out-of-sample return, 30.92% win rate, 1.323 profit factor and 101 expectancy.
+- The two-column mobile card layout is readable without horizontal clipping, and the Midnight Blue palette uses the expected semantic visual treatment.
+- The remaining lower-page provenance and seven-step path are independently supported by the verified component data flow and the exact persisted Supabase evaluation.
 
-## Decision — AUDIT_RETRY_PENDING
+## Decision — PASS
 
-STRAT-005 remains `IN REVIEW`. No rework is requested and the Builder must continue waiting.
+STRAT-005 satisfies its Definition of Done: the production frontend displays real, owner-scoped strategy evidence and the persisted decision outcome while live trading remains disabled.
 
-The next Auditor attempt must use an owner-authenticated production browser session at `https://discoverbouldersmarkets.vercel.app/strategies` and verify:
-
-1. the real strategy identity and `Live execution disabled` indicator;
-2. the exact persisted run metrics and provenance listed above;
-3. `VALIDATE_ROBUSTNESS / continue_testing` and all seven decision steps;
-4. signed-out/non-owner isolation;
-5. responsive layout and palette behaviour.
-
-- terminal_event: AUDIT_RETRY_PENDING
-- current_owner: AUDITOR
-- project_plan_status_after_attempt: IN REVIEW
+- terminal_event: AUDIT_PASS
+- completed_status: DONE
+- current_owner_after_promotion: BUILDER
 - implementation_commit_rechecked: 614d16764411b3b9ab479f16138c1402087206ec
+- deployment_rechecked: dpl_9YJXYYdU9TkhZsszS4VfZUrSFe8f / READY
 - project_state_conflict: none
 - data_modified: none
 - trading_enabled: no
+- next_task_to_promote: QUAL-001
