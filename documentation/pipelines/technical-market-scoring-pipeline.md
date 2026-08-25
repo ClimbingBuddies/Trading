@@ -85,4 +85,4 @@ Post-migration database advisors reported no new `market_scores` finding. Existi
 
 ## Current operational boundary
 
-TECH-003 implements the deterministic scoring contract and persisted scores. Recurring scheduling, ownership, retry/error monitoring and Admin visibility remain TECH-004. Formal independence verification remains TECH-005. Market Convergence remains a later phase.
+TECH-003 implemented the deterministic scoring contract and persisted scores. TECH-004 added recurring scheduling, ownership, retry/error monitoring and Admin visibility; TECH-005 independently verified the boundary. Market Convergence is operational under the completed CONV tasks.
