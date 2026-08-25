@@ -2,6 +2,24 @@
 
 This file is the persistent write-first checkpoint shared by the Trading Project Plan Builder and Auditor. It is operational controller state, not audit approval.
 
+## Manual build completed — 25 Aug 2026, 18:40 AWST
+
+- protocol_version: 1.3
+- builder_run_id: manual-20260825-1824-qual004
+- terminal_outcome: HANDOFF_COMPLETE
+- completed_task: QUAL-004
+- completed_builder_status: IN REVIEW
+- implementation_commit: 08ccdfb26474ba0b69623759e2967dda9f741ada
+- project_plan_commit: 703c0d5510f04af752ae4956188248f9419efafe
+- primary_deliverables: `documentation/development-workflow.md`; `.github/pull_request_template.md`
+- discoverability: `documentation/README.md`; root `README.md`
+- verified_result: development workflow requires explicit documentation-impact classification; significant architecture/schema changes must update affected canonical documentation in the same change set; PR review template exposes the gate and canonical trigger map; root/documentation indexes expose the workflow
+- affected_layers: GitHub only
+- not_applicable_layers: Supabase mutation/schema; Vercel deployment; browser; external evidence
+- current_owner: AUDITOR
+- auditor_next_action: independently verify the workflow policy, PR template, canonical-document mapping and index links against the QUAL-004 Definition of Done
+- safety_boundary: GitHub workflow/documentation changes only; no Supabase data/schema, production behaviour, trading logic or live-trading state changed
+
 ## QUAL-004 PR-link verification checkpoint — 25 Aug 2026, 18:37 AWST
 
 - protocol_version: 1.3
@@ -121,4 +139,4 @@ This file is the persistent write-first checkpoint shared by the Trading Project
 - builder_next_action: add the smallest enforceable documentation checklist to the development workflow so significant architecture/schema changes explicitly include required documentation updates
 - safety_boundary: documentation/controller changes only; no Supabase data, production behaviour, trading logic or live-trading state changed during audit
 
-The next eligible controller is the Trading Project Plan Builder working on QUAL-004.
+The next eligible controller is the Trading Project Plan Auditor working on QUAL-004.
