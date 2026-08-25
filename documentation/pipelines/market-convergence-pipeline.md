@@ -176,4 +176,4 @@ Client privilege verification confirmed:
 
 ## Deliberate next-stage boundaries
 
-CONV-002 established current-state persistence and CONV-003 adds deterministic source-date history, stale-input decisions and bounded retries. Frontend presentation of Technical, AI and Convergence results as distinct views remains CONV-004.
+CONV-002 established current-state persistence, CONV-003 added deterministic source-date history, stale-input decisions and bounded retries, and CONV-004 deployed distinct Technical, AI and Convergence presentation.
