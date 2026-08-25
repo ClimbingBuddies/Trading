@@ -44,3 +44,14 @@
 - analytical_independence_boundary: VERIFIED — Market AI, Opportunity Assessment and the Technical Engine are kept analytically independent during diagnosis and recovery; convergence is only rerun after valid independent inputs exist.
 - definition_of_done: VERIFIED — market-data, assessment, stale-data and deployment failure procedures are all documented with first checks, recovery actions, exit/escalation criteria and recovery evidence.
 - remaining_evidence_groups: none — GitHub/source is the sole applicable layer for this documentation-only task.
+
+## Terminal decision — 25 Aug 2026, 18:00 AWST
+
+- auditor_run_id: manual-20260825-1758-qual003
+- decision: PASS
+- terminal_outcome: AUDIT_PASS_PENDING_PLAN_RECONCILIATION
+- definition_of_done_verdict: VERIFIED
+- remediation_required: none
+- non_blocking_advice: none
+- final_project_plan_status: pending project-plan write/read-back
+- next_promoted_task: pending project-plan write/read-back
