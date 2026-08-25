@@ -1,111 +1,79 @@
 # Trading Platform Documentation
 
-This documentation describes the current Discover Boulders Markets trading platform as implemented in the Supabase project `glvbqcplgjdfgjyknzsa` and the GitHub repository `ClimbingBuddies/Trading`.
+This directory documents the current Discover Boulders Markets platform. Obsolete delivery-status narratives have been removed; historical implementation evidence remains in the audit records.
 
-The documentation is intentionally based on the live platform structure rather than chat history. Where the database contains scaffolding for future functionality, that is identified explicitly.
+## Source-of-truth order
 
-## Source of truth
+1. Supabase production schema, functions, schedules, policies and persisted results.
+2. GitHub application source and canonical methodologies.
+3. Vercel deployment configuration and production behaviour.
+4. Historical audit records for how a result was verified.
 
-Use the following order when resolving uncertainty:
+The [canonical project plan](project-plan.md) controls authorised work. The [development workflow](development-workflow.md) requires documentation-impact review for significant architecture, schema, security, automation and operational changes.
 
-1. Supabase schema, functions, scheduled jobs and persisted results.
-2. GitHub application code and canonical methodology in `ClimbingBuddies/Trading`.
-3. Vercel deployment configuration and production behaviour where relevant.
-4. Historical chat notes only as supporting context.
+## Architecture and product
 
-Project delivery state is controlled by [project-plan.md](project-plan.md).
+- [Platform architecture](platform-architecture.md)
+- [Assessment system overview](assessment-system-overview.md)
+- [Supabase data model](supabase-data-model.md)
+- [Frontend route map](frontend-route-map.md)
+- [Functional roadmap](functional-roadmap.md)
+- [Mobile interaction review](mobile-interaction-review.md)
+- [Palette compliance review](palette-compliance-review.md)
 
-## Assessment systems
+## Market data and short-term assessment
 
-The platform contains two analytically independent assessment systems:
+- [Market data pipeline](pipelines/market-data-pipeline.md)
+- [Historical market-data backfill](pipelines/historical-market-data-backfill.md)
+- [Market Assessment pipeline](pipelines/market-assessment-pipeline.md)
+- [Daily Market Assessment specification](../automation/daily-market-assessment.md)
+- [Technical calculation specification](specifications/technical-calculation-specification.md)
+- [Technical indicator pipeline](pipelines/technical-indicator-pipeline.md)
+- [Technical scoring specification](specifications/technical-market-scoring-specification.md)
+- [Technical scoring pipeline](pipelines/technical-market-scoring-pipeline.md)
+- [Technical Engine operations](pipelines/technical-engine-operations.md)
+- [Technical Engine independence evidence](pipelines/technical-engine-independence.md)
+- [Market Convergence specification](specifications/market-convergence-specification.md)
+- [Market Convergence pipeline](pipelines/market-convergence-pipeline.md)
 
-- **Short-term Market Assessment** — asks whether a tracked instrument is attractive now. The independent ChatGPT Market branch has persisted assessment results. The independent Technical Engine persists versioned indicators and technical scores under recurring monitored ownership; the canonical Market Convergence methodology now has a trusted current-state population pipeline with real lineage-backed results.
-- **Long-term Opportunity Assessment** — asks what structural or technological changes could become important over months or years. Structural Opportunity and Technology Inflection signals are assessed independently before Opportunity Assessment / Opportunity Convergence is calculated. Themes, signals, assessments, exposures and Research & Evidence are persisted.
+## Long-term Opportunity research
 
-The two systems may be displayed together only after each has independently produced its result. Neither system's score, rating or conclusion may be used to form the other.
+- [Opportunity Assessment pipeline](pipelines/opportunity-assessment-pipeline.md)
+- [Daily Opportunity Assessment specification](../automation/daily-opportunity-assessment.md)
+- [External opinion model](specifications/external-opinion-model.md)
+- [External opinion pipeline](pipelines/external-opinion-pipeline.md)
 
-Start with [Assessment System Overview](assessment-system-overview.md) for the architecture, independence rules, convergence boundaries, current maturity and UI cross-reference.
+## Monitoring and private workspaces
 
-## Documentation map
+- [Watchlist access model](security/watchlist-auth-model.md)
+- [Watchlist activation](watchlist-activation.md)
+- [Alert trigger specification](specifications/alert-trigger-specification.md)
+- [Alert lifecycle](alert-lifecycle.md)
+- [Operational runbook](operational-runbook.md)
+- [Security and operational notes](security-and-operational-notes.md)
 
-### Project control and system overview
+## Strategy laboratory
 
-- [Canonical Project Plan](project-plan.md) — task-by-task delivery plan, dependencies, status and next action.
-- [Assessment System Overview](assessment-system-overview.md) — Market vs Opportunity Assessment, independence, convergence and UI boundaries.
-- [Platform Architecture](platform-architecture.md) — major platform layers and how they connect.
-- [Supabase Data Model](supabase-data-model.md) — tables, relationships and current implementation status.
-- [Functional Roadmap](functional-roadmap.md) — staged platform capability and future work.
-- [Phase 2 Progress](phase2-progress.md) — implementation status, activation gates and next actions.
+- [Strategy framework](strategy-framework.md)
+- [Daily Trend Pullback strategy](specifications/daily-trend-pullback-strategy.md)
+- [Backtest specification](specifications/daily-trend-pullback-backtest-v1.md)
+- [Test-run ingestion contract](specifications/strategy-test-run-ingestion.md)
+- [Baseline backtest result](backtests/daily-trend-pullback-v1-baseline-result.md)
+- [Standard strategy review](strategy-reviews/daily-trend-pullback-v1-standard-review.md)
 
-### Data and assessment pipelines
+The first strategy review outcome is `VALIDATE_ROBUSTNESS / continue_testing`. Live trading remains disabled.
 
-- [Market Data Pipeline](pipelines/market-data-pipeline.md) — Twelve Data ingestion, scheduling and load monitoring.
-- [Technical Calculation Specification](specifications/technical-calculation-specification.md) — deterministic Technical Engine indicators, intervals, warm-up, formulas, provenance, versioning and missing-data rules.
-- [Technical Indicator Pipeline](pipelines/technical-indicator-pipeline.md) — service-only calculation implementation, persistence, idempotency and verification.
-- [Technical Market Scoring Specification](specifications/technical-market-scoring-specification.md) — deterministic component, overall, confidence, missing-data and versioning rules.
-- [Technical Market Scoring Pipeline](pipelines/technical-market-scoring-pipeline.md) — service-only scoring implementation, persistence, security and verification.
-- [Technical Engine Scheduling and Monitoring](pipelines/technical-engine-operations.md) — daily frequency, trusted ownership, durable errors, bounded retries and Admin visibility.
-- [Technical Engine Independence Verification](pipelines/technical-engine-independence.md) — permitted inputs, prohibited cross-system dependencies, live dependency evidence and the rollback-only contamination test.
-- [Market Convergence Specification](specifications/market-convergence-specification.md) — equal-weight score, confidence, disagreement, labels, lineage and versioning for the two independent Market branches.
-- [Market Convergence Population Pipeline](pipelines/market-convergence-pipeline.md) — trusted source selection, source-date history, stale-input handling, bounded retries, persistence, lineage and live verification for `market-convergence-v1`.
-- [Market Assessment Pipeline](pipelines/market-assessment-pipeline.md) — AI Market Assessment records, lifecycle and known gaps.
-- [External Opinion Model Specification](specifications/external-opinion-model.md) — normalized external-opinion evidence role, atomic-versus-consensus boundary and non-double-counting rules for the AI Market Assessment.
-- [External Opinion Pipeline](pipelines/external-opinion-pipeline.md) — approved-source scheduling, trusted ingestion, canonical source identity, consensus lineage, coverage monitoring and RES-002 verification.
-- [Opportunity Assessment Pipeline](pipelines/opportunity-assessment-pipeline.md) — Structural Signal, Technology Inflection, Opportunity Convergence, exposure, Research & Evidence, retries and Operational definition.
-- [Daily Market Assessment Specification](../automation/daily-market-assessment.md) — canonical short-term AI Market Assessment methodology and independence rules.
-- [Daily Opportunity Assessment Specification](../automation/daily-opportunity-assessment.md) — canonical long-term Opportunity Assessment execution specification.
+## Security
 
-### Product, strategy and operations
+- [Market Assessment access classification](security/market-assessment-access-classification.md)
+- [Helper-function search-path hardening](security/helper-function-search-path-hardening.md)
+- [pg_net extension review](security/pg-net-extension-review.md)
+- [Watchlist authentication and ownership](security/watchlist-auth-model.md)
 
-- [Development Workflow](development-workflow.md) — mandatory documentation-impact checklist and review gate for significant architecture, schema, security, automation and operational changes.
-- [Operational Runbook](operational-runbook.md) — first-response and recovery procedures for market-data, assessment, stale-data and deployment failures.
-- [Strategy Framework](strategy-framework.md) — strategy/test tables and the standard decision tree.
-- [Frontend Route Map](frontend-route-map.md) — Next.js routes and the Supabase data each page uses.
-- [Market Assessment Access Classification](security/market-assessment-access-classification.md) — canonical public-output and internal-control access decision for the Market Assessment system.
-- [Watchlist Authentication and Ownership Model](security/watchlist-auth-model.md) — canonical Supabase Auth identity, private ownership and RLS/write boundary required before watchlist activation.
-- [Security and Operational Notes](security-and-operational-notes.md) — RLS, public dashboard access, secrets and known technical debt.
+## Delivery and audit evidence
 
-## Current platform status
+- [Canonical project plan](project-plan.md)
+- [Controller journal](project-controller-journal.md)
+- [Independent task audits](project-audits/)
 
-### Operational foundation
-
-- Twelve Data market-data ingestion.
-- 30 active instruments across equities, ETFs, forex and crypto.
-- 15-minute market-data scheduler.
-- Market-hours-aware loading for US equities and ETFs.
-- Market observation history and sync-run monitoring.
-- Admin and Markets dashboards.
-
-### Assessment systems — partial / advanced
-
-#### Market Assessment
-
-- Independent ChatGPT Market Assessment rows and evidence are persisted.
-- The `/assessments` and `/assessments/[symbol]` routes expose the AI Market branch.
-- A canonical GitHub Market methodology now exists at `automation/daily-market-assessment.md`.
-- The Daily Trading Market Assessment task still requires migration to the canonical GitHub specification and unattended-run verification under the project plan.
-- The Technical Engine now persists versioned daily/weekly indicator snapshots and independent `technical-score-v1` market scores, with a daily Supabase scheduler, bounded retry, durable run telemetry and Admin monitoring.
-- The canonical `market-convergence-v1` methodology is documented; Market Convergence has no current persisted output until the implementation stage.
-
-#### Opportunity Assessment
-
-- Active/watch Opportunity Themes are persisted.
-- Structural Opportunity Signals, Technology Inflection Signals and final Opportunity Assessments are populated.
-- Technology Inflection Events, tracked/external exposure mappings and Research & Evidence are populated.
-- The `/opportunities` and `/opportunities/[theme]` routes expose the long-term Opportunity system.
-- The project plan retains a formal end-to-end Operational verification item before the workflow is labelled fully Operational.
-
-### Other partial or future capability
-
-- External opinion/research capture is implemented under RES-002 with a scheduled GitHub-spec runner, service-only ingestion, canonical deduplication, consensus lineage and coverage telemetry; independent project-plan audit is still required before RES-002 is complete.
-- Watchlists and alerts.
-- Strategy testing and evaluation workflow.
-- Trading strategies and test-run data remain unpopulated until the strategy laboratory is operationalised.
-
-## Important principle
-
-A table existing in Supabase or a dashboard existing in the frontend does not mean the associated workflow is complete. Documentation in this folder distinguishes between:
-
-- **Operational** — implemented, scheduled/owned, verified end to end and documented under the project-plan definition.
-- **Partial** — meaningful pipeline/database/UI pieces exist but the end-to-end process is incomplete or awaiting verification.
-- **Scaffolded** — schema or UI structure exists but the production workflow or persisted output is not yet present.
+Audit records and completed plan entries are retained as durable evidence. They are not current-work instructions.
