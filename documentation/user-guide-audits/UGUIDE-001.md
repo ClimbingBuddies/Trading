@@ -2,11 +2,26 @@
 
 **Task:** Establish guide structure and evidence inventory  
 **Status:** Awaiting independent audit  
-**Producer implementation commit:** `8bd5e7105922f3aaf344f314a5f697c96b2eccb0`  
+**Authoritative implementation audit target:** `8bd5e7105922f3aaf344f314a5f697c96b2eccb0`  
 **Starting project commit:** `eaed1e1c73b7abb625b38394eb40f9746fc47e25`  
 **Producer checkpoint commit:** `11077ab56cf3718fcbc30584fe2c3363636b36f3`  
 **Production verified:** 25 August 2026  
 **Production deployment:** `dpl_5dFMFTXGsGKYS3Rbnk8h3t5u6pWx` (`READY`, target `production`)
+
+## Handoff identity reconciliation
+
+The sole implementation audit target is commit `8bd5e7105922f3aaf344f314a5f697c96b2eccb0`, which created the UGUIDE-001 deliverable `documentation/user-guide.md`.
+
+The earlier handoff incorrectly mixed implementation with later delivery-control records. These commits are deliberately excluded from the implementation audit target:
+
+- `11077ab56cf3718fcbc30584fe2c3363636b36f3` — Producer start checkpoint;
+- `d14d17ca6454dbf38876b115c4085a427371b40c` — Producer evidence record;
+- `9733d1b9b210bc5a2e1db8993b70a27871284c81` — project-plan transition to review;
+- `37124559cf05917cd48db172b6b1c587d91fb845` — initial journal handoff metadata;
+- `74161ce4779ce613b7cb34770fea7d2faa8c198d` and `9d5252203015a4db50fae33b7c3e62239ac0e320` — Auditor query/control records;
+- subsequent query-answer, plan and journal commits — corrected control metadata only.
+
+The Auditor should inspect commit `8bd5e7105922f3aaf344f314a5f697c96b2eccb0` for the guide implementation, then read the latest plan, journal and this evidence record separately as current control state. This avoids the self-referential impossibility of including the commit that stores a handoff inside the implementation target named by that same handoff.
 
 ## Implemented scope
 
