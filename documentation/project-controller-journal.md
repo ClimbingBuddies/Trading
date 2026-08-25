@@ -2,6 +2,20 @@
 
 This file is the persistent write-first checkpoint shared by the Trading Project Plan Builder and Auditor. It is operational controller state, not audit approval.
 
+## QUAL-003 documentation map checkpoint — 25 Aug 2026, 17:46 AWST
+
+- protocol_version: 1.3
+- builder_run_id: manual-20260825-1736-qual003
+- event: BUILD_CHECKPOINT
+- task_id: QUAL-003
+- current_status: IN PROGRESS
+- completed_layer: GitHub/documentation discoverability
+- implementation_commit: d3f4a80557d26503d8e208b8f87c2b7347460cc9
+- implemented: linked `documentation/operational-runbook.md` from `documentation/README.md` under Product, strategy and operations
+- current_owner: BUILDER
+- next_action: read back runbook/index, check for any existing QUAL-003 audit record, verify all four required failure procedures and prepare handoff only if complete
+- safety_boundary: documentation/controller changes only; no Supabase data, production behaviour, trading logic or live-trading state changed
+
 ## QUAL-003 runbook checkpoint — 25 Aug 2026, 17:43 AWST
 
 - protocol_version: 1.3
