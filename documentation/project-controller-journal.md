@@ -2,6 +2,24 @@
 
 This file is the persistent write-first checkpoint shared by the Trading Project Plan Builder and Auditor. It is operational controller state, not audit approval.
 
+## QUAL-002 bounded increment continued — 25 Aug 2026, 15:43 AWST
+
+- protocol_version: 1.3
+- builder_run_id: manual-20260825-1533-qual002
+- event: BUILD_CONTINUE
+- task_id: QUAL-002
+- current_status: IN PROGRESS
+- completed_work: verified the committed browser Performance API instrumentation deployed successfully to production; confirmed palette, TypeScript and Next.js build success; confirmed `/api/performance-waterfall` is deployed; queried Vercel runtime logs for genuine `[performance-waterfall-v1]` telemetry
+- deployment_id: dpl_HEwx9WtekyUE13AQiXbkBWvcHs4K
+- deployed_commit: 622ed826c65ada0bd326f3afdfc2829f40d8bb6d
+- deployment_status: READY
+- genuine_browser_samples_found: 0
+- exact_remaining_work: collect real production browser waterfall samples for `/markets`, `/opportunities` and `/strategies` once normal browser traffic reaches those routes; persist navigation/resource timings plus cache/auth state; define evidence-based budgets from those samples and the preserved SQL baseline; run final Builder checks; hand off only when the Definition of Done is satisfied
+- next_safe_action: on the next Builder run query Vercel runtime logs for `[performance-waterfall-v1]` first; if samples exist, persist them route-by-route before doing any further work; do not optimise queries before measurement is complete
+- current_owner: BUILDER
+- terminal_outcome: REWORK_IN_PROGRESS
+- safety_boundary: measurement/monitoring only; no query optimisation, frontend behaviour change beyond telemetry, trading-data mutation, trading-decision change or live-trading enablement occurred
+
 ## QUAL-002 deployment telemetry checkpoint — 25 Aug 2026, 15:42 AWST
 
 - protocol_version: 1.3
@@ -34,23 +52,5 @@ This file is the persistent write-first checkpoint shared by the Trading Project
 - current_owner: BUILDER
 - resume_from: telemetry implementation commits eef149d94b83797f7520210ec507f57c6ac9ab18, fe272e36da4f46ae63e7e60447895e61337d442b, 3a60284d36060d604a741c65cdd0d76bec8bdd10 and SQL baseline bcaaeb99d2b825e9b2da645e823eba02f03c3bbd
 - safety_boundary: measurement/monitoring only; do not optimise queries, alter trading logic/data, or enable live trading
-
-## QUAL-002 bounded increment continued — 25 Aug 2026, 15:31 AWST
-
-- protocol_version: 1.3
-- builder_run_id: manual-20260825-1525-qual002
-- event: BUILD_CONTINUE
-- task_id: QUAL-002
-- current_status: IN PROGRESS
-- completed_work: implemented a production browser Performance API measurement path that does not depend on the controller runtime DNS; added `PerformanceWaterfallReporter` for `/markets`, `/opportunities` and `/strategies`; added `/api/performance-waterfall` structured telemetry receiver; mounted reporter in root layout; preserved query-string/fragment stripping and bounded resource count; no optimisation applied
-- implementation_commits: eef149d94b83797f7520210ec507f57c6ac9ab18, fe272e36da4f46ae63e7e60447895e61337d442b, 3a60284d36060d604a741c65cdd0d76bec8bdd10
-- deployment_check: latest visible production deployment remains dpl_47wMdVRico4Sroe3x54aRV3Pzv4C at commit dce9a26e8a5a9f3a5a616174294d19c0156fc03f; telemetry commits are not yet visible in the deployment list
-- preserved_sql_baseline: documentation/performance/qual-002-pre-optimisation-baseline.md @ bcaaeb99d2b825e9b2da645e823eba02f03c3bbd
-- trustworthy_browser_samples: none yet because the instrumentation has not deployed; no timings were fabricated
-- exact_remaining_work: on the next Builder run verify the telemetry implementation build/deployment; once production is on commit 3a60284d36060d604a741c65cdd0d76bec8bdd10 or later, inspect Vercel runtime logs for genuine `[performance-waterfall-v1]` samples from `/markets`, `/opportunities` and `/strategies`; persist measured waterfalls and cache/auth state; define evidence-based performance budgets from SQL plus browser measurements; run final Builder checks and hand off only when the Definition of Done is met
-- next_safe_action: resume with deployment/build verification first; do not repeat the failed local Chromium DNS path and do not optimise before real production waterfall samples exist
-- current_owner: BUILDER
-- terminal_outcome: REWORK_IN_PROGRESS
-- safety_boundary: measurement/monitoring only; no query optimisation, trading-data mutation, trading-decision change or live-trading enablement occurred
 
 The next eligible controller is the Trading Project Plan Builder working on QUAL-002.
