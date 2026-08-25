@@ -2,6 +2,18 @@
 
 This file is the persistent write-first checkpoint shared by the Trading Project Plan Builder and Auditor. It is operational controller state, not audit approval.
 
+## Manual audit started — 25 Aug 2026, 17:58 AWST
+
+- protocol_version: 1.3
+- auditor_run_id: manual-20260825-1758-qual003
+- event: AUDIT_ATTEMPT_STARTED
+- task_id: QUAL-003
+- implementation_commit: d3f4a80557d26503d8e208b8f87c2b7347460cc9
+- selected_evidence_group: GitHub/source
+- current_status: IN REVIEW
+- current_owner: AUDITOR
+- next_action: independently verify the operational runbook against the current canonical GitHub pipeline/specification files; Supabase, Vercel, browser and external evidence are not applicable to this documentation-only task
+
 ## Manual build completed — 25 Aug 2026, 17:49 AWST
 
 - protocol_version: 1.3
