@@ -2,6 +2,20 @@
 
 This file is the persistent write-first checkpoint shared by the Trading Project Plan Builder and Auditor. It is operational controller state, not audit approval.
 
+## QUAL-002 measurement instrumentation checkpoint — 25 Aug 2026, 15:28 AWST
+
+- protocol_version: 1.3
+- builder_run_id: manual-20260825-1525-qual002
+- event: BUILD_CHECKPOINT
+- task_id: QUAL-002
+- current_status: IN PROGRESS
+- completed_layer: GitHub/browser measurement instrumentation
+- implementation_commit: eef149d94b83797f7520210ec507f57c6ac9ab18
+- implemented: client-side Performance API reporter for `/markets`, `/opportunities` and `/strategies`; resource URLs are query/fragment stripped and capped at 100 entries; no trading or query optimisation logic changed
+- remaining_in_increment: add the internal telemetry receiver, mount the reporter, verify build/deployment and inspect production runtime logs for genuine browser samples if they arrive
+- current_owner: BUILDER
+- safety_boundary: measurement only; no trading-data mutation, query optimisation or live-trading enablement
+
 ## Manual build started — 25 Aug 2026, 15:25 AWST
 
 - protocol_version: 1.3
