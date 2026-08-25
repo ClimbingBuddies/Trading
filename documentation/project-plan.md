@@ -213,7 +213,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
 | QUAL-001 | **DONE** | Add automated tests for critical calculations/data access | Key calculations, data loaders and empty states have repeatable tests. |
-| QUAL-002 | **NEXT** | Add performance budgets/query monitoring | SQL time and network waterfalls are measured before optimisation. |
+| QUAL-002 | **IN PROGRESS** | Add performance budgets/query monitoring | SQL time and network waterfalls are measured before optimisation. |
 | QUAL-003 | **PLANNED** | Create operational runbook | Market-data, assessment, stale-data and deployment failure procedures are documented. |
 | QUAL-004 | **PLANNED** | Add documentation checklist to development workflow | Significant architecture/schema changes include documentation updates. |
 
@@ -246,25 +246,24 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `QUAL-002 — Add performance budgets/query monitoring` is **NEXT** after QUAL-001 passed independent audit. The Builder owns the next action: measure current SQL/query timing and frontend/network behaviour using repeatable instrumentation before proposing optimisation.
+**Current work:** `QUAL-002 — Add performance budgets/query monitoring` is **IN PROGRESS** under Builder run `manual-20260825-1446-qual002`. This bounded increment measures representative SQL/query timing and frontend/network waterfall behaviour before any optimisation is proposed or applied.
 
 ## Active controller handoff
 
 ```yaml
 task_id: QUAL-002
 handoff_owner: BUILDER
-handoff_status: READY_FOR_BUILD
+handoff_status: BUILDING
+builder_run_id: manual-20260825-1446-qual002
 starting_status: NEXT
-current_status: NEXT
+current_status: IN PROGRESS
 definition_of_done: SQL time and network waterfalls are measured before optimisation.
-previous_task: QUAL-001
-previous_outcome: PASS
-previous_implementation_commit: 0f73a6b8401e23d6bd80ce20913d675fe65e8bfa
-previous_audit_record: documentation/project-audits/QUAL-001.md
-next_action: measure current SQL/query timing and frontend/network behaviour using repeatable instrumentation before optimisation
+bounded_increment: establish a repeatable pre-optimisation SQL/query and frontend/network baseline and persist the measurement method/results
+optimisation_allowed_this_increment: no
+next_action: inspect the current production-used query surfaces and establish repeatable timing/waterfall measurements
 ```
 
-Exactly one item is `NEXT`. The Builder owns QUAL-002.
+Exactly one item is `IN PROGRESS`. The Builder owns QUAL-002.
 
 ## Definition of Operational
 
@@ -286,7 +285,7 @@ A workflow is Operational only when its schema and implementation exist, schedul
 | 18-Aug-2026 | OPS-001 | `documentation/project-audits/OPS-001.md` | Independent audit PASS WITH ADVICE; unattended Opportunity Assessment execution verified from canonical GitHub spec and live Supabase evidence; OPS-002 promoted. |
 | 18-Aug-2026 | OPS-002 | `documentation/project-audits/OPS-002.md` | Independent audit PASS; live Scheduled Task verified as a thin runner that retrieves the canonical GitHub Market specification; OPS-003 promoted. |
 | 18-Aug-2026 | OPS-003 | `documentation/project-audits/OPS-003.md` | Independent audit PASS WITH ADVICE; Market AI independence metadata standardised in the canonical spec and live persistence contract; OPS-004 promoted. |
-| 18-Aug-2026 | OPS-004 | `documentation/project-audits/OPS-004.md` | Independent audit PASS WITH ADVICE; weekday Market Assessment task verified enabled with the canonical thin runner; OPS-005 promoted. |
+| 19-Aug-2026 | OPS-004 | `documentation/project-audits/OPS-004.md` | Independent audit PASS WITH ADVICE; weekday Market Assessment task verified enabled with the canonical thin runner; OPS-005 promoted. |
 | 19-Aug-2026 | OPS-005 | `documentation/project-audits/OPS-005.md` | Independent audit PASS WITH ADVICE; first unattended Market Assessment verified with 30/30 active instruments, 68 evidence rows and terminal run/queue state; OPS-006 promoted. |
 | 19-Aug-2026 | OPS-006 | `documentation/project-audits/OPS-006.md` | Independent audit PASS WITH ADVICE; completed and resumable same-date retries reused the existing run without assessment/evidence duplicates; OPS-007 promoted. |
 | 19-Aug-2026 | OPS-007 | `documentation/project-audits/OPS-007.md` | Independent audit PASS WITH ADVICE; legacy test lifecycle finalised and seven obsolete queue rows terminally superseded without replay; SEC-001 promoted. |
