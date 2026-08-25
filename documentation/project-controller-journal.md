@@ -2,6 +2,21 @@
 
 This file is the persistent write-first checkpoint shared by the Trading Project Plan Builder and Auditor. It is operational controller state, not audit approval.
 
+## QUAL-004 pull-request gate checkpoint — 25 Aug 2026, 18:31 AWST
+
+- protocol_version: 1.3
+- builder_run_id: manual-20260825-1824-qual004
+- event: BUILD_CHECKPOINT
+- task_id: QUAL-004
+- current_status: IN PROGRESS
+- completed_layer: GitHub/development review workflow
+- implementation_commit: 31197a609724df36ffce2cc4a3a70204c36a2e86
+- implemented: `.github/pull_request_template.md` with required documentation-impact decision, explicit architecture/schema trigger checks, canonical documentation targets and a reviewer rework gate
+- verified_rule: a significant architecture or schema change must select `Documentation updated`; the PR workflow directs reviewers to return missing or stale canonical documentation for rework
+- current_owner: BUILDER
+- next_action: link `documentation/development-workflow.md` from the documentation map/root entry point, then read back and verify the complete QUAL-004 workflow
+- safety_boundary: GitHub workflow/documentation changes only; no Supabase data/schema, production behaviour, trading logic or live-trading state changed
+
 ## QUAL-004 documentation workflow checkpoint — 25 Aug 2026, 18:29 AWST
 
 - protocol_version: 1.3
@@ -93,48 +108,5 @@ This file is the persistent write-first checkpoint shared by the Trading Project
 - current_owner: AUDITOR
 - auditor_next_action: independently compare the runbook against current canonical operational specifications and verify the QUAL-003 Definition of Done without modifying implementation
 - safety_boundary: documentation/controller changes only; no Supabase data, production behaviour, trading logic or live-trading state changed
-
-## QUAL-003 documentation map checkpoint — 25 Aug 2026, 17:46 AWST
-
-- protocol_version: 1.3
-- builder_run_id: manual-20260825-1736-qual003
-- event: BUILD_CHECKPOINT
-- task_id: QUAL-003
-- current_status: IN PROGRESS
-- completed_layer: GitHub/documentation discoverability
-- implementation_commit: d3f4a80557d26503d8e208b8f87c2b7347460cc9
-- implemented: linked `documentation/operational-runbook.md` from `documentation/README.md` under Product, strategy and operations
-- current_owner: BUILDER
-- next_action: read back runbook/index, check for any existing QUAL-003 audit record, verify all four required failure procedures and prepare handoff only if complete
-- safety_boundary: documentation/controller changes only; no Supabase data, production behaviour, trading logic or live-trading state changed
-
-## QUAL-003 runbook checkpoint — 25 Aug 2026, 17:43 AWST
-
-- protocol_version: 1.3
-- builder_run_id: manual-20260825-1736-qual003
-- event: BUILD_CHECKPOINT
-- task_id: QUAL-003
-- current_status: IN PROGRESS
-- completed_layer: GitHub/documentation
-- project_plan_commit: 2091c8e4dc6eb0eb5f8e6136a19a8dffa3115e6e
-- implementation_commit: 411985bf8ecb93b0403ef71f36b837761c9a7974
-- implemented: `documentation/operational-runbook.md` covering market-data ingestion failure, assessment workflow failure, stale-data handling, Vercel deployment/route failure, security/evidence boundaries and recovery exit criteria
-- primary_sources_checked: `documentation/pipelines/market-data-pipeline.md`, `documentation/pipelines/market-assessment-pipeline.md`, `automation/daily-market-assessment.md`, `automation/daily-opportunity-assessment.md`, `documentation/pipelines/technical-engine-operations.md`, current audited project plan/journal state
-- verified_boundary: live Twelve Data quote freshness is separate from Tiingo 1day history; Market AI stops on clearly stale source data; Opportunity remains independent of short-term market freshness; Technical Engine uses its durable run/retry lifecycle; deployment lag is separated from implementation failure
-- current_owner: BUILDER
-- next_action: add the runbook to the documentation map, read back the final file and verify every QUAL-003 Definition of Done procedure is present before audit handoff
-- safety_boundary: documentation/controller changes only; no Supabase data, production behaviour, trading logic or live-trading state changed
-
-## Manual build started — 25 Aug 2026, 17:36 AWST
-
-- protocol_version: 1.3
-- builder_run_id: manual-20260825-1736-qual003
-- event: BUILD_ATTEMPT_STARTED
-- task_id: QUAL-003
-- task_title: Create operational runbook
-- starting_status: NEXT
-- intended_bounded_increment: create the smallest complete operational runbook covering market-data, assessment, stale-data and deployment failure procedures using current verified production architecture and controller boundaries; documentation-only unless primary evidence reveals a factual gap
-- current_owner: BUILDER
-- safety_boundary: documentation/controller changes only; do not alter Supabase data, production application behaviour, trading logic or live-trading state
 
 The next eligible controller is the Trading Project Plan Builder working on QUAL-004.
