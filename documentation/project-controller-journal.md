@@ -2,6 +2,20 @@
 
 This file is the persistent write-first checkpoint shared by the Trading Project Plan Builder and Auditor. It is operational controller state, not audit approval.
 
+## Manual audit continued — 25 Aug 2026, 14:17 AWST
+
+- protocol_version: 1.3
+- auditor_run_id: manual-20260825-1414-qual001
+- event: AUDIT_CONTINUE
+- task_id: QUAL-001
+- implementation_commit: 0f73a6b8401e23d6bd80ce20913d675fe65e8bfa
+- completed_evidence_group: GitHub/source
+- verified_result: handoff manifest valid; tests exercise production-used calculation, market-loader and strategy empty-state helpers; isolated Node execution passed 4/4 with 0 failures
+- remaining_evidence_group: Vercel/deployment
+- current_status: IN REVIEW
+- current_owner: AUDITOR
+- next_action: independently verify deployment/build and representative production route health; do not start a different evidence group in this run
+
 ## Manual audit started — 25 Aug 2026, 14:14 AWST
 
 - protocol_version: 1.3
