@@ -9,6 +9,7 @@ The platform is documented from the live Supabase structure outward. Start here:
 - [Canonical Project Plan](documentation/project-plan.md) — delivery status, dependencies and next action.
 - [Assessment System Overview](documentation/assessment-system-overview.md) — short-term Market Assessment vs long-term Opportunity Assessment, independence and convergence boundaries.
 - [Trading Platform Documentation](documentation/README.md)
+- [Development Workflow](documentation/development-workflow.md) — required documentation-impact checklist for significant architecture, schema, security, automation and operational changes.
 - [Platform Architecture](documentation/platform-architecture.md)
 - [Supabase Data Model](documentation/supabase-data-model.md)
 - [Market Data Pipeline](documentation/pipelines/market-data-pipeline.md)
