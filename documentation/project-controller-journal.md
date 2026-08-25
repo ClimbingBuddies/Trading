@@ -2,6 +2,24 @@
 
 This file is the persistent write-first checkpoint shared by the Trading Project Plan Builder and Auditor. It is operational controller state, not audit approval.
 
+## QUAL-002 bounded increment continued — 25 Aug 2026, 15:31 AWST
+
+- protocol_version: 1.3
+- builder_run_id: manual-20260825-1525-qual002
+- event: BUILD_CONTINUE
+- task_id: QUAL-002
+- current_status: IN PROGRESS
+- completed_work: implemented a production browser Performance API measurement path that does not depend on the controller runtime DNS; added `PerformanceWaterfallReporter` for `/markets`, `/opportunities` and `/strategies`; added `/api/performance-waterfall` structured telemetry receiver; mounted reporter in root layout; preserved query-string/fragment stripping and bounded resource count; no optimisation applied
+- implementation_commits: eef149d94b83797f7520210ec507f57c6ac9ab18, fe272e36da4f46ae63e7e60447895e61337d442b, 3a60284d36060d604a741c65cdd0d76bec8bdd10
+- deployment_check: latest visible production deployment remains dpl_47wMdVRico4Sroe3x54aRV3Pzv4C at commit dce9a26e8a5a9f3a5a616174294d19c0156fc03f; telemetry commits are not yet visible in the deployment list
+- preserved_sql_baseline: documentation/performance/qual-002-pre-optimisation-baseline.md @ bcaaeb99d2b825e9b2da645e823eba02f03c3bbd
+- trustworthy_browser_samples: none yet because the instrumentation has not deployed; no timings were fabricated
+- exact_remaining_work: on the next Builder run verify the telemetry implementation build/deployment; once production is on commit 3a60284d36060d604a741c65cdd0d76bec8bdd10 or later, inspect Vercel runtime logs for genuine `[performance-waterfall-v1]` samples from `/markets`, `/opportunities` and `/strategies`; persist measured waterfalls and cache/auth state; define evidence-based performance budgets from SQL plus browser measurements; run final Builder checks and hand off only when the Definition of Done is met
+- next_safe_action: resume with deployment/build verification first; do not repeat the failed local Chromium DNS path and do not optimise before real production waterfall samples exist
+- current_owner: BUILDER
+- terminal_outcome: REWORK_IN_PROGRESS
+- safety_boundary: measurement/monitoring only; no query optimisation, trading-data mutation, trading-decision change or live-trading enablement occurred
+
 ## QUAL-002 measurement instrumentation checkpoint — 25 Aug 2026, 15:28 AWST
 
 - protocol_version: 1.3
@@ -127,7 +145,7 @@ This file is the persistent write-first checkpoint shared by the Trading Project
 - builder_run_id: manual-20260825-1446-qual002
 - event: BUILD_ATTEMPT_STARTED
 - task_id: QUAL-002
-- task_title: Add performance budgets/query monitoring
+- task_title: Add automated tests for critical calculations/data access
 - starting_status: NEXT
 - intended_bounded_increment: establish a repeatable pre-optimisation baseline for representative SQL/query timing and frontend/network waterfall behaviour, persist the measurement method/results, and leave optimisation changes out of scope
 - current_owner: BUILDER
