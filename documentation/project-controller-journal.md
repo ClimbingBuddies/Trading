@@ -2,6 +2,24 @@
 
 This file is the persistent write-first checkpoint shared by the Trading Project Plan Builder and Auditor. It is operational controller state, not audit approval.
 
+## Manual audit completed — 25 Aug 2026, 13:18 AWST
+
+- protocol_version: 1.3
+- auditor_run_id: manual-20260825-1307-strat005
+- terminal_outcome: AUDIT_PASS
+- completed_task: STRAT-005
+- completed_status: DONE
+- audit_record: documentation/project-audits/STRAT-005.md
+- audit_commit: 472ef95cbfdddd7de9fbcd50a4e1530f42111126
+- project_plan_commit: 7aa75b9d60dbaa0e0014b41ec3915e653158f2a0
+- authenticated_evidence: owner-supplied production mobile screenshot dated 25 Aug 2026
+- verified_result: real strategy, test and review counts render; real rounded metrics match Supabase; live trading is visibly disabled; responsive mobile layout is healthy
+- promoted_task: QUAL-001
+- promoted_status: NEXT
+- current_owner: BUILDER
+- builder_next_action: add repeatable tests for the smallest high-risk critical calculations, data loaders and empty states
+- safety_boundary: live trading remains disabled; persisted strategy evidence and the accepted STRAT-004 evaluation were not modified
+
 ## Manual audit paused for authenticated evidence — 25 Aug 2026, 13:11 AWST
 
 - protocol_version: 1.3
