@@ -57,6 +57,7 @@ Start with [Assessment System Overview](assessment-system-overview.md) for the a
 
 ### Product, strategy and operations
 
+- [Operational Runbook](operational-runbook.md) — first-response and recovery procedures for market-data, assessment, stale-data and deployment failures.
 - [Strategy Framework](strategy-framework.md) — strategy/test tables and the standard decision tree.
 - [Frontend Route Map](frontend-route-map.md) — Next.js routes and the Supabase data each page uses.
 - [Market Assessment Access Classification](security/market-assessment-access-classification.md) — canonical public-output and internal-control access decision for the Market Assessment system.
