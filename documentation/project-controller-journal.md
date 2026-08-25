@@ -2,6 +2,18 @@
 
 This file is the persistent write-first checkpoint shared by the Trading Project Plan Builder and Auditor. It is operational controller state, not audit approval.
 
+## Manual audit started — 25 Aug 2026, 16:23 AWST
+
+- protocol_version: 1.3
+- auditor_run_id: manual-20260825-1623-qual002
+- event: AUDIT_ATTEMPT_STARTED
+- task_id: QUAL-002
+- implementation_commit: e7a54d452e26e784e41fefb359a532a56d5c7ca8
+- selected_evidence_group: GitHub/source
+- current_status: IN REVIEW
+- current_owner: AUDITOR
+- next_action: independently verify the reviewed implementation identity, baseline documentation, telemetry source/privacy boundary and evidence-based budget framing; do not perform Supabase, Vercel or browser evidence work in this bounded group
+
 ## Manual build completed — 25 Aug 2026, 16:20 AWST
 
 - protocol_version: 1.3
@@ -283,7 +295,7 @@ This file is the persistent write-first checkpoint shared by the Trading Project
 - implementation_commit: 0f73a6b8401e23d6bd80ce20913d675fe65e8bfa
 - selected_evidence_group: Vercel/deployment
 - current_owner: AUDITOR
-- next_action: independently verify the implementation deployment, build result and representative production route health; make no source changes
+- next_action: independently verify deployment/build and representative production route health; make no source changes
 
 ## Manual audit continued — 25 Aug 2026, 14:17 AWST
 
