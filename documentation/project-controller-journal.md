@@ -2,6 +2,20 @@
 
 This file is the persistent write-first checkpoint shared by the Trading Project Plan Builder and Auditor. It is operational controller state, not audit approval.
 
+## QUAL-002 state claimed — 25 Aug 2026, 14:48 AWST
+
+- protocol_version: 1.3
+- builder_run_id: manual-20260825-1446-qual002
+- event: BUILD_CHECKPOINT
+- task_id: QUAL-002
+- current_status: IN PROGRESS
+- project_plan_commit: 58d76dc5c1c6a719aec6ffaf9a73f721f2217b69
+- completed_layer: GitHub/controller state
+- verified_result: QUAL-002 is the sole IN PROGRESS item; QUAL-003 and QUAL-004 remain PLANNED; Builder owns the bounded measurement increment
+- current_owner: BUILDER
+- next_action: inspect production-used query surfaces and capture repeatable pre-optimisation SQL/query and network measurements
+- safety_boundary: measurement only; no optimisation or trading-state change
+
 ## Manual build started — 25 Aug 2026, 14:46 AWST
 
 - protocol_version: 1.3
@@ -218,4 +232,4 @@ This file is the persistent write-first checkpoint shared by the Trading Project
 - builder_next_action: inspect the existing owner-facing strategy routes and implement the smallest complete STRAT-005 frontend display of real strategy, backtest and decision-review evidence
 - safety_boundary: preserve owner-scoped data, leave live trading disabled and do not alter the accepted STRAT-004 evaluation
 
-The next eligible controller is the Trading Project Plan Builder working on STRAT-005.
+The next eligible controller is the Trading Project Plan Builder working on QUAL-002.
