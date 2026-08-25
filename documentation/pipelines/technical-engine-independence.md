@@ -3,13 +3,13 @@
 **Project-plan item:** TECH-005  
 **Builder verification date:** 22 August 2026, 09:25 AWST  
 **Supabase project:** `glvbqcplgjdfgjyknzsa`  
-**Status:** Builder verification complete; awaiting independent Auditor review
+**Status:** Independently verified; audit **PASS** ([TECH-005 audit](../project-audits/TECH-005.md))
 
 ## Purpose
 
 This record defines and verifies the analytical input boundary for the independent Technical Engine. It demonstrates that `technical-engine-v1` indicators and `technical-score-v1` market scores use market and indicator inputs only, without reading or reacting to ChatGPT Market conclusions, Opportunity Assessment output or Market Convergence output.
 
-This is Builder pre-flight evidence. The Project Plan Auditor must independently decide whether TECH-005 passes.
+This record preserves the dated Builder pre-flight evidence that the independent Project Plan Auditor reproduced and accepted under TECH-005.
 
 ## Required boundary
 
