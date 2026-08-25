@@ -1,6 +1,6 @@
 # Project Plan Builder
 
-**Specification version:** 1.2  
+**Specification version:** 1.3  
 **Last updated:** 25 August 2026  
 **System:** Discover Boulders Markets / Trading  
 **Repository:** `ClimbingBuddies/Trading`  
@@ -245,3 +245,27 @@ An eligible Builder run must not end silently. It must finish with exactly one o
 - `STATE_CONFLICT` — fresh state changed during the run and no stale write was made.
 
 A run may report `NO_ELIGIBLE_WORK` only when a fresh project-plan read proves there is no `NEXT` or `IN PROGRESS` item.
+
+
+---
+
+## 11. Bounded unattended execution protocol
+
+This section is authoritative for scheduled runs and exists to prevent a long investigation from being terminated before its state is persisted.
+
+### Write-first rule
+
+After selecting an eligible `NEXT` or `IN PROGRESS` item, the Builder must update the existing `documentation/project-controller-journal.md` within the first three minutes of the run. The checkpoint must include `builder_run_id`, task ID, starting status, timestamp, intended bounded increment and `BUILD_ATTEMPT_STARTED`. Fetch the journal after writing it and verify the checkpoint exists before using Supabase, Vercel, browser or external-research tools.
+
+If the first checkpoint cannot be persisted, stop immediately and report `CONTROLLER_WRITE_FAILED`. Do not spend the run investigating or implementing work that cannot be recovered.
+
+### Bounded increment and resume
+
+- A scheduled run may complete one bounded implementation increment, not necessarily the whole project item.
+- Persist a journal checkpoint after each material write or verified evidence layer.
+- At 18 minutes elapsed, stop starting new tool work. Persist `BUILD_CONTINUE` with completed work, exact remaining work and the next safe action, leaving the item `IN PROGRESS`.
+- `BUILD_CONTINUE` is a healthy resumable outcome, not a blocker.
+- When implementation and Builder-controlled checks are complete, persist the normal handoff and `HANDOFF_COMPLETE`.
+- On the next run, resume from the latest verified journal/project-plan checkpoint rather than repeating completed work.
+
+The Builder must never wait inside a run for a later deployment, rate-limit reset or other future event. Record the state and end the run so a later cycle can resume.
