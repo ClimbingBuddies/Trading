@@ -212,8 +212,8 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
-| QUAL-001 | **IN REVIEW** | Add automated tests for critical calculations/data access | Key calculations, data loaders and empty states have repeatable tests. |
-| QUAL-002 | **PLANNED** | Add performance budgets/query monitoring | SQL time and network waterfalls are measured before optimisation. |
+| QUAL-001 | **DONE** | Add automated tests for critical calculations/data access | Key calculations, data loaders and empty states have repeatable tests. |
+| QUAL-002 | **NEXT** | Add performance budgets/query monitoring | SQL time and network waterfalls are measured before optimisation. |
 | QUAL-003 | **PLANNED** | Create operational runbook | Market-data, assessment, stale-data and deployment failure procedures are documented. |
 | QUAL-004 | **PLANNED** | Add documentation checklist to development workflow | Significant architecture/schema changes include documentation updates. |
 
@@ -246,44 +246,25 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `QUAL-001 — Add automated tests for critical calculations/data access` is **IN REVIEW** after Builder implementation commit `0f73a6b8401e23d6bd80ce20913d675fe65e8bfa`. Production-used score calculation, market-loader mapping/summary and strategy empty-state rules now have deterministic Node tests. The Auditor owns the next action.
+**Current work:** `QUAL-002 — Add performance budgets/query monitoring` is **NEXT** after QUAL-001 passed independent audit. The Builder owns the next action: measure current SQL/query timing and frontend/network behaviour using repeatable instrumentation before proposing optimisation.
 
 ## Active controller handoff
 
 ```yaml
-task_id: QUAL-001
-handoff_owner: AUDITOR
-handoff_status: READY_FOR_AUDIT
+task_id: QUAL-002
+handoff_owner: BUILDER
+handoff_status: READY_FOR_BUILD
 starting_status: NEXT
-current_status: IN REVIEW
-builder_run_id: manual-20260825-1321-qual001
-definition_of_done: Key calculations, data loaders and empty states have repeatable tests.
-implementation_commit: 0f73a6b8401e23d6bd80ce20913d675fe65e8bfa
-affected_layers:
-  - GitHub
-  - Vercel
-builder_checks:
-  - "node --test tests/*.test.mjs: 4 passed, 0 failed"
-  - production modules import the tested quality-critical.mjs helpers
-  - scoreDelta covers numeric and missing-data behaviour
-  - market row construction covers canonical values, provider data and safe no-data fallbacks
-  - market summaries cover asset/freshness counts and latest observation selection
-  - strategy empty-state rule covers loading, empty and populated states
-  - Vercel deployment dpl_6MSTJWX8o52VRHeEt3GKQeiAYSph is READY at the implementation commit
-deployment_required: yes
-deployed_commit: 0f73a6b8401e23d6bd80ce20913d675fe65e8bfa
-deployment_status: READY
-auditor_checks_required:
-  - independently run the repository test command
-  - confirm tests execute production-used helpers rather than duplicate-only test logic
-  - verify market loader output types and behaviour remain compatible
-  - inspect the initial failed build and corrected d.mts declaration
-  - verify the READY production deployment and representative Markets, Opportunities and Strategies routes
-known_gaps: []
-handoff_at: 25 Aug 2026, 13:24 AWST
+current_status: NEXT
+definition_of_done: SQL time and network waterfalls are measured before optimisation.
+previous_task: QUAL-001
+previous_outcome: PASS
+previous_implementation_commit: 0f73a6b8401e23d6bd80ce20913d675fe65e8bfa
+previous_audit_record: documentation/project-audits/QUAL-001.md
+next_action: measure current SQL/query timing and frontend/network behaviour using repeatable instrumentation before optimisation
 ```
 
-Exactly one item is in `IN REVIEW`. The Auditor owns QUAL-001 and the Builder must wait.
+Exactly one item is `NEXT`. The Builder owns QUAL-002.
 
 ## Definition of Operational
 
@@ -338,3 +319,4 @@ A workflow is Operational only when its schema and implementation exist, schedul
 | 24-Aug-2026 | STRAT-003 | `documentation/project-audits/STRAT-003.md` | Independent audit PASS WITH ADVICE; first real baseline backtest, locked source hash, immutable provenance, accounting/event reconciliation, idempotent retry, success gate, owner isolation and STRAT-004 boundary verified; STRAT-004 promoted. |
 | 25-Aug-2026 | STRAT-004 | `documentation/project-audits/STRAT-004.md` | Independent audit PASS; live decision path/outcome, exact metrics, idempotent retry, service-only execution, owner isolation and live-disabled boundary verified; STRAT-005 promoted. |
 | 25-Aug-2026 | STRAT-005 | `documentation/project-audits/STRAT-005.md` | Independent audit PASS; owner-authenticated mobile production rendering, exact real metrics/outcome, owner isolation, deployment health and live-disabled boundary verified; QUAL-001 promoted. |
+| 25-Aug-2026 | QUAL-001 | `documentation/project-audits/QUAL-001.md` | Independent audit PASS; deterministic tests directly exercise production-used calculation, market-loader and strategy empty-state helpers; 4/4 independent tests passed; exact implementation deployment/build and representative route/runtime health verified; QUAL-002 promoted. |
