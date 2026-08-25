@@ -8,9 +8,9 @@
 
 ## Purpose
 
-Define the approved v1 alert types, target scopes, source-of-truth tables, trigger semantics, ownership rules, evaluation timing and event-deduplication contract that MON-004 must implement.
+Define the approved v1 alert types, target scopes, source-of-truth tables, trigger semantics, ownership rules, evaluation timing and event-deduplication contract implemented by MON-004.
 
-MON-003 is a definition task only. It does not activate alert writes, create alert events, schedule evaluators or send notifications.
+MON-003 established this contract. MON-004 implemented it as documented in the [Alert Lifecycle](../alert-lifecycle.md) and passed independent review in the [MON-004 audit](../project-audits/MON-004.md).
 
 ## Design principles
 
@@ -21,13 +21,11 @@ MON-003 is a definition task only. It does not activate alert writes, create ale
 5. **Evaluation must use persisted source data.** Browser-local values, fabricated values and UI-derived calculations are not valid alert sources.
 6. **Stale or ineligible source data must not create analytical alerts.** Freshness alerts are the mechanism for warning about stale Market data.
 7. **Event creation must be idempotent.** Re-running an evaluator against the same source transition must not create a duplicate event.
-8. **External notification delivery is not part of v1 MON-003.** MON-004 must persist trustworthy alert-event history. Email/SMS/push delivery requires a separate approved delivery contract; event persistence must not depend on delivery success.
+8. **External notification delivery is not part of v1.** Production persists trustworthy alert-event history with `notification_status = 'not_requested'`. Email/SMS/push delivery requires a separate approved delivery contract; event persistence does not depend on delivery success.
 
-## Current live scaffold
+## Implemented production boundary
 
-The live database already contains empty `public.alerts` and `public.alert_events` tables, but they are not production-ready alert infrastructure.
-
-Current production boundary after MON-004:
+The production MON-004 lifecycle provides:
 
 - `alerts.owner_user_id` is mandatory and references a permanent Supabase Auth user;
 - owners can manage only their own alert definitions through owner-scoped RLS;
@@ -51,7 +49,7 @@ Every enabled alert must have exactly one target scope.
 
 A watchlist-scoped alert is evaluated independently for each current watchlist instrument. Each generated event records the actual `instrument_id` that fired.
 
-Opportunity alerts are theme-scoped in v1. MON-004 should add a nullable `theme_id` foreign key to `opportunity_themes(id)` and enforce exactly one target among `instrument_id`, `watchlist_id` and `theme_id`. Storing an unvalidated theme UUID only inside JSON is not sufficient for the canonical target relationship.
+Opportunity alerts are theme-scoped in v1. Production uses a nullable `theme_id` foreign key to `opportunity_themes(id)` and enforces exactly one target among `instrument_id`, `watchlist_id` and `theme_id`. An unvalidated theme UUID inside JSON is not a canonical target relationship.
 
 ## Common condition contract
 
@@ -137,7 +135,7 @@ Required condition fields:
 
 The event fires when the instrument enters a selected state. It re-arms only after returning to a non-selected healthy/closed state and later entering the selected state again.
 
-Because freshness changes with time even when no new quote arrives, MON-004 must evaluate freshness on a recurring cadence no slower than the existing 15-minute Market-data cadence.
+Because freshness changes with time even when no new quote arrives, the production evaluator runs freshness on a recurring cadence no slower than the existing 15-minute Market-data cadence.
 
 ### 3. Independent ChatGPT Market Assessment — `market_assessment`
 
@@ -306,7 +304,7 @@ Historical rows earlier than alert creation are baseline state only and must not
 
 ## Evaluation timing
 
-MON-004 should evaluate each type after its authoritative producer finishes, rather than polling every table indiscriminately:
+The production lifecycle evaluates each type after its authoritative producer finishes, rather than polling every table indiscriminately:
 
 - **Price:** after a successful Market-data quote load; freshness also gets a scheduled time-based evaluation at the 15-minute Market cadence.
 - **Market Assessment:** after the relevant GPT Market run reaches terminal success.
@@ -320,7 +318,7 @@ A retry of a producer must not create duplicate alert events for an unchanged so
 
 Every alert has a persisted logical state independent of `last_triggered_at`.
 
-MON-004 must persist enough evaluator state to know:
+Persisted evaluator state records:
 
 - last source row/key evaluated;
 - prior condition truth/state;
@@ -344,7 +342,7 @@ For `changes`, fire once for each new source row whose selected metric differs f
 
 ## Event idempotency and provenance
 
-`alert_events` must gain or otherwise enforce a deterministic event key. The recommended v1 contract is a non-null `event_key` with a unique constraint on `(alert_id, event_key)`.
+`alert_events` enforces a non-null deterministic `event_key` with uniqueness on `(alert_id, event_key)`.
 
 The event key must identify the triggering transition, for example:
 
@@ -352,7 +350,7 @@ The event key must identify the triggering transition, for example:
 - assessment/convergence/opportunity/technical: source row ID + trigger code;
 - freshness: alert ID + instrument ID + entered state + rearm cycle identity.
 
-Every event must preserve enough provenance to explain why it fired. `alert_events.metadata` should include where applicable:
+Every event preserves enough provenance to explain why it fired. `alert_events.metadata` includes where applicable:
 
 - `condition_version`;
 - alert type and operator;
@@ -367,9 +365,9 @@ Every event must preserve enough provenance to explain why it fired. `alert_even
 
 `trigger_value` is used when the triggering value is numeric. Label/state triggers use metadata and may leave `trigger_value` null.
 
-## Ownership and access contract for MON-004
+## Implemented ownership and access contract
 
-Before alert writes are enabled, MON-004 must align alerts with the MON-001/MON-002 permanent-user model.
+Production alerts align with the MON-001/MON-002 permanent-user model.
 
 ### `alerts`
 
@@ -397,11 +395,11 @@ No service-role/secret credential may be exposed to the frontend.
 
 The existing `alert_events.notification_status` column must not be treated as proof of message delivery.
 
-For v1 event-history-only implementation, MON-004 should use an explicit status such as `not_requested`. If an outbound channel is added later, delivery lifecycle may use `pending`, `sent`, `failed` or `skipped`, but the underlying alert event must already be durably persisted before delivery is attempted.
+The v1 event-history implementation uses `not_requested`. If an outbound channel is separately approved later, delivery lifecycle may use `pending`, `sent`, `failed` or `skipped`, but the underlying alert event must already be durably persisted before delivery is attempted.
 
-## MON-004 minimum implementation acceptance matrix
+## MON-004 implementation evidence
 
-MON-004 should not be considered complete until Builder/Auditor can independently verify at least:
+The completed Builder and independent Auditor verification covered:
 
 1. permanent user A can create/edit/disable/delete only A's alert definitions;
 2. user B cannot read or mutate A's alerts or events;
@@ -422,4 +420,4 @@ MON-004 should not be considered complete until Builder/Auditor can independentl
 
 The project-plan requirement is: **Approved price, freshness, assessment, opportunity, convergence and technical triggers are documented.**
 
-This specification explicitly defines all six required trigger families, their authoritative persisted sources, target scopes, operators, conditions, eligibility, rearm rules, evaluation timing, event deduplication/provenance and the ownership/security boundary required for MON-004.
+This specification defines all six required trigger families, their authoritative persisted sources, target scopes, operators, conditions, eligibility, rearm rules, evaluation timing, event deduplication/provenance and the ownership/security boundary implemented by MON-004.
