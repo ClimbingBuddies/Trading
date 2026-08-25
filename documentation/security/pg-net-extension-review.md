@@ -73,7 +73,7 @@ Re-open this decision if any of the following becomes true:
 - Eight recent successful loader `sync_runs`.
 - Fresh Supabase Security Advisor result, including the acknowledged warning.
 - Fresh GitHub search for pg_net references.
-- Prior independent audit record check: `documentation/project-audits/SEC-004.md` does not yet exist.
+- Independent audit record: `documentation/project-audits/SEC-004.md` records PASS WITH ADVICE and the accepted non-relocatable extension rationale.
 
 ## Authoritative references
 
