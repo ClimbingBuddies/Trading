@@ -6,14 +6,14 @@ This journal is the sole persisted communication channel for the scheduled User 
 
 ```yaml
 project_status: ACTIVE
-active_task: UGUIDE-003
-active_task_status: IN REVIEW
-handoff_owner: AUDITOR
-handoff_status: READY_FOR_AUDIT
-last_updated: 2026-08-26T05:06:13+08:00
-completed_task: UGUIDE-002
-audit_decision: PENDING
-next_action: Auditor independently audits only UGUIDE-003 at implementation commit 173672b067ca8a4a37fd55a4515b5395b82b02c0; UGUIDE-004 remains PLANNED
+active_task: UGUIDE-004
+active_task_status: NEXT
+handoff_owner: PRODUCER
+handoff_status: AUTHORISED
+last_updated: 2026-08-26T06:03:30+08:00
+completed_task: UGUIDE-003
+audit_decision: PASS_WITH_ADVICE
+next_action: Producer reads the latest plan and journal, records BUILD_ATTEMPT_STARTED, and implements only UGUIDE-004
 ```
 
 ## State invariants
@@ -449,6 +449,43 @@ acceptance_criteria_evidence:
   audit_record: documentation/user-guide-audits/UGUIDE-003.md at current blob 02e4771406266fd8fc0b92a5d3d6f67a60a60a8f
   documentation_only: functional commit contains only documentation/user-guide.md; data_or_schema_effects none
 exact_next_action: Auditor fetches the latest authoritative records and exact commit 173672b067ca8a4a37fd55a4515b5395b82b02c0, independently verifies UGUIDE-003 source/RLS/production/AUTH_REQUIRED evidence, and issues PASS/PASS WITH ADVICE or one complete correction set; Producer does not edit this IN REVIEW gate, mark it DONE or promote UGUIDE-004
+```
+
+### 2026-08-26T06:03:30+08:00 — AUDIT_DECISION
+
+```yaml
+event: AUDIT_DECISION
+task_id: UGUIDE-003
+controller: AUDITOR
+decision: PASS_WITH_ADVICE
+implementation_commit_or_range_reviewed: 173672b067ca8a4a37fd55a4515b5395b82b02c0
+audit_record: documentation/user-guide-audits/UGUIDE-003.md
+audit_record_decision_commit: 92d5f6d091542045d7412dfbdd6746de28585946
+checks_performed:
+  - validated the complete, consistent Producer handoff and exact one-commit audit target
+  - confirmed the implementation commit changes only documentation/user-guide.md and current guide matches its blob exactly
+  - fetched current Watchlists/Alerts source and four canonical ownership/lifecycle documents
+  - verified 17 of 17 Markdown link targets and all 13 static/dynamic route source files
+  - independently opened root plus 10 representative production states at 1363x936 CSS pixels, device-pixel-ratio 1
+  - confirmed /watchlists and /alerts show signed-out permanent-account boundaries with no authorised owner session
+  - confirmed the nominated Vercel deployment is production READY and built from the exact implementation commit
+  - independently verified RLS, grants, owner/parent-owner policies, constraints, cascades, uniqueness and event idempotency with read-only Supabase evidence
+  - observed only aggregate private-workspace counts and exposed no identity, name, note or row payload
+  - confirmed both reserved owner-image paths are absent and the image directory contains only four prior audited images
+  - confirmed all four current guide images retain unique meaningful alt text and concise captions; UGUIDE-003 added no screenshot
+  - scanned the guide for email, user-ID, token, JWT and secret patterns; none found
+  - confirmed public/authenticated, monitoring/execution, no-live-trading and non-advice boundaries remain prominent
+  - confirmed no fabricated content, obsolete guide draft, duplicate image, temporary note, application change or data/schema effect
+findings:
+  - all UGUIDE-003 acceptance criteria pass
+  - Watchlist and Alert instructions match current source, canonical contracts and live database controls
+  - event-history, baseline, rearm, idempotency and not_requested delivery guidance is accurate
+  - AUTH_REQUIRED precisely covers /watchlists and /alerts owner states and satisfies the gate's approved screenshot alternative without invented content
+  - non_blocking_advice: retain both AUTH_REQUIRED records unless an already-authorised owner session becomes available
+  - non_blocking_advice: production / redirects to /admin while documentation/frontend-route-map.md says /markets; reconcile the stale route-map statement by UGUIDE-005
+complete_correction_set: none
+next_task_promoted: UGUIDE-004
+exact_next_action: Producer fetches the latest authoritative records, appends BUILD_ATTEMPT_STARTED, and implements only UGUIDE-004; use only an already-authorised owner session for the Strategy screenshot or record AUTH_REQUIRED, and do not revisit UGUIDE-003 unless explicitly returned
 ```
 
 ## Required entry templates
