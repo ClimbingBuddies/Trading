@@ -43,3 +43,14 @@
 - scope_boundary: VERIFIED — QUAL-004 is a GitHub-only development-process/documentation task. No Supabase mutation/schema, Vercel deployment, browser or external evidence is required to prove this Definition of Done.
 - definition_of_done: VERIFIED — the repository development workflow now requires significant architecture/schema changes to include affected canonical documentation updates and exposes an explicit review gate that sends non-compliant changes back for rework.
 - remaining_evidence_groups: none.
+
+## Terminal decision — 25 Aug 2026, 18:48 AWST
+
+- auditor_run_id: manual-20260825-1844-qual004
+- decision: PASS
+- terminal_outcome: AUDIT_PASS_PENDING_PLAN_RECONCILIATION
+- definition_of_done_verdict: VERIFIED
+- remediation_required: none
+- non_blocking_advice: none
+- successor_state: no eligible `PLANNED` successor exists in the current authorised project plan; do not fabricate or invent a new task
+- final_project_plan_status: pending project-plan write/read-back
