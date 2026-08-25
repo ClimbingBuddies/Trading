@@ -212,7 +212,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
-| QUAL-001 | **IN PROGRESS** | Add automated tests for critical calculations/data access | Key calculations, data loaders and empty states have repeatable tests. |
+| QUAL-001 | **IN REVIEW** | Add automated tests for critical calculations/data access | Key calculations, data loaders and empty states have repeatable tests. |
 | QUAL-002 | **PLANNED** | Add performance budgets/query monitoring | SQL time and network waterfalls are measured before optimisation. |
 | QUAL-003 | **PLANNED** | Create operational runbook | Market-data, assessment, stale-data and deployment failure procedures are documented. |
 | QUAL-004 | **PLANNED** | Add documentation checklist to development workflow | Significant architecture/schema changes include documentation updates. |
@@ -246,28 +246,44 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `QUAL-001 — Add automated tests for critical calculations/data access` is **IN PROGRESS** under Builder run `manual-20260825-1321-qual001`. The bounded increment is inspecting the current test framework and adding deterministic coverage for the smallest high-risk calculation, loader and empty-state surfaces.
+**Current work:** `QUAL-001 — Add automated tests for critical calculations/data access` is **IN REVIEW** after Builder implementation commit `0f73a6b8401e23d6bd80ce20913d675fe65e8bfa`. Production-used score calculation, market-loader mapping/summary and strategy empty-state rules now have deterministic Node tests. The Auditor owns the next action.
 
 ## Active controller handoff
 
 ```yaml
 task_id: QUAL-001
-handoff_owner: BUILDER
-handoff_status: BUILDING
+handoff_owner: AUDITOR
+handoff_status: READY_FOR_AUDIT
 starting_status: NEXT
-current_status: IN PROGRESS
+current_status: IN REVIEW
 builder_run_id: manual-20260825-1321-qual001
 definition_of_done: Key calculations, data loaders and empty states have repeatable tests.
+implementation_commit: 0f73a6b8401e23d6bd80ce20913d675fe65e8bfa
 affected_layers:
   - GitHub
-  - test suite
-safety_boundary:
-  - do not enable live trading
-  - do not modify persisted strategy results or accepted audit evidence
-checkpoint_at: 25 Aug 2026, 13:21 AWST
+  - Vercel
+builder_checks:
+  - "node --test tests/*.test.mjs: 4 passed, 0 failed"
+  - production modules import the tested quality-critical.mjs helpers
+  - scoreDelta covers numeric and missing-data behaviour
+  - market row construction covers canonical values, provider data and safe no-data fallbacks
+  - market summaries cover asset/freshness counts and latest observation selection
+  - strategy empty-state rule covers loading, empty and populated states
+  - Vercel deployment dpl_6MSTJWX8o52VRHeEt3GKQeiAYSph is READY at the implementation commit
+deployment_required: yes
+deployed_commit: 0f73a6b8401e23d6bd80ce20913d675fe65e8bfa
+deployment_status: READY
+auditor_checks_required:
+  - independently run the repository test command
+  - confirm tests execute production-used helpers rather than duplicate-only test logic
+  - verify market loader output types and behaviour remain compatible
+  - inspect the initial failed build and corrected d.mts declaration
+  - verify the READY production deployment and representative Markets, Opportunities and Strategies routes
+known_gaps: []
+handoff_at: 25 Aug 2026, 13:24 AWST
 ```
 
-Exactly one item is in `IN PROGRESS`. The Builder owns QUAL-001 and the Auditor must wait.
+Exactly one item is in `IN REVIEW`. The Auditor owns QUAL-001 and the Builder must wait.
 
 ## Definition of Operational
 
