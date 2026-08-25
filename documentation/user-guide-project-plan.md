@@ -58,7 +58,7 @@ Only one gate may be active at a time.
 |---|---|---|---|
 | UGUIDE-001 | **DONE** | Establish guide structure and evidence inventory | Create the guide skeleton with audience, boundaries, task sequence and screenshot manifest; map every section to current routes and canonical documentation; record public/authenticated access needs; remove any superseded user-guide draft found at the canonical path. |
 | UGUIDE-002 | **DONE** | Document public navigation and assessment dashboards | Explain navigation, Markets, instrument detail, Market Assessment, Technical/AI/Convergence interpretation and Opportunity themes; add current production screenshots for the dashboard/Markets/Assessment/Opportunity flows; verify all statements against source, production and persisted data where relevant. |
-| UGUIDE-003 | **NEXT** | Document signed-in monitoring workspaces | Explain sign-in boundaries, Watchlists, Alerts and event history with owner-isolation and safe-use notes; add current authenticated screenshots where access exists; otherwise record a precise `AUTH_REQUIRED` blocker without inventing content. |
+| UGUIDE-003 | **IN REVIEW** | Document signed-in monitoring workspaces | Explain sign-in boundaries, Watchlists, Alerts and event history with owner-isolation and safe-use notes; add current authenticated screenshots where access exists; otherwise record a precise `AUTH_REQUIRED` blocker without inventing content. |
 | UGUIDE-004 | **PLANNED** | Document strategy, operations and support | Explain strategy results including `continue_testing`, Admin/data-health indicators, data freshness, status colours, empty states and common troubleshooting; add the strategy/Admin and one representative mobile screenshot; add a compact glossary. |
 | UGUIDE-005 | **PLANNED** | Final assembly and publication QA | Reconcile the whole guide against current production; validate every route, link, image, caption and alt text; confirm no private or fabricated information; remove duplicate/obsolete guide artifacts; link the guide from `documentation/README.md`; record final audit evidence and mark the project complete. |
 
@@ -148,14 +148,16 @@ The project is complete only when:
 
 ```yaml
 task_id: UGUIDE-003
-handoff_owner: PRODUCER
-handoff_status: AUTHORISED
-current_status: NEXT
-completed_task: UGUIDE-002
-implementation_commit_or_range_reviewed: 41b8f433f4302fb755566f02d336374a3df8b0b4^..9d405c7bb519c1ef203821d079e8f77bcdc74c6d
-audit_record: documentation/user-guide-audits/UGUIDE-002.md
-audit_decision: PASS_WITH_ADVICE
-audit_decision_commit: 6da8dc01fe6e7be5bc8e5cf5611673f216a3cac4
-advice: production / redirects to /admin while documentation/frontend-route-map.md still says /markets; retain the production-accurate guide and reconcile the stale route-map statement by UGUIDE-005
-next_action: Producer reads the latest plan and journal, records BUILD_ATTEMPT_STARTED, and implements only UGUIDE-003; use only an already-authorised owner session for private screenshots or record AUTH_REQUIRED
+handoff_owner: AUDITOR
+handoff_status: READY_FOR_AUDIT
+current_status: IN REVIEW
+implementation_commit_or_range: 173672b067ca8a4a37fd55a4515b5395b82b02c0
+audit_record: documentation/user-guide-audits/UGUIDE-003.md
+screenshots_added_or_replaced: none
+auth_required:
+  - /watchlists authenticated owner state
+  - /alerts authenticated owner definition and event-history state
+data_or_schema_effects: none
+known_advice: production / redirects to /admin while documentation/frontend-route-map.md still says /markets; reconcile the stale route-map statement by UGUIDE-005
+next_action: Auditor independently verifies only UGUIDE-003 at the exact implementation commit and either passes it or returns one complete correction set; UGUIDE-004 remains PLANNED
 ```
