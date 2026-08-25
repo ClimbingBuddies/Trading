@@ -394,9 +394,9 @@ It must not:
 
 External opinion is consumed, when useful, only inside this independent AI branch. Market Convergence must not ingest the same external-opinion data again as a third analytical branch, because that would double-count evidence already reflected in the AI Market Assessment.
 
-Those are separate project-plan stages.
+Those are implemented as separate project-plan stages.
 
-The intended future architecture is:
+The current architecture is:
 
 ```text
 Raw market observations
@@ -436,20 +436,18 @@ GitHub is the system of record for this methodology and future revisions to it. 
 
 ### Scheduled Task
 
-The production Scheduled Task should be a thin runner that retrieves this file fresh and executes it. The migration from the current embedded task prompt to that thin-runner form is a separate project-plan item (`OPS-002`).
+The production Scheduled Task is a thin runner that retrieves this file fresh and executes it. OPS-002 implemented this source-of-truth boundary.
 
 ---
 
-## 15. Current implementation notes
+## 15. Implemented operational boundary
 
-Verified on 17 August 2026:
+- `public.prepare_chatgpt_market_assessment` and `public.finalize_chatgpt_market_assessment` provide deterministic prepare/finalise lifecycle.
+- `public.gpt_market_assessments` enforces one row per run and instrument.
+- Assessment rows persist `methodology_version = 'independent-market-ai-v1'` and `technical_engine_input_used = false`.
+- OPS-002 implemented the thin GitHub-spec runner; OPS-004 activated the weekday task; OPS-005 independently verified a complete unattended production run.
+- OPS-006 verified same-date retry/resume without duplicate assessments or evidence.
+- OPS-007 finalised the preserved historical test lifecycle and superseded the orphan backlog without replaying it as current work.
+- RES-002 operationalised deduplicated external-opinion evidence and lineage without creating another analytical branch.
 
-- `public.prepare_chatgpt_market_assessment` exists in live Supabase;
-- `public.finalize_chatgpt_market_assessment` exists in live Supabase;
-- `public.gpt_market_assessments` has a unique constraint on `(run_id, instrument_id)`;
-- `public.gpt_market_assessments` includes `methodology_version` and `technical_engine_input_used` columns;
-- the existing Daily Trading Market Assessment Scheduled Task is currently disabled;
-- its current prompt still embeds the methodology directly rather than retrieving this GitHub file;
-- changing that Scheduled Task into a thin GitHub-spec runner remains `OPS-002`, not part of this documentation task.
-
-RES-001 review on 24 August 2026 adds the authoritative external-opinion evidence boundary without claiming that the external-opinion collection subsystem itself is operational. Operational collection, provenance, consensus generation, monitoring and machine-verifiable deduplication remain RES-002.
+Current operations are documented in [Market Assessment Pipeline](../documentation/pipelines/market-assessment-pipeline.md), [External Opinion Pipeline](../documentation/pipelines/external-opinion-pipeline.md) and the corresponding project audit records.
