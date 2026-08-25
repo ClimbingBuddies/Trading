@@ -112,4 +112,4 @@ Builder checks confirmed:
 
 ## Interpretation boundary
 
-STRAT-003 records the result but does not make the strategy decision. In particular, the negative out-of-sample return is persisted as evidence rather than hidden or converted into a different test design. The Standard Strategy Review under STRAT-004 must evaluate the persisted metrics using the existing database-driven decision tree without changing this historical run.
+STRAT-003 recorded the result without making the strategy decision. In particular, the negative out-of-sample return is persisted as evidence rather than hidden or converted into a different test design. STRAT-004 subsequently evaluated the persisted metrics through the existing database-driven decision tree without changing this historical run.
