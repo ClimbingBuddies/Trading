@@ -2,6 +2,27 @@
 
 This file is the persistent write-first checkpoint shared by the Trading Project Plan Builder and Auditor. It is operational controller state, not audit approval.
 
+## Manual audit completed — 25 Aug 2026, 16:58 AWST
+
+- protocol_version: 1.3
+- auditor_run_id: manual-20260825-1651-qual002
+- terminal_outcome: AUDIT_PASS
+- completed_task: QUAL-002
+- completed_status: DONE
+- decision: PASS WITH ADVICE
+- implementation_commit: e7a54d452e26e784e41fefb359a532a56d5c7ca8
+- audit_record: documentation/project-audits/QUAL-002.md
+- audit_decision_commit: c169f72c58dd1e358847763bca0319cf12910769
+- project_plan_commit: f497a2303ae7380d85ab33f1f443cc2dea2e4345
+- verified_evidence_groups: GitHub/source; Supabase/schema-data-security; Vercel/deployment; browser/user-flow
+- verified_result: production SQL/PostgREST timing was independently reproduced; the exact telemetry deployment is READY and healthy; genuine browser Navigation/Resource Timing samples for /markets, /opportunities and /strategies exactly match the reviewed baseline; no optimisation was applied while establishing the baseline
+- promoted_task: QUAL-003
+- promoted_status: NEXT
+- current_owner: BUILDER
+- builder_next_action: create the operational runbook covering market-data, assessment, stale-data and deployment failure procedures using the current production architecture and verified operational boundaries
+- non_blocking_advice: collect additional comparable browser samples before treating current thresholds as percentile targets; if authenticated strategy-load optimisation is later required, use a privacy-preserving boolean session classification rather than identity-bearing telemetry
+- safety_boundary: no query optimisation, trading-data mutation, trading-decision change or live-trading enablement occurred during audit
+
 ## Manual audit started — 25 Aug 2026, 16:51 AWST
 
 - protocol_version: 1.3
@@ -97,4 +118,4 @@ This file is the persistent write-first checkpoint shared by the Trading Project
 - auditor_next_action: independently verify the reviewed implementation/baseline, live pg_stat_statements values, READY telemetry deployment and genuine performance-waterfall-v1 samples; decide PASS/PASS WITH ADVICE or REWORK
 - safety_boundary: no query optimisation, trading-data mutation, trading-decision change or live-trading enablement occurred
 
-The next eligible controller is the Trading Project Plan Auditor working on QUAL-002.
+The next eligible controller is the Trading Project Plan Builder working on QUAL-003.
