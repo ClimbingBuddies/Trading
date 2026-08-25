@@ -2,6 +2,24 @@
 
 This file is the persistent write-first checkpoint shared by the Trading Project Plan Builder and Auditor. It is operational controller state, not audit approval.
 
+## Manual build completed — 25 Aug 2026, 13:03 AWST
+
+- protocol_version: 1.3
+- builder_run_id: manual-20260825-1256-strat005
+- terminal_outcome: HANDOFF_COMPLETE
+- completed_task: STRAT-005
+- completed_builder_status: IN REVIEW
+- implementation_commit: 614d16764411b3b9ab479f16138c1402087206ec
+- project_plan_commit: e0a9bad56c44c3a98e8da29943b093d4b8e03646
+- deployment_id: dpl_9YJXYYdU9TkhZsszS4VfZUrSFe8f
+- deployment_status: READY
+- production_route: https://discoverbouldersmarkets.vercel.app/strategies
+- verified_layers: GitHub source, Vercel build/deployment, production HTTP route, Supabase owner and non-owner RLS reads
+- current_owner: AUDITOR
+- auditor_next_action: authenticate as the strategy owner and independently verify the real strategy, baseline metrics, provenance, VALIDATE_ROBUSTNESS / continue_testing outcome and seven-step decision path
+- safety_boundary: live trading remains disabled; no strategy, test-run or accepted STRAT-004 evaluation data was modified
+
+
 ## Manual build started — 25 Aug 2026, 12:56 AWST
 
 - protocol_version: 1.3
