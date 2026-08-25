@@ -214,8 +214,8 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 |---|---|---|---|
 | QUAL-001 | **DONE** | Add automated tests for critical calculations/data access | Key calculations, data loaders and empty states have repeatable tests. |
 | QUAL-002 | **DONE** | Add performance budgets/query monitoring | SQL time and network waterfalls are measured before optimisation. |
-| QUAL-003 | **IN REVIEW** | Create operational runbook | Market-data, assessment, stale-data and deployment failure procedures are documented. |
-| QUAL-004 | **PLANNED** | Add documentation checklist to development workflow | Significant architecture/schema changes include documentation updates. |
+| QUAL-003 | **DONE** | Create operational runbook | Market-data, assessment, stale-data and deployment failure procedures are documented. |
+| QUAL-004 | **NEXT** | Add documentation checklist to development workflow | Significant architecture/schema changes include documentation updates. |
 
 ## Recommended execution order
 
@@ -246,43 +246,20 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `QUAL-003 — Create operational runbook` is **IN REVIEW** after Builder implementation commit `d3f4a80557d26503d8e208b8f87c2b7347460cc9`. The runbook is documentation-only and is ready for independent verification against current canonical operational specifications.
+**Current work:** `QUAL-004 — Add documentation checklist to development workflow` is **NEXT** after QUAL-003 passed independent audit. The Builder owns the next action.
 
 ## Active controller handoff
 
 ```yaml
-task_id: QUAL-003
-handoff_owner: AUDITOR
-handoff_status: READY_FOR_AUDIT
-builder_run_id: manual-20260825-1736-qual003
-starting_status: NEXT
-current_status: IN REVIEW
-implementation_commit: d3f4a80557d26503d8e208b8f87c2b7347460cc9
-affected_layers:
-  - GitHub
-deployment_required: no
-not_applicable_layers:
-  - Supabase mutation/schema checks
-  - Vercel deployment checks
-  - browser checks
-  - external evidence
-builder_checks:
-  - PASS: `documentation/operational-runbook.md` read back successfully and explicitly covers market-data ingestion failure, assessment workflow failure, stale-data procedure and deployment/production-route failure.
-  - PASS: runbook preserves live Twelve Data `quote` versus Tiingo `1day` boundary and session-aware freshness handling.
-  - PASS: Market AI stale-data stop rule, Opportunity independence rule and Technical Engine durable retry lifecycle match current canonical specifications.
-  - PASS: deployment section separates source/build failure, deployment lag, READY route failure and compatibility-aware rollback.
-  - PASS: recovery evidence/security checklist prevents fabricated state, widened client privileges or secret exposure.
-  - PASS: documentation README links the new runbook.
-auditor_checks_required:
-  - Independently compare all four runbook procedures with current canonical pipeline/specification files.
-  - Verify retry/idempotency, timezone, source-of-truth and analytical-independence boundaries are represented accurately.
-  - Verify the runbook does not instruct operators to bypass RLS, expose secrets, fabricate current data or rewrite accepted historical evidence.
-  - Verify the documentation map points to the runbook and the QUAL-003 Definition of Done is fully satisfied.
-known_gaps: []
-handoff_at: 2026-08-25T17:48:00+08:00
+task_id: QUAL-004
+handoff_owner: BUILDER
+handoff_status: READY_TO_BUILD
+current_status: NEXT
+definition_of_done: Significant architecture/schema changes include documentation updates.
+next_action: add the smallest enforceable documentation checklist to the development workflow so significant architecture/schema changes explicitly include required documentation updates
 ```
 
-Exactly one item is `IN REVIEW`. The Auditor owns QUAL-003. QUAL-004 remains `PLANNED`; the Builder did not promote a successor.
+Exactly one item is `NEXT`. The Builder owns QUAL-004.
 
 ## Definition of Operational
 
@@ -339,3 +316,4 @@ A workflow is Operational only when its schema and implementation exist, schedul
 | 25-Aug-2026 | STRAT-005 | `documentation/project-audits/STRAT-005.md` | Independent audit PASS; owner-authenticated mobile production rendering, exact real metrics/outcome, owner isolation, deployment health and live-disabled boundary verified; QUAL-001 promoted. |
 | 25-Aug-2026 | QUAL-001 | `documentation/project-audits/QUAL-001.md` | Independent audit PASS; deterministic tests directly exercise production-used calculation, market-loader and strategy empty-state helpers; 4/4 independent tests passed; exact implementation deployment/build and representative route/runtime health verified; QUAL-002 promoted. |
 | 25-Aug-2026 | QUAL-002 | `documentation/project-audits/QUAL-002.md` | Independent audit PASS WITH ADVICE; live SQL/PostgREST timing, READY telemetry deployment and genuine browser Navigation/Resource Timing waterfalls independently verified; QUAL-003 promoted. |
+| 25-Aug-2026 | QUAL-003 | `documentation/project-audits/QUAL-003.md` | Independent audit PASS; market-data, assessment, stale-data and deployment recovery procedures verified against canonical GitHub specifications; QUAL-004 promoted. |
