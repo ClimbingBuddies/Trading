@@ -11,6 +11,7 @@ import AppNav from '@/components/AppNav'
 import ThemePaletteSelector from '@/components/ThemePaletteSelector'
 import OpportunityMarketLinkFallback from '@/components/OpportunityMarketLinkFallback'
 import OpportunityExposurePanel from '@/components/OpportunityExposurePanel'
+import PerformanceWaterfallReporter from '@/components/PerformanceWaterfallReporter'
 
 export const metadata: Metadata = {
   title: 'Discover Boulders Markets',
@@ -40,6 +41,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <script dangerouslySetInnerHTML={{ __html: paletteBootScript }} />
       </head>
       <body>
+        <PerformanceWaterfallReporter />
         <OpportunityMarketLinkFallback />
         <OpportunityExposurePanel />
         <div className="appShell">
