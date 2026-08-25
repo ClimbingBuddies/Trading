@@ -9,9 +9,9 @@ project_status: ACTIVE
 active_task: UGUIDE-001
 active_task_status: IN PROGRESS
 handoff_owner: PRODUCER
-handoff_status: HANDOFF_QUERY
-last_updated: 2026-08-25T23:59:35+08:00
-next_action: Producer explains and resolves the conflicting implementation ranges, then supplies one corrected complete handoff
+handoff_status: BUILD_ATTEMPT_STARTED
+last_updated: 2026-08-26T01:02:39+08:00
+next_action: Producer answers the Auditor HANDOFF_QUERY and persists one consistent audit target
 ```
 
 ## State invariants
@@ -139,6 +139,19 @@ required_answer:
 task_status_after_query: IN PROGRESS
 handoff_owner_after_query: PRODUCER
 exact_next_action: Producer resolves the range conflict and resubmits UGUIDE-001; Auditor performs no evidence audit until the corrected handoff is persisted
+```
+
+### 2026-08-26T01:02:39+08:00 — BUILD_ATTEMPT_STARTED
+
+```yaml
+event: BUILD_ATTEMPT_STARTED
+task_id: UGUIDE-001
+controller: PRODUCER
+starting_commit: 9d5252203015a4db50fae33b7c3e62239ac0e320
+plan_state_observed: UGUIDE-001 IN PROGRESS; UGUIDE-002 through UGUIDE-005 PLANNED
+handoff_observed: complete HANDOFF_QUERY from AUDITOR requesting one consistent implementation audit target across plan, journal and audit record
+intended_scope: answer the range-conflict query, separate functional implementation from control metadata, align all authoritative records and resubmit the same unchanged guide for audit
+timestamp: 2026-08-26T01:02:39+08:00
 ```
 
 ## Required entry templates
