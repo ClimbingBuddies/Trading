@@ -94,7 +94,7 @@ This is the main idempotency control for the scheduled task.
 
 ## Assessment writes
 
-The scheduled task should assess only instruments that do not yet have a row for the current `run_id`.
+The scheduled task assesses only instruments that do not yet have a row for the current `run_id`.
 
 The database already enforces:
 
@@ -148,27 +148,23 @@ Behaviour:
 
 A retry must not create another run for the same date.
 
-The task should:
+The retry path:
 
-1. call `prepare_chatgpt_market_assessment()`;
-2. reuse the returned `run_id`;
-3. query which active instruments are still missing from that run;
-4. assess only the missing instruments;
-5. finalise again when finished.
+1. calls `prepare_chatgpt_market_assessment()`;
+2. reuses the returned `run_id`;
+3. queries which active instruments are still missing from that run;
+4. assesses only the missing instruments;
+5. finalises again when finished.
 
 This lets an interrupted scheduled run resume safely.
 
-## Historical queue rows
+## Historical queue and test rows — resolved
 
-Seven legacy queue requests from 3–11 August 2026 remain in the database.
+OPS-007 terminally superseded the seven unattempted legacy queue requests from 3–11 August 2026 without replaying them or creating replacement GPT runs. Their original schedule logs remain preserved.
 
-The new ChatGPT task should use the **current New York date**, not the older helper that claims the oldest pending row. Those historical requests should not be replayed automatically.
+The earlier 1 August test dataset remains preserved with its original assessment/evidence content. OPS-007 truthfully finalised its lifecycle from the persisted rows rather than treating it as a new unattended production run.
 
-## Existing test dataset
-
-The database contains one earlier test GPT run with 30 assessment rows and 30 evidence rows, but the historical run metadata was not fully finalised (`running`, `tickers_completed = 0`, `completed_at = null`).
-
-Those rows are useful as a validation dataset but should not be treated as proof of a previously complete unattended scheduler.
+The current Scheduled Task uses the current New York assessment date and does not automatically claim historical backlog.
 
 ## Inactive fallback/prototype
 
