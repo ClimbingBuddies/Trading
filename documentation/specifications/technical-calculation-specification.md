@@ -2,7 +2,7 @@
 
 **Task:** TECH-001 — Define technical calculation specification  
 **Specification version:** `technical-engine-v1`  
-**Status:** Canonical implementation contract — TECH-001 audited
+**Status:** Canonical implemented contract — TECH-001 and TECH-002 independently audited
 
 ## Purpose
 
@@ -226,7 +226,7 @@ The current `technical_indicators` schema is the v1 persistence target:
 - `calculation_version`: `technical-engine-v1`;
 - `values` JSONB: component values and provenance.
 
-For scalar indicators, `values` contains at least `status`, `source_observed_from`, `source_observed_to`, `required_periods`, `valid_periods`, and `price_basis`. MACD additionally stores `macd_line`, `signal_line`, and `histogram`. Incomplete/data-quality outputs store `reason_code` and affected observation IDs. No schema change is authorised by TECH-001; TECH-002 must implement against this contract or propose a migration explicitly.
+For scalar indicators, `values` contains at least `status`, `source_observed_from`, `source_observed_to`, `required_periods`, `valid_periods`, and `price_basis`. MACD additionally stores `macd_line`, `signal_line`, and `histogram`. Incomplete/data-quality outputs store `reason_code` and affected observation IDs. TECH-002 implemented this contract through the private service-only pipeline documented in [Technical Indicator Pipeline](../pipelines/technical-indicator-pipeline.md).
 
 ## Live compatibility snapshot
 
@@ -251,12 +251,12 @@ Scoring is a separate task:
 
 ## Acceptance criteria
 
-This specification is complete when:
+The implemented contract includes:
 
-- indicators are defined;
-- intervals are defined;
-- history requirements are documented;
-- formulas are explicit;
-- versioning rules exist;
-- missing-data behaviour is deterministic;
-- independence boundaries are documented.
+- defined indicators and intervals;
+- exact history requirements and formulas;
+- versioning rules;
+- deterministic missing-data behaviour;
+- explicit analytical-independence boundaries.
+
+Implementation and independent review are recorded in the [Technical Indicator Pipeline](../pipelines/technical-indicator-pipeline.md) and [TECH-002 audit](../project-audits/TECH-002.md).
