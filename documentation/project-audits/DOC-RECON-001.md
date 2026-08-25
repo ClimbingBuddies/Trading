@@ -1,3 +1,37 @@
+## Auditor re-audit decision — 25 August 2026
+
+- protocol_version: 1.3
+- auditor_run_id: manual-20260825-doc-recon-001-reaudit
+- terminal_outcome: AUDIT_PASS
+- project_plan_status_at_review_start: IN REVIEW
+- implementation_commit: e3e88a5d16f7c36cae15d5cdf67974bf186c6729
+- implementation_range: 4cfa6d62ea3770edba661e5a24877686f3c45712..e3e88a5d16f7c36cae15d5cdf67974bf186c6729
+- decision: PASS
+- final_project_plan_status: DONE
+- resulting_controller_state: PROJECT_PLAN_COMPLETE
+- next_promoted_task: none
+- successor_reason: no eligible PLANNED successor exists and none was invented
+
+### Definition of Done checks
+
+| Requirement | Verdict | Independent evidence |
+|---|---|---|
+| Exact revised handoff and scope | VERIFIED | Fresh compare reports 17 modified paths: exactly the 16 named reference documents plus `documentation/project-controller-journal.md`. No source, migration, runtime configuration, application or database file changed. |
+| Prior seven-part REWORK correction set | VERIFIED | Project-plan baselines are operational and stable; Assessment overview reflects implemented history/retries, AI metadata, current navigation and the three-result detail view; SEC-003/TECH-005 records link PASS; Watchlist and Alert documents state implemented ownership/lifecycle; completed Strategy, Convergence, Technical and external-opinion contracts retain their formulas while using current/audited delivery language. |
+| Route coverage | VERIFIED | Current tree contains 14 Next.js page routes; all 14 are represented in `documentation/frontend-route-map.md` with no extra undocumented non-API route. |
+| Relative-link integrity and useful indexes | VERIFIED | Independently retrieved the 43 indexed current-reference Markdown files and resolved 118 relative links; zero are broken. |
+| Completed-task stale-state removal | VERIFIED | Independent targeted scan across all 43 current-reference files found zero obsolete partial baseline, pending-audit, disabled-write, current-scaffold, later-Convergence, unimplemented Technical/Convergence, or completed MON/STRAT future-delivery claims. A broader scan returned only a historical DONE task Definition of Done and a strategy sentence about four open positions, neither a stale delivery status. |
+| Obsolete-file boundary | VERIFIED | `documentation/phase2-progress.md` remains absent. The revised range adds or removes no repository path. |
+| Durable history and specification preservation | VERIFIED | Current tree retains 48 project-audit Markdown records and all 8 canonical specification files. Every prior plan item remains DONE. Formula/semantic anchors for Technical indicators, Convergence, Strategy metrics, six alert trigger families and external-opinion non-double-counting remain present. |
+| Representative live Supabase agreement | VERIFIED | Read-only production truth shows 30 active instruments, 1,464 `technical-engine-v1` indicator rows, 71 `technical-score-v1` score rows, 30 `market-convergence-v1` rows, 10 Opportunity themes, 490 current alert evaluator runs, one watchlist with two items and one strategy/test/evaluation chain. Representative Market, Technical, Opportunity, Watchlist, Alert and Strategy tables have RLS enabled; `watchlists.owner_user_id` and `alerts.owner_user_id` are non-null and `alerts.theme_id` exists. |
+| Documentation-only safety boundary | VERIFIED | No application, Supabase, Vercel, schedule, automation or trading-logic mutation was required or performed. |
+
+### Decision
+
+Every material DOC-RECON-001 acceptance criterion is independently proven. The complete prior REWORK set is resolved, the useful current-reference set is navigable and internally consistent, obsolete progress narration is absent, and durable specifications/audit evidence are preserved.
+
+**PASS.** Mark DOC-RECON-001 DONE and return the controller to PROJECT_PLAN_COMPLETE with no successor.
+
 ## Auditor re-audit attempt — 25 August 2026
 
 - protocol_version: 1.3
