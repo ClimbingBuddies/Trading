@@ -22,6 +22,20 @@
 - current_owner: AUDITOR
 - decision: PENDING
 
+### Evidence group result — browser/user-flow
+
+- result: VERIFIED
+- production_sample_transport: VERIFIED — deployment `dpl_HEwx9WtekyUE13AQiXbkBWvcHs4K` records successful `POST /api/performance-waterfall 204` events for all three fixed routes, proving the browser-generated payloads reached and were accepted by the deployed receiver.
+- `/markets`: VERIFIED — `capturedAt 2026-08-25T08:04:17.575Z`, `navigation.type: navigate`, response start 57.4 ms, response end 1331.4 ms, DOM interactive 1416.7 ms, DOM content loaded 1417.1 ms, load end/duration 1448.9 ms, document transfer 7868 B, resource count 19. These values exactly match the reviewed baseline.
+- `/opportunities`: VERIFIED — `capturedAt 2026-08-25T08:04:23.265Z`, `navigation.type: navigate`, response start 63.6 ms, response end 1807.1 ms, DOM interactive 1840.8 ms, DOM content loaded 1841.3 ms, load end/duration 1901.0 ms, document transfer 20000 B, resource count 16. These values exactly match the reviewed baseline.
+- `/strategies`: VERIFIED — `capturedAt 2026-08-25T08:04:52.718Z`, `navigation.type: navigate`, response start 66.6 ms, response end 335.0 ms, DOM interactive 396.8 ms, DOM content loaded 397.3 ms, load end/duration 412.5 ms, document transfer 3385 B, resource count 25. These values exactly match the reviewed baseline.
+- resource_timing_evidence: VERIFIED — each persisted sample contains non-empty `resources` arrays with initiator type, start time, duration and transfer/body-size fields for real production resources, consistent with browser `PerformanceResourceTiming` rather than an HTML-only server fetch.
+- browser_origin_claim: VERIFIED — the telemetry payloads include `navigation.type: navigate`, DOM/load milestones and resource timing entries that are browser Performance API outputs; the receiver merely validates and logs those fields. The persisted evidence therefore represents genuine browser Navigation/Resource Timing capture.
+- user_agent_boundary: VERIFIED — all first baseline samples are classified `desktop_or_other`, matching the reviewed baseline. No user identity/session state is inferred or claimed.
+- definition_of_done_network_half: VERIFIED — a genuine, persisted, repeatable browser network waterfall baseline exists for `/markets`, `/opportunities` and `/strategies` before any optimisation.
+- remaining_evidence_groups: none.
+- all_required_evidence_groups_complete: yes — GitHub/source, Supabase/schema-data-security, Vercel/deployment and browser/user-flow are all persisted as VERIFIED.
+
 ## Audit attempt started — 25 Aug 2026, 16:40 AWST
 
 - protocol_version: 1.3
