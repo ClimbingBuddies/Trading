@@ -7,13 +7,12 @@ This journal is the sole persisted communication channel for the scheduled User 
 ```yaml
 project_status: ACTIVE
 active_task: UGUIDE-002
-active_task_status: IN PROGRESS
-handoff_owner: PRODUCER
-handoff_status: BUILDING
-last_updated: 2026-08-26T03:03:35+08:00
+active_task_status: IN REVIEW
+handoff_owner: AUDITOR
+handoff_status: READY_FOR_AUDIT
+last_updated: 2026-08-26T03:14:07+08:00
 completed_task: UGUIDE-001
-audit_decision: PASS_WITH_ADVICE
-next_action: Producer implements only UGUIDE-002 public navigation, assessment and Opportunity guide content with current production screenshots
+next_action: Auditor independently audits only UGUIDE-002 at the exact functional range and current evidence record
 ```
 
 ## State invariants
@@ -284,6 +283,68 @@ plan_state_observed: UGUIDE-001 DONE; UGUIDE-002 sole NEXT gate; UGUIDE-003 thro
 handoff_observed: complete AUDIT_DECISION PASS_WITH_ADVICE for UGUIDE-001; UGUIDE-002 explicitly promoted to PRODUCER with no unresolved HANDOFF_QUERY
 intended_scope: document public navigation, Markets, instrument detail, Technical/AI/Market Convergence interpretation and long-term Opportunity themes; add exactly the four UGUIDE-002 production screenshots; verify all claims against current source, browser behaviour and read-only persisted evidence
 timestamp: 2026-08-26T03:03:35+08:00
+```
+
+### 2026-08-26T03:14:07+08:00 — PRODUCER_HANDOFF
+
+```yaml
+event: PRODUCER_HANDOFF
+task_id: UGUIDE-002
+handoff_from: PRODUCER
+handoff_to: AUDITOR
+handoff_status: READY_FOR_AUDIT
+implementation_commit_or_range: 41b8f433f4302fb755566f02d336374a3df8b0b4^..9d405c7bb519c1ef203821d079e8f77bcdc74c6d
+files_changed:
+  implementation:
+    - documentation/user-guide.md
+    - documentation/images/user-guide/markets-overview-desktop.png
+    - documentation/images/user-guide/instrument-detail-desktop.png
+    - documentation/images/user-guide/assessment-detail-desktop.png
+    - documentation/images/user-guide/opportunity-detail-desktop.png
+  current_delivery_control:
+    - documentation/user-guide-audits/UGUIDE-002.md
+    - documentation/user-guide-project-plan.md
+    - documentation/user-guide-controller-journal.md
+screenshots_added_or_replaced:
+  - documentation/images/user-guide/markets-overview-desktop.png
+  - documentation/images/user-guide/instrument-detail-desktop.png
+  - documentation/images/user-guide/assessment-detail-desktop.png
+  - documentation/images/user-guide/opportunity-detail-desktop.png
+routes_and_viewports_verified:
+  production: https://discoverbouldersmarkets.vercel.app
+  viewport: 1363x936 CSS pixels at device-pixel-ratio 1
+  routes:
+    - /markets
+    - /markets/amd
+    - /assessments
+    - /assessments/gld
+    - /opportunities
+    - /opportunities/ai_advanced_packaging
+  access: all routes public and read-only; no authenticated session used
+data_or_schema_effects: none
+tests_and_checks:
+  - compared the exact functional range; final diff contains three commits and only the five implementation files
+  - verified all six production routes and visible behaviour in one stable browser session
+  - fetched current route, page and data-query source plus seven relevant canonical documentation/specification files
+  - corroborated current representative rows with one read-only Supabase evidence query
+  - opened and inspected all four final screenshots at original resolution
+  - confirmed final Git tree points to four true PNG blobs with descriptive lowercase filenames
+  - confirmed each screenshot appears once in the guide with unique meaningful alt text and a concise caption
+  - confirmed no email address, user ID, token, secret, fabricated data or authenticated owner state is present
+  - confirmed public/authenticated, no-live-trading, non-advice and Market-versus-Opportunity boundaries remain prominent
+known_limitations:
+  - production / redirects to /admin while documentation/frontend-route-map.md still says /markets; this pre-existing advice remains due no later than UGUIDE-005 and the production-accurate guide was not changed
+  - final publication QA must re-capture any screenshot whose visible production UI materially changes
+  - Watchlists, Alerts, Strategy and Admin procedures/screenshots remain intentionally assigned to later gates
+acceptance_criteria_evidence:
+  navigation_and_markets: documentation/user-guide.md section 2 plus markets-overview-desktop.png
+  instrument_detail: section 2 plus instrument-detail-desktop.png
+  market_assessment_and_three_branches: section 3 plus assessment-detail-desktop.png
+  opportunity_themes_and_three_long_term_branches: section 4 plus opportunity-detail-desktop.png
+  source_production_data_verification: documentation/user-guide-audits/UGUIDE-002.md at Producer evidence commit 028b9049e6cf3df5c6db9aa941c38634b6a78faa
+  exact_functional_range: 41b8f433f4302fb755566f02d336374a3df8b0b4^..9d405c7bb519c1ef203821d079e8f77bcdc74c6d
+  documentation_only: final functional diff contains guide and image files only; no application or database effect
+exact_next_action: Auditor fetches the latest authoritative records, compares 41b8f433f4302fb755566f02d336374a3df8b0b4^..9d405c7bb519c1ef203821d079e8f77bcdc74c6d, opens every screenshot, re-verifies the six public routes and source/data claims, and issues PASS/PASS WITH ADVICE or one complete correction set; Producer does not edit UGUIDE-002 or promote UGUIDE-003
 ```
 
 ## Required entry templates
