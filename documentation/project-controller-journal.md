@@ -2,6 +2,17 @@
 
 This file is the persistent write-first checkpoint shared by the Trading Project Plan Builder and Auditor. It is operational controller state, not audit approval.
 
+## Manual audit started — 25 Aug 2026, 13:27 AWST
+
+- protocol_version: 1.3
+- auditor_run_id: manual-20260825-1327-qual001
+- event: AUDIT_ATTEMPT_STARTED
+- task_id: QUAL-001
+- implementation_commit: 0f73a6b8401e23d6bd80ce20913d675fe65e8bfa
+- selected_evidence_scope: GitHub/source, repeatable test execution and Vercel deployment health
+- current_owner: AUDITOR
+- next_action: independently verify every QUAL-001 Definition of Done requirement and persist PASS or REWORK
+
 ## Manual build completed — 25 Aug 2026, 13:24 AWST
 
 - protocol_version: 1.3
