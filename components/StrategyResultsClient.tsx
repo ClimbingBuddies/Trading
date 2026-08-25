@@ -5,7 +5,7 @@ import type { User } from '@supabase/supabase-js'
 import { getBrowserSupabase } from '@/lib/supabase-browser'
 import styles from './StrategyResultsClient.module.css'
 
-type Numeric = number | string | null
+type Numeric = number | string | null | undefined
 
 type Strategy = {
   id: string
