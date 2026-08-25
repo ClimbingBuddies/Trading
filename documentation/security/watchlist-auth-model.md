@@ -74,9 +74,9 @@ The same ownership key should be reused by future `alerts.owner_user_id` work un
 
 Watchlist names, descriptions, notes, ordering and membership are private user data in v1. There is no public read policy.
 
-## Required database boundary for MON-002
+## Implemented database boundary
 
-MON-002 should implement this contract before enabling any watchlist write control.
+MON-002 implemented this contract before enabling watchlist writes. The requirements below remain the active ownership and security boundary.
 
 ### Schema hardening
 
