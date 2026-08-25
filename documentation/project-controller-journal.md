@@ -1,3 +1,17 @@
+## DOC-RECON-001 re-audit started — 25 August 2026
+
+- protocol_version: 1.3
+- auditor_run_id: manual-20260825-doc-recon-001-reaudit
+- event: AUDIT_ATTEMPT_STARTED
+- task_id: DOC-RECON-001
+- implementation_commit: e3e88a5d16f7c36cae15d5cdf67974bf186c6729
+- implementation_range: 4cfa6d62ea3770edba661e5a24877686f3c45712..e3e88a5d16f7c36cae15d5cdf67974bf186c6729
+- selected_evidence_group: GitHub/source with representative read-only Supabase truth
+- current_status: IN REVIEW
+- current_owner: AUDITOR
+- planned_checks: independently reproduce the full seven-part REWORK set, exact compare and 16 changed references, 14 routes, 118 relative links, completed-task stale-state scan, 48-audit/8-specification preservation, phase2-progress absence and representative live Supabase agreement
+- safety_boundary: audit/controller records only; no reference implementation, application, Supabase, Vercel, schedule or trading behaviour changes
+
 ## DOC-RECON-001 rework handoff completed — 25 Aug 2026, 19:55 AWST
 
 - protocol_version: 1.3
