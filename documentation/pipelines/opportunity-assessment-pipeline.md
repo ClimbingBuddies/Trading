@@ -4,7 +4,7 @@
 **Supabase project:** `glvbqcplgjdfgjyknzsa`  
 **Canonical execution specification:** `automation/daily-opportunity-assessment.md`  
 **Current canonical specification version:** `1.3`  
-**Last verified:** 17 August 2026
+**Last reconciled:** 25 August 2026
 
 ## Purpose
 
@@ -90,16 +90,10 @@ Each invocation receives a new `run_id`, even when it updates the same day's ide
 
 The production Scheduled Task is the trigger owner; the analytical methodology remains in GitHub.
 
-At the time this document was verified on 17 August 2026, the **Daily Opportunity Assessment** Scheduled Task still existed but was **disabled**. Its current stored recurrence was daily at hour 12 in its configured task timezone. This runtime state is distinct from historical evidence: Supabase contains successful `scheduled-task` runs on 15, 16 and 17 August 2026.
-
-Therefore:
-
-- the pipeline has demonstrated successful scheduled execution historically;
-- the Scheduled Task is not currently active at the time of this verification;
-- re-enabling or changing the schedule must not require copying methodology into the task prompt;
-- the task should remain a thin runner that fetches the GitHub specification fresh.
-
-The project plan's operational status should be judged from current runtime state and persisted run evidence, not from an old schedule description alone.
+- Every run retrieves `automation/daily-opportunity-assessment.md` fresh.
+- The runner operates against the complete active/watch theme set and persists explicit lifecycle state.
+- OPS-001 independently verified a complete unattended run, Research & Evidence updates and idempotent persistence.
+- Runtime cadence and activation are operational configuration and should be checked directly when diagnosing a missed run; volatile task state is not copied into this durable pipeline reference.
 
 ---
 
@@ -479,19 +473,18 @@ Under `documentation/project-plan.md`, the Opportunity Assessment should be labe
 12. a complete unattended end-to-end run has been independently verified;
 13. documentation matches the actual flow.
 
-### Current verified maturity on 17 August 2026
+### Implemented operational maturity
 
-Primary evidence supports significant progress:
+The pipeline has independently verified evidence for:
 
-- 10 active/watch themes exist;
-- 10 Structural Signals exist for the current assessment date;
-- 10 Technology Inflection Signals exist for the current assessment date;
-- 10 Opportunity Assessments exist for the current assessment date;
-- three consecutive recent scheduled executions reached `succeeded` with 10/10 themes completed;
-- Opportunity Research & Evidence is materially populated;
-- database uniqueness rules support idempotent daily updates.
+- complete active/watch theme coverage;
+- populated Structural, Technology and final Opportunity outputs;
+- Technology Inflection events, exposure mappings and Research & Evidence;
+- terminal run lifecycle and recorded failures;
+- idempotent same-date updates and resume behaviour;
+- a thin GitHub-spec runner with explicit trigger ownership.
 
-However, the production Scheduled Task was disabled when this document was verified. That current trigger state should be reconciled before describing the workflow as continuously scheduled Operational, even though recent successful unattended run evidence exists.
+Dynamic row counts and task-toggle snapshots are intentionally omitted here because Supabase and the task configuration are the current production sources of truth.
 
 ---
 
