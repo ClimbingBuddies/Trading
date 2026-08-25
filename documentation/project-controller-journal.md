@@ -1,3 +1,17 @@
+## DOC-RECON-001 rework build started — 25 Aug 2026, 19:42 AWST
+
+- protocol_version: 1.3
+- builder_run_id: manual-20260825-1942-doc-recon-001-rework
+- event: BUILD_ATTEMPT_STARTED
+- task_id: DOC-RECON-001
+- starting_status: IN PROGRESS
+- latest_audit_decision: REWORK
+- audit_decision_commit: fcc1694f566de5e595133c4d2c830c7a94ec717c
+- project_plan_rework_commit: e9c76217526e3da348a75126f1f8bc8aee71b95f
+- intended_bounded_increment: address all seven persisted documentation corrections, verify current-reference wording/routes/links/history preservation and representative read-only Supabase truth, then hand the same task back for independent audit
+- authorised_scope: GitHub documentation and controller records only
+- safety_boundary: no application, Supabase schema/data, Vercel, schedule, automation or trading-logic changes
+
 ## DOC-RECON-001 audit completed — 25 August 2026
 
 - protocol_version: 1.3
