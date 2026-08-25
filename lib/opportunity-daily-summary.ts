@@ -1,4 +1,5 @@
 import { getSupabase } from './supabase'
+import { scoreDelta } from './quality-critical.mjs'
 
 export type OpportunityAssessmentRunSummary = {
   run_id: string
@@ -54,11 +55,6 @@ function perthToday() {
   }).formatToParts(new Date())
   const values = Object.fromEntries(parts.map((part) => [part.type, part.value]))
   return `${values.year}-${values.month}-${values.day}`
-}
-
-function scoreDelta(current: number | null, previous: number | null) {
-  if (current === null || previous === null) return null
-  return current - previous
 }
 
 export async function getOpportunityDailySummary(): Promise<OpportunityDailySummary> {
