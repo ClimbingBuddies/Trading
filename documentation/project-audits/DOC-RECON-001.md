@@ -1,3 +1,16 @@
+## Auditor attempt — 25 August 2026
+
+- protocol_version: 1.3
+- auditor_run_id: manual-20260825-doc-recon-001-audit
+- event: AUDIT_ATTEMPT_STARTED
+- project_plan_status_at_start: IN REVIEW
+- implementation_commit: c2c88005ef3eca3b67e44f343b52edb2e62de247
+- implementation_range: 57381ede18b1efc7675585309955920b0a83ef1d..c2c88005ef3eca3b67e44f343b52edb2e62de247
+- affected_layers: GitHub documentation only
+- selected_evidence_group: GitHub/source with representative read-only Supabase truth
+- planned_checks: exact handoff completeness; changed-file range; current route map; relative links; stale status claims; preservation of specifications, audits and completed plan entries; deliberate deletion of documentation/phase2-progress.md; representative production architecture/data-model agreement
+- decision: PENDING
+
 # DOC-RECON-001 — Reconcile completed platform documentation
 
 ## Builder handoff — 25 August 2026
