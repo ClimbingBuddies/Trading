@@ -126,3 +126,58 @@ Only aggregate counts and policy definitions were used. No owner identifier, ema
 ## Exact next action
 
 The independent Auditor must fetch the latest plan, journal, guide, this record and exact commit `173672b067ca8a4a37fd55a4515b5395b82b02c0`; verify the two signed-out routes, source/RLS claims and complete `AUTH_REQUIRED` evidence; then issue PASS/PASS WITH ADVICE or one complete correction set. The Producer must not work on UGUIDE-004 or mark this gate DONE.
+
+## Independent Auditor decision — 26 August 2026
+
+**Controller:** AUDITOR  
+**Decision:** PASS_WITH_ADVICE  
+**Implementation commit reviewed:** `173672b067ca8a4a37fd55a4515b5395b82b02c0`  
+**Audit record:** `documentation/user-guide-audits/UGUIDE-003.md`  
+**Screenshots added or replaced by this gate:** none  
+**Complete correction set:** none  
+**Next task promoted:** `UGUIDE-004`
+
+### Handoff validation
+
+The latest plan and journal identify UGUIDE-003 as the sole `IN REVIEW` gate with handoff owner `AUDITOR`. The latest Producer handoff contains every mandatory field: task identity, direction, `READY_FOR_AUDIT`, exact implementation commit, implementation/control files, screenshot result, routes and viewport, no data/schema effects, tests, limitations, acceptance evidence and exact next action. No unresolved UGUIDE-003 `HANDOFF_QUERY` exists.
+
+### Independent evidence checked
+
+- Fetched the exact implementation commit and confirmed it changes only `documentation/user-guide.md`.
+- Confirmed the current guide and implementation-commit guide are byte-for-byte identical at blob `2f4142f9be2a73b477c2b0ea510169b00aa46584`.
+- Fetched current Watchlists and Alerts page/client source plus the four canonical ownership/lifecycle documents; their blobs match the Producer evidence.
+- Verified all 17 Markdown link targets resolve from the current default branch.
+- Verified all 13 static/dynamic route source files referenced by the guide exist.
+- Independently opened the root plus ten representative production states at 1363 × 936 CSS pixels and device-pixel-ratio 1:
+  - `/` redirected to `/admin`;
+  - `/admin`;
+  - `/markets` and `/markets/amd`;
+  - `/assessments` and `/assessments/gld`;
+  - `/opportunities` and `/opportunities/ai_advanced_packaging`;
+  - `/watchlists`, `/alerts` and `/strategies` signed-out states.
+- Confirmed `/watchlists` and `/alerts` each showed the documented permanent-email sign-in boundary, no Sign out control and no authenticated owner state.
+- Confirmed Vercel deployment `dpl_A6KPQBpua8Zk4QY4QWaDMj6FbckE` is `READY`, production-targeted, aliased to `discoverbouldersmarkets.vercel.app` and built from the exact implementation commit.
+- Used read-only Supabase evidence to verify RLS on `watchlists`, `watchlist_items`, `alerts` and `alert_events`; owner/parent-owner policies; permanent-user checks; no `anon` grants; browser event-history SELECT-only access; alert/watchlist target integrity; cascade behaviour; one-default and duplicate-item uniqueness; and alert-event idempotency.
+- Independently observed aggregate-only persisted state of 1 Watchlist, 2 Watchlist items, 0 Alert definitions and 0 Alert events. No identity, name, note or private row payload was inspected or reproduced.
+- Confirmed the two reserved authenticated image paths are absent and the user guide explicitly does not count them as delivered.
+- Confirmed the image directory contains only the four previously audited UGUIDE-002 images, with no duplicate or temporary UGUIDE-003 candidate.
+- Confirmed all four images used by the current guide have unique meaningful alt text and concise captions; UGUIDE-003 introduced no image requiring visual re-audit.
+- Scanned the guide for email addresses, JWT/token/key patterns and common secret labels; none are present.
+- Confirmed public/authenticated boundaries, monitoring-versus-execution, no-live-trading and non-advice language remain prominent.
+- Confirmed no application code, database/schema/policy/function/schedule, Vercel configuration or production data was changed.
+
+### Findings
+
+- PASS: the guide explains the permanent-account sign-in boundary without claiming an authenticated session was observed.
+- PASS: Watchlist creation, edit/default, membership, private notes, ordering, removal, delete and empty-state instructions match current source and database constraints.
+- PASS: all six alert types, permitted targets, condition patterns, baseline/rearm/idempotency behaviour and definition lifecycle match current source, contract and production constraints.
+- PASS: event history is accurately described as private, read-only system evidence; `not_requested` is correctly distinguished from successful outbound delivery.
+- PASS: owner isolation is supported by current grants, RLS policies, ownership checks and parent-row relationships.
+- PASS: the explicit gate alternative is satisfied—`AUTH_REQUIRED` precisely names `/watchlists` and `/alerts`, the reserved files are absent, and no private or invented screenshot state appears.
+- PASS: the exact implementation is documentation-only and remains unchanged on the default branch.
+- ADVICE: retain the two `AUTH_REQUIRED` records unless an already-authorised owner session becomes available; final QA must not substitute a sign-in-form image or invented private state.
+- ADVICE: production `/` still redirects to `/admin` while `documentation/frontend-route-map.md` says `/markets`; the production-accurate guide is correct and the stale route-map statement remains due for UGUIDE-005.
+
+### Decision and next action
+
+UGUIDE-003 passes with advice. Mark only UGUIDE-003 `DONE`, promote the valid `PLANNED` successor UGUIDE-004 to `NEXT`, and assign it to the Producer. The Producer must fetch the latest plan/journal, append `BUILD_ATTEMPT_STARTED`, and implement only UGUIDE-004; it must not revisit UGUIDE-003 unless a later Auditor handback explicitly requires it.
