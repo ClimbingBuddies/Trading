@@ -4,7 +4,7 @@
 **Supabase:** `glvbqcplgjdfgjyknzsa`  
 **Production:** `https://discoverbouldersmarkets.vercel.app`  
 **Vercel project:** `boulders-market`  
-**Last reviewed:** 24 August 2026
+**Last reviewed:** 25 August 2026
 
 ## Purpose
 
@@ -206,7 +206,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | STRAT-002 | **DONE** | Define test-run ingestion format | Backtest/paper/live provenance and metrics are documented. |
 | STRAT-003 | **DONE** | Load first real test run | Real results populate `trading_test_runs`. |
 | STRAT-004 | **DONE** | Execute Standard Strategy Review | Decision path and outcome are persisted. |
-| STRAT-005 | **IN PROGRESS** | Surface real strategy results | Frontend displays real strategy evidence and decision outcomes. |
+| STRAT-005 | **IN REVIEW** | Surface real strategy results | Frontend displays real strategy evidence and decision outcomes. |
 
 ## Phase 8 — Quality and maintainability
 
@@ -246,28 +246,48 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `STRAT-005 — Surface real strategy results` is **IN PROGRESS** in manual Builder run `manual-20260825-1256-strat005` after STRAT-004 passed independent audit on 25 Aug 2026. The audit verified the exact live seven-step Standard Strategy Review path, the persisted `VALIDATE_ROBUSTNESS / continue_testing` outcome, one-row idempotency, service-only execution, owner-scoped read access and the unchanged `testing` / live-disabled strategy state. STRAT-005 may now implement owner-facing display of the accepted strategy, backtest evidence and review outcome without weakening the private evidence boundary.
+**Current work:** `STRAT-005 — Surface real strategy results` is **IN REVIEW** after Builder implementation commit `614d16764411b3b9ab479f16138c1402087206ec` deployed successfully to production on 25 Aug 2026. The new owner-authenticated Strategies view reads the real strategy, succeeded test run, persisted Standard Strategy Review outcome and exact decision path through Supabase RLS, while keeping live trading disabled. The Auditor owns the next action.
 
 ## Active controller handoff
 
 ```yaml
 task_id: STRAT-005
-handoff_owner: BUILDER
-handoff_status: BUILD_ATTEMPT_STARTED
+handoff_owner: AUDITOR
+handoff_status: READY_FOR_AUDIT
 starting_status: NEXT
-current_status: IN PROGRESS
+current_status: IN REVIEW
 builder_run_id: manual-20260825-1256-strat005
 definition_of_done: Frontend displays real strategy evidence and decision outcomes.
-preceding_audit: documentation/project-audits/STRAT-004.md
-preceding_audit_commit: bc64f3c0133b75dc237a943e86f782e2fecc8d0c
-required_boundary:
-  - preserve owner-scoped strategy, test-run and evaluation evidence
-  - do not enable live trading
-  - do not alter the accepted STRAT-004 evaluation
-builder_next_action: inspect existing owner-facing strategy routes and implement the smallest complete STRAT-005 frontend solution
+implementation_commit: 614d16764411b3b9ab479f16138c1402087206ec
+affected_layers:
+  - GitHub
+  - Supabase
+  - Vercel
+  - browser
+builder_checks:
+  - Vercel production deployment dpl_9YJXYYdU9TkhZsszS4VfZUrSFe8f is READY at the implementation commit
+  - production /strategies returns HTTP 200 and serves the authenticated StrategyResultsClient bundle
+  - authenticated owner RLS simulation returns 1 strategy, 1 test run and 1 decision evaluation
+  - non-owner authenticated RLS simulation returns 0 strategies, 0 test runs and 0 decision evaluations
+  - frontend uses the publishable browser client and performs no privileged writes or service-role calls
+  - live strategy state remains testing with live_execution_enabled false
+deployment_required: yes
+deployed_commit: 614d16764411b3b9ab479f16138c1402087206ec
+deployment_status: READY
+production_url: https://discoverbouldersmarkets.vercel.app/strategies
+auditor_checks_required:
+  - authenticate as the strategy owner and verify the real strategy identity and live-disabled indicator
+  - verify the succeeded baseline metrics and evidence/provenance fields against Supabase
+  - verify the persisted VALIDATE_ROBUSTNESS / continue_testing outcome and exact seven-step decision path
+  - verify signed-out and non-owner sessions cannot see private evidence
+  - check responsive layout and palette compliance in the production browser
+known_gaps:
+  - classification: auditor_verifiable
+    detail: authenticated production rendering was not independently exercised in the Builder tool session; source, deployment and role-scoped database reads passed
+handoff_at: 25 Aug 2026, 13:03 AWST
 ```
 
-There is no item in `IN REVIEW`. The Builder owns STRAT-005 while it replaces the unauthenticated strategy read path with an owner-authenticated frontend and then persists a complete audit handoff.
+Exactly one item is in `IN REVIEW`. The Auditor owns STRAT-005 and the Builder must wait.
 
 ## Definition of Operational
 
