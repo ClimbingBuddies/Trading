@@ -2,6 +2,23 @@
 
 This file is the persistent write-first checkpoint shared by the Trading Project Plan Builder and Auditor. It is operational controller state, not audit approval.
 
+## QUAL-002 bounded increment continued — 25 Aug 2026, 15:08 AWST
+
+- protocol_version: 1.3
+- builder_run_id: manual-20260825-1501-qual002
+- event: BUILD_CONTINUE
+- task_id: QUAL-002
+- current_status: IN PROGRESS
+- completed_work: verified QUAL-002 remained the sole IN PROGRESS item; persisted the required write-first checkpoint; attempted a local headless Chromium CDP measurement path to capture actual Navigation Timing / Resource Timing rather than infer a waterfall from Vercel logs
+- browser_measurement_attempt: first CDP attempt failed before measurement because Chromium rejected the websocket origin; corrected launch with remote-allow-origins then exceeded the bounded execution window before returning a complete three-route dataset
+- trustworthy_new_timing_data: none; no partial/guessed browser metrics were persisted as evidence
+- preserved_evidence: documentation/performance/qual-002-pre-optimisation-baseline.md @ bcaaeb99d2b825e9b2da645e823eba02f03c3bbd remains the accepted SQL/request baseline
+- exact_remaining_work: obtain a complete repeatable Navigation Timing / Resource Timing dataset for /markets, /opportunities and /strategies with cache/auth state; persist the waterfall; then define evidence-based budgets and run final Builder checks
+- next_safe_action: resume from this checkpoint with a bounded browser measurement harness that returns one route at a time and checkpoints each successful route before proceeding; do not optimise before all required measurements exist
+- current_owner: BUILDER
+- terminal_outcome: REWORK_IN_PROGRESS
+- safety_boundary: measurement/documentation only; no query optimisation, frontend behaviour change, trading-data mutation or live-trading enablement occurred
+
 ## Manual build started — 25 Aug 2026, 15:01 AWST
 
 - protocol_version: 1.3
