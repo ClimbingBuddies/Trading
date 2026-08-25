@@ -2,6 +2,18 @@
 
 This file is the persistent write-first checkpoint shared by the Trading Project Plan Builder and Auditor. It is operational controller state, not audit approval.
 
+## Manual build started — 25 Aug 2026, 12:56 AWST
+
+- protocol_version: 1.3
+- builder_run_id: manual-20260825-1256-strat005
+- event: BUILD_ATTEMPT_STARTED
+- task_id: STRAT-005
+- task_title: Surface real strategy results
+- starting_status: NEXT
+- intended_bounded_increment: inspect the owner-facing strategy routes, implement the smallest complete real strategy/results/review display, run Builder-controlled checks, and hand off to the Auditor if complete
+- current_owner: BUILDER
+- safety_boundary: preserve owner-scoped evidence, leave live trading disabled and do not alter the accepted STRAT-004 evaluation
+
 ## Manual audit completed — 25 Aug 2026, 12:48 AWST
 
 - protocol_version: 1.3
