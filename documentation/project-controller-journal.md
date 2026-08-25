@@ -2,6 +2,23 @@
 
 This file is the persistent write-first checkpoint shared by the Trading Project Plan Builder and Auditor. It is operational controller state, not audit approval.
 
+## QUAL-001 implementation verified — 25 Aug 2026, 13:23 AWST
+
+- protocol_version: 1.3
+- builder_run_id: manual-20260825-1321-qual001
+- event: BUILD_CHECKPOINT
+- task_id: QUAL-001
+- implementation_commit: 0f73a6b8401e23d6bd80ce20913d675fe65e8bfa
+- implemented: Node built-in test runner; production-used score calculation, market-loader mapping/summary and strategy empty-state helpers; four deterministic tests
+- test_result: 4 passed, 0 failed
+- initial_build_issue: MJS declaration resolution failed at commit 536ddf00821e8c77c5f23c4852459913dee2a1c1
+- correction: matching quality-critical.d.mts added; superseded d.ts removed
+- deployment_id: dpl_6MSTJWX8o52VRHeEt3GKQeiAYSph
+- deployment_status: READY
+- current_owner: BUILDER
+- next_action: persist the complete IN REVIEW handoff for independent audit
+- safety_boundary: production behaviour preserved; live trading remains disabled; no Supabase data changed
+
 ## Manual build started — 25 Aug 2026, 13:21 AWST
 
 - protocol_version: 1.3
