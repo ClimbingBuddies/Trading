@@ -3,6 +3,7 @@
 import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react'
 import type { User } from '@supabase/supabase-js'
 import { getBrowserSupabase } from '@/lib/supabase-browser'
+import { shouldShowEmptyState } from '@/lib/quality-critical.mjs'
 import styles from './StrategyResultsClient.module.css'
 
 type Numeric = number | string | null | undefined
@@ -308,7 +309,7 @@ export default function StrategyResultsClient() {
 
       {loading ? <div className={styles.authCard}>Loading owner-scoped strategy evidence…</div> : null}
 
-      {!loading && strategies.length === 0 ? (
+      {shouldShowEmptyState(loading, strategies.length) ? (
         <section className={styles.empty}>
           <strong>No strategy evidence is visible for this account.</strong>
           <span>Confirm you signed in with the owner account used to create the strategy. Row-level security intentionally hides other owners’ records.</span>
