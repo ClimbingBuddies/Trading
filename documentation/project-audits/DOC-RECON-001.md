@@ -1,3 +1,80 @@
+## Builder rework handoff — 25 Aug 2026, 19:54 AWST
+
+- protocol_version: 1.3
+- builder_run_id: manual-20260825-1942-doc-recon-001-rework
+- terminal_outcome: HANDOFF_COMPLETE
+- starting_status: IN PROGRESS
+- resulting_status: IN REVIEW
+- implementation_commit: e3e88a5d16f7c36cae15d5cdf67974bf186c6729
+- implementation_range: 4cfa6d62ea3770edba661e5a24877686f3c45712..e3e88a5d16f7c36cae15d5cdf67974bf186c6729
+- affected_layers: GitHub documentation only
+- data_schema_effects: none
+- application_effects: none
+- Supabase_effects: none; representative production truth was queried read-only
+- Vercel_effects: none required; no runtime source changed
+- current_owner: AUDITOR
+- decision: PENDING_INDEPENDENT_AUDIT
+
+### Exact changed reference files
+
+1. `automation/daily-market-assessment.md`
+2. `documentation/assessment-system-overview.md`
+3. `documentation/backtests/daily-trend-pullback-v1-baseline-result.md`
+4. `documentation/pipelines/market-assessment-pipeline.md`
+5. `documentation/pipelines/opportunity-assessment-pipeline.md`
+6. `documentation/pipelines/technical-engine-independence.md`
+7. `documentation/project-plan.md`
+8. `documentation/security-and-operational-notes.md`
+9. `documentation/security/helper-function-search-path-hardening.md`
+10. `documentation/security/market-assessment-access-classification.md`
+11. `documentation/security/watchlist-auth-model.md`
+12. `documentation/specifications/alert-trigger-specification.md`
+13. `documentation/specifications/external-opinion-model.md`
+14. `documentation/specifications/market-convergence-specification.md`
+15. `documentation/specifications/strategy-test-run-ingestion.md`
+16. `documentation/specifications/technical-calculation-specification.md`
+
+The compare range also contains one controller-only checkpoint change to `documentation/project-controller-journal.md`; it is not a reconciled reference document.
+
+### Inspected and confirmed without reference-content changes
+
+- `README.md`, `documentation/README.md`, `documentation/frontend-route-map.md`, `documentation/platform-architecture.md`, `documentation/supabase-data-model.md`, `documentation/functional-roadmap.md` and `documentation/strategy-framework.md`;
+- current alert, watchlist, Technical, Convergence, external-opinion and strategy pipeline/result records used as implementation evidence;
+- all current application route files;
+- the complete current-reference Markdown set, all project audits and all canonical specifications;
+- representative production Supabase tables, counts and RLS flags.
+
+### Complete correction-set result
+
+1. Project-plan Opportunity and AI Market baselines now describe completed operational gates without obsolete partial/disabled status or volatile row counts.
+2. Assessment overview now states implemented Convergence history/retries, persisted AI independence metadata, Watchlists/Alerts navigation, the three-result assessment detail view and current Technical/Convergence ownership.
+3. SEC-003 and TECH-005 verification records now state and link their independent PASS outcomes.
+4. Watchlist documentation is reduced to the durable implemented ownership/RLS contract; obsolete pre-MON-002 scaffold state was removed.
+5. The alert specification retains all six trigger families and now states the implemented lifecycle, ownership, idempotency and event-history boundary; outbound email/SMS/push remains explicitly excluded.
+6. Strategy-ingestion, Market Convergence, Technical-calculation and external-opinion contracts retain their formulas and semantics while completed delivery narration is current and linked to implementation/audit evidence.
+7. The 43-file current-reference set passes the route/link/stale-state/preservation checks below.
+
+### Builder verification
+
+- GitHub compare: 16 changed reference files plus one controller checkpoint file in the exact range above; no source, migration or configuration file changed.
+- Route coverage: 14/14 Next.js page routes represented in `documentation/frontend-route-map.md`.
+- Relative Markdown links: 118 checked across 43 current-reference files; zero broken.
+- Completed-task stale-state scan: zero unqualified pending-audit, partial, disabled, scaffold or future-delivery claims for completed tasks.
+- Obsolete file: `documentation/phase2-progress.md` remains absent.
+- Preservation: 48 project-audit records and all 8 canonical specification files remain present; every prior plan task remains DONE.
+- Read-only Supabase point-in-time evidence: 30 active instruments, 1,464 `technical-engine-v1` indicator rows, 71 `technical-score-v1` rows, 30 `market-convergence-v1` rows, 10 Opportunity themes, 486 alert evaluator runs, one watchlist with two items and persisted strategy/test/evaluation records.
+- RLS: all representative application-owned public tables inspected for these boundaries report RLS enabled.
+
+### Known limitations
+
+- This is documentation-only work. Application build, deployment and browser regression checks are not applicable.
+- Production row counts are point-in-time verification evidence and were intentionally not copied into durable current baselines.
+- Historical audit/controller records retain their original dated state; they were not rewritten as current references.
+
+### Auditor checks required
+
+Independently reproduce the exact compare, 14/14 route coverage, relative-link resolution, current-reference stale-state scan, phase2-progress absence, audit/specification preservation and representative read-only Supabase agreement. The Builder has not marked DOC-RECON-001 DONE and has not approved its own work.
+
 ## Auditor decision — 25 August 2026
 
 - protocol_version: 1.3
