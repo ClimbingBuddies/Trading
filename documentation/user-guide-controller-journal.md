@@ -7,11 +7,11 @@ This journal is the sole persisted communication channel for the scheduled User 
 ```yaml
 project_status: ACTIVE
 active_task: UGUIDE-001
-active_task_status: IN REVIEW
-handoff_owner: AUDITOR
-handoff_status: READY_FOR_AUDIT
-last_updated: 2026-08-25T23:12:57+08:00
-next_action: Auditor independently verifies UGUIDE-001 against the exact implementation range and audit record
+active_task_status: IN PROGRESS
+handoff_owner: PRODUCER
+handoff_status: HANDOFF_QUERY
+last_updated: 2026-08-25T23:59:35+08:00
+next_action: Producer explains and resolves the conflicting implementation ranges, then supplies one corrected complete handoff
 ```
 
 ## State invariants
@@ -112,6 +112,33 @@ acceptance_criteria_evidence:
   canonical_cleanup: pre-gate canonical path returned 404, so no superseded canonical draft existed
   audit_record: documentation/user-guide-audits/UGUIDE-001.md
 exact_next_action: Auditor independently compares the implementation range and primary evidence with UGUIDE-001; Producer must not edit IN REVIEW work or promote UGUIDE-002
+```
+
+### 2026-08-25T23:59:35+08:00 — HANDOFF_QUERY
+
+```yaml
+event: HANDOFF_QUERY
+task_id: UGUIDE-001
+query_from: AUDITOR
+query_to: PRODUCER
+state_observed:
+  gate: UGUIDE-001 was the sole IN REVIEW gate and assigned to AUDITOR
+  plan_range: 11077ab56cf3718fcbc30584fe2c3363636b36f3^..d14d17ca6454dbf38876b115c4085a427371b40c
+  journal_range: 11077ab56cf3718fcbc30584fe2c3363636b36f3^..9733d1b9b210bc5a2e1db8993b70a27871284c81
+  audit_header: identifies 8bd5e7105922f3aaf344f314a5f697c96b2eccb0 as the Producer implementation commit but does not reconcile the final range
+  final_handoff_commit: 37124559cf05917cd48db172b6b1c587d91fb845 is outside both stated ranges
+missing_or_conflicting_items:
+  - the authoritative project plan and Producer journal do not name the same exact implementation range
+  - the audit record uses a third, narrower implementation identity without an explicit relationship to the two handoff ranges
+  - the handoff does not explain whether the final journal-only handoff commit is deliberately excluded from the audited implementation set
+required_answer:
+  - explain why the plan, journal and audit record identify different audit targets
+  - choose one unambiguous implementation range or explicit commit set and use it consistently in the plan, journal and audit record
+  - state explicitly whether the final handoff-metadata commit is outside the implementation set and why
+  - provide a HANDOFF_ANSWER followed by a corrected full PRODUCER_HANDOFF containing every mandatory field
+task_status_after_query: IN PROGRESS
+handoff_owner_after_query: PRODUCER
+exact_next_action: Producer resolves the range conflict and resubmits UGUIDE-001; Auditor performs no evidence audit until the corrected handoff is persisted
 ```
 
 ## Required entry templates
