@@ -1,5 +1,27 @@
 # QUAL-002 — Add performance budgets/query monitoring
 
+## Audit attempt started — 25 Aug 2026, 16:51 AWST
+
+- protocol_version: 1.3
+- auditor_run_id: manual-20260825-1651-qual002
+- event: AUDIT_ATTEMPT_STARTED
+- project_plan_status_at_start: IN REVIEW
+- implementation_commit: e7a54d452e26e784e41fefb359a532a56d5c7ca8
+- affected_layers:
+  - GitHub
+  - Supabase
+  - Vercel
+  - browser
+- definition_of_done: SQL time and network waterfalls are measured before optimisation.
+- selected_evidence_group: browser/user-flow
+- planned_checks:
+  - independently read the persisted production `performance-waterfall-v1` samples for `/markets`, `/opportunities` and `/strategies`
+  - confirm the route, navigation type, captured time, duration/resource count and browser-originated timing fields match the reviewed baseline
+  - confirm the samples were accepted through the deployed receiver as successful POSTs and represent real Navigation/Resource Timing evidence rather than synthetic HTML fetches
+  - if this final group verifies, perform the mandatory stale-state re-read and then persist PASS/PASS WITH ADVICE before updating the project plan
+- current_owner: AUDITOR
+- decision: PENDING
+
 ## Audit attempt started — 25 Aug 2026, 16:40 AWST
 
 - protocol_version: 1.3
