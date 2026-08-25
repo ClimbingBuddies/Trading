@@ -8,7 +8,7 @@
 
 ## Purpose
 
-Define the role of the external-opinion subsystem relative to the independent ChatGPT Market Assessment and establish a non-double-counting evidence contract for later operationalisation under RES-002.
+Define the role of the external-opinion subsystem relative to the independent ChatGPT Market Assessment and preserve the non-double-counting evidence contract implemented under RES-002.
 
 The external-opinion subsystem is **not** a fourth analytical branch beside the Technical Engine, AI Market Assessment and Market Convergence. It is a normalized evidence/staging layer that may supply sourced external opinion to the independent AI Market Assessment.
 
@@ -20,29 +20,20 @@ It does not produce an automatic Trading rating, does not alter the Technical En
 
 The AI Market Assessment remains responsible for its own score, rating and confidence. External opinion is evidence, not a vote that is mechanically converted into a Trading conclusion.
 
-## Current live model
+## Implemented live model
 
-The live Supabase model contains four related tables:
+The production model contains:
 
 | Table | Role | Evidence status |
 |---|---|---|
-| `opinion_sources` | Registry of approved/known source categories | Metadata only; not evidence by itself |
-| `opinion_reviews` | Review/collection run lifecycle and operational counts | Control/telemetry only; not evidence |
-| `instrument_opinions` | Atomic normalized external observations for an instrument | Canonical opinion evidence records |
-| `instrument_opinion_consensus` | Derived per-instrument/as-of-date summary of normalized observations | Derived summary; not an additional independent source |
+| `opinion_sources` | Approved source-family registry and collection guidance | Configuration; not evidence by itself |
+| `opinion_reviews` and source results | Deterministic review lifecycle, counts and errors | Control/telemetry only |
+| `instrument_opinions` | Atomic normalised external observations | Canonical opinion evidence records |
+| `instrument_opinion_consensus` plus membership | Deduplicated per-instrument/as-of-date summary and exact lineage | Derived summary; not an additional independent source |
 
-Verified live state at RES-001 review:
+RES-002 implemented service-only collection, canonical source identity, retry-safe ingestion, consensus membership, coverage monitoring and machine-verifiable lineage into `gpt_market_evidence`. Normal browser clients cannot write the opinion lifecycle.
 
-- 5 `opinion_sources` rows;
-- 1 `opinion_reviews` row, terminal `succeeded`;
-- 2 `instrument_opinions` rows;
-- 1 `instrument_opinion_consensus` row;
-- the existing sample is NVDA-only and was last reviewed on 25 July 2026;
-- no live database function currently references these tables to automate collection or consensus generation;
-- all four tables have RLS enabled and currently expose no RLS policies, so normal client reads/writes are not an operational interface;
-- the existing data is therefore a scaffold/test baseline, not evidence that RES-002 is operational.
-
-The live sample also demonstrates the duplication risk RES-001 must resolve: the StockAnalysis NVDA forecast URL exists in `instrument_opinions` and is also persisted as a later `gpt_market_evidence` row. That is valid provenance only if the underlying source is counted once in the Market Assessment's evidence weighting.
+Current operations are documented in the [External Opinion Pipeline](../pipelines/external-opinion-pipeline.md) and independently reviewed in the [RES-002 audit](../project-audits/RES-002.md).
 
 ## Relationship to the independent AI Market Assessment
 
@@ -90,7 +81,7 @@ The Market Assessment should distinguish:
 - headline/summary/rationale;
 - materiality.
 
-The current uniqueness constraints on `(instrument_id, content_hash)` and `(instrument_id, source_id, external_reference)` are useful ingestion-level safeguards and should be retained or strengthened by RES-002.
+Production retains ingestion safeguards and adds the canonical observation identity enforced by the service-only RES-002 ingestion path.
 
 ### `instrument_opinion_consensus`
 
@@ -113,7 +104,7 @@ Use the strongest available identity, in this order:
 3. `content_hash`;
 4. when none of the above exists, a deterministic fallback based on source identity + source publication time/date + normalized headline/claim text.
 
-Normalization should remove purely transport/tracking differences without merging genuinely different source documents. RES-002 should implement one canonical normalization routine rather than allowing each collector to invent its own rules.
+Normalisation removes purely transport/tracking differences without merging genuinely different source documents. RES-002 implements one canonical routine through the approved ingestion helper rather than allowing each collector to invent its own rules.
 
 ### Same source in opinion store and direct web research
 
@@ -144,7 +135,7 @@ When external opinion is material to a Market Assessment:
 - do not create a second evidence row for the same canonical source/claim within the same assessment;
 - on retry/resume, reuse/replace/deduplicate rather than append duplicates.
 
-The current `gpt_market_evidence` schema has no foreign key back to `instrument_opinions`. RES-002 should evaluate adding explicit lineage (for example, `instrument_opinion_id` or an equivalent canonical source key) so this boundary becomes machine-verifiable rather than relying only on source URL/text matching.
+Production `gpt_market_evidence` stores `instrument_opinion_id` and `canonical_source_key`. A trigger validates instrument alignment and a partial unique index prevents the same canonical external-opinion source being counted twice in one assessment.
 
 ## Freshness and historical context
 
@@ -152,7 +143,7 @@ Opinion evidence must retain its actual publication/observation date.
 
 A dated opinion snapshot may be useful historical context, but it must not be presented as **current consensus** merely because it is the newest row available in Supabase. The Market Assessment should assess whether an opinion remains sufficiently current and material for the assessment date and reduce weight/confidence when it is stale or superseded.
 
-The current live opinion scaffold was last reviewed on 25 July 2026, so it must not be interpreted as proof that external-opinion coverage is currently fresh on 24 August 2026.
+Production coverage monitoring distinguishes `current`, `stale` and `none`; absence or stale coverage is never converted into neutral opinion evidence.
 
 ## Evidence weighting rules
 
@@ -179,24 +170,23 @@ Market Convergence combines the already-independent Technical result with the al
 
 The external-opinion subsystem defined here is short-term Market research support. Long-term Opportunity Assessment continues to use its own independent structural/technology evidence contract and must not import short-term analyst ratings, target prices or Market Assessment conclusions as Opportunity inputs.
 
-## RES-002 implementation contract
+## Implemented RES-002 boundary
 
-RES-002 may operationalise approved opinion sources only after preserving this boundary. At minimum it should provide:
+RES-002 operationalises this contract with:
 
-1. explicit approved source registry and source-specific collection rules;
-2. deterministic canonical source identity/URL normalization;
-3. idempotent insertion using external reference/content hash/source identity;
+1. an approved source registry and source-specific collection rules;
+2. deterministic canonical source identity and URL normalisation;
+3. idempotent observation insertion and retry-safe review identity;
 4. preserved publication/observation timestamps and source URLs;
-5. explicit review-run lifecycle, terminal status and errors;
+5. explicit review/source lifecycle, terminal status and errors;
 6. consensus generated only from deduplicated eligible atomic observations;
-7. machine-verifiable lineage between derived consensus and/or Market evidence and the atomic source observations where practical;
-8. no client-write exposure without deliberate RLS/grant design;
-9. tests proving retries do not duplicate opinions or consensus;
-10. tests proving the same underlying source cannot increase Market Assessment evidence breadth twice;
-11. monitoring of coverage/freshness so absence of current opinion data is distinguishable from neutral consensus;
-12. no direct writes into Technical Engine, Market Convergence or Opportunity Assessment outputs.
+7. exact consensus membership and Market-evidence lineage;
+8. service-only writes, deliberate RLS and restricted function execution;
+9. verified retry deduplication and non-double-counting constraints;
+10. coverage/freshness monitoring that distinguishes current, stale and absent evidence;
+11. no direct writes into Technical Engine, Market Convergence or Opportunity Assessment outputs.
 
-RES-002 should not treat the existing one-review/two-opinion sample as production coverage.
+The implementation does not treat historical sample rows as current production coverage.
 
 ## Definition of Done mapping for RES-001
 
