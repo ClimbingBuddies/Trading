@@ -2,6 +2,23 @@
 
 This file is the persistent write-first checkpoint shared by the Trading Project Plan Builder and Auditor. It is operational controller state, not audit approval.
 
+## QUAL-002 bounded increment continued — 25 Aug 2026, 15:24 AWST
+
+- protocol_version: 1.3
+- builder_run_id: manual-20260825-1520-qual002
+- event: BUILD_CONTINUE
+- task_id: QUAL-002
+- current_status: IN PROGRESS
+- completed_work: verified the write-first checkpoint; launched a bounded one-route Chromium CDP measurement harness for `/markets`; confirmed the browser harness and Performance API extraction path operate locally
+- browser_measurement_result: not accepted as evidence because the execution environment could not resolve `discoverbouldersmarkets.vercel.app`; Chromium navigated to `chrome-error://chromewebdata/` and direct curl returned DNS resolution failure
+- trustworthy_new_timing_data: none
+- preserved_evidence: documentation/performance/qual-002-pre-optimisation-baseline.md @ bcaaeb99d2b825e9b2da645e823eba02f03c3bbd remains the accepted SQL/request baseline
+- exact_remaining_work: obtain real Navigation Timing / Resource Timing for `/markets`, `/opportunities` and `/strategies` from a browser-capable environment with production DNS/network access; checkpoint each route separately; then define budgets from the measured SQL and browser evidence and run final Builder checks
+- next_safe_action: resume QUAL-002 from this checkpoint using a browser execution path that can reach the production hostname; do not reuse the `chrome-error` timing values and do not optimise before the real waterfall exists
+- current_owner: BUILDER
+- terminal_outcome: REWORK_IN_PROGRESS
+- safety_boundary: measurement/documentation only; no query optimisation, frontend behaviour change, trading-data mutation or live-trading enablement occurred
+
 ## Manual build started — 25 Aug 2026, 15:20 AWST
 
 - protocol_version: 1.3
@@ -171,51 +188,5 @@ This file is the persistent write-first checkpoint shared by the Trading Project
 - current_owner: AUDITOR
 - auditor_next_action: independently rerun tests, verify production-used helper coverage and check representative production routes
 - safety_boundary: no live-trading change and no Supabase data mutation
-
-## QUAL-001 implementation verified — 25 Aug 2026, 13:23 AWST
-
-- protocol_version: 1.3
-- builder_run_id: manual-20260825-1321-qual001
-- event: BUILD_CHECKPOINT
-- task_id: QUAL-001
-- implementation_commit: 0f73a6b8401e23d6bd80ce20913d675fe65e8bfa
-- implemented: Node built-in test runner; production-used score calculation, market-loader mapping/summary and strategy empty-state helpers; four deterministic tests
-- test_result: 4 passed, 0 failed
-- initial_build_issue: MJS declaration resolution failed at commit 536ddf00821e8c77c5f23c4852459913dee2a1c1
-- correction: matching quality-critical.d.mts added; superseded d.ts removed
-- deployment_id: dpl_6MSTJWX8o52VRHeEt3GKQeiAYSph
-- deployment_status: READY
-- current_owner: BUILDER
-- next_action: persist the complete IN REVIEW handoff for independent audit
-- safety_boundary: production behaviour preserved; live trading remains disabled; no Supabase data changed
-
-## Manual build started — 25 Aug 2026, 13:21 AWST
-
-- protocol_version: 1.3
-- builder_run_id: manual-20260825-1321-qual001
-- event: BUILD_ATTEMPT_STARTED
-- task_id: QUAL-001
-- task_title: Add automated tests for critical calculations/data access
-- starting_status: NEXT
-- intended_bounded_increment: inspect the current test framework and highest-risk untested calculation, loader and empty-state surfaces; add the smallest coherent deterministic test set; run Builder checks; hand off only if the Definition of Done is met
-- current_owner: BUILDER
-- safety_boundary: do not alter production behaviour, persisted strategy evidence or live-trading state
-
-## Manual audit completed — 25 Aug 2026, 13:18 AWST
-
-- protocol_version: 1.3
-- auditor_run_id: manual-20260825-1307-strat005
-- terminal_outcome: AUDIT_PASS
-- completed_task: STRAT-005
-- audit_record: documentation/project-audits/STRAT-005.md
-- audit_commit: 472ef95cbfdddd7de9fbcd50a4e1530f42111126
-- project_plan_commit: 7aa75b9d60dbaa0e0014b41ec3915e653158f2a0
-- authenticated_evidence: owner-supplied production mobile screenshot dated 25 Aug 2026
-- verified_result: real strategy, test and review counts render; real rounded metrics match Supabase; live trading is visibly disabled; responsive mobile layout is healthy
-- promoted_task: QUAL-001
-- promoted_status: NEXT
-- current_owner: BUILDER
-- builder_next_action: add repeatable tests for the smallest high-risk critical calculations, data loaders and empty states
-- safety_boundary: live trading remains disabled; persisted strategy evidence and the accepted STRAT-004 evaluation were not modified
 
 The next eligible controller is the Trading Project Plan Builder working on QUAL-002.
