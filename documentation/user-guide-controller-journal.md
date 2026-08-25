@@ -7,13 +7,13 @@ This journal is the sole persisted communication channel for the scheduled User 
 ```yaml
 project_status: ACTIVE
 active_task: UGUIDE-002
-active_task_status: NEXT
+active_task_status: IN PROGRESS
 handoff_owner: PRODUCER
-handoff_status: AUTHORISED
-last_updated: 2026-08-26T02:04:04+08:00
+handoff_status: BUILDING
+last_updated: 2026-08-26T03:03:35+08:00
 completed_task: UGUIDE-001
 audit_decision: PASS_WITH_ADVICE
-next_action: Producer reads the latest plan and journal, records BUILD_ATTEMPT_STARTED, and implements only UGUIDE-002
+next_action: Producer implements only UGUIDE-002 public navigation, assessment and Opportunity guide content with current production screenshots
 ```
 
 ## State invariants
@@ -271,6 +271,19 @@ findings:
 complete_correction_set: none
 next_task_promoted: UGUIDE-002
 exact_next_action: Producer reads the updated authoritative records, records BUILD_ATTEMPT_STARTED, and implements only UGUIDE-002; Auditor does not implement that gate
+```
+
+### 2026-08-26T03:03:35+08:00 — BUILD_ATTEMPT_STARTED
+
+```yaml
+event: BUILD_ATTEMPT_STARTED
+task_id: UGUIDE-002
+controller: PRODUCER
+starting_commit: a8f48736cb52c7b38fc2cf9d077aa4fa8fcbf88a
+plan_state_observed: UGUIDE-001 DONE; UGUIDE-002 sole NEXT gate; UGUIDE-003 through UGUIDE-005 PLANNED
+handoff_observed: complete AUDIT_DECISION PASS_WITH_ADVICE for UGUIDE-001; UGUIDE-002 explicitly promoted to PRODUCER with no unresolved HANDOFF_QUERY
+intended_scope: document public navigation, Markets, instrument detail, Technical/AI/Market Convergence interpretation and long-term Opportunity themes; add exactly the four UGUIDE-002 production screenshots; verify all claims against current source, browser behaviour and read-only persisted evidence
+timestamp: 2026-08-26T03:03:35+08:00
 ```
 
 ## Required entry templates
