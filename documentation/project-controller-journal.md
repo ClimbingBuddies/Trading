@@ -2,6 +2,19 @@
 
 This file is the persistent write-first checkpoint shared by the Trading Project Plan Builder and Auditor. It is operational controller state, not audit approval.
 
+## Manual build started — 25 Aug 2026, 15:01 AWST
+
+- protocol_version: 1.3
+- builder_run_id: manual-20260825-1501-qual002
+- event: BUILD_ATTEMPT_STARTED
+- task_id: QUAL-002
+- task_title: Add performance budgets/query monitoring
+- starting_status: IN PROGRESS
+- intended_bounded_increment: capture the missing repeatable frontend/resource timing evidence for representative production routes, reconcile it with the existing SQL baseline, and if sufficient define evidence-based pre-optimisation performance budgets without changing production behaviour
+- current_owner: BUILDER
+- resume_from: documentation/performance/qual-002-pre-optimisation-baseline.md @ bcaaeb99d2b825e9b2da645e823eba02f03c3bbd
+- safety_boundary: measurement and documentation only; do not optimise queries, alter trading logic/data, or enable live trading
+
 ## QUAL-002 bounded increment continued — 25 Aug 2026, 14:55 AWST
 
 - protocol_version: 1.3
