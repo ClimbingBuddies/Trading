@@ -221,7 +221,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 
 | ID | Status | Task | Definition of done |
 |---|---|---|---|
-| DOC-RECON-001 | **IN REVIEW** | Reconcile completed platform documentation | Current architecture, routes, data model, operations and strategy documentation agree with the completed platform; obsolete status narratives are removed; durable specifications and audit history are preserved; documentation indexes expose the current useful set. |
+| DOC-RECON-001 | **IN PROGRESS** | Reconcile completed platform documentation | Current architecture, routes, data model, operations and strategy documentation agree with the completed platform; obsolete status narratives are removed; durable specifications and audit history are preserved; documentation indexes expose the current useful set. |
 
 ## Recommended execution order
 
@@ -252,21 +252,21 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** DOC-RECON-001 is **IN REVIEW** after the documentation-only Builder implementation and exact handoff were persisted. The independent Auditor is next.
+**Current work:** DOC-RECON-001 is **IN PROGRESS** after independent audit returned a complete documentation correction set. The Builder is next and must address the recorded REWORK findings before another handoff.
 
 ## Active controller handoff
 
 ```yaml
 task_id: DOC-RECON-001
-handoff_owner: AUDITOR
-handoff_status: IMPLEMENTATION_COMPLETE
-current_status: IN REVIEW
+handoff_owner: BUILDER
+handoff_status: REWORK_REQUIRED
+current_status: IN PROGRESS
 implementation_commit: c2c88005ef3eca3b67e44f343b52edb2e62de247
 audit_record: documentation/project-audits/DOC-RECON-001.md
-next_action: independently audit the reconciliation against current GitHub and representative Supabase production truth; PASS or return the complete correction set
+next_action: address every numbered remediation in documentation/project-audits/DOC-RECON-001.md, rerun the documentation checks and persist a new exact implementation handoff
 ```
 
-DOC-RECON-001 is the sole active item. All previously completed project-plan items and audit records remain preserved.
+DOC-RECON-001 remains the sole active item. No successor was promoted. All previously completed project-plan items and audit records remain preserved.
 
 ## Definition of Operational
 
