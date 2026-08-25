@@ -10,7 +10,7 @@ Describe the implementation and the user/system contract it changes.
 
 ## Documentation impact — required
 
-Review [`documentation/development-workflow.md`](../documentation/development-workflow.md) before marking this change ready for review.
+Review [the canonical Development Workflow](https://github.com/ClimbingBuddies/Trading/blob/main/documentation/development-workflow.md) before marking this change ready for review.
 
 Select exactly one:
 
