@@ -2,6 +2,24 @@
 
 This file is the persistent write-first checkpoint shared by the Trading Project Plan Builder and Auditor. It is operational controller state, not audit approval.
 
+## Manual audit paused for authenticated evidence — 25 Aug 2026, 13:11 AWST
+
+- protocol_version: 1.3
+- auditor_run_id: manual-20260825-1307-strat005
+- terminal_outcome: AUDIT_RETRY_PENDING
+- task_id: STRAT-005
+- current_status: IN REVIEW
+- implementation_commit: 614d16764411b3b9ab479f16138c1402087206ec
+- audit_record: documentation/project-audits/STRAT-005.md
+- audit_commit: c374c4379d20267145db46ec561d1967db44ea4c
+- verified_layers: GitHub source, Supabase exact data and owner/non-owner RLS, Vercel deployment, production HTTP route and runtime health
+- remaining_evidence: owner-authenticated production browser rendering, exact on-screen metric/path parity and responsive presentation
+- defect_found: no
+- rework_requested: no
+- current_owner: AUDITOR
+- next_action: rerun the Auditor with an existing owner-authenticated browser session at /strategies
+- safety_boundary: STRAT-005 remains IN REVIEW; Builder waits; live trading remains disabled; no project or trading data changed
+
 ## Manual audit started — 25 Aug 2026, 13:07 AWST
 
 - protocol_version: 1.3
