@@ -2,6 +2,19 @@
 
 This file is the persistent write-first checkpoint shared by the Trading Project Plan Builder and Auditor. It is operational controller state, not audit approval.
 
+## Manual build started — 25 Aug 2026, 16:07 AWST
+
+- protocol_version: 1.3
+- builder_run_id: manual-20260825-1607-qual002
+- event: BUILD_ATTEMPT_STARTED
+- task_id: QUAL-002
+- task_title: Add performance budgets/query monitoring
+- starting_status: IN PROGRESS
+- intended_bounded_increment: consume the newly available genuine production `[performance-waterfall-v1]` samples for `/markets`, `/opportunities` and `/strategies`, persist the measured waterfall baseline and cache/authentication interpretation, define evidence-based pre-optimisation budgets from the browser and preserved SQL evidence, run final Builder checks, and hand off to the Auditor if the Definition of Done is complete
+- current_owner: BUILDER
+- resume_from: production telemetry deployment dpl_HEwx9WtekyUE13AQiXbkBWvcHs4K at commit 622ed826c65ada0bd326f3afdfc2829f40d8bb6d and SQL baseline documentation/performance/qual-002-pre-optimisation-baseline.md @ bcaaeb99d2b825e9b2da645e823eba02f03c3bbd
+- safety_boundary: measurement/monitoring and documentation only; do not optimise queries, mutate trading data, change trading decisions or enable live trading
+
 ## QUAL-002 bounded increment continued — 25 Aug 2026, 15:43 AWST
 
 - protocol_version: 1.3
