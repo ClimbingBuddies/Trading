@@ -214,7 +214,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 |---|---|---|---|
 | QUAL-001 | **DONE** | Add automated tests for critical calculations/data access | Key calculations, data loaders and empty states have repeatable tests. |
 | QUAL-002 | **DONE** | Add performance budgets/query monitoring | SQL time and network waterfalls are measured before optimisation. |
-| QUAL-003 | **IN PROGRESS** | Create operational runbook | Market-data, assessment, stale-data and deployment failure procedures are documented. |
+| QUAL-003 | **IN REVIEW** | Create operational runbook | Market-data, assessment, stale-data and deployment failure procedures are documented. |
 | QUAL-004 | **PLANNED** | Add documentation checklist to development workflow | Significant architecture/schema changes include documentation updates. |
 
 ## Recommended execution order
@@ -246,23 +246,43 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `QUAL-003 — Create operational runbook` is **IN PROGRESS** under Builder run `manual-20260825-1736-qual003`. The bounded increment is documentation-only: create and verify procedures for market-data, assessment, stale-data and deployment failures against the current verified architecture.
+**Current work:** `QUAL-003 — Create operational runbook` is **IN REVIEW** after Builder implementation commit `d3f4a80557d26503d8e208b8f87c2b7347460cc9`. The runbook is documentation-only and is ready for independent verification against current canonical operational specifications.
 
 ## Active controller handoff
 
 ```yaml
 task_id: QUAL-003
-handoff_owner: BUILDER
-handoff_status: BUILDING
+handoff_owner: AUDITOR
+handoff_status: READY_FOR_AUDIT
 builder_run_id: manual-20260825-1736-qual003
 starting_status: NEXT
-current_status: IN PROGRESS
-definition_of_done: Market-data, assessment, stale-data and deployment failure procedures are documented.
-bounded_increment: create the operational runbook from current canonical specifications, production architecture and audited operational boundaries
-next_action: inspect current operational specifications and write the smallest complete runbook without changing production behaviour
+current_status: IN REVIEW
+implementation_commit: d3f4a80557d26503d8e208b8f87c2b7347460cc9
+affected_layers:
+  - GitHub
+deployment_required: no
+not_applicable_layers:
+  - Supabase mutation/schema checks
+  - Vercel deployment checks
+  - browser checks
+  - external evidence
+builder_checks:
+  - PASS: `documentation/operational-runbook.md` read back successfully and explicitly covers market-data ingestion failure, assessment workflow failure, stale-data procedure and deployment/production-route failure.
+  - PASS: runbook preserves live Twelve Data `quote` versus Tiingo `1day` boundary and session-aware freshness handling.
+  - PASS: Market AI stale-data stop rule, Opportunity independence rule and Technical Engine durable retry lifecycle match current canonical specifications.
+  - PASS: deployment section separates source/build failure, deployment lag, READY route failure and compatibility-aware rollback.
+  - PASS: recovery evidence/security checklist prevents fabricated state, widened client privileges or secret exposure.
+  - PASS: documentation README links the new runbook.
+auditor_checks_required:
+  - Independently compare all four runbook procedures with current canonical pipeline/specification files.
+  - Verify retry/idempotency, timezone, source-of-truth and analytical-independence boundaries are represented accurately.
+  - Verify the runbook does not instruct operators to bypass RLS, expose secrets, fabricate current data or rewrite accepted historical evidence.
+  - Verify the documentation map points to the runbook and the QUAL-003 Definition of Done is fully satisfied.
+known_gaps: []
+handoff_at: 2026-08-25T17:48:00+08:00
 ```
 
-Exactly one item is `IN PROGRESS`. The Builder owns QUAL-003.
+Exactly one item is `IN REVIEW`. The Auditor owns QUAL-003. QUAL-004 remains `PLANNED`; the Builder did not promote a successor.
 
 ## Definition of Operational
 
