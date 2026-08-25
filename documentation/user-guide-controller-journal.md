@@ -9,11 +9,11 @@ project_status: ACTIVE
 active_task: UGUIDE-004
 active_task_status: IN PROGRESS
 handoff_owner: PRODUCER
-handoff_status: BUILDING
-last_updated: 2026-08-26T06:59:34+08:00
+handoff_status: BLOCKED
+last_updated: 2026-08-26T07:09:00+08:00
 completed_task: UGUIDE-003
 audit_decision: PASS_WITH_ADVICE
-next_action: Producer implements only UGUIDE-004 and prepares complete evidence for independent audit
+next_action: provide genuine narrow production viewport, capture markets-overview-mobile.png, then complete UGUIDE-004 verification and Producer handoff
 ```
 
 ## State invariants
@@ -499,6 +499,51 @@ plan_state_observed: UGUIDE-001 through UGUIDE-003 DONE; UGUIDE-004 sole NEXT ga
 handoff_observed: complete AUDIT_DECISION PASS_WITH_ADVICE for UGUIDE-003; UGUIDE-004 explicitly promoted to PRODUCER with no unresolved HANDOFF_QUERY
 intended_scope: document Strategy evidence and continue_testing interpretation, Admin and data-health indicators, freshness/status/empty states, troubleshooting, one representative mobile view and a compact glossary; capture authenticated Strategy evidence only from an already-authorised owner session, otherwise record exact AUTH_REQUIRED routes
 timestamp: 2026-08-26T06:59:34+08:00
+```
+
+### 2026-08-26T07:09:00+08:00 — BUILD_BLOCKED
+
+```yaml
+event: BUILD_BLOCKED
+task_id: UGUIDE-004
+controller: PRODUCER
+task_status: IN PROGRESS
+handoff_owner: PRODUCER
+handoff_status: BLOCKED
+partial_implementation_range: 147a1be1454a73e974a0f6fe0a43dfcc11b91601..9764401109463ccb1835d295dc05e24255bbe7d7
+partial_files_changed:
+  - documentation/user-guide.md
+  - documentation/images/user-guide/admin-health-desktop.jpg
+partial_audit_record: documentation/user-guide-audits/UGUIDE-004.md
+completed_scope:
+  - Strategy reading procedure and continue_testing safety boundary
+  - Admin/data-health procedure and current production screenshot
+  - freshness/status/empty-state guidance
+  - common troubleshooting, mobile usage guidance and compact glossary
+screenshots_added:
+  - documentation/images/user-guide/admin-health-desktop.jpg
+auth_required:
+  - /strategies
+  - /strategies/[id]
+  - /strategies/[id]/tests/[runId]
+blocking_acceptance_item: one representative mobile screenshot
+missing_file: documentation/images/user-guide/markets-overview-mobile.png
+blocker_reason: the controlled production browser exposes only a fixed 1363x936 CSS-pixel viewport and advertises no viewport/device-emulation capability; a genuine narrow capture could not be made
+required_answer_or_resource:
+  - a supported production browser/session with a genuine narrow viewport, recommended 390x844 CSS pixels
+  - no credential is requested; an authenticated session is not needed for the public /markets screenshot
+required_completion_steps:
+  - open current production /markets at the narrow viewport
+  - verify horizontal navigation, stacked header, touch controls and deliberate table scrolling
+  - capture, inspect and commit markets-overview-mobile.png
+  - add meaningful alt text and concise caption
+  - rerun all UGUIDE-004 checks and submit a complete READY_FOR_AUDIT Producer handoff
+prohibited_substitutes:
+  - desktop crop or resized desktop bitmap
+  - generated mock-up
+  - relabelled non-mobile screenshot
+data_or_schema_effects: none
+exact_next_action: keep UGUIDE-004 IN PROGRESS under PRODUCER; Auditor performs no audit and promotes no successor until the blocker is cleared and the complete handoff is persisted
 ```
 
 ## Required entry templates
