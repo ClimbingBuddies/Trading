@@ -31,7 +31,7 @@ The word **convergence** is used in two separate contexts and must not be confus
 - **Market Convergence** combines the independent Technical Engine result with the independent ChatGPT Market Assessment.
 - **Opportunity Convergence** combines the independent Structural Opportunity Signal with the independent Technology Inflection Signal.
 
-There is no direct convergence calculation between the Market system and the Opportunity system. Cross-system presentation is a later user-experience layer, not an analytical dependency.
+There is no direct convergence calculation between the Market system and the Opportunity system. Cross-system presentation is an implemented user-experience layer, not an analytical dependency.
 
 ---
 
@@ -112,7 +112,7 @@ Only after both independent branches exist should Market Convergence combine the
 
 The canonical [Market Convergence Specification](specifications/market-convergence-specification.md) defines the `market-convergence-v1` equal-weight score, confidence calculation, disagreement precedence, labels, lineage and versioning. Disagreement remains visible as `mixed` or `conflict` rather than being hidden by the arithmetic mean.
 
-The trusted [Market Convergence Population Pipeline](pipelines/market-convergence-pipeline.md) now implements that methodology against independently completed source rows. It persists complete Technical and AI snapshots with mandatory source lineage; history/stale-input behavior remains a later stage.
+The trusted [Market Convergence Population Pipeline](pipelines/market-convergence-pipeline.md) implements that methodology against independently completed source rows. It persists complete Technical and AI snapshots, source-date history, mandatory lineage, immutable-cutoff freshness decisions and bounded retry state.
 
 ## Current Market maturity
 
@@ -282,7 +282,7 @@ The independent Technical Engine should derive its indicators and market scores 
 
 ## Market AI must remain independently identifiable
 
-The independent ChatGPT Market workflow should record methodology/version metadata and whether Technical Engine input was used. The project target is to make the independence explicit in persisted metadata before Market Convergence is operationalised.
+The independent ChatGPT Market workflow records methodology/version metadata and whether Technical Engine input was used. Production AI rows are independently identifiable through `methodology_version = 'independent-market-ai-v1'` and `technical_engine_input_used = false` before they are eligible for Market Convergence.
 
 ## Cross-system display is allowed
 
@@ -352,6 +352,8 @@ The production application exposes the systems as separate primary navigation de
 - `/markets` — market data;
 - `/assessments` — short-term AI Market Assessments;
 - `/opportunities` — long-term Opportunity Assessments;
+- `/watchlists` — private owner watchlists;
+- `/alerts` — private owner alert definitions and event history;
 - `/strategies` — strategy laboratory.
 
 ## `/assessments`
@@ -377,18 +379,16 @@ Primary sources:
 
 ## `/assessments/[symbol]`
 
-Purpose: instrument-level ChatGPT Market Assessment.
+Purpose: instrument-level short-term Market view with separate Technical, AI and Market Convergence results.
 
 Current UI includes:
 
-- rating;
-- score;
-- confidence;
-- summary;
-- bull/bear cases;
-- technical, macro and valuation views;
-- catalysts and risks;
-- linked supporting evidence;
+- separate Technical, AI Market and Market Convergence cards;
+- AI rating, score, confidence and summary;
+- bull/bear cases, macro and valuation views;
+- catalysts, risks and linked supporting evidence;
+- Technical score, confidence and component context;
+- Convergence score, confidence, label, disagreement and lineage;
 - link to the corresponding Market page.
 
 Primary sources:
@@ -396,8 +396,10 @@ Primary sources:
 - `instruments`
 - `gpt_market_assessments`
 - `gpt_market_evidence`
+- `market_scores`
+- `market_convergence_assessments`
 
-This route currently represents the **AI branch**, not a completed Market Convergence view.
+The route preserves the three branches as distinct results; it does not collapse Technical, AI and Convergence into one unexplained score.
 
 ## `/opportunities`
 
@@ -450,8 +452,8 @@ It owns, among other things:
 
 - market observations;
 - assessment runs/results/evidence;
-- technical indicators/scores when implemented;
-- convergence rows when implemented;
+- versioned technical indicators and scores;
+- Market Convergence rows, lineage, history and run state;
 - Opportunity Themes/signals/assessments;
 - exposure mappings;
 - Research & Evidence documents and embeds.
