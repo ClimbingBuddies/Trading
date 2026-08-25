@@ -1,7 +1,7 @@
 # UGUIDE-002 — Producer Evidence
 
 **Task:** Document public navigation and assessment dashboards  
-**Status:** Awaiting independent audit  
+**Status:** PASS WITH ADVICE — independently audited  
 **Authoritative implementation range:** `41b8f433f4302fb755566f02d336374a3df8b0b4^..9d405c7bb519c1ef203821d079e8f77bcdc74c6d`  
 **Functional base/checkpoint:** `8746c0e6de55b23825ea1f339a6c4093e605a096`  
 **Production verified:** 2026-08-26T03:13:26+08:00  
@@ -122,3 +122,67 @@ These are audit observations, not hard-coded guide promises. No database row, sc
 ## Exact next action
 
 The independent Auditor compares `41b8f433f4302fb755566f02d336374a3df8b0b4^..9d405c7bb519c1ef203821d079e8f77bcdc74c6d` with UGUIDE-002, opens every screenshot, rechecks the documented routes and claims against current source and read-only production evidence, and issues PASS/PASS WITH ADVICE or one complete correction set. The Producer must not edit UGUIDE-002 while it is IN REVIEW.
+
+
+## Independent Auditor decision — 26 August 2026
+
+**Decision:** PASS WITH ADVICE  
+**Implementation range reviewed:** `41b8f433f4302fb755566f02d336374a3df8b0b4^..9d405c7bb519c1ef203821d079e8f77bcdc74c6d`  
+**Audit scope:** UGUIDE-002 only  
+**Data or schema effects:** none
+
+### Evidence independently checked
+
+- Validated the complete Producer handoff: task identity, ownership, readiness, exact range, all changed files, screenshot list, routes/viewports, effects, checks, limitations, acceptance evidence and next action are present and consistent across the plan, journal and audit record.
+- Compared the exact implementation range. It is three commits ahead of checkpoint `8746c0e6de55b23825ea1f339a6c4093e605a096` and its final diff contains only `documentation/user-guide.md` plus the four named screenshot files.
+- Confirmed the implementation guide and current default-branch guide are byte-for-byte identical at Git blob `90d72830aeaa240e43b6f81e59250eb919a495d0`.
+- Re-fetched all 17 unique canonical documentation targets linked by the guide; 17/17 resolve.
+- Re-fetched the six UGUIDE-002 page sources and four supporting data-query modules. Their current blobs match the Producer evidence.
+- Independently checked live production at a 1363 × 936 CSS-pixel viewport, device-pixel ratio 1:
+  - root redirects to `/admin`;
+  - `/admin`, `/markets`, `/markets/amd`, `/assessments`, `/assessments/gld`, `/opportunities` and `/opportunities/ai_advanced_packaging` render the documented public states;
+  - `/watchlists`, `/alerts` and `/strategies` render the documented signed-out boundaries.
+- Confirmed the dynamic route source files exist for `/admin/loads/[id]`, `/strategies/[id]` and `/strategies/[id]/tests/[runId]`.
+- Verified each local screenshot hashes to the exact Git blob in the implementation range, then opened all four at original resolution:
+  - `markets-overview-desktop.png` → `221139f8bc4bc797c00f3189a42548951a648ffe`;
+  - `instrument-detail-desktop.png` → `b0984fa5fde5cdbaca7dde9de6b80c81cba76cfe`;
+  - `assessment-detail-desktop.png` → `7ebfe5489aba0046bab983d42d266bb4d4ef989b`;
+  - `opportunity-detail-desktop.png` → `9513fcb8833a05bf3016660f053e3907bbd67cdd`.
+- Confirmed all four screenshots are true PNG files, legible, useful, non-repetitive and visually consistent with the current production layout. Three encode at 1348 × 926 and one at 1363 × 936; all came from the stated stable 1363 × 936 CSS viewport.
+- Confirmed each screenshot appears once in the guide with unique, meaningful alt text and a concise explanatory caption.
+- Independently corroborated the screenshot evidence with read-only production data:
+  - 30 active instruments, 30 latest AI rows and 30 latest Market Convergence rows;
+  - the screenshot's AMD 478.94 USD observation and ETH/USD 2,467.12 USD observation remain persisted at their displayed times;
+  - AMD Hold/50 at 78% confidence and two active theme exposures;
+  - GLD Technical 54.57/Hold, AI 79/Buy and Convergence 66.79/moderate_bullish at 83.28% confidence;
+  - 10 active/watch themes and Advanced Packaging 87.6 Structural, 90 Technology and 88.8/transformational Opportunity Convergence.
+- Confirmed the guide does not hard-code those volatile example values as promises.
+- Confirmed public/authenticated access, no-live-trading, non-advice, Market-versus-Opportunity and exposure-versus-return boundaries remain prominent.
+- Scanned guide text for email addresses, common token/secret patterns and temporary markers; none were found. Visual inspection found no email address, user identifier, token, secret or other personal information.
+- Inspected the Git tree for guide artifacts. It contains the canonical guide, authorised plans/journals/audits and exactly the four current UGUIDE-002 images; no superseded draft, duplicate candidate or temporary reconciliation artifact was found.
+
+### Findings
+
+1. The complete UGUIDE-002 Definition of Done is satisfied.
+2. Navigation, Markets, instrument detail, Market Assessment, Technical/AI/Market Convergence and long-term Opportunity interpretation are accurately task-based and consistent with current source, production and persisted evidence.
+3. All four screenshots meet the gate's currency, usefulness, legibility, privacy, alt-text and caption requirements.
+4. Non-blocking advice carried from UGUIDE-001: production `/` redirects to `/admin`, while `documentation/frontend-route-map.md` still says `/markets`. The guide correctly follows production truth; reconcile the stale route-map statement no later than UGUIDE-005.
+5. Dynamic market values have advanced since capture, as expected, but the screenshot rows remain genuine persisted records and the visible layout has not materially changed. Final QA should re-capture only if the UI materially changes.
+
+### Decision trace
+
+| UGUIDE-002 criterion | Auditor result |
+|---|---|
+| Navigation and Markets procedure | PASS |
+| Instrument-detail procedure and system separation | PASS |
+| Market Assessment and three-branch interpretation | PASS |
+| Opportunity theme and three-branch interpretation | PASS |
+| Four current production screenshots | PASS |
+| Alt text, captions, privacy and no fabrication | PASS |
+| Source, production and persisted-data verification | PASS |
+| Documentation-only boundary | PASS |
+| Existing root-route documentation discrepancy | PASS WITH ADVICE — outside this gate, due by UGUIDE-005 |
+
+**Complete correction set:** none; no rework is required for UGUIDE-002.  
+**Successor authorised:** UGUIDE-003 — Document signed-in monitoring workspaces.  
+**Exact next action:** Producer begins only UGUIDE-003 after reading the updated plan and journal. It must use only an already-authorised owner session for Watchlists/Alerts screenshots; otherwise it records `AUTH_REQUIRED` for the exact affected routes.
