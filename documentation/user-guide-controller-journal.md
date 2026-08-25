@@ -7,11 +7,11 @@ This journal is the sole persisted communication channel for the scheduled User 
 ```yaml
 project_status: ACTIVE
 active_task: UGUIDE-001
-active_task_status: IN PROGRESS
-handoff_owner: PRODUCER
-handoff_status: BUILD_ATTEMPT_STARTED
-last_updated: 2026-08-26T01:02:39+08:00
-next_action: Producer answers the Auditor HANDOFF_QUERY and persists one consistent audit target
+active_task_status: IN REVIEW
+handoff_owner: AUDITOR
+handoff_status: READY_FOR_AUDIT
+last_updated: 2026-08-26T01:03:29+08:00
+next_action: Auditor independently audits the unchanged guide implementation at commit 8bd5e7105922f3aaf344f314a5f697c96b2eccb0
 ```
 
 ## State invariants
@@ -152,6 +152,93 @@ plan_state_observed: UGUIDE-001 IN PROGRESS; UGUIDE-002 through UGUIDE-005 PLANN
 handoff_observed: complete HANDOFF_QUERY from AUDITOR requesting one consistent implementation audit target across plan, journal and audit record
 intended_scope: answer the range-conflict query, separate functional implementation from control metadata, align all authoritative records and resubmit the same unchanged guide for audit
 timestamp: 2026-08-26T01:02:39+08:00
+```
+
+### 2026-08-26T01:03:29+08:00 — HANDOFF_ANSWER
+
+```yaml
+event: HANDOFF_ANSWER
+task_id: UGUIDE-001
+answer_from: PRODUCER
+answer_to: AUDITOR
+query_resolved: yes
+why_the_targets_differed: the initial handoff incorrectly used commit ranges that mixed the functional guide implementation with checkpoint, evidence, project-plan and journal control metadata; the audit record alone named the actual deliverable commit
+authoritative_implementation_audit_target: 8bd5e7105922f3aaf344f314a5f697c96b2eccb0
+excluded_control_metadata:
+  - 11077ab56cf3718fcbc30584fe2c3363636b36f3: Producer start checkpoint
+  - d14d17ca6454dbf38876b115c4085a427371b40c: Producer evidence record
+  - 9733d1b9b210bc5a2e1db8993b70a27871284c81: initial project-plan review transition
+  - 37124559cf05917cd48db172b6b1c587d91fb845: initial journal handoff
+  - 74161ce4779ce613b7cb34770fea7d2faa8c198d and 9d5252203015a4db50fae33b7c3e62239ac0e320: Auditor query/control records
+  - subsequent answer, plan, audit-record and journal commits: corrected delivery metadata
+exclusion_reason: control records describe or route the audit and cannot be included self-referentially in the implementation commit they name; the Auditor reads their latest versions separately
+corrected_full_handoff: the complete PRODUCER_HANDOFF immediately below is authoritative and replaces the 25 August 23:12 handoff
+exact_next_action: Auditor uses commit 8bd5e7105922f3aaf344f314a5f697c96b2eccb0 as the sole implementation target and the latest plan, journal and audit record as control evidence
+```
+
+### 2026-08-26T01:03:29+08:00 — PRODUCER_HANDOFF
+
+```yaml
+event: PRODUCER_HANDOFF
+task_id: UGUIDE-001
+handoff_from: PRODUCER
+handoff_to: AUDITOR
+handoff_status: READY_FOR_AUDIT
+implementation_commit_or_range: 8bd5e7105922f3aaf344f314a5f697c96b2eccb0
+files_changed:
+  implementation:
+    - documentation/user-guide.md
+  current_delivery_control:
+    - documentation/user-guide-audits/UGUIDE-001.md
+    - documentation/user-guide-project-plan.md
+    - documentation/user-guide-controller-journal.md
+screenshots_added_or_replaced: none; UGUIDE-001 is the structure and evidence-inventory gate
+routes_and_viewports_verified:
+  viewport: 1363x936 CSS pixels at device-pixel-ratio 1
+  browser:
+    - / redirected to /admin
+    - /admin
+    - /markets
+    - /markets/amd
+    - /assessments
+    - /assessments/gld
+    - /opportunities
+    - /opportunities/ai_advanced_packaging
+    - /watchlists signed-out state
+    - /alerts signed-out state
+    - /strategies signed-out state
+  vercel_fetch:
+    - /admin
+    - /markets
+    - /markets/amd
+    - /assessments
+    - /assessments/gld
+    - /opportunities
+    - /opportunities/ai_advanced_packaging
+    - /watchlists
+    - /alerts
+    - /strategies
+data_or_schema_effects: none
+tests_and_checks:
+  - confirmed commit 8bd5e7105922f3aaf344f314a5f697c96b2eccb0 created only documentation/user-guide.md
+  - fetched the guide at commit 8bd5e7105922f3aaf344f314a5f697c96b2eccb0 and from the latest default branch; both resolve to blob 066e05f8648eb06e0c195f75e44e6d50fc6869a2 and are byte-for-byte unchanged
+  - made the project plan and Producer evidence record name the same authoritative implementation target
+  - retained the original 17/17 repository-link, 10/10 production-route, browser and read-only Supabase checks in documentation/user-guide-audits/UGUIDE-001.md
+  - changed no guide prose, screenshot, application code, database state or production configuration during the handoff correction
+known_limitations:
+  - production / redirects to /admin while documentation/frontend-route-map.md says /markets; the guide follows observed production and the Auditor must classify the discrepancy
+  - owner-authenticated screenshots and workflows are deferred to UGUIDE-003 and UGUIDE-004; only signed-out private states were observed for UGUIDE-001
+  - delivery-control commits are deliberately outside the sole implementation audit target and must be read as latest state
+acceptance_criteria_evidence:
+  guide_skeleton: documentation/user-guide.md at commit 8bd5e7105922f3aaf344f314a5f697c96b2eccb0
+  task_sequence: recommended first visit plus eight task sections
+  screenshot_manifest: exactly nine planned production images with gate, route/state, access and purpose
+  route_and_source_map: access-at-a-glance and section-to-source tables
+  access_needs: public versus authenticated owner states and AUTH_REQUIRED rule are explicit
+  canonical_cleanup: pre-gate canonical path returned 404, so no superseded canonical draft existed
+  audit_record: documentation/user-guide-audits/UGUIDE-001.md
+  handoff_identity: plan, audit record and this journal all name 8bd5e7105922f3aaf344f314a5f697c96b2eccb0
+exact_next_action: Auditor independently audits UGUIDE-001 at commit 8bd5e7105922f3aaf344f314a5f697c96b2eccb0; Producer must not edit IN REVIEW work or promote UGUIDE-002
 ```
 
 ## Required entry templates
