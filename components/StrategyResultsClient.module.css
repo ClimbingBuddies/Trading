@@ -1,0 +1,382 @@
+.shell {
+  display: grid;
+  gap: 12px;
+  padding: 22px;
+}
+
+.hero,
+.strategyHeader,
+.runHeader,
+.reviewHeader,
+.signedIn,
+.badges {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.hero h1,
+.strategyHeader h2,
+.runHeader h3,
+.reviewHeader h3,
+.authCard h2 {
+  margin: 0;
+}
+
+.hero p,
+.strategyHeader p,
+.runHeader p,
+.reviewHeader p,
+.authCard p {
+  margin: 5px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.signedIn {
+  align-items: center;
+  font-size: 10px;
+}
+
+.signedIn button,
+.signInForm button {
+  min-height: 34px;
+  padding: 7px 11px;
+  border: 1px solid var(--accent);
+  border-radius: 7px;
+  background: var(--accent);
+  color: var(--panel);
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.authCard,
+.empty,
+.strategyPanel,
+.runCard,
+.summaryGrid article {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+}
+
+.authCard,
+.empty {
+  padding: 22px;
+}
+
+.signInForm {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) auto;
+  gap: 12px;
+  margin-top: 16px;
+  align-items: end;
+}
+
+.signInForm label {
+  display: grid;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.signInForm input {
+  min-height: 36px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--panel);
+  color: var(--text);
+}
+
+.error,
+.statusMessage {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 7px;
+  background: var(--bad-soft);
+  color: var(--bad);
+  font-size: 10px;
+}
+
+.statusMessage {
+  background: var(--ok-soft);
+  color: var(--ok);
+}
+
+.summaryGrid,
+.metrics {
+  display: grid;
+  gap: 10px;
+}
+
+.summaryGrid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.summaryGrid article,
+.metrics article {
+  display: grid;
+  gap: 4px;
+  padding: 13px;
+}
+
+.summaryGrid span,
+.metrics span,
+.eyebrow {
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .035em;
+  text-transform: uppercase;
+}
+
+.summaryGrid strong {
+  font-size: 22px;
+}
+
+.summaryGrid small {
+  color: var(--muted);
+  font-size: 9px;
+}
+
+.empty {
+  display: grid;
+  gap: 7px;
+  text-align: center;
+}
+
+.empty span,
+.emptyInline {
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.strategyPanel {
+  padding: 16px;
+}
+
+.strategyHeader {
+  margin-bottom: 14px;
+}
+
+.strategyHeader h2 {
+  margin-top: 4px;
+  font-size: 17px;
+}
+
+.badges {
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.lifecycle,
+.liveDisabled,
+.liveEnabled,
+.outcomeBadge,
+.pendingBadge,
+.safetyCallout {
+  display: inline-flex;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: var(--warn-soft);
+  color: var(--warn);
+  font-size: 9px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.liveDisabled,
+.safetyCallout {
+  background: var(--bad-soft);
+  color: var(--bad);
+}
+
+.liveEnabled {
+  background: var(--ok-soft);
+  color: var(--ok);
+}
+
+.outcomeBadge {
+  background: var(--warn-soft);
+  color: var(--warn);
+}
+
+.pendingBadge {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.runCard {
+  padding: 14px;
+  margin-top: 10px;
+  background: var(--bg);
+}
+
+.runHeader h3,
+.reviewHeader h3 {
+  margin-top: 4px;
+  font-size: 14px;
+}
+
+.metrics {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 12px 0;
+}
+
+.metrics article {
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--panel);
+}
+
+.metrics strong {
+  font-size: 17px;
+  font-variant-numeric: tabular-nums;
+}
+
+.review,
+.reviewPending {
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+}
+
+.reviewPending {
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.decisionPath {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 8px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.decisionPath li {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr);
+  gap: 7px;
+  padding: 9px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--ok-soft);
+}
+
+.decisionPath li > span {
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border-radius: 6px;
+  background: var(--ok);
+  color: var(--panel);
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.decisionPath li div {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.decisionPath strong {
+  font-size: 9px;
+  line-height: 1.35;
+}
+
+.decisionPath small {
+  color: var(--muted);
+  font-size: 8px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.decisionPath .failedStep {
+  background: var(--warn-soft);
+}
+
+.decisionPath .failedStep > span {
+  background: var(--warn);
+}
+
+.provenance {
+  margin-top: 10px;
+  border-top: 1px solid var(--line);
+}
+
+.provenance summary {
+  padding-top: 10px;
+  color: var(--accent);
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.provenance dl {
+  margin: 10px 0 0;
+}
+
+.provenance dl div {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  gap: 10px;
+  padding: 7px 0;
+  border-top: 1px solid var(--line);
+  font-size: 9px;
+}
+
+.provenance dt {
+  color: var(--muted);
+}
+
+.provenance dd {
+  margin: 0;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 1100px) {
+  .decisionPath {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .shell {
+    padding: 16px 12px 28px;
+  }
+
+  .hero,
+  .strategyHeader,
+  .runHeader,
+  .reviewHeader {
+    flex-direction: column;
+  }
+
+  .summaryGrid,
+  .metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .decisionPath {
+    grid-template-columns: 1fr;
+  }
+
+  .signInForm {
+    grid-template-columns: 1fr;
+  }
+
+  .badges {
+    justify-content: flex-start;
+  }
+}
