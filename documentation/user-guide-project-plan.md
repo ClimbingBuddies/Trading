@@ -57,7 +57,7 @@ Only one gate may be active at a time.
 | ID | Status | Gate | Definition of done |
 |---|---|---|---|
 | UGUIDE-001 | **DONE** | Establish guide structure and evidence inventory | Create the guide skeleton with audience, boundaries, task sequence and screenshot manifest; map every section to current routes and canonical documentation; record public/authenticated access needs; remove any superseded user-guide draft found at the canonical path. |
-| UGUIDE-002 | **NEXT** | Document public navigation and assessment dashboards | Explain navigation, Markets, instrument detail, Market Assessment, Technical/AI/Convergence interpretation and Opportunity themes; add current production screenshots for the dashboard/Markets/Assessment/Opportunity flows; verify all statements against source, production and persisted data where relevant. |
+| UGUIDE-002 | **IN REVIEW** | Document public navigation and assessment dashboards | Explain navigation, Markets, instrument detail, Market Assessment, Technical/AI/Convergence interpretation and Opportunity themes; add current production screenshots for the dashboard/Markets/Assessment/Opportunity flows; verify all statements against source, production and persisted data where relevant. |
 | UGUIDE-003 | **PLANNED** | Document signed-in monitoring workspaces | Explain sign-in boundaries, Watchlists, Alerts and event history with owner-isolation and safe-use notes; add current authenticated screenshots where access exists; otherwise record a precise `AUTH_REQUIRED` blocker without inventing content. |
 | UGUIDE-004 | **PLANNED** | Document strategy, operations and support | Explain strategy results including `continue_testing`, Admin/data-health indicators, data freshness, status colours, empty states and common troubleshooting; add the strategy/Admin and one representative mobile screenshot; add a compact glossary. |
 | UGUIDE-005 | **PLANNED** | Final assembly and publication QA | Reconcile the whole guide against current production; validate every route, link, image, caption and alt text; confirm no private or fabricated information; remove duplicate/obsolete guide artifacts; link the guide from `documentation/README.md`; record final audit evidence and mark the project complete. |
@@ -148,14 +148,17 @@ The project is complete only when:
 
 ```yaml
 task_id: UGUIDE-002
-handoff_owner: PRODUCER
-handoff_status: AUTHORISED
-current_status: NEXT
-completed_task: UGUIDE-001
-implementation_commit_or_range_reviewed: 8bd5e7105922f3aaf344f314a5f697c96b2eccb0
-audit_record: documentation/user-guide-audits/UGUIDE-001.md
-audit_decision: PASS_WITH_ADVICE
-audit_decision_commit: e101560bf47239a0deeb6fffa5e2344ca9ada124
-advice: production / redirects to /admin while documentation/frontend-route-map.md still says /markets; retain the production-accurate guide and reconcile the stale route-map statement by UGUIDE-005
-next_action: Producer reads the latest plan and journal, records BUILD_ATTEMPT_STARTED, and implements only UGUIDE-002
+handoff_owner: AUDITOR
+handoff_status: READY_FOR_AUDIT
+current_status: IN REVIEW
+implementation_commit_or_range: 41b8f433f4302fb755566f02d336374a3df8b0b4^..9d405c7bb519c1ef203821d079e8f77bcdc74c6d
+control_metadata: latest plan, journal and documentation/user-guide-audits/UGUIDE-002.md are delivery records outside the functional implementation target
+audit_record: documentation/user-guide-audits/UGUIDE-002.md
+producer_evidence_commit: 028b9049e6cf3df5c6db9aa941c38634b6a78faa
+screenshots:
+  - documentation/images/user-guide/markets-overview-desktop.png
+  - documentation/images/user-guide/instrument-detail-desktop.png
+  - documentation/images/user-guide/assessment-detail-desktop.png
+  - documentation/images/user-guide/opportunity-detail-desktop.png
+next_action: Auditor independently audits only UGUIDE-002; Producer must not edit IN REVIEW work or promote UGUIDE-003
 ```
