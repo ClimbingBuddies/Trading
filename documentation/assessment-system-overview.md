@@ -261,7 +261,7 @@ As verified against live Supabase on 17 August 2026:
 - Opportunity Research & Evidence documents are populated.
 - The latest scheduled Opportunity run for 17 August 2026 is recorded as `succeeded`, with 10/10 themes completed using GitHub specification version `1.3`.
 
-The project plan still retains a formal operational-verification item (`OPS-001`) so that the unattended workflow is independently checked against the full Definition of Operational before the project labels the pipeline fully Operational.
+The unattended Opportunity workflow passed the OPS-001 independent operational audit, including GitHub-spec retrieval, idempotent Supabase persistence and Research & Evidence updates.
 
 ---
 
@@ -341,7 +341,7 @@ Market result + Opportunity exposure/theme context
         -> displayed together for the user
 ```
 
-Layer 3 does not create a new score unless a future project-plan item explicitly defines and validates such a methodology. The current plan calls for combined presentation while preserving analytical independence.
+Layer 3 does not create a new score. The current product combines the independently completed views for presentation while preserving their analytical boundaries.
 
 ---
 
