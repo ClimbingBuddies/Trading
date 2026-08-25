@@ -1,3 +1,24 @@
+## DOC-RECON-001 audit completed — 25 August 2026
+
+- protocol_version: 1.3
+- auditor_run_id: manual-20260825-doc-recon-001-audit
+- terminal_outcome: AUDIT_REWORK
+- completed_task: DOC-RECON-001
+- decision: REWORK
+- implementation_commit: c2c88005ef3eca3b67e44f343b52edb2e62de247
+- implementation_range: 57381ede18b1efc7675585309955920b0a83ef1d..c2c88005ef3eca3b67e44f343b52edb2e62de247
+- audit_record: documentation/project-audits/DOC-RECON-001.md
+- audit_decision_commit: fcc1694f566de5e595133c4d2c830c7a94ec717c
+- project_plan_rework_commit: e9c76217526e3da348a75126f1f8bc8aee71b95f
+- verified_evidence: 14/14 routes mapped; 85/85 relative links across 43 indexed current-reference documents resolve; `documentation/phase2-progress.md` is the sole deletion; 47 audits and 8 specifications preserved; representative Supabase architecture/data boundaries confirmed
+- failed_evidence: indexed current references still contain obsolete or contradictory partial, pending-audit, disabled, scaffold and future-delivery narratives for completed OPS, SEC, TECH, CONV, MON and STRAT work
+- remediation: seven-part correction set persisted in the canonical DOC-RECON-001 audit record
+- current_status: IN PROGRESS
+- current_owner: BUILDER
+- promoted_task: none
+- next_action: address the complete correction set, rerun the documentation checks and persist a new exact handoff for independent audit
+- safety_boundary: audit/controller records only; no application/reference implementation, Supabase, Vercel, schedule or trading behaviour changed during audit
+
 ## DOC-RECON-001 audit started — 25 August 2026
 
 - protocol_version: 1.3
