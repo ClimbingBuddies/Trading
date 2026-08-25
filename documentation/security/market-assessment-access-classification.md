@@ -3,7 +3,7 @@
 **Project-plan item:** `SEC-001 — Define public/private Market Assessment access`  
 **Decision date:** 19 August 2026  
 **Supabase project:** `glvbqcplgjdfgjyknzsa`  
-**Status:** Canonical access decision for the Market Assessment system
+**Status:** Canonical access decision; implemented under SEC-002 and independently audited ([SEC-001 audit](../project-audits/SEC-001.md))
 
 ## Purpose
 
@@ -203,4 +203,4 @@ Fresh Builder verification established:
 - all seven orchestration functions remain trusted-backend-only;
 - production `/assessments`, `/assessments/NVDA`, and `/markets/NVDA` return HTTP 200 with real published data.
 
-This is Builder pre-flight evidence only. Independent approval remains the responsibility of the Project Plan Auditor.
+This dated Builder pre-flight evidence was independently reviewed and accepted under SEC-001; SEC-002 subsequently implemented the classified access boundary.
