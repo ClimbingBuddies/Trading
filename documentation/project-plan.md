@@ -215,7 +215,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | QUAL-001 | **DONE** | Add automated tests for critical calculations/data access | Key calculations, data loaders and empty states have repeatable tests. |
 | QUAL-002 | **DONE** | Add performance budgets/query monitoring | SQL time and network waterfalls are measured before optimisation. |
 | QUAL-003 | **DONE** | Create operational runbook | Market-data, assessment, stale-data and deployment failure procedures are documented. |
-| QUAL-004 | **IN REVIEW** | Add documentation checklist to development workflow | Significant architecture/schema changes include documentation updates. |
+| QUAL-004 | **DONE** | Add documentation checklist to development workflow | Significant architecture/schema changes include documentation updates. |
 
 ## Recommended execution order
 
@@ -246,44 +246,19 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `QUAL-004 — Add documentation checklist to development workflow` is **IN REVIEW** after Builder implementation commit `08ccdfb26474ba0b69623759e2967dda9f741ada`. The GitHub-only workflow change is ready for independent validation.
+**Current work:** All currently authorised project-plan items are **DONE** after QUAL-004 passed independent audit. No `NEXT`, `IN PROGRESS` or `IN REVIEW` task remains.
 
 ## Active controller handoff
 
 ```yaml
-task_id: QUAL-004
-handoff_owner: AUDITOR
-handoff_status: READY_FOR_AUDIT
-builder_run_id: manual-20260825-1824-qual004
-starting_status: NEXT
-current_status: IN REVIEW
-implementation_commit: 08ccdfb26474ba0b69623759e2967dda9f741ada
-affected_layers:
-  - GitHub
-deployment_required: no
-not_applicable_layers:
-  - Supabase mutation/schema checks
-  - Vercel deployment checks
-  - browser checks
-  - external evidence
-builder_checks:
-  - PASS: `documentation/development-workflow.md` requires an explicit documentation-impact decision for significant changes and forbids `No canonical documentation change required` for significant architecture/schema changes.
-  - PASS: the canonical trigger map covers architecture/source-of-truth, schema/migrations, RPC/RLS/security, automation/retries, methodology, frontend data contracts, deployment/operations, new canonical documents and controller-protocol changes.
-  - PASS: `.github/pull_request_template.md` exposes the documentation-impact decision and trigger checklist in normal review, requires `Documentation updated` for significant architecture/schema changes, and directs reviewers to return missing/stale documentation for rework.
-  - PASS: the PR template links directly to the canonical Development Workflow using a stable GitHub URL.
-  - PASS: `documentation/README.md` and root `README.md` both expose the Development Workflow.
-  - PASS: there was no pre-existing QUAL-004 audit record or existing `.github` pull-request workflow to reconcile.
-auditor_checks_required:
-  - Independently verify the Development Workflow and pull-request template state at the implementation commit.
-  - Confirm significant architecture/schema changes cannot legitimately use the no-documentation option and that the reviewer rework gate is explicit.
-  - Verify the trigger-to-canonical-document mapping is coherent with the current repository documentation structure.
-  - Verify root/documentation indexes expose the workflow and the PR template points to the canonical file.
-  - Confirm no Supabase, Vercel, browser or external-evidence layer is required for this GitHub-only Definition of Done.
-known_gaps: []
-handoff_at: 2026-08-25T18:39:00+08:00
+task_id: null
+handoff_owner: NONE
+handoff_status: PROJECT_PLAN_COMPLETE
+current_status: COMPLETE
+next_action: wait for an explicitly authorised new project-plan item; do not invent successor work
 ```
 
-Exactly one item is `IN REVIEW`. The Auditor owns QUAL-004. No successor was promoted.
+No item is `NEXT`, `IN PROGRESS` or `IN REVIEW`. The current authorised project plan is complete.
 
 ## Definition of Operational
 
@@ -341,3 +316,4 @@ A workflow is Operational only when its schema and implementation exist, schedul
 | 25-Aug-2026 | QUAL-001 | `documentation/project-audits/QUAL-001.md` | Independent audit PASS; deterministic tests directly exercise production-used calculation, market-loader and strategy empty-state helpers; 4/4 independent tests passed; exact implementation deployment/build and representative route/runtime health verified; QUAL-002 promoted. |
 | 25-Aug-2026 | QUAL-002 | `documentation/project-audits/QUAL-002.md` | Independent audit PASS WITH ADVICE; live SQL/PostgREST timing, READY telemetry deployment and genuine browser Navigation/Resource Timing waterfalls independently verified; QUAL-003 promoted. |
 | 25-Aug-2026 | QUAL-003 | `documentation/project-audits/QUAL-003.md` | Independent audit PASS; market-data, assessment, stale-data and deployment recovery procedures verified against canonical GitHub specifications; QUAL-004 promoted. |
+| 25-Aug-2026 | QUAL-004 | `documentation/project-audits/QUAL-004.md` | Independent audit PASS; documentation-impact workflow, architecture/schema mandatory documentation gate, canonical trigger mapping, PR-review rework gate and repository discoverability independently verified; current authorised project plan complete. |
