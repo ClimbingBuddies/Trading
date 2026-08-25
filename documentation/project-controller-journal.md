@@ -2,6 +2,19 @@
 
 This file is the persistent write-first checkpoint shared by the Trading Project Plan Builder and Auditor. It is operational controller state, not audit approval.
 
+## Manual build started — 25 Aug 2026, 15:25 AWST
+
+- protocol_version: 1.3
+- builder_run_id: manual-20260825-1525-qual002
+- event: BUILD_ATTEMPT_STARTED
+- task_id: QUAL-002
+- task_title: Add performance budgets/query monitoring
+- starting_status: IN PROGRESS
+- intended_bounded_increment: establish an alternative repeatable production network measurement path using connected Vercel/runtime evidence and repository instrumentation that does not depend on the broken local Chromium DNS path; persist one coherent evidence layer and do not optimise production behaviour
+- current_owner: BUILDER
+- resume_from: documentation/performance/qual-002-pre-optimisation-baseline.md @ bcaaeb99d2b825e9b2da645e823eba02f03c3bbd and journal checkpoint @ 8c1e98740173deff402f77e5aa762806882d75ec
+- safety_boundary: measurement and documentation only; do not optimise queries, alter trading logic/data, or enable live trading
+
 ## QUAL-002 bounded increment continued — 25 Aug 2026, 15:24 AWST
 
 - protocol_version: 1.3
@@ -43,7 +56,7 @@ This file is the persistent write-first checkpoint shared by the Trading Project
 - browser_measurement_attempt: first CDP attempt failed before measurement because Chromium rejected the websocket origin; corrected launch with remote-allow-origins then exceeded the bounded execution window before returning a complete three-route dataset
 - trustworthy_new_timing_data: none; no partial/guessed browser metrics were persisted as evidence
 - preserved_evidence: documentation/performance/qual-002-pre-optimisation-baseline.md @ bcaaeb99d2b825e9b2da645e823eba02f03c3bbd remains the accepted SQL/request baseline
-- exact_remaining_work: obtain a complete repeatable Navigation Timing / Resource Timing dataset for /markets, /opportunities and /strategies with cache/auth state; persist the waterfall; then define evidence-based budgets and run final Builder checks
+- exact_remaining_work: obtain a complete repeatable Navigation Timing / Resource Timing dataset for /markets, /opportunities and /strategies with cache/auth state; persist the waterfall; then define evidence-based budgets and run Builder checks
 - next_safe_action: resume from this checkpoint with a bounded browser measurement harness that returns one route at a time and checkpoints each successful route before proceeding; do not optimise before all required measurements exist
 - current_owner: BUILDER
 - terminal_outcome: REWORK_IN_PROGRESS
