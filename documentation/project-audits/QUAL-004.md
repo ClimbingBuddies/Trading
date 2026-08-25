@@ -48,9 +48,11 @@
 
 - auditor_run_id: manual-20260825-1844-qual004
 - decision: PASS
-- terminal_outcome: AUDIT_PASS_PENDING_PLAN_RECONCILIATION
+- terminal_outcome: AUDIT_PASS
 - definition_of_done_verdict: VERIFIED
 - remediation_required: none
 - non_blocking_advice: none
-- successor_state: no eligible `PLANNED` successor exists in the current authorised project plan; do not fabricate or invent a new task
-- final_project_plan_status: pending project-plan write/read-back
+- final_project_plan_status: DONE
+- project_plan_commit: 31992ce890dd288beff842bb05bad0910b18a05c
+- successor_state: no eligible `PLANNED` successor exists in the current authorised project plan; no task was invented or promoted
+- resulting_controller_state: PROJECT_PLAN_COMPLETE
