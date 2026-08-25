@@ -215,7 +215,7 @@ RLS is enabled on the Market Assessment output/control tables. `SEC-001` classif
 | QUAL-001 | **DONE** | Add automated tests for critical calculations/data access | Key calculations, data loaders and empty states have repeatable tests. |
 | QUAL-002 | **DONE** | Add performance budgets/query monitoring | SQL time and network waterfalls are measured before optimisation. |
 | QUAL-003 | **DONE** | Create operational runbook | Market-data, assessment, stale-data and deployment failure procedures are documented. |
-| QUAL-004 | **NEXT** | Add documentation checklist to development workflow | Significant architecture/schema changes include documentation updates. |
+| QUAL-004 | **IN PROGRESS** | Add documentation checklist to development workflow | Significant architecture/schema changes include documentation updates. |
 
 ## Recommended execution order
 
@@ -246,20 +246,23 @@ DOC-001 Assessment system overview
        Monitoring / Strategies
 ```
 
-**Current work:** `QUAL-004 — Add documentation checklist to development workflow` is **NEXT** after QUAL-003 passed independent audit. The Builder owns the next action.
+**Current work:** `QUAL-004 — Add documentation checklist to development workflow` is **IN PROGRESS** under Builder run `manual-20260825-1824-qual004`. This bounded increment will add and verify the smallest enforceable documentation checklist for significant architecture/schema/security/automation/operational changes.
 
 ## Active controller handoff
 
 ```yaml
 task_id: QUAL-004
 handoff_owner: BUILDER
-handoff_status: READY_TO_BUILD
-current_status: NEXT
+handoff_status: BUILDING
+builder_run_id: manual-20260825-1824-qual004
+starting_status: NEXT
+current_status: IN PROGRESS
 definition_of_done: Significant architecture/schema changes include documentation updates.
-next_action: add the smallest enforceable documentation checklist to the development workflow so significant architecture/schema changes explicitly include required documentation updates
+bounded_increment: inspect the current development workflow and add an actionable documentation-update checklist with explicit trigger conditions and canonical-document targets
+next_action: inspect existing contribution/PR/development workflow files and implement the smallest enforceable checklist without changing production behaviour
 ```
 
-Exactly one item is `NEXT`. The Builder owns QUAL-004.
+Exactly one item is `IN PROGRESS`. The Builder owns QUAL-004.
 
 ## Definition of Operational
 
