@@ -14,7 +14,7 @@ Market Convergence combines two already-completed, analytically independent view
 
 It answers **how strongly the two branches jointly support or oppose current attractiveness**. It does not recalculate either branch and it does not use Opportunity Assessment output.
 
-The canonical output relation is `public.market_convergence_assessments`. CONV-001 defines the calculation contract only. Population, scheduling, history/retry behaviour and frontend presentation belong to later project-plan items.
+The canonical output relation is `public.market_convergence_assessments`. CONV-001 defined this calculation contract; CONV-002 and CONV-003 implemented audited population, source-date history, freshness and bounded retry behaviour. Current operations are documented in the [Market Convergence Population Pipeline](../pipelines/market-convergence-pipeline.md).
 
 ## Independence boundary
 
@@ -57,7 +57,7 @@ For `market-convergence-v1`:
 - source methodology versions are validated through the linked rows;
 - rerunning the same identity updates that row rather than creating a duplicate.
 
-The source IDs are mandatory for a calculated v1 result even though the scaffolded database columns currently permit null. A calculation with missing lineage is invalid.
+Source IDs are mandatory for every calculated v1 result and are enforced by the production population boundary. A calculation with missing lineage is invalid.
 
 ## Eligible source selection
 
@@ -82,7 +82,7 @@ A partial Technical score remains eligible because its `confidence_score` alread
 
 ## History, cutoff and source freshness
 
-CONV-003 completes the v1 history and retry contract without changing the calculation:
+The completed CONV-003 implementation enforces the v1 history and retry contract without changing the calculation:
 
 - every run has an immutable cutoff timestamp;
 - the logical assessment date is the cutoff converted to `America/New_York`, matching the AI Market assessment date boundary;
@@ -300,13 +300,13 @@ A new methodology version is required for any change to:
 
 Documentation-only clarifications that do not change an output for any valid input may retain v1.
 
-## Implementation and audit gates
+## Implemented and audited boundary
 
-CONV-002 must implement this contract without populating inputs that fail eligibility and must verify exact calculations against live source rows.
+CONV-002 implements this contract without populating inputs that fail eligibility and was independently verified against live source rows.
 
 CONV-003 implements idempotent source-date history, immutable-cutoff retries and explicit stale-input handling without altering v1 calculations.
 
-The independent Auditor should verify:
+The independent audits verified:
 
 1. the implementation reads only permitted completed branch outputs;
 2. source IDs and snapshots agree;
@@ -338,4 +338,10 @@ A read-only v1 dry run over the 30 instruments with both eligible branches produ
 - a 31.48–79.78 score range and a 40.00–92.25 confidence range;
 - no inserts, updates or deletes.
 
-This dry run verifies that every formula branch maps into the existing schema. It is design evidence only, not proof of the later CONV-002 implementation.
+This dated dry run verified that every formula branch mapped into the schema before population. The later production implementation and audit evidence are recorded separately below.
+
+## Completion evidence
+
+- [Market Convergence Population Pipeline](../pipelines/market-convergence-pipeline.md)
+- [CONV-002 audit](../project-audits/CONV-002.md)
+- [CONV-003 audit and re-audit record](../project-audits/CONV-003.md)
