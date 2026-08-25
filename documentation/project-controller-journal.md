@@ -2,6 +2,20 @@
 
 This file is the persistent write-first checkpoint shared by the Trading Project Plan Builder and Auditor. It is operational controller state, not audit approval.
 
+## QUAL-004 root-entry checkpoint — 25 Aug 2026, 18:35 AWST
+
+- protocol_version: 1.3
+- builder_run_id: manual-20260825-1824-qual004
+- event: BUILD_CHECKPOINT
+- task_id: QUAL-004
+- current_status: IN PROGRESS
+- completed_layer: GitHub/root documentation discoverability
+- implementation_commit: ce89e56feb0f0e8dd4945c1c25cdd61c38ebd7a7
+- implemented: root `README.md` links `documentation/development-workflow.md` as the required documentation-impact checklist
+- current_owner: BUILDER
+- next_action: read back the workflow document, pull-request template, documentation index and root README; verify trigger coverage and review gate; then prepare the Auditor handoff if complete
+- safety_boundary: GitHub workflow/documentation changes only; no Supabase data/schema, production behaviour, trading logic or live-trading state changed
+
 ## QUAL-004 documentation map checkpoint — 25 Aug 2026, 18:33 AWST
 
 - protocol_version: 1.3
