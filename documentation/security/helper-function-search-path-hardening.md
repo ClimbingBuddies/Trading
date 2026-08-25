@@ -3,7 +3,7 @@
 **Project-plan item:** `SEC-003 — Harden helper-function search paths`  
 **Implementation date:** 20 August 2026  
 **Supabase project:** `glvbqcplgjdfgjyknzsa`  
-**Status:** Builder implementation complete; awaiting independent audit
+**Status:** Implemented; independent audit **PASS** ([SEC-003 audit](../project-audits/SEC-003.md))
 
 ## Security decision
 
