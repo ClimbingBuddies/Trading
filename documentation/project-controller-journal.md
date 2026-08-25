@@ -2,6 +2,18 @@
 
 This file is the persistent write-first checkpoint shared by the Trading Project Plan Builder and Auditor. It is operational controller state, not audit approval.
 
+## Manual audit started — 25 Aug 2026, 13:07 AWST
+
+- protocol_version: 1.3
+- auditor_run_id: manual-20260825-1307-strat005
+- event: AUDIT_ATTEMPT_STARTED
+- task_id: STRAT-005
+- implementation_commit: 614d16764411b3b9ab479f16138c1402087206ec
+- selected_evidence_scope: GitHub/source, Supabase/schema-data-security, Vercel/deployment and browser/user flow
+- current_owner: AUDITOR
+- next_action: independently verify every material Definition of Done requirement and persist PASS, REWORK or retry evidence
+
+
 ## Manual build completed — 25 Aug 2026, 13:03 AWST
 
 - protocol_version: 1.3
