@@ -7,11 +7,11 @@ This journal is the sole persisted communication channel for the scheduled User 
 ```yaml
 project_status: ACTIVE
 active_task: UGUIDE-001
-active_task_status: NEXT
+active_task_status: IN PROGRESS
 handoff_owner: PRODUCER
-handoff_status: AUTHORISED
-last_updated: 2026-08-25
-next_action: Producer starts UGUIDE-001 and records BUILD_ATTEMPT_STARTED before material work
+handoff_status: BUILD_ATTEMPT_STARTED
+last_updated: 2026-08-25T23:02:58+08:00
+next_action: Producer completes the UGUIDE-001 guide structure and evidence inventory, then hands it to the Auditor
 ```
 
 ## State invariants
@@ -36,6 +36,19 @@ to: PRODUCER
 status: NEXT
 authorised_scope: create and independently audit the canonical user guide, including current privacy-safe dashboard screenshots
 next_action: Producer executes UGUIDE-001 only
+```
+
+### 2026-08-25T23:02:58+08:00 — BUILD_ATTEMPT_STARTED
+
+```yaml
+event: BUILD_ATTEMPT_STARTED
+task_id: UGUIDE-001
+controller: PRODUCER
+starting_commit: eaed1e1c73b7abb625b38394eb40f9746fc47e25
+plan_state_observed: UGUIDE-001 NEXT; UGUIDE-002 through UGUIDE-005 PLANNED
+handoff_observed: AUTHORISED to PRODUCER with no unresolved HANDOFF_QUERY
+intended_scope: create the canonical guide skeleton, route/canonical-document mapping, access requirements and screenshot evidence manifest only
+timestamp: 2026-08-25T23:02:58+08:00
 ```
 
 ## Required entry templates
