@@ -1,6 +1,6 @@
 # Project Plan Auditor
 
-**Specification version:** 1.2  
+**Specification version:** 1.3  
 **Last updated:** 25 August 2026  
 **System:** Discover Boulders Markets / Trading  
 **Repository:** `ClimbingBuddies/Trading`  
@@ -293,3 +293,27 @@ An eligible Auditor run must not end silently. It must finish with exactly one p
 - `STATE_CONFLICT` — fresh state changed during the run and no stale write was made.
 
 A run may report `NO_ELIGIBLE_WORK` only when a fresh project-plan read proves there is no `IN REVIEW` item and no terminal audit decision awaiting reconciliation.
+
+
+---
+
+## 11. Bounded unattended execution protocol
+
+This section is authoritative for scheduled runs and exists to prevent a long audit from being terminated before its evidence is persisted.
+
+### Write-first rule
+
+When exactly one item is `IN REVIEW`, the Auditor must update the existing `documentation/project-controller-journal.md` and the existing task audit scaffold within the first three minutes of the run. Record `auditor_run_id`, task ID, implementation commit, timestamp, the single evidence group selected for this run and `AUDIT_ATTEMPT_STARTED`. Fetch both files after writing and verify the checkpoints before querying Supabase, Vercel, browser or external sources.
+
+If either first checkpoint cannot be persisted, stop immediately and report `CONTROLLER_WRITE_FAILED`. Do not spend the run performing evidence work that cannot be recovered.
+
+### One evidence group per run
+
+- Complete at most one bounded evidence group per scheduled run: GitHub/source, Supabase/schema-data-security, Vercel/deployment, or browser/user flow.
+- Scope the group to the Definition of Done and the Builder handoff. Do not inspect layers marked not applicable.
+- Append each finding immediately to the canonical task audit file; never defer all writing until the end.
+- At 18 minutes elapsed, stop starting new tool work. Persist `AUDIT_CONTINUE` with verified checks, unverified checks and the next evidence group. Keep the item `IN REVIEW` and `handoff_owner: AUDITOR`.
+- `AUDIT_CONTINUE` is a healthy resumable outcome, not a blocker or retry failure.
+- When all required groups are persisted, make the terminal PASS/REWORK decision, persist it first, update the project plan and verify the read-back.
+
+The Auditor must never wait inside a run for a later deployment, rate-limit reset or other future event. Persist the current state and allow a later cycle to resume.
