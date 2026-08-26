@@ -1,0 +1,96 @@
+name: APPGUIDE-002 production QA
+
+'on':
+  push:
+    paths:
+      - .github/workflows/appguide-002-production-qa.yml
+
+permissions:
+  contents: read
+
+jobs:
+  production-browser:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install browser dependency
+        run: python3 -m pip install --quiet selenium
+      - name: Verify live production Help
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import re
+          from selenium import webdriver
+          from selenium.webdriver.common.by import By
+          from selenium.webdriver.common.keys import Keys
+          from selenium.webdriver.support.ui import WebDriverWait
+          from selenium.webdriver.support import expected_conditions as EC
+
+          url = 'https://discoverbouldersmarkets.vercel.app/help'
+          opts = webdriver.ChromeOptions()
+          opts.add_argument('--headless=new')
+          opts.add_argument('--no-sandbox')
+          opts.add_argument('--disable-dev-shm-usage')
+          opts.add_argument('--disable-gpu')
+          opts.add_argument('--window-size=1363,936')
+          driver = webdriver.Chrome(options=opts)
+          wait = WebDriverWait(driver, 30)
+          try:
+              driver.get(url)
+              wait.until(EC.text_to_be_present_in_element((By.TAG_NAME, 'body'), 'Discover Boulders Markets — User Guide'))
+              article = driver.find_element(By.CSS_SELECTOR, 'article[data-guide-source="documentation/user-guide.md"]')
+              help_link = driver.find_element(By.CSS_SELECTOR, 'a.navItem[href="/help"]')
+              assert 'navActive' in (help_link.get_attribute('class') or '')
+              assert help_link.get_property('tabIndex') == 0
+              driver.execute_script('arguments[0].focus()', help_link)
+              assert driver.switch_to.active_element.get_attribute('href').endswith('/help')
+              help_link.send_keys(Keys.ENTER)
+              wait.until(lambda d: d.current_url.rstrip('/').endswith('/help'))
+
+              body = driver.find_element(By.TAG_NAME, 'body')
+              assert 'In-app Help:' in body.text
+              assert 'does not place live trades' in body.text
+              assert article.find_elements(By.CSS_SELECTOR, 'table')
+              images = article.find_elements(By.CSS_SELECTOR, 'img')
+              assert len(images) == 6
+              for image in images:
+                  assert len((image.get_attribute('alt') or '').strip()) >= 20
+                  driver.execute_script("arguments[0].scrollIntoView({block:'center'})", image)
+                  wait.until(lambda d, img=image: d.execute_script('return arguments[0].complete && arguments[0].naturalWidth > 0', img))
+              assert driver.find_element(By.CSS_SELECTOR, 'a[href^="https://github.com/ClimbingBuddies/Trading/blob/main/documentation/"]')
+              text = body.text
+              assert not re.search(r'\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b', text, re.I)
+              assert not re.search(r'eyJ[a-zA-Z0-9_-]{20,}|sb_secret_[A-Za-z0-9_-]+|sk-[A-Za-z0-9]{20,}', text)
+
+              driver.get(url + '#compact-glossary')
+              heading = wait.until(EC.presence_of_element_located((By.ID, 'compact-glossary')))
+              top = driver.execute_script('return arguments[0].getBoundingClientRect().top', heading)
+              assert -20 <= top <= 160, top
+
+              driver.execute_cdp_cmd('Emulation.setDeviceMetricsOverride', {
+                  'width': 390, 'height': 844, 'deviceScaleFactor': 1, 'mobile': False,
+              })
+              driver.get(url)
+              wait.until(EC.text_to_be_present_in_element((By.TAG_NAME, 'body'), 'Discover Boulders Markets — User Guide'))
+              metrics = driver.execute_script('''
+                const nav=document.querySelector('.sideNav nav');
+                const help=document.querySelector('a.navItem[href="/help"]');
+                const article=document.querySelector('article[data-guide-source="documentation/user-guide.md"]');
+                const region=document.querySelector('[role="region"][aria-label="Scrollable user-guide table"]');
+                const image=article.querySelector('img');
+                return {w:innerWidth,h:innerHeight,doc:document.documentElement.scrollWidth,
+                  navClient:nav.clientWidth,navScroll:nav.scrollWidth,helpH:help.getBoundingClientRect().height,
+                  helpActive:help.classList.contains('navActive'),articleW:article.getBoundingClientRect().width,
+                  regionClient:region.clientWidth,regionScroll:region.scrollWidth,imageW:image.getBoundingClientRect().width};
+              ''')
+              assert metrics['w'] == 390 and metrics['h'] == 844, metrics
+              assert metrics['doc'] <= 390, metrics
+              assert metrics['navScroll'] > metrics['navClient'], metrics
+              assert metrics['helpH'] >= 43 and metrics['helpActive'], metrics
+              assert metrics['articleW'] <= 390 and metrics['imageW'] <= metrics['articleW'], metrics
+              assert metrics['regionScroll'] > metrics['regionClient'], metrics
+              print('APPGUIDE_002_PRODUCTION_QA_PASS', metrics)
+          finally:
+              driver.quit()
+          PY
