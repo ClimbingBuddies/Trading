@@ -9,11 +9,11 @@ project_status: ACTIVE
 active_task: UGUIDE-004
 active_task_status: IN PROGRESS
 handoff_owner: PRODUCER
-handoff_status: BLOCKED
-last_updated: 2026-08-26T07:09:00+08:00
+handoff_status: IN PROGRESS
+last_updated: 2026-08-26T10:14:29+08:00
 completed_task: UGUIDE-003
 audit_decision: PASS_WITH_ADVICE
-next_action: provide genuine narrow production viewport, capture markets-overview-mobile.png, then complete UGUIDE-004 verification and Producer handoff
+next_action: inspect genuine 390x844 production /markets evidence, then complete UGUIDE-004 verification and Producer handoff
 ```
 
 ## State invariants
@@ -621,4 +621,18 @@ answer_to:
 query_resolved:
 corrected_full_handoff:
 exact_next_action:
+```
+
+
+### 2026-08-26T10:14:29+08:00 — BUILD_ATTEMPT_STARTED
+
+```yaml
+event: BUILD_ATTEMPT_STARTED
+task_id: UGUIDE-004
+controller: PRODUCER
+starting_commit: a2e5cebb69fef1e5cbb2f6c0a16783d364c5b807
+plan_state_observed: UGUIDE-004 IN PROGRESS; UGUIDE-001 through UGUIDE-003 DONE; UGUIDE-005 PLANNED
+handoff_observed: BLOCKED to PRODUCER only by missing genuine narrow production screenshot; no unresolved HANDOFF_QUERY
+intended_scope: capture and verify documentation/images/user-guide/markets-overview-mobile.png from the live production /markets route at a genuine 390x844 CSS-pixel viewport; do not change application, database, policy, schedule or production data
+timestamp: 2026-08-26T10:14:29+08:00
 ```
