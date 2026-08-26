@@ -1,0 +1,187 @@
+name: APPGUIDE-002 Producer verified implementation
+
+'on':
+  push:
+    paths:
+      - .github/workflows/appguide-002-producer-verified.yml
+
+permissions:
+  contents: write
+
+jobs:
+  implement-verify-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Implement bounded APPGUIDE-002 changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          nav_path = Path('components/AppNav.tsx')
+          nav = nav_path.read_text()
+          old_nav = "  { href: '/strategies', label: 'Strategies', icon: '⬡' },\n]"
+          new_nav = "  { href: '/strategies', label: 'Strategies', icon: '⬡' },\n  { href: '/help', label: 'Help', icon: '?' },\n]"
+          assert old_nav in nav
+          nav_path.write_text(nav.replace(old_nav, new_nav, 1))
+
+          guide_path = Path('documentation/user-guide.md')
+          guide = guide_path.read_text()
+          old_header = "**Production:** https://discoverbouldersmarkets.vercel.app  \n**Audience:** first-time users with general market knowledge  "
+          new_header = "**Production:** https://discoverbouldersmarkets.vercel.app  \n**In-app Help:** `/help` — this same canonical guide, rendered inside the app  \n**Audience:** first-time users with general market knowledge  "
+          assert old_header in guide
+          guide = guide.replace(old_header, new_header, 1)
+          old_row = "| Strategies | `/strategies` | Signed-in owner | Review private strategy definitions, tests and decision outcomes |"
+          new_row = old_row + "\n| Help | `/help` | Public read-only | Read this canonical user guide inside the app |"
+          assert old_row in guide
+          guide = guide.replace(old_row, new_row, 1)
+          old_sentence = "Opening the production root currently lands on the Admin dashboard. Use the persistent left navigation to move between workspaces."
+          new_sentence = "Opening the production root currently lands on the Admin dashboard. Use the persistent left navigation to move between workspaces; **Help** opens this same canonical guide at `/help`."
+          assert old_sentence in guide
+          guide_path.write_text(guide.replace(old_sentence, new_sentence, 1))
+
+          readme_path = Path('documentation/README.md')
+          readme = readme_path.read_text()
+          old_readme = "- [Platform user guide](user-guide.md) — canonical user documentation for the production platform"
+          new_readme = "- [Platform user guide](user-guide.md) — canonical user documentation for the production platform; rendered in-app at `/help`"
+          assert old_readme in readme
+          readme_path.write_text(readme.replace(old_readme, new_readme, 1))
+
+          route_path = Path('documentation/frontend-route-map.md')
+          route = route_path.read_text()
+          marker = "- `/help` renders repository-authored Markdown from `documentation/user-guide.md`; generated public screenshot copies are build artifacts and are not a second editable guide source."
+          addition = marker + "\n- Primary navigation exposes **Help** at `/help` using the same link and active-state behaviour as the other workspaces."
+          assert marker in route
+          route_path.write_text(route.replace(marker, addition, 1))
+
+          tests_path = Path('tests/in-app-user-guide.test.mjs')
+          tests = tests_path.read_text()
+          tests = tests.replace(
+              "const pagePath = join(root, 'app', 'help', 'page.tsx')\n",
+              "const pagePath = join(root, 'app', 'help', 'page.tsx')\nconst appNavPath = join(root, 'components', 'AppNav.tsx')\nconst documentationIndexPath = join(root, 'documentation', 'README.md')\n",
+              1,
+          )
+          tests = tests.replace(
+              "const page = readFileSync(pagePath, 'utf8')\n",
+              "const page = readFileSync(pagePath, 'utf8')\nconst appNav = readFileSync(appNavPath, 'utf8')\nconst documentationIndex = readFileSync(documentationIndexPath, 'utf8')\n",
+              1,
+          )
+          tests += '''\n\ntest('primary navigation and canonical documentation expose the in-app Help route', () => {\n  assert.match(appNav, /\\{ href: '\\/help', label: 'Help', icon: '\\?' \\}/)\n  assert.match(appNav, /pathname === item\\.href \\|\\| pathname\\.startsWith\\(`\\$\\{item\\.href\\}\\/`\\)/)\n  assert.match(guide, /\\*\\*In-app Help:\\*\\* `\\/help`/)\n  assert.match(guide, /\\| Help \\| `\\/help` \\| Public read-only \\| Read this canonical user guide inside the app \\|/)\n  assert.match(documentationIndex, /rendered in-app at `\\/help`/)\n  assert.match(routeMap, /Primary navigation exposes \\*\\*Help\\*\\* at `\\/help`/)\n})\n'''
+          tests_path.write_text(tests)
+          PY
+
+      - name: Install dependencies
+        run: |
+          npm install --no-package-lock
+          python3 -m pip install --quiet selenium
+
+      - name: Test, palette and production build
+        run: |
+          npm test
+          npm run check:palette
+          npm run build
+
+      - name: Browser verify local production Help
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run start -- -p 3000 > /tmp/appguide-002-verified.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID || true' EXIT
+          for i in {1..30}; do
+            if curl --fail --silent http://127.0.0.1:3000/help > /dev/null; then break; fi
+            sleep 1
+          done
+          python3 - <<'PY'
+          import re
+          from selenium import webdriver
+          from selenium.webdriver.common.by import By
+          from selenium.webdriver.common.keys import Keys
+          from selenium.webdriver.support.ui import WebDriverWait
+          from selenium.webdriver.support import expected_conditions as EC
+
+          base = 'http://127.0.0.1:3000'
+          opts = webdriver.ChromeOptions()
+          opts.add_argument('--headless=new')
+          opts.add_argument('--no-sandbox')
+          opts.add_argument('--disable-dev-shm-usage')
+          opts.add_argument('--disable-gpu')
+          opts.add_argument('--window-size=1363,936')
+          driver = webdriver.Chrome(options=opts)
+          wait = WebDriverWait(driver, 20)
+          try:
+              driver.get(base + '/help')
+              wait.until(EC.text_to_be_present_in_element((By.TAG_NAME, 'body'), 'Discover Boulders Markets — User Guide'))
+              help_link = driver.find_element(By.CSS_SELECTOR, 'a.navItem[href="/help"]')
+              assert help_link.text.strip().endswith('Help')
+              assert 'navActive' in (help_link.get_attribute('class') or '')
+              assert help_link.get_property('tabIndex') == 0
+              assert help_link.is_displayed() and help_link.is_enabled()
+              driver.execute_script('arguments[0].focus()', help_link)
+              assert driver.switch_to.active_element.get_attribute('href').endswith('/help')
+              help_link.send_keys(Keys.ENTER)
+              wait.until(lambda d: d.current_url.rstrip('/').endswith('/help'))
+
+              article = driver.find_element(By.CSS_SELECTOR, 'article[data-guide-source="documentation/user-guide.md"]')
+              images = article.find_elements(By.CSS_SELECTOR, 'img')
+              assert len(images) == 6, len(images)
+              for image in images:
+                  assert len((image.get_attribute('alt') or '').strip()) >= 20
+                  driver.execute_script("arguments[0].scrollIntoView({block:'center'})", image)
+                  wait.until(lambda d, img=image: d.execute_script('return arguments[0].complete && arguments[0].naturalWidth > 0', img))
+              assert article.find_elements(By.CSS_SELECTOR, 'table')
+              assert driver.find_element(By.CSS_SELECTOR, 'a[href^="https://github.com/ClimbingBuddies/Trading/blob/main/documentation/"]')
+              text = driver.find_element(By.TAG_NAME, 'body').text
+              assert not re.search(r'\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b', text, re.I)
+              assert not re.search(r'eyJ[a-zA-Z0-9_-]{20,}|sb_secret_[A-Za-z0-9_-]+|sk-[A-Za-z0-9]{20,}', text)
+
+              driver.get(base + '/help#compact-glossary')
+              heading = wait.until(EC.presence_of_element_located((By.ID, 'compact-glossary')))
+              top = driver.execute_script('return arguments[0].getBoundingClientRect().top', heading)
+              assert -20 <= top <= 160, top
+
+              driver.execute_cdp_cmd('Emulation.setDeviceMetricsOverride', {
+                  'width': 390, 'height': 844, 'deviceScaleFactor': 1, 'mobile': False,
+              })
+              driver.get(base + '/help')
+              wait.until(EC.text_to_be_present_in_element((By.TAG_NAME, 'body'), 'Discover Boulders Markets — User Guide'))
+              metrics = driver.execute_script('''
+                const nav=document.querySelector('.sideNav nav');
+                const help=document.querySelector('a.navItem[href="/help"]');
+                const article=document.querySelector('article[data-guide-source="documentation/user-guide.md"]');
+                const region=document.querySelector('[role="region"][aria-label="Scrollable user-guide table"]');
+                const image=article.querySelector('img');
+                return {w:innerWidth,h:innerHeight,doc:document.documentElement.scrollWidth,
+                  navClient:nav.clientWidth,navScroll:nav.scrollWidth,helpH:help.getBoundingClientRect().height,
+                  helpActive:help.classList.contains('navActive'),articleW:article.getBoundingClientRect().width,
+                  regionClient:region.clientWidth,regionScroll:region.scrollWidth,imageW:image.getBoundingClientRect().width};
+              ''')
+              assert metrics['w'] == 390 and metrics['h'] == 844, metrics
+              assert metrics['doc'] <= 390, metrics
+              assert metrics['navScroll'] > metrics['navClient'], metrics
+              assert metrics['helpH'] >= 43, metrics
+              assert metrics['helpActive'], metrics
+              assert metrics['articleW'] <= 390, metrics
+              assert metrics['regionScroll'] > metrics['regionClient'], metrics
+              assert metrics['imageW'] <= metrics['articleW'], metrics
+              print('APPGUIDE_002_VERIFIED_QA_PASS', metrics)
+          finally:
+              driver.quit()
+          PY
+
+      - name: Commit verified functional implementation
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'ClimbingBuddies In-App Guide Producer'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add components/AppNav.tsx documentation/user-guide.md documentation/README.md documentation/frontend-route-map.md tests/in-app-user-guide.test.mjs
+          git diff --cached --quiet && { echo 'No APPGUIDE-002 functional changes to commit'; exit 1; }
+          git commit -m 'feat(APPGUIDE-002): expose canonical Help in navigation'
+          git push origin HEAD:main
