@@ -74,3 +74,44 @@ The temporary Producer QA workflow was removed after evidence capture by commit 
 ## Exact next action
 
 Auditor retrieves the current plan/journal, this evidence record and functional range fresh; independently reproduces APPGUIDE-001 acceptance criteria. Producer must not edit the IN REVIEW implementation or begin APPGUIDE-002 unless the Auditor passes this gate and promotes it.
+
+
+## Independent Auditor decision
+
+**Decision:** PASS  
+**Audited at:** 2026-08-26T12:34:21+08:00 (Australia/Perth)  
+**Functional implementation reviewed:** `7f0b31f939e49b4c6b9f40bcb068aba30766d92e^..1a336ee074a2d7177984c425ddc3ca0c948d4732`  
+**Producer evidence reviewed:** `3448ae0aff8ffac6873d41b686645802b9b6e06b`  
+**Independent QA:** GitHub Actions run `32930590164`, job `98061927379` — PASS  
+**Data or schema effects:** none
+
+### Independent checks performed
+
+- Confirmed the functional range contains exactly eight implementation commits changing only the eight files declared in the Producer handoff.
+- Confirmed `components/AppNav.tsx` remains untouched; Help navigation is correctly reserved for APPGUIDE-002.
+- Independently confirmed `app/help/page.tsx` reads the canonical loader and contains no copied guide prose.
+- Confirmed `lib/user-guide.ts` reads `documentation/user-guide.md`, safely rewrites relative documentation links to GitHub and rewrites only canonical guide screenshot paths to generated public assets.
+- Confirmed raw arbitrary HTML rendering is disabled, GitHub-flavoured Markdown tables are enabled and stable heading IDs are generated.
+- Confirmed Help-specific styling uses existing `--theme-*` variables, has visible `:focus-visible` treatment, responsive images and contained table scrolling with no raw colour literals.
+- Independently resolved all 22 relative canonical guide links in the repository.
+- Rebuilt from a fresh checkout: `npm test` 9/9 PASS, palette compliance PASS and `npm run build` PASS with `/help` statically prerendered.
+- Confirmed the prebuild published exactly six screenshot assets and verified each generated file is byte-identical to its canonical `documentation/images/user-guide/` source.
+- Independently started the production-mode app and verified `/help` renders the canonical title/source marker, real tables, all six loaded images with meaningful alt text, stable heading anchors and rewritten GitHub documentation links.
+- Verified keyboard focus on a scrollable table region produces a visible 3px solid outline.
+- Verified direct navigation to `/help#compact-glossary` lands at the requested heading.
+- Reproduced `/help` at exactly 390×844 CSS pixels: document width 375px, article width 355px, responsive image width 321px, and the 680px-wide table is contained inside its 319px scroll region without page-level horizontal overflow.
+- Confirmed current Vercel production `/help` returns the canonical guide and six images; APPGUIDE-002 will independently repeat production verification after navigation is added.
+- Privacy/source review found no second hand-maintained guide prose or committed generated screenshot directory.
+
+### Audit-harness calibration note
+
+Independent run `32930468876` initially failed only because the Auditor helper expected a different valid phrase in `documentation/frontend-route-map.md`. The repository already correctly documented `/help`; no application or project implementation was changed. The Auditor-only assertion was corrected and the full independent run then passed.
+
+### Findings
+
+- Every APPGUIDE-001 acceptance criterion passes.
+- There is no correction set.
+- APPGUIDE-002 is the only authorised successor and owns Help navigation plus final production completion.
+
+**Complete correction set:** none.  
+**Next gate:** APPGUIDE-002.

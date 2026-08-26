@@ -9,13 +9,13 @@ Controller specification: `automation/in-app-user-guide-agentic-controller.md`
 
 ```yaml
 project_status: ACTIVE
-active_task: APPGUIDE-001
-active_task_status: IN REVIEW
-handoff_owner: AUDITOR
-handoff_status: READY_FOR_AUDIT
-completed_task: none
-audit_decision: PENDING
-next_action: Auditor independently audits APPGUIDE-001 rendering gate only
+active_task: APPGUIDE-002
+active_task_status: NEXT
+handoff_owner: PRODUCER
+handoff_status: AUTHORISED
+completed_task: APPGUIDE-001
+audit_decision: PASS
+next_action: Producer retrieves authoritative state fresh, records BUILD_ATTEMPT_STARTED and implements APPGUIDE-002 only
 ```
 
 ## State invariants
@@ -126,4 +126,31 @@ acceptance_criteria_evidence:
   producer_evidence: documentation/in-app-user-guide-audits/APPGUIDE-001.md
   temporary_qa_cleanup: 86952a2f4e20025ddd6f8453b24e090d01a3cf60
 exact_next_action: Auditor retrieves the exact functional range and current evidence fresh, independently reproduces APPGUIDE-001 acceptance criteria, and either returns one complete correction set or marks APPGUIDE-001 DONE and promotes APPGUIDE-002; Producer does not continue in this run
+```
+
+
+### 2026-08-26T12:34:21+08:00 — AUDIT_DECISION
+
+```yaml
+event: AUDIT_DECISION
+task_id: APPGUIDE-001
+controller: AUDITOR
+decision: PASS
+implementation_commit_or_range_reviewed: 7f0b31f939e49b4c6b9f40bcb068aba30766d92e^..1a336ee074a2d7177984c425ddc3ca0c948d4732
+producer_evidence_commit_reviewed: 3448ae0aff8ffac6873d41b686645802b9b6e06b
+audit_record: documentation/in-app-user-guide-audits/APPGUIDE-001.md
+independent_evidence: GitHub Actions run 32930590164 / job 98061927379
+checks_performed:
+  - exact eight-file functional range independently inspected
+  - canonical single-source and no-copy contract verified
+  - 22 relative documentation links resolved
+  - six generated screenshots byte-matched to canonical sources and loaded with alt text
+  - 9/9 tests, palette compliance and production build independently passed
+  - local production-mode desktop and 390x844 Help rendering independently passed
+  - heading anchors, visible keyboard focus and contained table scrolling independently passed
+  - current Vercel /help canonical render confirmed as supporting evidence
+complete_correction_set: none
+next_task_promoted: APPGUIDE-002
+handoff_owner_after_audit: PRODUCER
+exact_next_action: Producer implements APPGUIDE-002 navigation and production completion only; Auditor does not implement that gate
 ```
