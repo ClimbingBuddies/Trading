@@ -2,7 +2,7 @@
 
 **Production:** https://discoverbouldersmarkets.vercel.app  
 **Audience:** first-time users with general market knowledge  
-**Guide status:** public research, private monitoring, Strategy interpretation and operational support documented; final mobile evidence capture and publication QA remain  
+**Guide status:** public research, private monitoring, Strategy interpretation and operational support documented; UGUIDE-004 is ready for independent audit and final publication QA remains  
 **Last production check:** 26 August 2026
 
 ## Before you begin
@@ -299,7 +299,9 @@ These states require investigation or patience, not invented content:
 
 At widths up to 900 pixels, the side navigation becomes a horizontally swipeable rail. At smaller breakpoints, page headers stack, material controls retain a 44-pixel touch target, and wide tables stay inside their own horizontal scroll area. Swipe the navigation or table itself; page-level sideways scrolling is not expected. The palette selector remains available and does not change the data or status semantics.
 
-> **CAPTURE_REQUIRED — mobile evidence:** The responsive contract and current source were verified, but the available production browser exposed only a fixed 1363 × 936 CSS-pixel viewport. `markets-overview-mobile.png` was therefore not captured or counted. A true narrow production capture is still required; a desktop crop or relabelled image must not be substituted.
+![Markets overview at a genuine 390 × 844 production viewport showing the horizontal primary navigation, stacked mobile layout, market controls and the responsive table area](images/user-guide/markets-overview-mobile.png)
+
+*On a narrow screen, swipe the primary navigation and the market table horizontally when needed. The page stacks its header and controls without changing the meaning of prices, freshness or market-status labels.*
 
 ### Compact glossary
 
@@ -322,7 +324,7 @@ At widths up to 900 pixels, the side navigation becomes a horizontally swipeable
 
 ## Screenshot evidence manifest
 
-The final guide targets seven to nine production screenshots. Every image must use real production-backed state, omit personal information, have meaningful alt text and include a concise explanatory caption. Five images are currently delivered. Items 5–7 remain blocked by `AUTH_REQUIRED`, and item 9 remains `CAPTURE_REQUIRED`; absent files are not counted.
+The final guide targets seven to nine production screenshots. Every image must use real production-backed state, omit personal information, have meaningful alt text and include a concise explanatory caption. Six images are currently delivered. Items 5–7 remain blocked by `AUTH_REQUIRED`; absent authenticated-owner files are not counted.
 
 | # | Planned filename | Gate | Route/state | Access | Intended teaching purpose |
 |---|---|---|---|---|---|
@@ -336,7 +338,7 @@ The final guide targets seven to nine production screenshots. Every image must u
 | 8 | `admin-health-desktop.jpg` | UGUIDE-004 | `/admin` | Public | Loader health, freshness and run telemetry |
 | 9 | `markets-overview-mobile.png` | UGUIDE-004 | `/markets` narrow viewport | Public | Mobile navigation and responsive market table pattern |
 
-If an authorised owner session is unavailable for items 5–7, the affected gate records `AUTH_REQUIRED` rather than using a sign-in form or invented private state. UGUIDE-003 recorded this for `/watchlists` and `/alerts`; UGUIDE-004 records it for the Strategy route family. A true narrow production viewport is still required for item 9, so its absent file remains `CAPTURE_REQUIRED`.
+If an authorised owner session is unavailable for items 5–7, the affected gate records `AUTH_REQUIRED` rather than using a sign-in form or invented private state. UGUIDE-003 recorded this for `/watchlists` and `/alerts`; UGUIDE-004 records it for the Strategy route family. Item 9 is a genuine 390 × 844 capture of the current production `/markets` route.
 
 ## Section-to-source map
 
@@ -355,7 +357,7 @@ This map identifies the canonical evidence that controls each section. The final
 
 ## Verification inventory for later gates
 
-Production was observed at a 1363 × 936 CSS-pixel browser viewport with device-pixel ratio 1.
+Production was observed at a 1363 × 936 desktop CSS-pixel viewport and at a genuine 390 × 844 narrow CSS-pixel viewport, both at device-pixel ratio 1.
 
 Verified public route examples:
 
