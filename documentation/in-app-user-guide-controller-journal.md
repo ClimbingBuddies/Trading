@@ -8,14 +8,14 @@ Controller specification: `automation/in-app-user-guide-agentic-controller.md`
 ## Current state
 
 ```yaml
-project_status: ACTIVE
-active_task: APPGUIDE-002
-active_task_status: IN REVIEW
-handoff_owner: AUDITOR
-handoff_status: READY_FOR_AUDIT
-completed_task: APPGUIDE-001
-audit_decision: PENDING
-next_action: Auditor independently audits APPGUIDE-002 final navigation and production completion only
+project_status: IN_APP_USER_GUIDE_PROJECT_COMPLETE
+active_task: none
+active_task_status: DONE
+handoff_owner: none
+handoff_status: COMPLETE
+completed_task: APPGUIDE-002
+audit_decision: PASS
+next_action: none — project complete
 ```
 
 ## State invariants
@@ -229,4 +229,37 @@ acceptance_criteria_evidence:
   production_browser_run: 32935393876 / 98075534280
   mobile_metrics: document 375px; article 355px; Help target 44px; nav 350/818px client/scroll; table 319/680px client/scroll; image 321px at 390x844
 exact_next_action: Auditor retrieves the current plan, journal, APPGUIDE-002 evidence record, functional commit and current production fresh; independently reproduces the final acceptance criteria and either returns one complete correction set or records IN_APP_USER_GUIDE_PROJECT_COMPLETE. Producer does not continue in this run.
+```
+
+
+### 2026-08-26T13:55:49+08:00 — AUDIT_DECISION
+
+```yaml
+event: AUDIT_DECISION
+task_id: APPGUIDE-002
+controller: AUDITOR
+decision: PASS
+implementation_commit_or_range_reviewed: bed0f674f6b317f7d13390d5f262d1e9b8b290f6
+producer_evidence_commit_reviewed: 78f16592c2d0db3542d064033266033ba59e5850
+audit_record: documentation/in-app-user-guide-audits/APPGUIDE-002.md
+independent_evidence: GitHub Actions run 32935825791 / job 98076732661 PASS
+checks_performed:
+  - exact five-file functional commit independently inspected
+  - current components/AppNav.tsx confirms Help /help entry and shared active-state rule
+  - current app/help/page.tsx and lib/user-guide.ts confirm documentation/user-guide.md remains the sole editable guide prose source
+  - npm test independently reproduced 10/10 PASS
+  - npm run check:palette independently reproduced PASS
+  - npm run build independently reproduced PASS with /help static prerender and six canonical screenshot assets
+  - local production-mode browser audit passed desktop and exactly 390x844
+  - live production browser audit passed desktop and exactly 390x844
+  - Help visible focus treatment, native focusability and Enter activation independently verified
+  - active-state switching verified: Help active on /help and not active on /markets while Markets is active
+  - canonical title, research/no-live-trading/no-personalised-advice boundaries, four-plus tables, all six screenshots, representative GitHub documentation links and direct #compact-glossary anchor independently verified
+  - privacy/secret-pattern checks independently passed
+  - mobile metrics independently reproduced: document 375px; article 355px; Help target 44px; nav 350/818px client/scroll; table 319/680px client/scroll; image 321px at 390x844
+  - temporary Auditor workflow removed; fresh .github/workflows lookup returned 404
+complete_correction_set: none
+project_status_after_audit: IN_APP_USER_GUIDE_PROJECT_COMPLETE
+next_task_promoted: none
+exact_next_action: none; the in-app User Guide project is complete
 ```

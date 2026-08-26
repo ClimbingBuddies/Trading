@@ -135,3 +135,30 @@ Every APPGUIDE-002 Producer acceptance criterion is satisfied for handoff:
 ## Exact next action
 
 Auditor retrieves the current plan, journal, this record, functional commit `bed0f674f6b317f7d13390d5f262d1e9b8b290f6`, current production deployment and relevant source fresh. Auditor independently reproduces APPGUIDE-002 acceptance criteria and either returns one complete correction set or records `IN_APP_USER_GUIDE_PROJECT_COMPLETE`. Producer must not mark this final gate DONE.
+
+
+## Independent Auditor decision
+
+**Decision:** PASS  
+**Audited at:** 2026-08-26T13:55:49+08:00  
+**Functional implementation reviewed:** `bed0f674f6b317f7d13390d5f262d1e9b8b290f6`  
+**Independent evidence:** GitHub Actions run `32935825791`, job `98076732661` — PASS  
+**Data or schema effects:** none  
+**Complete correction set:** none  
+**Project result:** `IN_APP_USER_GUIDE_PROJECT_COMPLETE`
+
+### Independent findings
+
+The Auditor independently reproduced the final gate from a fresh checkout with a read-only audit workflow and did not rely on the Producer's browser results. The exact five-file functional commit matches the handoff. Current source still reads `documentation/user-guide.md` directly through `lib/user-guide.ts`; APPGUIDE-002 introduced only navigation, documentation reconciliation and a deterministic navigation test, with no duplicate guide prose.
+
+Independent repository checks passed: `npm test` 10/10, palette compliance, and a production Next.js build with `/help` statically prerendered and exactly six canonical screenshot assets published.
+
+Independent local and live browser checks both passed at desktop and exactly 390 × 844 CSS pixels. Help is visible, active only on `/help`, natively focusable, Enter-activatable and has a visible focus treatment (`outline: auto`, 1px plus inset focus shadow). `/markets` correctly activates Markets instead of Help. The title, research/no-live-trading/no-personalised-advice boundaries, rendered tables, all six lazy-loaded screenshots with meaningful alt text, representative GitHub documentation links, the external production link and `/help#compact-glossary` all worked. Privacy/secret-pattern scans found no email address, owner identity, token or secret-like string.
+
+At 390 × 844 the independently reproduced metrics were: document width 375px, article 355px, Help target 44px, navigation 350px client / 818px scroll, table region 319px client / 680px scroll and first image 321px. There was no page-level horizontal overflow; navigation and wide tables retained contained horizontal scrolling.
+
+The temporary Auditor workflow was removed after evidence capture and a fresh `.github/workflows` lookup returned 404. No implementation fixes were made while acting as Auditor.
+
+### Final decision
+
+APPGUIDE-002 satisfies every acceptance criterion. Both APPGUIDE-001 and APPGUIDE-002 are independently audited and DONE. No successor gate is promoted. The project terminates at `IN_APP_USER_GUIDE_PROJECT_COMPLETE`.

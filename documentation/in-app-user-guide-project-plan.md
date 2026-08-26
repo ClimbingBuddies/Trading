@@ -78,7 +78,7 @@ Only one gate may be active at a time.
 | ID | Status | Gate | Definition of done |
 |---|---|---|---|
 | APPGUIDE-001 | **DONE** | Render canonical guide at `/help` | Implement the public `/help` route from `documentation/user-guide.md`; add required Markdown dependencies and build-time screenshot publication; preserve tables, headings, code, links and images; provide stable heading anchors; map relative documentation links safely; add responsive article styles; update `documentation/frontend-route-map.md`; add automated tests/checks proving the app is sourced from the canonical file; `npm test`, palette check and production build pass. |
-| APPGUIDE-002 | **IN REVIEW** | Navigation and production completion | Add Help to `components/AppNav.tsx`; verify active navigation state and keyboard access; deploy through the existing normal production path; independently verify `/help` on desktop and 390×844, all six existing screenshots, representative tables/links/anchors, no page-level horizontal overflow, and no accidental private information; update `documentation/user-guide.md` only to identify the in-app Help route if appropriate; remove temporary project tooling; complete final documentation reconciliation. |
+| APPGUIDE-002 | **DONE** | Navigation and production completion | Add Help to `components/AppNav.tsx`; verify active navigation state and keyboard access; deploy through the existing normal production path; independently verify `/help` on desktop and 390×844, all six existing screenshots, representative tables/links/anchors, no page-level horizontal overflow, and no accidental private information; update `documentation/user-guide.md` only to identify the in-app Help route if appropriate; remove temporary project tooling; complete final documentation reconciliation. |
 
 ## APPGUIDE-001 acceptance criteria
 
@@ -214,18 +214,17 @@ The project is complete only when:
 
 ```yaml
 task_id: APPGUIDE-002
-handoff_owner: AUDITOR
-handoff_status: READY_FOR_AUDIT
-current_status: IN REVIEW
-project_status: ACTIVE
-completed_task: APPGUIDE-001
-audit_decision: PENDING
-implementation_commit: bed0f674f6b317f7d13390d5f262d1e9b8b290f6
-producer_evidence_commit: 78f16592c2d0db3542d064033266033ba59e5850
-local_producer_qa: GitHub Actions run 32935199838 / job 98074993878 PASS
-production_deployment: dpl_EKWjsb1AGoiU95rcdE5WmaETucf1
-production_browser_evidence: GitHub Actions run 32935393876 / job 98075534280 PASS
+handoff_owner: NONE
+handoff_status: COMPLETE
+current_status: DONE
+project_status: IN_APP_USER_GUIDE_PROJECT_COMPLETE
+completed_task: APPGUIDE-002
+audit_decision: PASS
+implementation_commit_reviewed: bed0f674f6b317f7d13390d5f262d1e9b8b290f6
+producer_evidence_commit_reviewed: 78f16592c2d0db3542d064033266033ba59e5850
+independent_audit_run: GitHub Actions run 32935825791 / job 98076732661 PASS
+audit_helper_cleanup_commit: 7684d766370256d33f7d6e84a93342bd02b7dfd1
 data_or_schema_effects: none
-known_limitations: none blocking; authenticated-owner screenshots remain governed by the completed canonical guide's AUTH_REQUIRED policy and are not part of this publication gate
-next_action: Auditor independently audits APPGUIDE-002 final navigation and production completion; only Auditor may mark this gate DONE and record IN_APP_USER_GUIDE_PROJECT_COMPLETE
+complete_correction_set: none
+next_action: none — IN_APP_USER_GUIDE_PROJECT_COMPLETE
 ```
