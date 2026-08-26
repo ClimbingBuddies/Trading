@@ -38,3 +38,5 @@ jobs:
             sleep 1
           done
           python3 .github/scripts/appguide_001_auditor.py
+
+# rerun after correcting Auditor-only route-map assertion
