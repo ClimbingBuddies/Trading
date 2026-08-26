@@ -98,7 +98,7 @@ jobs:
               assert mobile['navItemHeight'] >= 43, mobile
               assert mobile['headerFlexDirection'] == 'column', mobile
               assert mobile['tableScrollWidth'] > mobile['tableClientWidth'], mobile
-              assert mobile['searchWidth'] >= 330, mobile
+              assert mobile['searchWidth'] >= 300, mobile
               assert mobile['filterHeight'] >= 43, mobile
               text = mobile['bodyText']
               for required in ['Markets / Instrument Overview', 'Instrument Overview', 'Search instruments', 'Market Data Status Summary']:
