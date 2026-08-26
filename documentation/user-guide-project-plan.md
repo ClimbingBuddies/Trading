@@ -59,8 +59,8 @@ Only one gate may be active at a time.
 | UGUIDE-001 | **DONE** | Establish guide structure and evidence inventory | Create the guide skeleton with audience, boundaries, task sequence and screenshot manifest; map every section to current routes and canonical documentation; record public/authenticated access needs; remove any superseded user-guide draft found at the canonical path. |
 | UGUIDE-002 | **DONE** | Document public navigation and assessment dashboards | Explain navigation, Markets, instrument detail, Market Assessment, Technical/AI/Convergence interpretation and Opportunity themes; add current production screenshots for the dashboard/Markets/Assessment/Opportunity flows; verify all statements against source, production and persisted data where relevant. |
 | UGUIDE-003 | **DONE** | Document signed-in monitoring workspaces | Explain sign-in boundaries, Watchlists, Alerts and event history with owner-isolation and safe-use notes; add current authenticated screenshots where access exists; otherwise record a precise `AUTH_REQUIRED` blocker without inventing content. |
-| UGUIDE-004 | **IN REVIEW** | Document strategy, operations and support | Explain strategy results including `continue_testing`, Admin/data-health indicators, data freshness, status colours, empty states and common troubleshooting; add the strategy/Admin and one representative mobile screenshot; add a compact glossary. |
-| UGUIDE-005 | **PLANNED** | Final assembly and publication QA | Reconcile the whole guide against current production; validate every route, link, image, caption and alt text; confirm no private or fabricated information; remove duplicate/obsolete guide artifacts; link the guide from `documentation/README.md`; record final audit evidence and mark the project complete. |
+| UGUIDE-004 | **DONE** | Document strategy, operations and support | Explain strategy results including `continue_testing`, Admin/data-health indicators, data freshness, status colours, empty states and common troubleshooting; add the strategy/Admin and one representative mobile screenshot; add a compact glossary. |
+| UGUIDE-005 | **NEXT** | Final assembly and publication QA | Reconcile the whole guide against current production; validate every route, link, image, caption and alt text; confirm no private or fabricated information; remove duplicate/obsolete guide artifacts; link the guide from `documentation/README.md`; record final audit evidence and mark the project complete. |
 
 ## Producer rules
 
@@ -147,17 +147,18 @@ The project is complete only when:
 ## Current controller handoff
 
 ```yaml
-task_id: UGUIDE-004
-handoff_owner: AUDITOR
-handoff_status: READY_FOR_AUDIT
-current_status: IN REVIEW
-implementation_evidence:
-  - aebabc269a990ae3aaf74fe1d3ebe6841cb2abdb  # current Admin screenshot
-  - 9764401109463ccb1835d295dc05e24255bbe7d7  # Strategy/operations/support guide implementation
-  - 12e32b4c2d4ab89a956bd10e1b202679579c3232  # genuine 390x844 production Markets screenshot
-  - 74b44fc6535305f3827c927eb764e6644d3faf32  # mobile screenshot integration into canonical guide
+task_id: UGUIDE-005
+handoff_owner: PRODUCER
+handoff_status: AUTHORISED
+current_status: NEXT
+completed_task: UGUIDE-004
+audit_decision: PASS_WITH_ADVICE
 audit_record: documentation/user-guide-audits/UGUIDE-004.md
-known_limitations:
-  - AUTH_REQUIRED for /strategies, /strategies/[id] and /strategies/[id]/tests/[runId]; no already-authorised permanent-owner session exists
-next_action: Auditor independently audits UGUIDE-004 only; Producer must not edit the IN REVIEW gate or promote UGUIDE-005
+verified_evidence:
+  - UGUIDE-004 functional commits aebabc269a990ae3aaf74fe1d3ebe6841cb2abdb, 9764401109463ccb1835d295dc05e24255bbe7d7, 12e32b4c2d4ab89a956bd10e1b202679579c3232 and 74b44fc6535305f3827c927eb764e6644d3faf32
+  - independent browser audit run 32924695740 / job 98045110165 succeeded
+known_advice:
+  - Strategy owner screenshot remains AUTH_REQUIRED unless an already-authorised permanent-owner session is available during final QA
+  - reconcile the stale root-route statement against production / -> /admin during final assembly
+next_action: Producer records BUILD_ATTEMPT_STARTED and executes UGUIDE-005 final assembly and publication QA only; Auditor does not implement that gate
 ```

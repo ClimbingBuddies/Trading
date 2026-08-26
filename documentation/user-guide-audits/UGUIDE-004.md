@@ -1,4 +1,4 @@
-# UGUIDE-004 — Producer implementation evidence
+# UGUIDE-004 — Producer evidence and independent audit
 
 **Gate:** Document strategy, operations and support  
 **Producer state:** READY_FOR_AUDIT  
@@ -106,3 +106,43 @@ The same live deployment returned **Markets / Instrument Overview**, **Instrumen
 ## Exact next action
 
 UGUIDE-004 is `IN REVIEW` with handoff owner AUDITOR. Independently audit the functional evidence set—Admin screenshot/content, Strategy/operations/support guide changes, mobile production screenshot commit `12e32b4c2d4ab89a956bd10e1b202679579c3232`, and guide integration commit `74b44fc6535305f3827c927eb764e6644d3faf32`—against the current plan and live production. The Producer must not promote UGUIDE-005.
+
+
+## Independent Auditor decision
+
+**Decision:** PASS_WITH_ADVICE  
+**Audited at:** 2026-08-26T11:00:46+08:00 (Australia/Perth)  
+**Functional implementation reviewed:** `aebabc269a990ae3aaf74fe1d3ebe6841cb2abdb`, `9764401109463ccb1835d295dc05e24255bbe7d7`, `12e32b4c2d4ab89a956bd10e1b202679579c3232`, `74b44fc6535305f3827c927eb764e6644d3faf32`  
+**Independent browser evidence:** GitHub Actions run `32924695740`, job `98045110165` — SUCCESS  
+**Data or schema effects:** none
+
+### Independent checks performed
+
+- Retrieved the current project plan, controller journal, complete Producer handoff, current guide and exact functional implementation commits fresh from GitHub.
+- Re-fetched live production `/admin` and `/strategies`; production deployment `dpl_6WE7pr4DrPpU4qA1FR2eB7dVKmME` returned the current Admin dashboard and the permanent-owner Strategy sign-in boundary.
+- Reproduced `/markets` independently in headless Chromium at exactly 390 × 844 CSS pixels, device-pixel ratio 1. The live page had no page-level horizontal overflow (`documentWidth` 375), a horizontally scrollable primary nav (350 client / 741 scroll width), 44-pixel nav items, a stacked page header, a horizontally scrollable market table (349 client / 855 scroll width), a 321-pixel search field and 44-pixel filter controls.
+- Independently validated the committed mobile screenshot as PNG 390 × 844 and the Admin screenshot as JPEG 1348 × 926; both contained substantial non-blank visual variation.
+- Confirmed the live mobile route contained Markets / Instrument Overview, Instrument Overview, Search instruments and Market Data Status Summary, with no email address exposed.
+- Confirmed the live Admin route contained Loader Health, Data Freshness, Opportunity Engine, Technical Engine and Recent Load History, with no email address exposed.
+- Confirmed the signed-out Strategy route resolves to `Sign in to view strategy evidence`, offers a secure email-link flow and states that real strategy tests/review outcomes are private to their owner.
+- Queried Supabase production read-only for the immutable Daily Trend Pullback v1 baseline and decision: strategy remains `testing`, live execution is disabled, run is `succeeded`, 249 completed trades, 28.2199% total return, -8.2656% out-of-sample return, 1.3231 profit factor, 16.2900% maximum drawdown and persisted `VALIDATE_ROBUSTNESS / continue_testing`.
+- Inspected production RLS policies: strategy definitions, test runs and decision evaluations are owner-scoped for authenticated reads; the Strategy frontend additionally filters by the authenticated owner ID.
+- Verified the production freshness contract directly from `latest_market_status` and its functions: closed equity/ETF sessions return `market_closed`; active observations are Current through 90 minutes, Due through 120 minutes and Stale thereafter; missing observations are represented rather than fabricated.
+- Confirmed the guide contains meaningful alt text and captions for the Admin and mobile images, a compact glossary, status/empty-state explanations and the required troubleshooting flow.
+
+### Findings
+
+- All UGUIDE-004 acceptance criteria pass.
+- The strategy discussion preserves the negative holdout and correctly distinguishes `continue_testing` from promotion or live-trading authority.
+- Admin, freshness/status, empty-state, troubleshooting and glossary guidance match current production/source behaviour.
+- The previously blocked mobile evidence is genuine, current, useful and independently reproducible.
+- The Strategy owner screenshot remains `AUTH_REQUIRED`, which is explicitly allowed by the project screenshot policy when no already-authorised permanent-owner session exists. No private state was fabricated.
+
+### Advice for UGUIDE-005
+
+- If an already-authorised permanent-owner session is available during final publication QA, capture the missing owner screenshots then; otherwise retain the explicit `AUTH_REQUIRED` disclosures rather than weakening the security boundary or inventing evidence.
+- Reconcile the previously recorded stale root-route statement in `documentation/frontend-route-map.md` against production `/` → `/admin` as part of the final assembly/reconciliation gate.
+- Re-check screenshot currency against the final production deployment before publication, as required by the project plan.
+
+**Complete correction set:** none.  
+**Next gate:** UGUIDE-005 — Final assembly and publication QA.

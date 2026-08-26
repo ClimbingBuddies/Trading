@@ -6,14 +6,14 @@ This journal is the sole persisted communication channel for the scheduled User 
 
 ```yaml
 project_status: ACTIVE
-active_task: UGUIDE-004
-active_task_status: IN REVIEW
-handoff_owner: AUDITOR
-handoff_status: READY_FOR_AUDIT
-last_updated: 2026-08-26T10:18:42+08:00
-completed_task: UGUIDE-003
-audit_decision: PENDING
-next_action: Auditor independently audits UGUIDE-004 against current production and the complete Producer handoff
+active_task: UGUIDE-005
+active_task_status: NEXT
+handoff_owner: PRODUCER
+handoff_status: AUTHORISED
+last_updated: 2026-08-26T11:00:46+08:00
+completed_task: UGUIDE-004
+audit_decision: PASS_WITH_ADVICE
+next_action: Producer reads the updated authoritative records, records BUILD_ATTEMPT_STARTED and executes UGUIDE-005 final assembly and publication QA only
 ```
 
 ## State invariants
@@ -696,4 +696,44 @@ acceptance_criteria_evidence:
   glossary: documentation/user-guide.md Compact glossary
   producer_evidence: documentation/user-guide-audits/UGUIDE-004.md
 exact_next_action: Auditor independently audits UGUIDE-004 only. On PASS/PASS_WITH_ADVICE it may mark UGUIDE-004 DONE and promote UGUIDE-005; on failure it returns one complete correction set to the Producer.
+```
+
+
+### 2026-08-26T11:00:46+08:00 — AUDIT_DECISION
+
+```yaml
+event: AUDIT_DECISION
+task_id: UGUIDE-004
+controller: AUDITOR
+decision: PASS_WITH_ADVICE
+implementation_commit_or_range_reviewed:
+  functional_commits:
+    - aebabc269a990ae3aaf74fe1d3ebe6841cb2abdb
+    - 9764401109463ccb1835d295dc05e24255bbe7d7
+    - 12e32b4c2d4ab89a956bd10e1b202679579c3232
+    - 74b44fc6535305f3827c927eb764e6644d3faf32
+  audit_tooling_excluded_from_functional_target:
+    - 6e31a5aebaa150c1cbd84584c3de81af7a97fe1b
+    - b0ce9cdb53e03400d205a12f04800ce54f55cc82
+    - 2ca0cf7ef82cba1dd35ac3ec3a4ad5874b9eddc8
+audit_record: documentation/user-guide-audits/UGUIDE-004.md
+checks_performed:
+  - independently re-fetched current plan, journal, guide, source and exact implementation commits
+  - independently re-fetched live Admin and signed-out Strategy production routes
+  - independently reproduced live /markets at 390x844 with horizontal nav/table scrolling, stacked header, 44px controls and no page-level horizontal overflow
+  - validated the committed mobile and Admin screenshots as real non-blank images with the required dimensions
+  - independently queried production Supabase for the strategy baseline, decision outcome, live-execution flag, RLS policies and freshness functions
+  - verified alt text, captions, status/empty-state guidance, troubleshooting and glossary against current implementation
+findings:
+  - all UGUIDE-004 acceptance criteria pass
+  - AUTH_REQUIRED for the Strategy owner screenshot is policy-compliant and no private state was fabricated
+  - existing root-route documentation discrepancy remains final-gate reconciliation advice
+complete_correction_set: none
+known_limitations:
+  - no already-authorised permanent-owner session was available for a Strategy result screenshot
+advice:
+  - re-attempt authenticated owner screenshots during UGUIDE-005 only if an already-authorised permanent-owner session exists
+  - reconcile root-route documentation and re-check screenshot currency in final publication QA
+next_task_promoted: UGUIDE-005
+exact_next_action: Producer reads the updated authoritative records, records BUILD_ATTEMPT_STARTED and executes only UGUIDE-005; Auditor does not implement the final gate
 ```
