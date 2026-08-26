@@ -7,13 +7,13 @@ This journal is the sole persisted communication channel for the scheduled User 
 ```yaml
 project_status: ACTIVE
 active_task: UGUIDE-005
-active_task_status: IN PROGRESS
-handoff_owner: PRODUCER
-handoff_status: IN PROGRESS
-last_updated: 2026-08-26T11:07:04+08:00
+active_task_status: IN REVIEW
+handoff_owner: AUDITOR
+handoff_status: READY_FOR_AUDIT
+last_updated: 2026-08-26T11:07:45+08:00
 completed_task: UGUIDE-004
-audit_decision: PASS_WITH_ADVICE
-next_action: complete UGUIDE-005 final assembly, production reconciliation and publication QA, then hand to Auditor
+audit_decision: PENDING
+next_action: Auditor independently audits UGUIDE-005 final assembly and publication QA; only Auditor may complete the project
 ```
 
 ## State invariants
@@ -750,4 +750,49 @@ plan_state_observed: UGUIDE-001 through UGUIDE-004 DONE; UGUIDE-005 NEXT
 handoff_observed: AUTHORISED to PRODUCER with UGUIDE-004 PASS_WITH_ADVICE and no unresolved HANDOFF_QUERY
 intended_scope: reconcile canonical guide and route documentation against current production, validate routes/links/images/privacy, clean temporary guide artifacts, link the final guide from documentation/README.md and submit UGUIDE-005 for independent audit only
 timestamp: 2026-08-26T11:07:04+08:00
+```
+
+
+### 2026-08-26T11:07:45+08:00 — PRODUCER_HANDOFF
+
+```yaml
+event: PRODUCER_HANDOFF
+task_id: UGUIDE-005
+handoff_from: PRODUCER
+handoff_to: AUDITOR
+handoff_status: READY_FOR_AUDIT
+implementation_commit_or_range:
+  functional_commit: 2823eb3acd2a4bc171fa83d69c15928e47fe569c
+  producer_evidence_commit: 9d922bf89d3c1a58c8f9641285d754b6b24ae079
+  plan_transition_commit: 65a762140c8ed57a219125b505e7f2289ede2514
+files_changed:
+  implementation:
+    - documentation/user-guide.md
+    - documentation/README.md
+    - documentation/frontend-route-map.md
+  delivery_control:
+    - documentation/user-guide-audits/UGUIDE-005.md
+    - documentation/user-guide-project-plan.md
+    - documentation/user-guide-controller-journal.md
+screenshots_added_or_replaced: none; six delivered screenshots revalidated; owner-only Watchlists/Alerts/Strategy screenshots remain AUTH_REQUIRED under policy
+routes_and_viewports_verified:
+  desktop_1363x936: / -> /admin; /admin; /markets; /markets/amd; /assessments; /assessments/gld; /opportunities; /opportunities/ai_advanced_packaging; signed-out /watchlists; /alerts; /strategies
+  narrow_390x844: /markets
+data_or_schema_effects: none
+tests_and_checks:
+  - reconciled root route and documentation index
+  - verified every relative guide link and all six embedded images
+  - verified meaningful alt text and immediate captions
+  - verified live public routes and private signed-out boundaries
+  - reverified genuine narrow production behaviour
+  - privacy/secret-pattern scan passed
+  - stale/superseded user-guide artifact scan passed
+known_limitations:
+  - no already-authorised permanent-owner Trading session existed for the three owner-only screenshots; AUTH_REQUIRED retained exactly as policy requires
+acceptance_criteria_evidence:
+  guide: documentation/user-guide.md
+  index: documentation/README.md
+  route_map: documentation/frontend-route-map.md
+  evidence: documentation/user-guide-audits/UGUIDE-005.md
+exact_next_action: Auditor independently audits the final gate. Producer must not mark UGUIDE-005 DONE or record USER_GUIDE_PROJECT_COMPLETE.
 ```
