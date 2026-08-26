@@ -1,0 +1,62 @@
+name: APPGUIDE-001 Producer QA
+
+'on':
+  push:
+    paths:
+      - .github/workflows/appguide-001-producer-qa.yml
+
+permissions:
+  contents: read
+
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install dependencies
+        run: npm install --no-package-lock
+
+      - name: Run tests
+        run: npm test
+
+      - name: Run palette compliance
+        run: npm run check:palette
+
+      - name: Build production app
+        run: npm run build
+
+      - name: Verify built Help route
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run start -- -p 3000 > /tmp/appguide-next.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID || true' EXIT
+          for i in {1..30}; do
+            if curl --fail --silent http://127.0.0.1:3000/help > /tmp/help.html; then
+              break
+            fi
+            sleep 1
+          done
+          python3 - <<'PY'
+          from pathlib import Path
+          html = Path('/tmp/help.html').read_text()
+          checks = {
+              'canonical title': 'Discover Boulders Markets — User Guide',
+              'research boundary': 'does <strong>not</strong> place live trades',
+              'real table': '<table',
+              'admin screenshot alt': 'Admin data-load dashboard showing Loader Health',
+              'stable heading anchor': 'id="before-you-begin"',
+              'rewritten GitHub documentation link': 'https://github.com/ClimbingBuddies/Trading/blob/main/documentation/',
+          }
+          missing = [label for label, needle in checks.items() if needle not in html]
+          if missing:
+              raise SystemExit(f'Missing rendered Help checks: {missing}')
+          if '/generated/user-guide/admin-health-desktop.jpg' not in html:
+              raise SystemExit('Generated guide screenshot path missing')
+          print('APPGUIDE_001_RENDER_OK', ', '.join(checks))
+          PY
