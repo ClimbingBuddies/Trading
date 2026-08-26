@@ -2,7 +2,7 @@
 
 **Application:** Next.js App Router  
 **Production:** https://discoverbouldersmarkets.vercel.app  
-**Last reconciled:** 25 August 2026
+**Last reconciled:** 26 August 2026
 
 The frontend is a presentation and owner-workspace layer over Supabase. It does not create analytical conclusions in the browser and does not use privileged credentials.
 
@@ -10,7 +10,7 @@ The frontend is a presentation and owner-workspace layer over Supabase. It does 
 
 | Route | Purpose | Primary persisted sources | Access |
 |---|---|---|---|
-| `/` | Redirect to the main Markets workspace | None | Public |
+| `/` | Redirect to the Admin operational dashboard | None | Public |
 | `/admin` | Loader health, freshness, operational telemetry and performance monitoring | `sync_runs`, `instruments`, `market_observations`, Technical/Convergence/evaluator run telemetry | Operational dashboard |
 | `/admin/loads/[id]` | Individual market-data load drill-through | `sync_runs`, related observations | Operational dashboard |
 | `/markets` | Active instrument overview, search, filters and freshness | `instruments`, latest observations | Public read-only |
