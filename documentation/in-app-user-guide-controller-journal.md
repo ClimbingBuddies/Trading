@@ -10,12 +10,12 @@ Controller specification: `automation/in-app-user-guide-agentic-controller.md`
 ```yaml
 project_status: ACTIVE
 active_task: APPGUIDE-002
-active_task_status: NEXT
+active_task_status: IN PROGRESS
 handoff_owner: PRODUCER
-handoff_status: AUTHORISED
+handoff_status: IN PROGRESS
 completed_task: APPGUIDE-001
 audit_decision: PASS
-next_action: Producer retrieves authoritative state fresh, records BUILD_ATTEMPT_STARTED and implements APPGUIDE-002 only
+next_action: Producer implements and verifies APPGUIDE-002 navigation and production completion only, then hands it to Auditor
 ```
 
 ## State invariants
@@ -153,4 +153,27 @@ complete_correction_set: none
 next_task_promoted: APPGUIDE-002
 handoff_owner_after_audit: PRODUCER
 exact_next_action: Producer implements APPGUIDE-002 navigation and production completion only; Auditor does not implement that gate
+```
+
+
+### 2026-08-26T13:31:00+08:00 — BUILD_ATTEMPT_STARTED
+
+```yaml
+event: BUILD_ATTEMPT_STARTED
+task_id: APPGUIDE-002
+controller: PRODUCER
+starting_commit: 9aed5a075a4a86677df8c0c256671e6802d4c4eb
+plan_blob: 3f94dc308f74468b832edb837cf5cea1eaaf0ff5
+journal_blob_before_start: eb3f42dc4a71b9c75f4e58f91b1ee5d9b91ee69c
+controller_blob: 279b60b128f006c8903f02c70a968d86430e715a
+canonical_guide_blob: 68bdfc34e106f95eaaaf286299100ed93994619e
+development_workflow_blob: e04dfa048b5b42767db4feb43d86f3738cd3c07c
+app_nav_blob: 0e122a5efdb5c8fdbe6be00581533f8496857819
+frontend_route_map_blob: d0b4cf1e8c01a225fbd409263af5e184286bab97
+package_blob: 71a52a374274ce3b8b50c75531dfd950bcf5d268
+production_baseline_deployment: dpl_29tXzvNwBi5h2TeEJNHodENaERSY
+plan_state_observed: APPGUIDE-001 DONE; APPGUIDE-002 NEXT
+handoff_observed: APPGUIDE-002 AUTHORISED to PRODUCER with no unresolved HANDOFF_QUERY
+intended_scope: add Help to the primary navigation, add deterministic navigation/reconciliation checks, minimally reconcile the canonical guide and documentation index/route map, deploy through the normal production path, and verify production desktop plus 390x844 behaviour; do not make Supabase, auth, trading-methodology or schedule changes
+data_or_schema_effects: none
 ```
