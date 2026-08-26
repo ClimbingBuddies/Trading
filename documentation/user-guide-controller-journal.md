@@ -5,15 +5,15 @@ This journal is the sole persisted communication channel for the scheduled User 
 ## Current state
 
 ```yaml
-project_status: ACTIVE
+project_status: USER_GUIDE_PROJECT_COMPLETE
 active_task: UGUIDE-005
-active_task_status: IN REVIEW
-handoff_owner: AUDITOR
-handoff_status: READY_FOR_AUDIT
-last_updated: 2026-08-26T11:07:45+08:00
-completed_task: UGUIDE-004
-audit_decision: PENDING
-next_action: Auditor independently audits UGUIDE-005 final assembly and publication QA; only Auditor may complete the project
+active_task_status: DONE
+handoff_owner: NONE
+handoff_status: COMPLETE
+last_updated: 2026-08-26T11:44:19+08:00
+completed_task: UGUIDE-005
+audit_decision: PASS_WITH_ADVICE
+next_action: none; User Guide project complete and no successor promoted
 ```
 
 ## State invariants
@@ -795,4 +795,34 @@ acceptance_criteria_evidence:
   route_map: documentation/frontend-route-map.md
   evidence: documentation/user-guide-audits/UGUIDE-005.md
 exact_next_action: Auditor independently audits the final gate. Producer must not mark UGUIDE-005 DONE or record USER_GUIDE_PROJECT_COMPLETE.
+```
+
+
+### 2026-08-26T11:44:19+08:00 — AUDIT_DECISION
+
+```yaml
+event: AUDIT_DECISION
+task_id: UGUIDE-005
+controller: AUDITOR
+decision: PASS_WITH_ADVICE
+implementation_commit_or_range_reviewed: 2823eb3acd2a4bc171fa83d69c15928e47fe569c
+producer_evidence_commit_reviewed: 9d922bf89d3c1a58c8f9641285d754b6b24ae079
+audit_record: documentation/user-guide-audits/UGUIDE-005.md
+independent_browser_evidence: GitHub Actions run 32927448601 / job 98053077104
+checks_performed:
+  - exact functional commit scope verified as documentation-only
+  - final guide index and root-route reconciliation independently verified
+  - 22 relative guide links resolved
+  - six unique delivered screenshots decoded, non-blank, captioned and accessible
+  - public production routes and signed-out private boundaries independently reproduced
+  - 390x844 Markets responsive behaviour independently reproduced
+  - production Supabase core counts and Strategy decision independently reconciled
+  - privacy, secret-pattern, duplicate-image and obsolete-artifact checks passed
+findings:
+  - all final completion criteria pass under the explicit AUTH_REQUIRED screenshot policy
+  - owner-only screenshots remain a policy-permitted future enhancement, not a correction requirement
+complete_correction_set: none
+final_state: USER_GUIDE_PROJECT_COMPLETE
+next_task_promoted: none
+exact_next_action: none; project is complete
 ```

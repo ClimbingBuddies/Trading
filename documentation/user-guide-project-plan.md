@@ -60,7 +60,7 @@ Only one gate may be active at a time.
 | UGUIDE-002 | **DONE** | Document public navigation and assessment dashboards | Explain navigation, Markets, instrument detail, Market Assessment, Technical/AI/Convergence interpretation and Opportunity themes; add current production screenshots for the dashboard/Markets/Assessment/Opportunity flows; verify all statements against source, production and persisted data where relevant. |
 | UGUIDE-003 | **DONE** | Document signed-in monitoring workspaces | Explain sign-in boundaries, Watchlists, Alerts and event history with owner-isolation and safe-use notes; add current authenticated screenshots where access exists; otherwise record a precise `AUTH_REQUIRED` blocker without inventing content. |
 | UGUIDE-004 | **DONE** | Document strategy, operations and support | Explain strategy results including `continue_testing`, Admin/data-health indicators, data freshness, status colours, empty states and common troubleshooting; add the strategy/Admin and one representative mobile screenshot; add a compact glossary. |
-| UGUIDE-005 | **IN REVIEW** | Final assembly and publication QA | Reconcile the whole guide against current production; validate every route, link, image, caption and alt text; confirm no private or fabricated information; remove duplicate/obsolete guide artifacts; link the guide from `documentation/README.md`; record final audit evidence and mark the project complete. |
+| UGUIDE-005 | **DONE** | Final assembly and publication QA | Reconcile the whole guide against current production; validate every route, link, image, caption and alt text; confirm no private or fabricated information; remove duplicate/obsolete guide artifacts; link the guide from `documentation/README.md`; record final audit evidence and mark the project complete. |
 
 ## Producer rules
 
@@ -148,41 +148,17 @@ The project is complete only when:
 
 ```yaml
 task_id: UGUIDE-005
-handoff_owner: AUDITOR
-handoff_status: READY_FOR_AUDIT
-current_status: IN REVIEW
-implementation_commit_or_range:
-  functional_commit: 2823eb3acd2a4bc171fa83d69c15928e47fe569c
-  producer_evidence_commit: 9d922bf89d3c1a58c8f9641285d754b6b24ae079
-files_changed:
-  implementation:
-    - documentation/user-guide.md
-    - documentation/README.md
-    - documentation/frontend-route-map.md
-  current_delivery_control:
-    - documentation/user-guide-audits/UGUIDE-005.md
-    - documentation/user-guide-project-plan.md
-    - documentation/user-guide-controller-journal.md
-screenshots_added_or_replaced: none; six existing production screenshots revalidated; three owner-only entries remain AUTH_REQUIRED under policy
-routes_and_viewports_verified:
-  desktop_1363x936: / -> /admin; /admin; /markets; /markets/amd; /assessments; /assessments/gld; /opportunities; /opportunities/ai_advanced_packaging; signed-out /watchlists; /alerts; /strategies
-  narrow_390x844: /markets
-data_or_schema_effects: none
-tests_and_checks:
-  - root-route documentation reconciled to production / -> /admin
-  - canonical guide linked from documentation/README.md as production user documentation
-  - all relative guide Markdown links resolve
-  - all six delivered images resolve, decode, have meaningful alt text and immediate captions
-  - public and signed-out private route examples resolve in current production
-  - narrow Markets behaviour reverified
-  - privacy/secret-pattern scan passed
-  - superseded/stale user-guide artifact scan passed
-known_limitations:
-  - Watchlists, Alerts and Strategy owner screenshots remain AUTH_REQUIRED because no already-authorised permanent-owner Trading session was available; no private evidence was fabricated
-acceptance_criteria_evidence:
-  canonical_guide: documentation/user-guide.md
-  documentation_index: documentation/README.md
-  reconciled_route_map: documentation/frontend-route-map.md
-  producer_evidence: documentation/user-guide-audits/UGUIDE-005.md
-exact_next_action: Auditor independently audits UGUIDE-005 only; on PASS it marks UGUIDE-005 DONE, records USER_GUIDE_PROJECT_COMPLETE and promotes no successor
+handoff_owner: NONE
+handoff_status: COMPLETE
+current_status: DONE
+completed_task: UGUIDE-005
+audit_decision: PASS_WITH_ADVICE
+audit_record: documentation/user-guide-audits/UGUIDE-005.md
+functional_commit_reviewed: 2823eb3acd2a4bc171fa83d69c15928e47fe569c
+independent_browser_evidence: GitHub Actions run 32927448601 / job 98053077104
+final_state: USER_GUIDE_PROJECT_COMPLETE
+known_advice:
+  - owner-only screenshots remain AUTH_REQUIRED unless a future already-authorised owner session is available
+  - re-audit screenshots after material production UI changes
+next_action: none; all five gates are DONE and no successor is promoted
 ```

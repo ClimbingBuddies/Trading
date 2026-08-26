@@ -2,7 +2,7 @@
 
 **Production:** https://discoverbouldersmarkets.vercel.app  
 **Audience:** first-time users with general market knowledge  
-**Guide status:** final publication candidate; all guide sections are assembled and UGUIDE-005 independent audit is pending  
+**Guide status:** final production user guide; independently audited 26 August 2026  
 **Last production check:** 26 August 2026
 
 ## Before you begin
