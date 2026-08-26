@@ -10,12 +10,12 @@ Controller specification: `automation/in-app-user-guide-agentic-controller.md`
 ```yaml
 project_status: ACTIVE
 active_task: APPGUIDE-001
-active_task_status: NEXT
+active_task_status: IN PROGRESS
 handoff_owner: PRODUCER
-handoff_status: AUTHORISED
+handoff_status: IN PROGRESS
 completed_task: none
 audit_decision: none
-next_action: Producer retrieves authoritative sources fresh, records BUILD_ATTEMPT_STARTED and implements APPGUIDE-001 only
+next_action: Producer implements and verifies APPGUIDE-001 only, then submits it to Auditor
 ```
 
 ## State invariants
@@ -51,4 +51,25 @@ excluded_scope:
   - automation schedule changes
   - context-sensitive dashboard Help links
 next_action: Producer executes APPGUIDE-001 only
+```
+
+### 2026-08-26T12:00:00+08:00 — BUILD_ATTEMPT_STARTED
+
+```yaml
+event: BUILD_ATTEMPT_STARTED
+task_id: APPGUIDE-001
+controller: PRODUCER
+starting_commit: 10f7af43a520862f358d87fff8691d400d992eea
+plan_blob: 721ab62c27df70df594590280b6ce8fd13652036
+journal_blob_before_start: 479e81de36162ba6f9be51a66bb1ccf25d0307af
+controller_blob: 279b60b128f006c8903f02c70a968d86430e715a
+canonical_guide_blob: 68bdfc34e106f95eaaaf286299100ed93994619e
+development_workflow_blob: e04dfa048b5b42767db4feb43d86f3738cd3c07c
+package_blob: b07cfcad46277e921dfd0cc31594b17473a4cac9
+layout_blob: ef1ea4743fb5290504ec750c5cae55f7e8e666ce
+frontend_route_map_blob: 4fa1ea3aaf96e41d2cfa0ab33950a79e00241a83
+plan_state_observed: APPGUIDE-001 NEXT; APPGUIDE-002 PLANNED
+handoff_observed: APPGUIDE-001 AUTHORISED to PRODUCER with no unresolved HANDOFF_QUERY
+intended_scope: implement the public /help route from documentation/user-guide.md, Markdown rendering, safe image/document-link transformation, responsive themed presentation, route-map reconciliation and automated source/build checks only; do not add Help navigation in this gate
+data_or_schema_effects: none
 ```
