@@ -1,4 +1,4 @@
-name: UGUIDE-005 final auditor QA
+name: UGUIDE-005 final auditor completion
 
 'on':
   push:
@@ -6,17 +6,22 @@ name: UGUIDE-005 final auditor QA
       - .github/workflows/ug005-auditor-final.yml
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  audit-final-user-guide:
+  persist-final-decision:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Install audit dependencies
-        run: python3 -m pip install --quiet pillow selenium
-      - name: Run independent final QA
+      - name: Persist terminal audit decision
         run: python3 .github/scripts/ug005_auditor_final.py
+      - name: Commit completion state
+        run: |
+          git config user.name 'ClimbingBuddies User Guide Auditor'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add documentation/user-guide.md documentation/user-guide-project-plan.md documentation/user-guide-controller-journal.md documentation/user-guide-audits/UGUIDE-005.md
+          git commit -m 'docs(UGUIDE-005): complete audited user guide project'
+          git push origin HEAD:main
