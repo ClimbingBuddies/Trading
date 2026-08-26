@@ -7,13 +7,13 @@ This journal is the sole persisted communication channel for the scheduled User 
 ```yaml
 project_status: ACTIVE
 active_task: UGUIDE-005
-active_task_status: NEXT
+active_task_status: IN PROGRESS
 handoff_owner: PRODUCER
-handoff_status: AUTHORISED
-last_updated: 2026-08-26T11:00:46+08:00
+handoff_status: IN PROGRESS
+last_updated: 2026-08-26T11:07:04+08:00
 completed_task: UGUIDE-004
 audit_decision: PASS_WITH_ADVICE
-next_action: Producer reads the updated authoritative records, records BUILD_ATTEMPT_STARTED and executes UGUIDE-005 final assembly and publication QA only
+next_action: complete UGUIDE-005 final assembly, production reconciliation and publication QA, then hand to Auditor
 ```
 
 ## State invariants
@@ -736,4 +736,18 @@ advice:
   - reconcile root-route documentation and re-check screenshot currency in final publication QA
 next_task_promoted: UGUIDE-005
 exact_next_action: Producer reads the updated authoritative records, records BUILD_ATTEMPT_STARTED and executes only UGUIDE-005; Auditor does not implement the final gate
+```
+
+
+### 2026-08-26T11:07:04+08:00 — BUILD_ATTEMPT_STARTED
+
+```yaml
+event: BUILD_ATTEMPT_STARTED
+task_id: UGUIDE-005
+controller: PRODUCER
+starting_commit: 417f34e1d7b86b5509738160dbd1bba9d9176f95
+plan_state_observed: UGUIDE-001 through UGUIDE-004 DONE; UGUIDE-005 NEXT
+handoff_observed: AUTHORISED to PRODUCER with UGUIDE-004 PASS_WITH_ADVICE and no unresolved HANDOFF_QUERY
+intended_scope: reconcile canonical guide and route documentation against current production, validate routes/links/images/privacy, clean temporary guide artifacts, link the final guide from documentation/README.md and submit UGUIDE-005 for independent audit only
+timestamp: 2026-08-26T11:07:04+08:00
 ```
