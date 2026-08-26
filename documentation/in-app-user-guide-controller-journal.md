@@ -10,12 +10,12 @@ Controller specification: `automation/in-app-user-guide-agentic-controller.md`
 ```yaml
 project_status: ACTIVE
 active_task: APPGUIDE-001
-active_task_status: IN PROGRESS
-handoff_owner: PRODUCER
-handoff_status: IN PROGRESS
+active_task_status: IN REVIEW
+handoff_owner: AUDITOR
+handoff_status: READY_FOR_AUDIT
 completed_task: none
-audit_decision: none
-next_action: Producer implements and verifies APPGUIDE-001 only, then submits it to Auditor
+audit_decision: PENDING
+next_action: Auditor independently audits APPGUIDE-001 rendering gate only
 ```
 
 ## State invariants
@@ -72,4 +72,58 @@ plan_state_observed: APPGUIDE-001 NEXT; APPGUIDE-002 PLANNED
 handoff_observed: APPGUIDE-001 AUTHORISED to PRODUCER with no unresolved HANDOFF_QUERY
 intended_scope: implement the public /help route from documentation/user-guide.md, Markdown rendering, safe image/document-link transformation, responsive themed presentation, route-map reconciliation and automated source/build checks only; do not add Help navigation in this gate
 data_or_schema_effects: none
+```
+
+
+### 2026-08-26T12:07:59+08:00 — PRODUCER_HANDOFF
+
+```yaml
+task_id: APPGUIDE-001
+handoff_from: PRODUCER
+handoff_to: AUDITOR
+handoff_status: READY_FOR_AUDIT
+implementation_commit_or_range: 7f0b31f939e49b4c6b9f40bcb068aba30766d92e^..1a336ee074a2d7177984c425ddc3ca0c948d4732
+files_changed:
+  - .gitignore
+  - app/help/help.module.css
+  - app/help/page.tsx
+  - documentation/frontend-route-map.md
+  - lib/user-guide.ts
+  - package.json
+  - scripts/sync-user-guide-assets.mjs
+  - tests/in-app-user-guide.test.mjs
+generated_or_build_only_artifacts:
+  - public/generated/user-guide/* copied from the six canonical screenshots at dev/build time and ignored by Git
+routes_and_viewports_verified:
+  - production-mode local /help route rendered successfully after npm run build
+  - static build route listing contains /help
+data_or_schema_effects: none
+tests_and_checks:
+  - npm install --no-package-lock: zero reported vulnerabilities
+  - npm test: 9/9 PASS
+  - npm run check:palette: PASS
+  - npm run build: PASS; /help static prerender
+  - production-mode local HTML check: canonical title, research boundary, table, screenshot alt, before-you-begin anchor, rewritten GitHub doc link and generated screenshot path all PASS
+  - Producer QA evidence: GitHub Actions run 32928898467 / job 98057174915
+documentation_impact:
+  - documentation/frontend-route-map.md updated for the new public /help route and canonical source contract
+single_source_of_truth_evidence:
+  - app/help/page.tsx calls loadUserGuideMarkdown and contains no copied guide prose
+  - lib/user-guide.ts reads documentation/user-guide.md explicitly
+  - only referenced canonical screenshots are copied as ignored build artifacts
+  - deterministic integration tests enforce the canonical path/no-copy contract
+known_limitations:
+  - Help is not yet in components/AppNav.tsx because APPGUIDE-002 owns navigation
+  - current Vercel production /help verification is intentionally deferred to APPGUIDE-002
+acceptance_criteria_evidence:
+  canonical_source: documentation/user-guide.md
+  route: app/help/page.tsx
+  styles: app/help/help.module.css
+  source_and_link_mapping: lib/user-guide.ts
+  asset_sync: scripts/sync-user-guide-assets.mjs
+  automated_contract_tests: tests/in-app-user-guide.test.mjs
+  route_documentation: documentation/frontend-route-map.md
+  producer_evidence: documentation/in-app-user-guide-audits/APPGUIDE-001.md
+  temporary_qa_cleanup: 86952a2f4e20025ddd6f8453b24e090d01a3cf60
+exact_next_action: Auditor retrieves the exact functional range and current evidence fresh, independently reproduces APPGUIDE-001 acceptance criteria, and either returns one complete correction set or marks APPGUIDE-001 DONE and promotes APPGUIDE-002; Producer does not continue in this run
 ```

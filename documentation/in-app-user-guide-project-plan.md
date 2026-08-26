@@ -77,7 +77,7 @@ Only one gate may be active at a time.
 
 | ID | Status | Gate | Definition of done |
 |---|---|---|---|
-| APPGUIDE-001 | **NEXT** | Render canonical guide at `/help` | Implement the public `/help` route from `documentation/user-guide.md`; add required Markdown dependencies and build-time screenshot publication; preserve tables, headings, code, links and images; provide stable heading anchors; map relative documentation links safely; add responsive article styles; update `documentation/frontend-route-map.md`; add automated tests/checks proving the app is sourced from the canonical file; `npm test`, palette check and production build pass. |
+| APPGUIDE-001 | **IN REVIEW** | Render canonical guide at `/help` | Implement the public `/help` route from `documentation/user-guide.md`; add required Markdown dependencies and build-time screenshot publication; preserve tables, headings, code, links and images; provide stable heading anchors; map relative documentation links safely; add responsive article styles; update `documentation/frontend-route-map.md`; add automated tests/checks proving the app is sourced from the canonical file; `npm test`, palette check and production build pass. |
 | APPGUIDE-002 | **PLANNED** | Navigation and production completion | Add Help to `components/AppNav.tsx`; verify active navigation state and keyboard access; deploy through the existing normal production path; independently verify `/help` on desktop and 390×844, all six existing screenshots, representative tables/links/anchors, no page-level horizontal overflow, and no accidental private information; update `documentation/user-guide.md` only to identify the in-app Help route if appropriate; remove temporary project tooling; complete final documentation reconciliation. |
 
 ## APPGUIDE-001 acceptance criteria
@@ -210,13 +210,21 @@ The project is complete only when:
 - temporary project tooling is absent;
 - the controller journal records `IN_APP_USER_GUIDE_PROJECT_COMPLETE`.
 
-## Initial controller handoff
+## Current controller handoff
 
 ```yaml
 task_id: APPGUIDE-001
-handoff_owner: PRODUCER
-handoff_status: AUTHORISED
-current_status: NEXT
+handoff_owner: AUDITOR
+handoff_status: READY_FOR_AUDIT
+current_status: IN REVIEW
 project_status: ACTIVE
-next_action: Producer records BUILD_ATTEMPT_STARTED and implements APPGUIDE-001 only; Auditor does not implement this gate
+implementation_commit_or_range: 7f0b31f939e49b4c6b9f40bcb068aba30766d92e^..1a336ee074a2d7177984c425ddc3ca0c948d4732
+producer_evidence_commit: 3448ae0aff8ffac6873d41b686645802b9b6e06b
+producer_qa: GitHub Actions run 32928898467 / job 98057174915 PASS
+cleanup_commit: 86952a2f4e20025ddd6f8453b24e090d01a3cf60
+data_or_schema_effects: none
+known_limitations:
+  - Help navigation is deliberately deferred to APPGUIDE-002
+  - production Vercel verification is an APPGUIDE-002 acceptance criterion
+next_action: Auditor independently audits APPGUIDE-001 only; Producer must not edit this IN REVIEW gate or begin APPGUIDE-002
 ```
