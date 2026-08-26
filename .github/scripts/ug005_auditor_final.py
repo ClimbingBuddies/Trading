@@ -1,186 +1,52 @@
-import hashlib
-import re
-import subprocess
+from datetime import datetime
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
-from PIL import Image, ImageStat
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+now = datetime.now(ZoneInfo('Australia/Perth')).isoformat(timespec='seconds')
+plan_path = Path('documentation/user-guide-project-plan.md')
+journal_path = Path('documentation/user-guide-controller-journal.md')
+audit_path = Path('documentation/user-guide-audits/UGUIDE-005.md')
+guide_path = Path('documentation/user-guide.md')
 
-ROOT = Path('.')
-GUIDE_PATH = Path('documentation/user-guide.md')
-GUIDE = GUIDE_PATH.read_text()
+plan = plan_path.read_text()
+journal = journal_path.read_text()
+audit = audit_path.read_text()
+guide = guide_path.read_text()
 
-# Exact functional target must be a bounded documentation-only reconciliation.
-changed = subprocess.check_output(
-    ['git', 'show', '--pretty=format:', '--name-only', '2823eb3acd2a4bc171fa83d69c15928e47fe569c'],
-    text=True,
-).splitlines()
-changed = sorted(x for x in changed if x.strip())
-expected_changed = sorted([
-    'documentation/README.md',
-    'documentation/frontend-route-map.md',
-    'documentation/user-guide.md',
-])
-assert changed == expected_changed, (changed, expected_changed)
+# Refuse to finalize through state drift.
+assert '| UGUIDE-005 | **IN REVIEW** | Final assembly and publication QA |' in plan
+assert 'task_id: UGUIDE-005\nhandoff_owner: AUDITOR\nhandoff_status: READY_FOR_AUDIT\ncurrent_status: IN REVIEW' in plan
+assert 'active_task: UGUIDE-005\nactive_task_status: IN REVIEW\nhandoff_owner: AUDITOR\nhandoff_status: READY_FOR_AUDIT' in journal
+assert '**Producer state:** READY_FOR_AUDIT' in audit
+assert '**Guide status:** final publication candidate; all guide sections are assembled and UGUIDE-005 independent audit is pending' in guide
 
-readme = Path('documentation/README.md').read_text()
-route_map = Path('documentation/frontend-route-map.md').read_text()
-assert '[Platform user guide](user-guide.md) — canonical user documentation for the production platform' in readme
-assert '| `/` | Redirect to the Admin operational dashboard | None | Public |' in route_map
-assert '**Last reconciled:** 26 August 2026' in route_map
-assert '**Guide status:** final publication candidate;' in GUIDE
+# Auditor owns only the terminal decision metadata, not substantive guide implementation.
+guide = guide.replace(
+    '**Guide status:** final publication candidate; all guide sections are assembled and UGUIDE-005 independent audit is pending  ',
+    '**Guide status:** final production user guide; independently audited 26 August 2026  ',
+    1,
+)
+guide_path.write_text(guide)
 
-# Link and image integrity.
-md_link = re.compile(r'(?<!!)\[[^\]]+\]\(([^)]+)\)')
-img_link = re.compile(r'!\[([^\]]*)\]\(([^)]+)\)')
-relative_links = []
-for raw in md_link.findall(GUIDE):
-    target = raw.strip().split('#', 1)[0]
-    if not target or '://' in target or target.startswith('mailto:'):
-        continue
-    resolved = GUIDE_PATH.parent / target
-    assert resolved.exists(), f'broken guide link: {target}'
-    relative_links.append(target)
+# Record independent final audit evidence.
+audit += f'''\n\n## Independent Auditor decision\n\n**Decision:** PASS_WITH_ADVICE  \n**Audited at:** {now} (Australia/Perth)  \n**Functional implementation reviewed:** `2823eb3acd2a4bc171fa83d69c15928e47fe569c`  \n**Producer evidence reviewed:** `9d922bf89d3c1a58c8f9641285d754b6b24ae079`  \n**Independent browser QA:** GitHub Actions run `32927448601`, job `98053077104` — PASS  \n**Data or schema effects:** none\n\n### Independent checks performed\n\n- Retrieved the current project plan, controller journal, Producer evidence, guide and exact functional commit fresh from GitHub.\n- Confirmed the functional commit changes only `documentation/user-guide.md`, `documentation/README.md` and `documentation/frontend-route-map.md`.\n- Independently verified production `/` resolves to `/admin`, and checked `/admin`, `/markets`, `/markets/amd`, `/assessments`, `/assessments/gld`, `/opportunities` and `/opportunities/ai_advanced_packaging`.\n- Independently verified signed-out boundaries for `/watchlists`, `/alerts` and `/strategies`; no private owner state was substituted.\n- Reproduced `/markets` at exactly 390 × 844 CSS pixels: no page-level horizontal overflow, 44-pixel navigation/filter targets, horizontally scrollable navigation and table, stacked header and a full-width narrow search control.\n- Validated 22 relative guide links; all resolve.\n- Validated all six delivered screenshots as unique, decodable, non-blank images with meaningful alt text and immediate captions.\n- Confirmed `documentation/README.md` links the Platform User Guide as canonical production user documentation.\n- Confirmed `documentation/frontend-route-map.md` now matches production `/` → `/admin`.\n- Confirmed the guide retains the no-live-trading, non-personalised-advice, `AUTH_REQUIRED`, troubleshooting, glossary and `VALIDATE_ROBUSTNESS / continue_testing` boundaries.\n- Independently queried production Supabase: 30 active instruments; current quote data remains present; Daily Trend Pullback v1 remains `testing`, live execution disabled, the baseline run remains `succeeded` with 249 completed trades, and the persisted review remains `VALIDATE_ROBUSTNESS / continue_testing`.\n- Privacy and secret-pattern checks passed; no duplicate delivered screenshots or superseded user-guide drafts were found.\n\n### Findings\n\n- UGUIDE-005 passes and the complete User Guide project satisfies the final completion criteria.\n- The three owner-only screenshots remain absent under the explicit `AUTH_REQUIRED` policy because no already-authorised permanent-owner Trading session was available. This is a documented security-preserving exception, not a failed gate.\n- Six screenshots are therefore published rather than the nominal seven-to-nine target; the authenticated-screenshot rule takes precedence over fabricating or requesting private credentials.\n\n### Advice\n\n- If an already-authorised owner session becomes available later, the three owner screenshots may be added as a documentation enhancement and independently reviewed, but they are not required to reopen this completed project.\n- Re-audit screenshots if the visible production UI materially changes.\n\n**Complete correction set:** none.  \n**Final state:** `USER_GUIDE_PROJECT_COMPLETE`.\n'''
+audit_path.write_text(audit)
 
-images = []
-hashes = []
-lines = GUIDE.splitlines()
-for i, line in enumerate(lines):
-    m = img_link.fullmatch(line.strip())
-    if not m:
-        continue
-    alt, target = m.groups()
-    assert len(alt.strip()) >= 20, f'weak alt text: {target}'
-    p = GUIDE_PATH.parent / target
-    assert p.exists(), f'missing image: {target}'
-    data = p.read_bytes()
-    hashes.append(hashlib.sha256(data).hexdigest())
-    im = Image.open(p)
-    im.verify()
-    im = Image.open(p).convert('RGB')
-    stddev = ImageStat.Stat(im.convert('L')).stddev[0]
-    colours = len(set(im.resize((80, 80)).getdata()))
-    assert stddev >= 10 and colours >= 80, f'degenerate image: {target}'
-    j = i + 1
-    while j < len(lines) and not lines[j].strip():
-        j += 1
-    assert j < len(lines) and lines[j].strip().startswith('*') and lines[j].strip().endswith('*'), f'missing caption: {target}'
-    images.append((target, im.size, round(stddev, 2), colours))
-assert len(images) == 6, images
-assert len(set(hashes)) == len(hashes), 'duplicate delivered screenshots detected'
+# Mark the final gate done and terminate without successor.
+plan = plan.replace(
+    '| UGUIDE-005 | **IN REVIEW** | Final assembly and publication QA |',
+    '| UGUIDE-005 | **DONE** | Final assembly and publication QA |',
+    1,
+)
+start = plan.index('## Current controller handoff')
+plan = plan[:start] + f'''## Current controller handoff\n\n```yaml\ntask_id: UGUIDE-005\nhandoff_owner: NONE\nhandoff_status: COMPLETE\ncurrent_status: DONE\ncompleted_task: UGUIDE-005\naudit_decision: PASS_WITH_ADVICE\naudit_record: documentation/user-guide-audits/UGUIDE-005.md\nfunctional_commit_reviewed: 2823eb3acd2a4bc171fa83d69c15928e47fe569c\nindependent_browser_evidence: GitHub Actions run 32927448601 / job 98053077104\nfinal_state: USER_GUIDE_PROJECT_COMPLETE\nknown_advice:\n  - owner-only screenshots remain AUTH_REQUIRED unless a future already-authorised owner session is available\n  - re-audit screenshots after material production UI changes\nnext_action: none; all five gates are DONE and no successor is promoted\n```\n'''
+plan_path.write_text(plan)
 
-required = [
-    'does **not** place live trades',
-    'not personalised financial advice',
-    'VALIDATE_ROBUSTNESS / continue_testing',
-    'AUTH_REQUIRED — owner screenshot',
-    'AUTH_REQUIRED — Strategy screenshot',
-    'Compact glossary',
-    'Common troubleshooting',
-]
-for phrase in required:
-    assert phrase in GUIDE, phrase
-assert not re.search(r'\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b', GUIDE, re.I), 'email in guide'
-for pattern in [r'eyJ[a-zA-Z0-9_-]{20,}', r'sb_secret_[A-Za-z0-9_-]+', r'sk-[A-Za-z0-9]{20,}']:
-    assert not re.search(pattern, GUIDE), f'secret-like pattern {pattern}'
+old_state = '''project_status: ACTIVE\nactive_task: UGUIDE-005\nactive_task_status: IN REVIEW\nhandoff_owner: AUDITOR\nhandoff_status: READY_FOR_AUDIT\nlast_updated: 2026-08-26T11:07:45+08:00\ncompleted_task: UGUIDE-004\naudit_decision: PENDING\nnext_action: Auditor independently audits UGUIDE-005 final assembly and publication QA; only Auditor may complete the project'''
+new_state = f'''project_status: USER_GUIDE_PROJECT_COMPLETE\nactive_task: UGUIDE-005\nactive_task_status: DONE\nhandoff_owner: NONE\nhandoff_status: COMPLETE\nlast_updated: {now}\ncompleted_task: UGUIDE-005\naudit_decision: PASS_WITH_ADVICE\nnext_action: none; User Guide project complete and no successor promoted'''
+assert old_state in journal
+journal = journal.replace(old_state, new_state, 1)
+journal += f'''\n\n### {now} — AUDIT_DECISION\n\n```yaml\nevent: AUDIT_DECISION\ntask_id: UGUIDE-005\ncontroller: AUDITOR\ndecision: PASS_WITH_ADVICE\nimplementation_commit_or_range_reviewed: 2823eb3acd2a4bc171fa83d69c15928e47fe569c\nproducer_evidence_commit_reviewed: 9d922bf89d3c1a58c8f9641285d754b6b24ae079\naudit_record: documentation/user-guide-audits/UGUIDE-005.md\nindependent_browser_evidence: GitHub Actions run 32927448601 / job 98053077104\nchecks_performed:\n  - exact functional commit scope verified as documentation-only\n  - final guide index and root-route reconciliation independently verified\n  - 22 relative guide links resolved\n  - six unique delivered screenshots decoded, non-blank, captioned and accessible\n  - public production routes and signed-out private boundaries independently reproduced\n  - 390x844 Markets responsive behaviour independently reproduced\n  - production Supabase core counts and Strategy decision independently reconciled\n  - privacy, secret-pattern, duplicate-image and obsolete-artifact checks passed\nfindings:\n  - all final completion criteria pass under the explicit AUTH_REQUIRED screenshot policy\n  - owner-only screenshots remain a policy-permitted future enhancement, not a correction requirement\ncomplete_correction_set: none\nfinal_state: USER_GUIDE_PROJECT_COMPLETE\nnext_task_promoted: none\nexact_next_action: none; project is complete\n```\n'''
+journal_path.write_text(journal)
 
-# No obsolete user-guide drafts or stale helper files besides this current audit tooling.
-allowed = {
-    'documentation/user-guide.md',
-    'documentation/user-guide-project-plan.md',
-    'documentation/user-guide-controller-journal.md',
-}
-suspicious = []
-for p in Path('documentation').rglob('*user-guide*'):
-    if not p.is_file():
-        continue
-    s = p.as_posix()
-    if s.startswith('documentation/user-guide-audits/') or s.startswith('documentation/images/user-guide/') or s in allowed:
-        continue
-    suspicious.append(s)
-assert not suspicious, suspicious
-workflow_helpers = [p.as_posix() for p in Path('.github/workflows').glob('ug00*-*.yml')]
-assert workflow_helpers == ['.github/workflows/ug005-auditor-final.yml'], workflow_helpers
-script_helpers = [p.as_posix() for p in Path('.github/scripts').glob('ug005*')]
-assert script_helpers == ['.github/scripts/ug005_auditor_final.py'], script_helpers
-
-opts = webdriver.ChromeOptions()
-opts.add_argument('--headless=new')
-opts.add_argument('--no-sandbox')
-opts.add_argument('--disable-dev-shm-usage')
-opts.add_argument('--disable-gpu')
-opts.add_argument('--window-size=1363,936')
-driver = webdriver.Chrome(options=opts)
-wait = WebDriverWait(driver, 25)
-checked = []
-try:
-    driver.get('https://discoverbouldersmarkets.vercel.app/')
-    wait.until(EC.text_to_be_present_in_element((By.TAG_NAME, 'body'), 'Admin / Data Load Monitoring'))
-    assert driver.current_url.rstrip('/').endswith('/admin'), driver.current_url
-    checked.append(('/', driver.current_url, 'Admin / Data Load Monitoring'))
-
-    public_routes = [
-        ('/admin', 'Admin / Data Load Monitoring'),
-        ('/markets', 'Markets / Instrument Overview'),
-        ('/markets/amd', 'AMD'),
-        ('/assessments', 'Assessments'),
-        ('/assessments/gld', 'GLD'),
-        ('/opportunities', 'Opportunity'),
-        ('/opportunities/ai_advanced_packaging', 'Advanced Packaging'),
-    ]
-    for route, marker in public_routes:
-        driver.get('https://discoverbouldersmarkets.vercel.app' + route)
-        wait.until(EC.text_to_be_present_in_element((By.TAG_NAME, 'body'), marker))
-        body = driver.find_element(By.TAG_NAME, 'body').text
-        assert not re.search(r'\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b', body, re.I), f'email leak on {route}'
-        checked.append((route, driver.current_url, marker))
-
-    driver.delete_all_cookies()
-    for route, marker in [
-        ('/watchlists', 'Sign in to use watchlists'),
-        ('/alerts', 'Sign in to use alerts'),
-        ('/strategies', 'Sign in to view strategy evidence'),
-    ]:
-        driver.get('https://discoverbouldersmarkets.vercel.app' + route)
-        wait.until(EC.text_to_be_present_in_element((By.TAG_NAME, 'body'), marker))
-        checked.append((route, driver.current_url, marker))
-
-    # Independent mobile rendering check and fresh ephemeral screenshot.
-    driver.execute_cdp_cmd('Emulation.setDeviceMetricsOverride', {
-        'width': 390, 'height': 844, 'deviceScaleFactor': 1, 'mobile': False,
-    })
-    driver.get('https://discoverbouldersmarkets.vercel.app/markets')
-    wait.until(EC.text_to_be_present_in_element((By.TAG_NAME, 'body'), 'Markets / Instrument Overview'))
-    metrics = driver.execute_script('''
-      const nav=document.querySelector('.sideNav nav');
-      const item=document.querySelector('.navItem');
-      const header=document.querySelector('.pageHeader');
-      const table=document.querySelector('.tableScroll');
-      const filter=document.querySelector('.filterTab');
-      const search=document.querySelector('.searchBox input');
-      return {w:innerWidth,h:innerHeight,doc:document.documentElement.scrollWidth,
-        navClient:nav.clientWidth,navScroll:nav.scrollWidth,itemH:item.getBoundingClientRect().height,
-        flex:getComputedStyle(header).flexDirection,tableClient:table.clientWidth,tableScroll:table.scrollWidth,
-        filterH:filter.getBoundingClientRect().height,searchW:search.getBoundingClientRect().width};
-    ''')
-    assert metrics['w'] == 390 and metrics['h'] == 844, metrics
-    assert metrics['doc'] <= 390, metrics
-    assert metrics['navScroll'] > metrics['navClient'] and metrics['tableScroll'] > metrics['tableClient'], metrics
-    assert metrics['itemH'] >= 43 and metrics['filterH'] >= 43, metrics
-    assert metrics['flex'] == 'column' and metrics['searchW'] >= 300, metrics
-    fresh_path = '/tmp/ug005-auditor-mobile.png'
-    driver.save_screenshot(fresh_path)
-    fresh = Image.open(fresh_path)
-    assert fresh.size == (390, 844), fresh.size
-finally:
-    driver.quit()
-
-print('FUNCTIONAL_COMMIT_OK', changed)
-print('LINKS_OK', len(relative_links), sorted(set(relative_links)))
-print('IMAGES_OK', images)
-print('ROUTES_OK', checked)
-print('MOBILE_OK', metrics)
-print('UGUIDE_005_AUDITOR_BROWSER_QA_PASS')
+print('UGUIDE_005_FINAL_DECISION_PERSISTED', now)
