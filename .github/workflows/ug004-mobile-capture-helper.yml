@@ -1,0 +1,109 @@
+name: UGUIDE-004 mobile capture helper
+
+on:
+  push:
+    paths:
+      - .github/workflows/ug004-mobile-capture-helper.yml
+
+permissions:
+  contents: write
+
+jobs:
+  capture-production-mobile:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Record Producer resume before material work
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from datetime import datetime
+          from zoneinfo import ZoneInfo
+          import subprocess
+
+          path = Path('documentation/user-guide-controller-journal.md')
+          text = path.read_text()
+          now = datetime.now(ZoneInfo('Australia/Perth')).isoformat(timespec='seconds')
+          start = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
+
+          old = '''project_status: ACTIVE
+active_task: UGUIDE-004
+active_task_status: IN PROGRESS
+handoff_owner: PRODUCER
+handoff_status: BLOCKED
+last_updated: 2026-08-26T07:09:00+08:00
+completed_task: UGUIDE-003
+audit_decision: PASS_WITH_ADVICE
+next_action: provide genuine narrow production viewport, capture markets-overview-mobile.png, then complete UGUIDE-004 verification and Producer handoff'''
+          new = f'''project_status: ACTIVE
+active_task: UGUIDE-004
+active_task_status: IN PROGRESS
+handoff_owner: PRODUCER
+handoff_status: IN PROGRESS
+last_updated: {now}
+completed_task: UGUIDE-003
+audit_decision: PASS_WITH_ADVICE
+next_action: capture and inspect genuine 390x844 production /markets evidence, then complete UGUIDE-004 verification and Producer handoff'''
+          if old not in text:
+              raise SystemExit('Expected UGUIDE-004 current-state block not found; refusing to guess through state drift.')
+          text = text.replace(old, new, 1)
+          text += f'''\n\n### {now} — BUILD_ATTEMPT_STARTED\n\n```yaml\nevent: BUILD_ATTEMPT_STARTED\ntask_id: UGUIDE-004\ncontroller: PRODUCER\nstarting_commit: {start}\nplan_state_observed: UGUIDE-004 IN PROGRESS; UGUIDE-001 through UGUIDE-003 DONE; UGUIDE-005 PLANNED\nhandoff_observed: BLOCKED to PRODUCER only by missing genuine narrow production screenshot; no unresolved HANDOFF_QUERY\nintended_scope: capture and verify documentation/images/user-guide/markets-overview-mobile.png from the live production /markets route at a genuine 390x844 CSS-pixel viewport; do not change application, database, policy, schedule or production data\ntimestamp: {now}\n```\n'''
+          path.write_text(text)
+          PY
+
+      - name: Verify production route before capture
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error --location --retry 3 --retry-all-errors \
+            https://discoverbouldersmarkets.vercel.app/markets > /tmp/markets.html
+          grep -q 'Markets / Instrument Overview' /tmp/markets.html
+          grep -q 'Instrument Overview' /tmp/markets.html
+          grep -q 'Search instruments' /tmp/markets.html
+
+      - name: Capture genuine narrow production viewport
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p documentation/images/user-guide
+          CHROME="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || command -v chromium-browser || true)"
+          test -n "$CHROME"
+          "$CHROME" \
+            --headless=new \
+            --no-sandbox \
+            --disable-dev-shm-usage \
+            --disable-gpu \
+            --window-size=390,844 \
+            --force-device-scale-factor=1 \
+            --virtual-time-budget=6000 \
+            --screenshot=documentation/images/user-guide/markets-overview-mobile.png \
+            https://discoverbouldersmarkets.vercel.app/markets
+          python3 - <<'PY'
+          from pathlib import Path
+          import struct
+          p = Path('documentation/images/user-guide/markets-overview-mobile.png')
+          b = p.read_bytes()
+          if b[:8] != b'\x89PNG\r\n\x1a\n':
+              raise SystemExit('Capture is not PNG')
+          w, h = struct.unpack('>II', b[16:24])
+          print(f'PNG dimensions: {w}x{h}; bytes={len(b)}')
+          if (w, h) != (390, 844):
+              raise SystemExit(f'Expected 390x844 capture, got {w}x{h}')
+          if len(b) < 20000:
+              raise SystemExit('Capture is unexpectedly small; refusing to accept likely error/blank evidence')
+          PY
+
+      - name: Commit evidence capture
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'ClimbingBuddies Documentation Producer'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add documentation/user-guide-controller-journal.md documentation/images/user-guide/markets-overview-mobile.png
+          git commit -m 'docs(UGUIDE-004): capture mobile production evidence'
+          git push origin HEAD:main
