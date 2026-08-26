@@ -24,6 +24,7 @@ The frontend is a presentation and owner-workspace layer over Supabase. It does 
 | `/strategies` | Strategy laboratory summary and secure-session resolution | Strategy, test-run and evaluation tables | Authenticated owner |
 | `/strategies/[id]` | Strategy definition and current evidence | `trading_strategies`, decision-tree metadata | Authenticated owner |
 | `/strategies/[id]/tests/[runId]` | Immutable test-run metrics, provenance and review outcome | `trading_test_runs`, `trading_decision_evaluations`, decision path | Authenticated owner |
+| `/help` | Render the canonical Trading Platform User Guide inside the app | `documentation/user-guide.md` and its referenced documentation screenshots | Public read-only |
 
 ## Analytical boundaries
 
@@ -41,6 +42,7 @@ The frontend is a presentation and owner-workspace layer over Supabase. It does 
 - Loading, empty and error states must preserve the page structure and explain what is happening.
 - Missing data stays explicit; the frontend must not infer or fabricate values.
 - Owner workspaces resolve Supabase Auth before reading or mutating private rows.
+- `/help` renders repository-authored Markdown from `documentation/user-guide.md`; generated public screenshot copies are build artifacts and are not a second editable guide source.
 
 ## Data and security contract
 
