@@ -1,0 +1,22 @@
+name: UGUIDE-005 final auditor QA
+
+'on':
+  push:
+    paths:
+      - .github/workflows/ug005-auditor-final.yml
+
+permissions:
+  contents: read
+
+jobs:
+  audit-final-user-guide:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install audit dependencies
+        run: python3 -m pip install --quiet pillow selenium
+      - name: Run independent final QA
+        run: python3 .github/scripts/ug005_auditor_final.py
