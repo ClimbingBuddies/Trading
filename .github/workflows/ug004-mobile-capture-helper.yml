@@ -1,4 +1,4 @@
-name: UGUIDE-004 mobile capture helper
+name: UGUIDE-004 finalisation helper
 
 on:
   push:
@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 jobs:
-  capture-production-mobile:
+  finalise-producer-gate:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -17,99 +17,153 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Record Producer resume before material work
-        shell: bash
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          from datetime import datetime
-          from zoneinfo import ZoneInfo
-          import subprocess
-
-          path = Path('documentation/user-guide-controller-journal.md')
-          text = path.read_text()
-          now = datetime.now(ZoneInfo('Australia/Perth')).isoformat(timespec='seconds')
-          start = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
-
-          old = "\n".join([
-              'project_status: ACTIVE',
-              'active_task: UGUIDE-004',
-              'active_task_status: IN PROGRESS',
-              'handoff_owner: PRODUCER',
-              'handoff_status: BLOCKED',
-              'last_updated: 2026-08-26T07:09:00+08:00',
-              'completed_task: UGUIDE-003',
-              'audit_decision: PASS_WITH_ADVICE',
-              'next_action: provide genuine narrow production viewport, capture markets-overview-mobile.png, then complete UGUIDE-004 verification and Producer handoff',
-          ])
-          new = "\n".join([
-              'project_status: ACTIVE',
-              'active_task: UGUIDE-004',
-              'active_task_status: IN PROGRESS',
-              'handoff_owner: PRODUCER',
-              'handoff_status: IN PROGRESS',
-              f'last_updated: {now}',
-              'completed_task: UGUIDE-003',
-              'audit_decision: PASS_WITH_ADVICE',
-              'next_action: inspect genuine 390x844 production /markets evidence, then complete UGUIDE-004 verification and Producer handoff',
-          ])
-          if old not in text:
-              raise SystemExit('Expected UGUIDE-004 current-state block not found; refusing to guess through state drift.')
-          text = text.replace(old, new, 1)
-          entry = "\n".join([
-              '', '', f'### {now} — BUILD_ATTEMPT_STARTED', '',
-              '```yaml',
-              'event: BUILD_ATTEMPT_STARTED',
-              'task_id: UGUIDE-004',
-              'controller: PRODUCER',
-              f'starting_commit: {start}',
-              'plan_state_observed: UGUIDE-004 IN PROGRESS; UGUIDE-001 through UGUIDE-003 DONE; UGUIDE-005 PLANNED',
-              'handoff_observed: BLOCKED to PRODUCER only by missing genuine narrow production screenshot; no unresolved HANDOFF_QUERY',
-              'intended_scope: capture and verify documentation/images/user-guide/markets-overview-mobile.png from the live production /markets route at a genuine 390x844 CSS-pixel viewport; do not change application, database, policy, schedule or production data',
-              f'timestamp: {now}',
-              '```', '',
-          ])
-          path.write_text(text + entry)
-          PY
-
-      - name: Verify production route before capture
+      - name: Verify captured mobile evidence and live production contract
         shell: bash
         run: |
           set -euo pipefail
-          curl --fail --silent --show-error --location --retry 3 --retry-all-errors https://discoverbouldersmarkets.vercel.app/markets > /tmp/markets.html
-          grep -q 'Markets / Instrument Overview' /tmp/markets.html
-          grep -q 'Instrument Overview' /tmp/markets.html
-          grep -q 'Search instruments' /tmp/markets.html
-
-      - name: Capture genuine narrow production viewport
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p documentation/images/user-guide
-          CHROME="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || command -v chromium-browser || true)"
-          test -n "$CHROME"
-          "$CHROME" --headless=new --no-sandbox --disable-dev-shm-usage --disable-gpu --window-size=390,844 --force-device-scale-factor=1 --virtual-time-budget=6000 --screenshot=documentation/images/user-guide/markets-overview-mobile.png https://discoverbouldersmarkets.vercel.app/markets
+          test -f documentation/images/user-guide/markets-overview-mobile.png
           python3 - <<'PY'
           from pathlib import Path
           import struct
           p = Path('documentation/images/user-guide/markets-overview-mobile.png')
           b = p.read_bytes()
           if b[:8] != b'\x89PNG\r\n\x1a\n':
-              raise SystemExit('Capture is not PNG')
+              raise SystemExit('Mobile evidence is not PNG')
           w, h = struct.unpack('>II', b[16:24])
-          print(f'PNG dimensions: {w}x{h}; bytes={len(b)}')
           if (w, h) != (390, 844):
-              raise SystemExit(f'Expected 390x844 capture, got {w}x{h}')
+              raise SystemExit(f'Expected 390x844, got {w}x{h}')
           if len(b) < 20000:
-              raise SystemExit('Capture is unexpectedly small; refusing to accept likely error/blank evidence')
+              raise SystemExit('Mobile screenshot too small to accept as evidence')
+          print(f'mobile evidence: {w}x{h}, {len(b)} bytes')
           PY
+          curl --fail --silent --show-error --location --retry 3 --retry-all-errors https://discoverbouldersmarkets.vercel.app/markets > /tmp/markets.html
+          grep -q 'Markets / Instrument Overview' /tmp/markets.html
+          grep -q 'Instrument Overview' /tmp/markets.html
+          grep -q 'Search instruments' /tmp/markets.html
+          CSS_PATH="$(python3 - <<'PY'
+          import re
+          text=open('/tmp/markets.html').read()
+          paths=re.findall(r'href="([^"]+\.css)"', text)
+          print(paths[0] if paths else '')
+          PY
+          )"
+          test -n "$CSS_PATH"
+          curl --fail --silent --show-error --location "https://discoverbouldersmarkets.vercel.app${CSS_PATH}" > /tmp/production.css
+          grep -q '@media (max-width:900px)' /tmp/production.css
+          grep -q 'overflow-x:auto' /tmp/production.css
+          grep -q '@media (max-width:640px)' /tmp/production.css
+          grep -q 'tableTools{flex-direction:column' /tmp/production.css
+          grep -q 'searchBox input{width:100%' /tmp/production.css
+          grep -q 'min-height:44px' /tmp/production.css
 
-      - name: Commit evidence capture
+      - name: Integrate mobile evidence into canonical guide
         shell: bash
         run: |
           set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('documentation/user-guide.md')
+          t = p.read_text()
+          replacements = {
+            '**Guide status:** public research, private monitoring, Strategy interpretation and operational support documented; final mobile evidence capture and publication QA remain': '**Guide status:** public research, private monitoring, Strategy interpretation and operational support documented; UGUIDE-004 is ready for independent audit and final publication QA remains',
+            '> **CAPTURE_REQUIRED — mobile evidence:** The responsive contract and current source were verified, but the available production browser exposed only a fixed 1363 × 936 CSS-pixel viewport. `markets-overview-mobile.png` was therefore not captured or counted. A true narrow production capture is still required; a desktop crop or relabelled image must not be substituted.': '![Markets overview at a genuine 390 × 844 production viewport showing the horizontal primary navigation, stacked mobile layout, market controls and the responsive table area](images/user-guide/markets-overview-mobile.png)\n\n*On a narrow screen, swipe the primary navigation and the market table horizontally when needed. The page stacks its header and controls without changing the meaning of prices, freshness or market-status labels.*',
+            'The final guide targets seven to nine production screenshots. Every image must use real production-backed state, omit personal information, have meaningful alt text and include a concise explanatory caption. Five images are currently delivered. Items 5–7 remain blocked by `AUTH_REQUIRED`, and item 9 remains `CAPTURE_REQUIRED`; absent files are not counted.': 'The final guide targets seven to nine production screenshots. Every image must use real production-backed state, omit personal information, have meaningful alt text and include a concise explanatory caption. Six images are currently delivered. Items 5–7 remain blocked by `AUTH_REQUIRED`; absent authenticated-owner files are not counted.',
+            'If an authorised owner session is unavailable for items 5–7, the affected gate records `AUTH_REQUIRED` rather than using a sign-in form or invented private state. UGUIDE-003 recorded this for `/watchlists` and `/alerts`; UGUIDE-004 records it for the Strategy route family. A true narrow production viewport is still required for item 9, so its absent file remains `CAPTURE_REQUIRED`.': 'If an authorised owner session is unavailable for items 5–7, the affected gate records `AUTH_REQUIRED` rather than using a sign-in form or invented private state. UGUIDE-003 recorded this for `/watchlists` and `/alerts`; UGUIDE-004 records it for the Strategy route family. Item 9 is a genuine 390 × 844 capture of the current production `/markets` route.',
+            'Production was observed at a 1363 × 936 CSS-pixel browser viewport with device-pixel ratio 1.': 'Production was observed at a 1363 × 936 desktop CSS-pixel viewport and at a genuine 390 × 844 narrow CSS-pixel viewport, both at device-pixel ratio 1.',
+          }
+          for old, new in replacements.items():
+              if old not in t:
+                  raise SystemExit(f'Expected guide text not found: {old[:80]}')
+              t = t.replace(old, new, 1)
+          p.write_text(t)
+          PY
+
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          guide = Path('documentation/user-guide.md').read_text()
+          missing=[]
+          for target in set(re.findall(r'(?<!!)\[[^\]]+\]\(([^)]+)\)', guide)):
+              if target.startswith(('http://','https://','#')):
+                  continue
+              path=(Path('documentation')/target).resolve()
+              if not path.exists(): missing.append(target)
+          for target in set(re.findall(r'!\[[^\]]*\]\(([^)]+)\)', guide)):
+              path=(Path('documentation')/target).resolve()
+              if not path.exists(): missing.append(target)
+          if missing:
+              raise SystemExit('Missing guide targets: '+', '.join(sorted(missing)))
+          if re.search(r'(?i)(sk-[A-Za-z0-9_-]{20,}|eyJ[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}|api[_-]?key\s*[:=]\s*[^\s`]+)', guide):
+              raise SystemExit('Potential secret pattern found in guide')
+          print('Guide relative links/images resolve; no common secret pattern found')
+          PY
+
           git config user.name 'ClimbingBuddies Documentation Producer'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add documentation/user-guide-controller-journal.md documentation/images/user-guide/markets-overview-mobile.png
-          git commit -m 'docs(UGUIDE-004): capture mobile production evidence'
+          git add documentation/user-guide.md
+          git commit -m 'docs(UGUIDE-004): integrate mobile production evidence'
+          echo "FUNCTIONAL_COMMIT=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
+      - name: Persist Producer evidence and complete handoff
+        shell: bash
+        run: |
+          set -euo pipefail
+          export NOW_PERTH="$(TZ=Australia/Perth date --iso-8601=seconds)"
+          export MOBILE_SHA256="$(sha256sum documentation/images/user-guide/markets-overview-mobile.png | awk '{print $1}')"
+          export MOBILE_BYTES="$(stat -c%s documentation/images/user-guide/markets-overview-mobile.png)"
+          python3 - <<'PY'
+          from pathlib import Path
+          import os, re
+          now=os.environ['NOW_PERTH']
+          func=os.environ['FUNCTIONAL_COMMIT']
+          sha256=os.environ['MOBILE_SHA256']
+          nbytes=os.environ['MOBILE_BYTES']
+
+          # Producer evidence record
+          p=Path('documentation/user-guide-audits/UGUIDE-004.md')
+          t=p.read_text()
+          t=t.replace('**Producer state:** BLOCKED — NOT_READY_FOR_AUDIT', '**Producer state:** READY_FOR_AUDIT', 1)
+          t=t.replace('**Evidence timestamp:** 26 August 2026, 07:06 Australia/Perth', f'**Evidence timestamp:** {now} (Australia/Perth)', 1)
+          t=t.replace('- narrow-screen navigation, touch-target and table-scroll guidance from the current responsive contract;', '- narrow-screen navigation, touch-target and table-scroll guidance from the current responsive contract;\n- one genuine 390 × 844 production `/markets` screenshot showing the responsive mobile experience;', 1)
+          t=t.replace('- All five images currently used in the guide resolve.', '- All six images currently used in the guide resolve.', 1)
+          start=t.find('## Mandatory blocker')
+          end=t.find('## Additional limitation')
+          if start < 0 or end < 0 or end <= start:
+              raise SystemExit('UGUIDE-004 blocker section not found')
+          mobile=f'''## Mobile production evidence\n\nThe prior mobile-evidence blocker is resolved. A GitHub-hosted Chromium session opened the live production `/markets` route only after a successful HTTP/route-content check and captured `documentation/images/user-guide/markets-overview-mobile.png` at exactly **390 × 844 CSS pixels**, device-pixel ratio 1. The capture is a direct narrow-browser render, not a desktop crop, resized bitmap, generated mock-up or relabelled image.\n\n| File | Capture commit | Format / dimensions | SHA-256 | Decision |\n|---|---|---|---|---|\n| `documentation/images/user-guide/markets-overview-mobile.png` | `12e32b4c2d4ab89a956bd10e1b202679579c3232` | PNG, 390 × 844 | `{sha256}` | accepted as genuine production narrow-viewport evidence |\n\nThe same live deployment returned **Markets / Instrument Overview**, **Instrument Overview** and **Search instruments** before capture. Its deployed stylesheet independently confirms the intended narrow behaviour: the side navigation becomes a horizontal overflow rail at ≤900 px, page headers stack at the smaller breakpoint, search becomes full width, the market table remains within its own horizontal scroller, and material controls retain a 44-pixel touch target. The committed PNG is {nbytes} bytes and passed the exact PNG signature/dimension checks.\n\n'''
+          t=t[:start]+mobile+t[end:]
+          old='''## Exact next action\n\nKeep UGUIDE-004 `IN PROGRESS` with handoff owner PRODUCER. Resume only after a genuine narrow production viewport becomes available; capture the mobile image, update this evidence, verify the complete gate, then submit the mandatory full Producer handoff. The Auditor must not audit or promote UGUIDE-005 while the gate remains blocked.'''
+          new=f'''## Exact next action\n\nUGUIDE-004 is `IN REVIEW` with handoff owner AUDITOR. Independently audit the functional evidence set—Admin screenshot/content, Strategy/operations/support guide changes, mobile production screenshot commit `12e32b4c2d4ab89a956bd10e1b202679579c3232`, and guide integration commit `{func}`—against the current plan and live production. The Producer must not promote UGUIDE-005.''' 
+          if old not in t:
+              raise SystemExit('UGUIDE-004 exact-next-action blocker text not found')
+          t=t.replace(old,new,1)
+          p.write_text(t)
+
+          # Project plan state and current handoff
+          p=Path('documentation/user-guide-project-plan.md')
+          t=p.read_text()
+          oldrow='| UGUIDE-004 | **IN PROGRESS** | Document strategy, operations and support |'
+          newrow='| UGUIDE-004 | **IN REVIEW** | Document strategy, operations and support |'
+          if oldrow not in t: raise SystemExit('UGUIDE-004 plan row not IN PROGRESS as expected')
+          t=t.replace(oldrow,newrow,1)
+          marker='## Current controller handoff\n\n```yaml\n'
+          pos=t.find(marker)
+          if pos<0: raise SystemExit('Plan current handoff marker missing')
+          prefix=t[:pos+len(marker)]
+          handoff=f'''task_id: UGUIDE-004\nhandoff_owner: AUDITOR\nhandoff_status: READY_FOR_AUDIT\ncurrent_status: IN REVIEW\nimplementation_evidence:\n  - aebabc269a990ae3aaf74fe1d3ebe6841cb2abdb  # current Admin screenshot\n  - 9764401109463ccb1835d295dc05e24255bbe7d7  # Strategy/operations/support guide implementation\n  - 12e32b4c2d4ab89a956bd10e1b202679579c3232  # genuine 390x844 production Markets screenshot\n  - {func}  # mobile screenshot integration into canonical guide\naudit_record: documentation/user-guide-audits/UGUIDE-004.md\nknown_limitations:\n  - AUTH_REQUIRED for /strategies, /strategies/[id] and /strategies/[id]/tests/[runId]; no already-authorised permanent-owner session exists\nnext_action: Auditor independently audits UGUIDE-004 only; Producer must not edit the IN REVIEW gate or promote UGUIDE-005\n```\n'''
+          p.write_text(prefix+handoff)
+
+          # Controller journal current state and append mandatory handoff
+          p=Path('documentation/user-guide-controller-journal.md')
+          t=p.read_text()
+          current=re.compile(r'''project_status: ACTIVE\nactive_task: UGUIDE-004\nactive_task_status: IN PROGRESS\nhandoff_owner: PRODUCER\nhandoff_status: IN PROGRESS\nlast_updated: [^\n]+\ncompleted_task: UGUIDE-003\naudit_decision: PASS_WITH_ADVICE\nnext_action: inspect genuine 390x844 production /markets evidence, then complete UGUIDE-004 verification and Producer handoff''')
+          replacement=f'''project_status: ACTIVE\nactive_task: UGUIDE-004\nactive_task_status: IN REVIEW\nhandoff_owner: AUDITOR\nhandoff_status: READY_FOR_AUDIT\nlast_updated: {now}\ncompleted_task: UGUIDE-003\naudit_decision: PENDING\nnext_action: Auditor independently audits UGUIDE-004 against current production and the complete Producer handoff'''
+          t,n=current.subn(replacement,t,count=1)
+          if n!=1: raise SystemExit('Expected journal current state not found exactly once')
+          entry=f'''\n\n### {now} — PRODUCER_HANDOFF\n\n```yaml\nevent: PRODUCER_HANDOFF\ntask_id: UGUIDE-004\nhandoff_from: PRODUCER\nhandoff_to: AUDITOR\nhandoff_status: READY_FOR_AUDIT\nimplementation_commit_or_range:\n  functional_commits:\n    - aebabc269a990ae3aaf74fe1d3ebe6841cb2abdb\n    - 9764401109463ccb1835d295dc05e24255bbe7d7\n    - 12e32b4c2d4ab89a956bd10e1b202679579c3232\n    - {func}\n  excluded_control_tooling:\n    - 84dc18c3da55b9317ba590b0590fc829bbaa5011\n    - a2e5cebb69fef1e5cbb2f6c0a16783d364c5b807\nfiles_changed:\n  implementation:\n    - documentation/user-guide.md\n    - documentation/images/user-guide/admin-health-desktop.jpg\n    - documentation/images/user-guide/markets-overview-mobile.png\n  current_delivery_control:\n    - documentation/user-guide-audits/UGUIDE-004.md\n    - documentation/user-guide-project-plan.md\n    - documentation/user-guide-controller-journal.md\nscreenshots_added_or_replaced:\n  - documentation/images/user-guide/admin-health-desktop.jpg: current public production Admin evidence\n  - documentation/images/user-guide/markets-overview-mobile.png: genuine 390x844 public production Markets evidence\n  - strategy-result-desktop.png: AUTH_REQUIRED under screenshot policy; not fabricated\nroutes_and_viewports_verified:\n  desktop_1363x936:\n    - /admin\n    - representative /admin/loads/[id]\n    - /markets\n    - /strategies signed-out owner boundary\n  narrow_390x844:\n    - /markets captured from current production at device-pixel-ratio 1\ndata_or_schema_effects: none\ntests_and_checks:\n  - live /markets returned the expected Markets / Instrument Overview, Instrument Overview and Search instruments content immediately before the mobile capture\n  - mobile evidence is a PNG at exactly 390x844 with device-pixel-ratio 1 and is not a resized/cropped desktop substitute\n  - current deployed CSS confirms horizontal mobile navigation, stacked header/controls, table-contained horizontal scrolling and 44px material touch targets\n  - all relative Markdown links and all six embedded guide images resolve in the repository\n  - guide scan found no common API-key, JWT or token pattern\n  - prior UGUIDE-004 verification covers current Admin telemetry, Strategy baseline/provenance, freshness/status semantics, empty states, troubleshooting and glossary\n  - no application, database, RLS/policy, schedule, Vercel configuration or production data was changed\nknown_limitations:\n  - AUTH_REQUIRED remains for /strategies, /strategies/[id] and /strategies/[id]/tests/[runId] because no already-authorised permanent-owner browser session exists; source, canonical review documents and read-only production records support the documented workflow\nacceptance_criteria_evidence:\n  strategy_results: documentation/user-guide.md section 7 plus current baseline/review evidence\n  admin_operations: documentation/user-guide.md section 1 plus admin-health-desktop.jpg\n  freshness_status_empty_states: documentation/user-guide.md section 8\n  troubleshooting: documentation/user-guide.md Common troubleshooting\n  mobile: documentation/images/user-guide/markets-overview-mobile.png at commit 12e32b4c2d4ab89a956bd10e1b202679579c3232\n  glossary: documentation/user-guide.md Compact glossary\n  producer_evidence: documentation/user-guide-audits/UGUIDE-004.md\nexact_next_action: Auditor independently audits UGUIDE-004 only. On PASS/PASS_WITH_ADVICE it may mark UGUIDE-004 DONE and promote UGUIDE-005; on failure it returns one complete correction set to the Producer.\n```\n'''
+          p.write_text(t+entry)
+          PY
+
+          git add documentation/user-guide-audits/UGUIDE-004.md documentation/user-guide-project-plan.md documentation/user-guide-controller-journal.md
+          git commit -m 'docs(UGUIDE-004): hand strategy operations support to auditor'
           git push origin HEAD:main
