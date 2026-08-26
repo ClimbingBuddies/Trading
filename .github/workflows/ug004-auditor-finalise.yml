@@ -1,0 +1,99 @@
+name: UGUIDE-004 auditor finaliser
+
+'on':
+  push:
+    paths:
+      - .github/workflows/ug004-auditor-finalise.yml
+
+permissions:
+  contents: write
+
+jobs:
+  persist-audit-decision:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Persist UGUIDE-004 independent audit decision
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from datetime import datetime
+          from zoneinfo import ZoneInfo
+
+          now = datetime.now(ZoneInfo('Australia/Perth')).isoformat(timespec='seconds')
+
+          plan_path = Path('documentation/user-guide-project-plan.md')
+          journal_path = Path('documentation/user-guide-controller-journal.md')
+          audit_path = Path('documentation/user-guide-audits/UGUIDE-004.md')
+
+          plan = plan_path.read_text()
+          journal = journal_path.read_text()
+          audit = audit_path.read_text()
+
+          # Refuse to write through state drift or a malformed handoff.
+          if '| UGUIDE-004 | **IN REVIEW** | Document strategy, operations and support |' not in plan:
+              raise SystemExit('UGUIDE-004 is no longer the IN REVIEW gate; refusing to alter state.')
+          if '| UGUIDE-005 | **PLANNED** | Final assembly and publication QA |' not in plan:
+              raise SystemExit('UGUIDE-005 is not PLANNED; refusing to promote.')
+          for required in [
+              'task_id: UGUIDE-004',
+              'handoff_owner: AUDITOR',
+              'handoff_status: READY_FOR_AUDIT',
+              'current_status: IN REVIEW',
+              'aebabc269a990ae3aaf74fe1d3ebe6841cb2abdb',
+              '9764401109463ccb1835d295dc05e24255bbe7d7',
+              '12e32b4c2d4ab89a956bd10e1b202679579c3232',
+              '74b44fc6535305f3827c927eb764e6644d3faf32',
+          ]:
+              if required not in plan:
+                  raise SystemExit(f'missing expected plan handoff evidence: {required}')
+          if 'active_task: UGUIDE-004\nactive_task_status: IN REVIEW\nhandoff_owner: AUDITOR\nhandoff_status: READY_FOR_AUDIT' not in journal:
+              raise SystemExit('journal is no longer assigned to the UGUIDE-004 Auditor; refusing to alter state.')
+          if '**Producer state:** READY_FOR_AUDIT' not in audit:
+              raise SystemExit('Producer audit evidence no longer in expected state.')
+
+          audit = audit.replace(
+              '# UGUIDE-004 — Producer implementation evidence',
+              '# UGUIDE-004 — Producer evidence and independent audit',
+              1,
+          )
+          audit += f'''\n\n## Independent Auditor decision\n\n**Decision:** PASS_WITH_ADVICE  \n**Audited at:** {now} (Australia/Perth)  \n**Functional implementation reviewed:** `aebabc269a990ae3aaf74fe1d3ebe6841cb2abdb`, `9764401109463ccb1835d295dc05e24255bbe7d7`, `12e32b4c2d4ab89a956bd10e1b202679579c3232`, `74b44fc6535305f3827c927eb764e6644d3faf32`  \n**Independent browser evidence:** GitHub Actions run `32924695740`, job `98045110165` — SUCCESS  \n**Data or schema effects:** none\n\n### Independent checks performed\n\n- Retrieved the current project plan, controller journal, complete Producer handoff, current guide and exact functional implementation commits fresh from GitHub.\n- Re-fetched live production `/admin` and `/strategies`; production deployment `dpl_6WE7pr4DrPpU4qA1FR2eB7dVKmME` returned the current Admin dashboard and the permanent-owner Strategy sign-in boundary.\n- Reproduced `/markets` independently in headless Chromium at exactly 390 × 844 CSS pixels, device-pixel ratio 1. The live page had no page-level horizontal overflow (`documentWidth` 375), a horizontally scrollable primary nav (350 client / 741 scroll width), 44-pixel nav items, a stacked page header, a horizontally scrollable market table (349 client / 855 scroll width), a 321-pixel search field and 44-pixel filter controls.\n- Independently validated the committed mobile screenshot as PNG 390 × 844 and the Admin screenshot as JPEG 1348 × 926; both contained substantial non-blank visual variation.\n- Confirmed the live mobile route contained Markets / Instrument Overview, Instrument Overview, Search instruments and Market Data Status Summary, with no email address exposed.\n- Confirmed the live Admin route contained Loader Health, Data Freshness, Opportunity Engine, Technical Engine and Recent Load History, with no email address exposed.\n- Confirmed the signed-out Strategy route resolves to `Sign in to view strategy evidence`, offers a secure email-link flow and states that real strategy tests/review outcomes are private to their owner.\n- Queried Supabase production read-only for the immutable Daily Trend Pullback v1 baseline and decision: strategy remains `testing`, live execution is disabled, run is `succeeded`, 249 completed trades, 28.2199% total return, -8.2656% out-of-sample return, 1.3231 profit factor, 16.2900% maximum drawdown and persisted `VALIDATE_ROBUSTNESS / continue_testing`.\n- Inspected production RLS policies: strategy definitions, test runs and decision evaluations are owner-scoped for authenticated reads; the Strategy frontend additionally filters by the authenticated owner ID.\n- Verified the production freshness contract directly from `latest_market_status` and its functions: closed equity/ETF sessions return `market_closed`; active observations are Current through 90 minutes, Due through 120 minutes and Stale thereafter; missing observations are represented rather than fabricated.\n- Confirmed the guide contains meaningful alt text and captions for the Admin and mobile images, a compact glossary, status/empty-state explanations and the required troubleshooting flow.\n\n### Findings\n\n- All UGUIDE-004 acceptance criteria pass.\n- The strategy discussion preserves the negative holdout and correctly distinguishes `continue_testing` from promotion or live-trading authority.\n- Admin, freshness/status, empty-state, troubleshooting and glossary guidance match current production/source behaviour.\n- The previously blocked mobile evidence is genuine, current, useful and independently reproducible.\n- The Strategy owner screenshot remains `AUTH_REQUIRED`, which is explicitly allowed by the project screenshot policy when no already-authorised permanent-owner session exists. No private state was fabricated.\n\n### Advice for UGUIDE-005\n\n- If an already-authorised permanent-owner session is available during final publication QA, capture the missing owner screenshots then; otherwise retain the explicit `AUTH_REQUIRED` disclosures rather than weakening the security boundary or inventing evidence.\n- Reconcile the previously recorded stale root-route statement in `documentation/frontend-route-map.md` against production `/` → `/admin` as part of the final assembly/reconciliation gate.\n- Re-check screenshot currency against the final production deployment before publication, as required by the project plan.\n\n**Complete correction set:** none.  \n**Next gate:** UGUIDE-005 — Final assembly and publication QA.\n'''
+          audit_path.write_text(audit)
+
+          plan = plan.replace(
+              '| UGUIDE-004 | **IN REVIEW** | Document strategy, operations and support |',
+              '| UGUIDE-004 | **DONE** | Document strategy, operations and support |',
+              1,
+          )
+          plan = plan.replace(
+              '| UGUIDE-005 | **PLANNED** | Final assembly and publication QA |',
+              '| UGUIDE-005 | **NEXT** | Final assembly and publication QA |',
+              1,
+          )
+          handoff_start = plan.index('## Current controller handoff')
+          plan = plan[:handoff_start] + f'''## Current controller handoff\n\n```yaml\ntask_id: UGUIDE-005\nhandoff_owner: PRODUCER\nhandoff_status: AUTHORISED\ncurrent_status: NEXT\ncompleted_task: UGUIDE-004\naudit_decision: PASS_WITH_ADVICE\naudit_record: documentation/user-guide-audits/UGUIDE-004.md\nverified_evidence:\n  - UGUIDE-004 functional commits aebabc269a990ae3aaf74fe1d3ebe6841cb2abdb, 9764401109463ccb1835d295dc05e24255bbe7d7, 12e32b4c2d4ab89a956bd10e1b202679579c3232 and 74b44fc6535305f3827c927eb764e6644d3faf32\n  - independent browser audit run 32924695740 / job 98045110165 succeeded\nknown_advice:\n  - Strategy owner screenshot remains AUTH_REQUIRED unless an already-authorised permanent-owner session is available during final QA\n  - reconcile the stale root-route statement against production / -> /admin during final assembly\nnext_action: Producer records BUILD_ATTEMPT_STARTED and executes UGUIDE-005 final assembly and publication QA only; Auditor does not implement that gate\n```\n'''
+          plan_path.write_text(plan)
+
+          old_state = '''project_status: ACTIVE\nactive_task: UGUIDE-004\nactive_task_status: IN REVIEW\nhandoff_owner: AUDITOR\nhandoff_status: READY_FOR_AUDIT\nlast_updated: 2026-08-26T10:18:42+08:00\ncompleted_task: UGUIDE-003\naudit_decision: PENDING\nnext_action: Auditor independently audits UGUIDE-004 against current production and the complete Producer handoff'''
+          new_state = f'''project_status: ACTIVE\nactive_task: UGUIDE-005\nactive_task_status: NEXT\nhandoff_owner: PRODUCER\nhandoff_status: AUTHORISED\nlast_updated: {now}\ncompleted_task: UGUIDE-004\naudit_decision: PASS_WITH_ADVICE\nnext_action: Producer reads the updated authoritative records, records BUILD_ATTEMPT_STARTED and executes UGUIDE-005 final assembly and publication QA only'''
+          if old_state not in journal:
+              raise SystemExit('expected journal current-state block not found; refusing partial transition.')
+          journal = journal.replace(old_state, new_state, 1)
+          journal += f'''\n\n### {now} — AUDIT_DECISION\n\n```yaml\nevent: AUDIT_DECISION\ntask_id: UGUIDE-004\ncontroller: AUDITOR\ndecision: PASS_WITH_ADVICE\nimplementation_commit_or_range_reviewed:\n  functional_commits:\n    - aebabc269a990ae3aaf74fe1d3ebe6841cb2abdb\n    - 9764401109463ccb1835d295dc05e24255bbe7d7\n    - 12e32b4c2d4ab89a956bd10e1b202679579c3232\n    - 74b44fc6535305f3827c927eb764e6644d3faf32\n  audit_tooling_excluded_from_functional_target:\n    - 6e31a5aebaa150c1cbd84584c3de81af7a97fe1b\n    - b0ce9cdb53e03400d205a12f04800ce54f55cc82\n    - 2ca0cf7ef82cba1dd35ac3ec3a4ad5874b9eddc8\naudit_record: documentation/user-guide-audits/UGUIDE-004.md\nchecks_performed:\n  - independently re-fetched current plan, journal, guide, source and exact implementation commits\n  - independently re-fetched live Admin and signed-out Strategy production routes\n  - independently reproduced live /markets at 390x844 with horizontal nav/table scrolling, stacked header, 44px controls and no page-level horizontal overflow\n  - validated the committed mobile and Admin screenshots as real non-blank images with the required dimensions\n  - independently queried production Supabase for the strategy baseline, decision outcome, live-execution flag, RLS policies and freshness functions\n  - verified alt text, captions, status/empty-state guidance, troubleshooting and glossary against current implementation\nfindings:\n  - all UGUIDE-004 acceptance criteria pass\n  - AUTH_REQUIRED for the Strategy owner screenshot is policy-compliant and no private state was fabricated\n  - existing root-route documentation discrepancy remains final-gate reconciliation advice\ncomplete_correction_set: none\nknown_limitations:\n  - no already-authorised permanent-owner session was available for a Strategy result screenshot\nadvice:\n  - re-attempt authenticated owner screenshots during UGUIDE-005 only if an already-authorised permanent-owner session exists\n  - reconcile root-route documentation and re-check screenshot currency in final publication QA\nnext_task_promoted: UGUIDE-005\nexact_next_action: Producer reads the updated authoritative records, records BUILD_ATTEMPT_STARTED and executes only UGUIDE-005; Auditor does not implement the final gate\n```\n'''
+          journal_path.write_text(journal)
+          PY
+
+      - name: Commit audit decision
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'ClimbingBuddies User Guide Auditor'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add documentation/user-guide-project-plan.md documentation/user-guide-controller-journal.md documentation/user-guide-audits/UGUIDE-004.md
+          git commit -m 'docs(UGUIDE-004): pass audit and promote final QA'
+          git push origin HEAD:main
