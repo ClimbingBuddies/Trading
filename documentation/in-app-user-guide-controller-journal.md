@@ -10,12 +10,12 @@ Controller specification: `automation/in-app-user-guide-agentic-controller.md`
 ```yaml
 project_status: ACTIVE
 active_task: APPGUIDE-002
-active_task_status: IN PROGRESS
-handoff_owner: PRODUCER
-handoff_status: IN PROGRESS
+active_task_status: IN REVIEW
+handoff_owner: AUDITOR
+handoff_status: READY_FOR_AUDIT
 completed_task: APPGUIDE-001
-audit_decision: PASS
-next_action: Producer implements and verifies APPGUIDE-002 navigation and production completion only, then hands it to Auditor
+audit_decision: PENDING
+next_action: Auditor independently audits APPGUIDE-002 final navigation and production completion only
 ```
 
 ## State invariants
@@ -176,4 +176,57 @@ plan_state_observed: APPGUIDE-001 DONE; APPGUIDE-002 NEXT
 handoff_observed: APPGUIDE-002 AUTHORISED to PRODUCER with no unresolved HANDOFF_QUERY
 intended_scope: add Help to the primary navigation, add deterministic navigation/reconciliation checks, minimally reconcile the canonical guide and documentation index/route map, deploy through the normal production path, and verify production desktop plus 390x844 behaviour; do not make Supabase, auth, trading-methodology or schedule changes
 data_or_schema_effects: none
+```
+
+
+### 2026-08-26T13:49:14+08:00 — PRODUCER_HANDOFF
+
+```yaml
+task_id: APPGUIDE-002
+handoff_from: PRODUCER
+handoff_to: AUDITOR
+handoff_status: READY_FOR_AUDIT
+implementation_commit_or_range: bed0f674f6b317f7d13390d5f262d1e9b8b290f6
+files_changed:
+  - components/AppNav.tsx
+  - documentation/README.md
+  - documentation/frontend-route-map.md
+  - documentation/user-guide.md
+  - tests/in-app-user-guide.test.mjs
+generated_or_build_only_artifacts:
+  - public/generated/user-guide/* remains generated from canonical documentation screenshots and ignored by Git
+routes_and_viewports_verified:
+  - local production-mode /help at desktop and exactly 390x844
+  - current production /help on deployment dpl_EKWjsb1AGoiU95rcdE5WmaETucf1 at desktop and exactly 390x844
+  - /help#compact-glossary direct heading navigation
+data_or_schema_effects: none
+tests_and_checks:
+  - npm install --no-package-lock: zero reported vulnerabilities
+  - npm test: 10/10 PASS
+  - npm run check:palette: PASS
+  - npm run build: PASS; /help static prerender and six canonical screenshot assets published
+  - local browser QA: run 32935199838 / job 98074993878 PASS
+  - production HTML/alias verification: dpl_EKWjsb1AGoiU95rcdE5WmaETucf1 shows active Help navigation and canonical in-app wording
+  - production browser QA: run 32935393876 / job 98075534280 PASS
+  - privacy/secret-pattern checks: PASS
+  - temporary APPGUIDE-002 workflows removed before handoff
+documentation_impact:
+  - canonical user guide minimally identifies its in-app /help rendering route and Help access row
+  - documentation/README.md records the canonical guide is rendered in-app
+  - documentation/frontend-route-map.md records the primary Help navigation contract
+single_source_of_truth_evidence:
+  - documentation/user-guide.md remains the only editable guide prose source
+  - APPGUIDE-002 did not change app/help/page.tsx, lib/user-guide.ts or the canonical screenshot generation pipeline
+  - Help navigation only links to /help; it does not duplicate guide prose
+known_limitations:
+  - no blocking limitations
+  - owner-only Watchlists/Alerts/Strategy screenshots remain under the completed canonical guide's AUTH_REQUIRED policy; this gate does not alter that policy
+acceptance_criteria_evidence:
+  functional_commit: bed0f674f6b317f7d13390d5f262d1e9b8b290f6
+  producer_evidence: documentation/in-app-user-guide-audits/APPGUIDE-002.md
+  production_deployment: dpl_EKWjsb1AGoiU95rcdE5WmaETucf1
+  local_browser_run: 32935199838 / 98074993878
+  production_browser_run: 32935393876 / 98075534280
+  mobile_metrics: document 375px; article 355px; Help target 44px; nav 350/818px client/scroll; table 319/680px client/scroll; image 321px at 390x844
+exact_next_action: Auditor retrieves the current plan, journal, APPGUIDE-002 evidence record, functional commit and current production fresh; independently reproduces the final acceptance criteria and either returns one complete correction set or records IN_APP_USER_GUIDE_PROJECT_COMPLETE. Producer does not continue in this run.
 ```
