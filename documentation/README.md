@@ -26,6 +26,9 @@ The [canonical project plan](project-plan.md) controls authorised work. The [dev
 - [Platform user guide](user-guide.md) — canonical user documentation for the production platform
 - [User guide project plan](user-guide-project-plan.md)
 - [User guide controller journal](user-guide-controller-journal.md)
+- [In-app User Guide agentic project](in-app-user-guide-project-plan.md) — publishes the canonical guide at `/help`
+- [In-app User Guide controller journal](in-app-user-guide-controller-journal.md)
+- [In-app User Guide agentic controller](../automation/in-app-user-guide-agentic-controller.md)
 
 ## Market data and short-term assessment
 
@@ -83,5 +86,7 @@ The first strategy review outcome is `VALIDATE_ROBUSTNESS / continue_testing`. L
 - [Independent task audits](project-audits/)
 - [User guide delivery plan](user-guide-project-plan.md)
 - [User guide controller journal](user-guide-controller-journal.md)
+- [In-app User Guide delivery plan](in-app-user-guide-project-plan.md)
+- [In-app User Guide controller journal](in-app-user-guide-controller-journal.md)
 
 Audit records and completed plan entries are retained as durable evidence. They are not current-work instructions.
