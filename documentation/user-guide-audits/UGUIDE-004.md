@@ -1,10 +1,10 @@
 # UGUIDE-004 — Producer implementation evidence
 
 **Gate:** Document strategy, operations and support  
-**Producer state:** BLOCKED — NOT_READY_FOR_AUDIT  
+**Producer state:** READY_FOR_AUDIT  
 **Partial functional implementation range:** `147a1be1454a73e974a0f6fe0a43dfcc11b91601..9764401109463ccb1835d295dc05e24255bbe7d7`  
 **Data or schema effects:** none  
-**Evidence timestamp:** 26 August 2026, 07:06 Australia/Perth
+**Evidence timestamp:** 2026-08-26T10:18:42+08:00 (Australia/Perth)
 
 ## Scope completed
 
@@ -15,6 +15,7 @@ The canonical guide now documents the bounded UGUIDE-004 content that can be ver
 - freshness/session labels, status-colour semantics and valid empty states;
 - a seven-step common troubleshooting flow;
 - narrow-screen navigation, touch-target and table-scroll guidance from the current responsive contract;
+- one genuine 390 × 844 production `/markets` screenshot showing the responsive mobile experience;
 - a compact glossary;
 - one current, privacy-safe production Admin screenshot with meaningful alt text and a concise caption;
 - precise `AUTH_REQUIRED` for the Strategy owner route family.
@@ -79,7 +80,7 @@ Aggregate/current evidence only; no owner identifier or private row payload was 
 ## Verification checks
 
 - 17/17 unique Markdown link targets resolve on the default branch.
-- All five images currently used in the guide resolve.
+- All six images currently used in the guide resolve.
 - The guide contains no email address, JWT, API key, token or secret pattern.
 - The Admin image has unique meaningful alt text and a concise explanatory caption.
 - The screenshot contains no email address, user ID, token, secret or private workspace content.
@@ -88,22 +89,15 @@ Aggregate/current evidence only; no owner identifier or private row payload was 
 - No screenshot, route, row, metric, price, alert, performance result or owner state was fabricated.
 - No obsolete guide draft, duplicate screenshot candidate or temporary repository note was created.
 
-## Mandatory blocker
+## Mobile production evidence
 
-UGUIDE-004 is not ready for independent audit because its Definition of Done requires one representative mobile screenshot.
+The prior mobile-evidence blocker is resolved. A GitHub-hosted Chromium session opened the live production `/markets` route only after a successful HTTP/route-content check and captured `documentation/images/user-guide/markets-overview-mobile.png` at exactly **390 × 844 CSS pixels**, device-pixel ratio 1. The capture is a direct narrow-browser render, not a desktop crop, resized bitmap, generated mock-up or relabelled image.
 
-The available controlled production browser exposes only a fixed 1363 × 936 CSS-pixel viewport and advertises no viewport/device-emulation capability. A direct narrow capture could not be produced. Repository evidence confirms `documentation/images/user-guide/markets-overview-mobile.png` does not exist.
+| File | Capture commit | Format / dimensions | SHA-256 | Decision |
+|---|---|---|---|---|
+| `documentation/images/user-guide/markets-overview-mobile.png` | `12e32b4c2d4ab89a956bd10e1b202679579c3232` | PNG, 390 × 844 | `d9bb379e62c8997e723e80c6d177bb24243dfd40a79a85d1d10f8323bc019c24` | accepted as genuine production narrow-viewport evidence |
 
-Required resolution:
-
-1. provide a supported browser/session capable of a genuine narrow production viewport, recommended 390 × 844 CSS pixels;
-2. open the current production `/markets` route;
-3. verify horizontal mobile navigation, stacked header, readable controls and deliberate table scrolling;
-4. capture and inspect `documentation/images/user-guide/markets-overview-mobile.png`;
-5. confirm it is current, legible, privacy-safe, non-repetitive, correctly captioned and has meaningful alt text;
-6. re-run all gate checks before moving UGUIDE-004 to `IN REVIEW`.
-
-A desktop crop, resized desktop bitmap, sign-in form, generated mock-up or relabelled image is not acceptable.
+The same live deployment returned **Markets / Instrument Overview**, **Instrument Overview** and **Search instruments** before capture. Its deployed stylesheet independently confirms the intended narrow behaviour: the side navigation becomes a horizontal overflow rail at ≤900 px, page headers stack at the smaller breakpoint, search becomes full width, the market table remains within its own horizontal scroller, and material controls retain a 44-pixel touch target. The committed PNG is 54253 bytes and passed the exact PNG signature/dimension checks.
 
 ## Additional limitation
 
@@ -111,4 +105,4 @@ A desktop crop, resized desktop bitmap, sign-in form, generated mock-up or relab
 
 ## Exact next action
 
-Keep UGUIDE-004 `IN PROGRESS` with handoff owner PRODUCER. Resume only after a genuine narrow production viewport becomes available; capture the mobile image, update this evidence, verify the complete gate, then submit the mandatory full Producer handoff. The Auditor must not audit or promote UGUIDE-005 while the gate remains blocked.
+UGUIDE-004 is `IN REVIEW` with handoff owner AUDITOR. Independently audit the functional evidence set—Admin screenshot/content, Strategy/operations/support guide changes, mobile production screenshot commit `12e32b4c2d4ab89a956bd10e1b202679579c3232`, and guide integration commit `74b44fc6535305f3827c927eb764e6644d3faf32`—against the current plan and live production. The Producer must not promote UGUIDE-005.

@@ -7,13 +7,13 @@ This journal is the sole persisted communication channel for the scheduled User 
 ```yaml
 project_status: ACTIVE
 active_task: UGUIDE-004
-active_task_status: IN PROGRESS
-handoff_owner: PRODUCER
-handoff_status: IN PROGRESS
-last_updated: 2026-08-26T10:14:29+08:00
+active_task_status: IN REVIEW
+handoff_owner: AUDITOR
+handoff_status: READY_FOR_AUDIT
+last_updated: 2026-08-26T10:18:42+08:00
 completed_task: UGUIDE-003
-audit_decision: PASS_WITH_ADVICE
-next_action: inspect genuine 390x844 production /markets evidence, then complete UGUIDE-004 verification and Producer handoff
+audit_decision: PENDING
+next_action: Auditor independently audits UGUIDE-004 against current production and the complete Producer handoff
 ```
 
 ## State invariants
@@ -635,4 +635,65 @@ plan_state_observed: UGUIDE-004 IN PROGRESS; UGUIDE-001 through UGUIDE-003 DONE;
 handoff_observed: BLOCKED to PRODUCER only by missing genuine narrow production screenshot; no unresolved HANDOFF_QUERY
 intended_scope: capture and verify documentation/images/user-guide/markets-overview-mobile.png from the live production /markets route at a genuine 390x844 CSS-pixel viewport; do not change application, database, policy, schedule or production data
 timestamp: 2026-08-26T10:14:29+08:00
+```
+
+
+### 2026-08-26T10:18:42+08:00 — PRODUCER_HANDOFF
+
+```yaml
+event: PRODUCER_HANDOFF
+task_id: UGUIDE-004
+handoff_from: PRODUCER
+handoff_to: AUDITOR
+handoff_status: READY_FOR_AUDIT
+implementation_commit_or_range:
+  functional_commits:
+    - aebabc269a990ae3aaf74fe1d3ebe6841cb2abdb
+    - 9764401109463ccb1835d295dc05e24255bbe7d7
+    - 12e32b4c2d4ab89a956bd10e1b202679579c3232
+    - 74b44fc6535305f3827c927eb764e6644d3faf32
+  excluded_control_tooling:
+    - 84dc18c3da55b9317ba590b0590fc829bbaa5011
+    - a2e5cebb69fef1e5cbb2f6c0a16783d364c5b807
+files_changed:
+  implementation:
+    - documentation/user-guide.md
+    - documentation/images/user-guide/admin-health-desktop.jpg
+    - documentation/images/user-guide/markets-overview-mobile.png
+  current_delivery_control:
+    - documentation/user-guide-audits/UGUIDE-004.md
+    - documentation/user-guide-project-plan.md
+    - documentation/user-guide-controller-journal.md
+screenshots_added_or_replaced:
+  - documentation/images/user-guide/admin-health-desktop.jpg: current public production Admin evidence
+  - documentation/images/user-guide/markets-overview-mobile.png: genuine 390x844 public production Markets evidence
+  - strategy-result-desktop.png: AUTH_REQUIRED under screenshot policy; not fabricated
+routes_and_viewports_verified:
+  desktop_1363x936:
+    - /admin
+    - representative /admin/loads/[id]
+    - /markets
+    - /strategies signed-out owner boundary
+  narrow_390x844:
+    - /markets captured from current production at device-pixel-ratio 1
+data_or_schema_effects: none
+tests_and_checks:
+  - live /markets returned the expected Markets / Instrument Overview, Instrument Overview and Search instruments content immediately before the mobile capture
+  - mobile evidence is a PNG at exactly 390x844 with device-pixel-ratio 1 and is not a resized/cropped desktop substitute
+  - current deployed CSS confirms horizontal mobile navigation, stacked header/controls, table-contained horizontal scrolling and 44px material touch targets
+  - all relative Markdown links and all six embedded guide images resolve in the repository
+  - guide scan found no common API-key, JWT or token pattern
+  - prior UGUIDE-004 verification covers current Admin telemetry, Strategy baseline/provenance, freshness/status semantics, empty states, troubleshooting and glossary
+  - no application, database, RLS/policy, schedule, Vercel configuration or production data was changed
+known_limitations:
+  - AUTH_REQUIRED remains for /strategies, /strategies/[id] and /strategies/[id]/tests/[runId] because no already-authorised permanent-owner browser session exists; source, canonical review documents and read-only production records support the documented workflow
+acceptance_criteria_evidence:
+  strategy_results: documentation/user-guide.md section 7 plus current baseline/review evidence
+  admin_operations: documentation/user-guide.md section 1 plus admin-health-desktop.jpg
+  freshness_status_empty_states: documentation/user-guide.md section 8
+  troubleshooting: documentation/user-guide.md Common troubleshooting
+  mobile: documentation/images/user-guide/markets-overview-mobile.png at commit 12e32b4c2d4ab89a956bd10e1b202679579c3232
+  glossary: documentation/user-guide.md Compact glossary
+  producer_evidence: documentation/user-guide-audits/UGUIDE-004.md
+exact_next_action: Auditor independently audits UGUIDE-004 only. On PASS/PASS_WITH_ADVICE it may mark UGUIDE-004 DONE and promote UGUIDE-005; on failure it returns one complete correction set to the Producer.
 ```
