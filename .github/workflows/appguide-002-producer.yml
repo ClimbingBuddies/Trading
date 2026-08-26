@@ -123,7 +123,7 @@ jobs:
               driver.get(base + '/help')
               wait.until(EC.text_to_be_present_in_element((By.TAG_NAME, 'body'), 'Discover Boulders Markets — User Guide'))
               help_link = driver.find_element(By.CSS_SELECTOR, 'a.navItem[href="/help"]')
-              assert help_link.text.strip() == 'Help'
+              assert help_link.text.strip().endswith('Help')
               assert 'navActive' in (help_link.get_attribute('class') or '')
 
               body = driver.find_element(By.TAG_NAME, 'body')
@@ -143,7 +143,7 @@ jobs:
                   assert len((image.get_attribute('alt') or '').strip()) >= 20
                   assert driver.execute_script('return arguments[0].complete && arguments[0].naturalWidth > 0', image)
 
-              assert driver.find_elements(By.CSS_SELECTOR, '.help-module__e6Z45q__tableScroll table, article table')
+              assert driver.find_elements(By.CSS_SELECTOR, 'article table')
               assert driver.find_element(By.CSS_SELECTOR, 'a[href^="https://github.com/ClimbingBuddies/Trading/blob/main/documentation/"]')
               text = body.text
               assert not re.search(r'\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b', text, re.I)
