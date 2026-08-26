@@ -1,0 +1,197 @@
+.helpPage {
+  width: 100%;
+  padding: 22px 24px 48px;
+}
+
+.article {
+  width: min(1080px, 100%);
+  margin: 0 auto;
+  padding: clamp(22px, 4vw, 48px);
+  border: 1px solid var(--theme-border);
+  border-radius: 12px;
+  background: var(--theme-panel);
+  color: var(--theme-text);
+  box-shadow: 0 18px 45px color-mix(in srgb, var(--theme-nav) 22%, transparent);
+}
+
+.article h1,
+.article h2,
+.article h3,
+.article h4 {
+  color: var(--theme-text);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  scroll-margin-top: 24px;
+}
+
+.article h1 {
+  margin: 0 0 24px;
+  font-size: clamp(28px, 4vw, 40px);
+}
+
+.article h2 {
+  margin: 42px 0 14px;
+  padding-top: 8px;
+  border-top: 1px solid var(--theme-border-soft);
+  font-size: clamp(21px, 3vw, 28px);
+}
+
+.article h3 {
+  margin: 28px 0 10px;
+  font-size: 18px;
+}
+
+.article h4 {
+  margin: 24px 0 8px;
+  font-size: 15px;
+}
+
+.article p,
+.article li {
+  font-size: 13px;
+  line-height: 1.72;
+}
+
+.article p {
+  margin: 10px 0 16px;
+}
+
+.article ul,
+.article ol {
+  margin: 10px 0 20px;
+  padding-left: 24px;
+}
+
+.article li + li {
+  margin-top: 6px;
+}
+
+.article strong {
+  color: var(--theme-text);
+}
+
+.article a {
+  color: var(--theme-accent);
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.article a:hover {
+  color: var(--theme-text);
+}
+
+.article a:focus-visible,
+.tableScroll:focus-visible {
+  outline: 3px solid var(--theme-accent);
+  outline-offset: 3px;
+  border-radius: 5px;
+}
+
+.article code {
+  border-radius: 5px;
+  background: var(--theme-panel-2);
+  color: var(--theme-text-secondary);
+  padding: 2px 5px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.92em;
+}
+
+.article pre {
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 14px 16px;
+  border: 1px solid var(--theme-border-soft);
+  border-radius: 8px;
+  background: var(--theme-bg-alt);
+}
+
+.article pre code {
+  padding: 0;
+  background: transparent;
+}
+
+.article blockquote {
+  margin: 18px 0;
+  padding: 2px 0 2px 16px;
+  border-left: 4px solid var(--theme-warning);
+  color: var(--theme-text-secondary);
+}
+
+.article img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  margin: 18px auto 8px;
+  border: 1px solid var(--theme-border);
+  border-radius: 10px;
+  background: var(--theme-panel-2);
+}
+
+.article hr {
+  margin: 32px 0;
+  border: 0;
+  border-top: 1px solid var(--theme-border);
+}
+
+.tableScroll {
+  width: 100%;
+  margin: 16px 0 22px;
+  overflow-x: auto;
+  border: 1px solid var(--theme-border);
+  border-radius: 9px;
+  background: var(--theme-panel-2);
+}
+
+.tableScroll table {
+  width: 100%;
+  min-width: 680px;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.tableScroll th,
+.tableScroll td {
+  padding: 10px 12px;
+  border-top: 1px solid var(--theme-border-soft);
+  white-space: normal;
+  vertical-align: top;
+  line-height: 1.5;
+}
+
+.tableScroll th {
+  background: var(--theme-table-head);
+  color: var(--theme-muted);
+  font-size: 10px;
+}
+
+.tableScroll tbody tr:hover {
+  background: var(--theme-row-hover);
+}
+
+@media (max-width: 720px) {
+  .helpPage {
+    padding: 12px 10px 32px;
+  }
+
+  .article {
+    padding: 20px 16px 30px;
+    border-radius: 9px;
+  }
+
+  .article h2 {
+    margin-top: 34px;
+  }
+
+  .article p,
+  .article li {
+    font-size: 14px;
+  }
+
+  .tableScroll {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
