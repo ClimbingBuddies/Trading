@@ -1,0 +1,55 @@
+name: APPGUIDE-002 Producer handoff
+
+'on':
+  push:
+    paths:
+      - .github/workflows/appguide-002-handoff.yml
+
+permissions:
+  contents: write
+
+jobs:
+  handoff:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Persist final Producer handoff
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from datetime import datetime
+          from pathlib import Path
+          from zoneinfo import ZoneInfo
+
+          now = datetime.now(ZoneInfo('Australia/Perth')).isoformat(timespec='seconds')
+          plan_path = Path('documentation/in-app-user-guide-project-plan.md')
+          journal_path = Path('documentation/in-app-user-guide-controller-journal.md')
+          plan = plan_path.read_text()
+          journal = journal_path.read_text()
+
+          old_gate = '| APPGUIDE-002 | **NEXT** | Navigation and production completion |'
+          new_gate = '| APPGUIDE-002 | **IN REVIEW** | Navigation and production completion |'
+          assert old_gate in plan
+          plan = plan.replace(old_gate, new_gate, 1)
+
+          heading = '## Current controller handoff'
+          assert heading in plan
+          plan = plan[:plan.index(heading)] + '''## Current controller handoff\n\n```yaml\ntask_id: APPGUIDE-002\nhandoff_owner: AUDITOR\nhandoff_status: READY_FOR_AUDIT\ncurrent_status: IN REVIEW\nproject_status: ACTIVE\ncompleted_task: APPGUIDE-001\naudit_decision: PENDING\nimplementation_commit: bed0f674f6b317f7d13390d5f262d1e9b8b290f6\nproducer_evidence_commit: 78f16592c2d0db3542d064033266033ba59e5850\nlocal_producer_qa: GitHub Actions run 32935199838 / job 98074993878 PASS\nproduction_deployment: dpl_EKWjsb1AGoiU95rcdE5WmaETucf1\nproduction_browser_evidence: GitHub Actions run 32935393876 / job 98075534280 PASS\ndata_or_schema_effects: none\nknown_limitations: none blocking; authenticated-owner screenshots remain governed by the completed canonical guide's AUTH_REQUIRED policy and are not part of this publication gate\nnext_action: Auditor independently audits APPGUIDE-002 final navigation and production completion; only Auditor may mark this gate DONE and record IN_APP_USER_GUIDE_PROJECT_COMPLETE\n```\n'''
+          plan_path.write_text(plan)
+
+          old_state = '''project_status: ACTIVE\nactive_task: APPGUIDE-002\nactive_task_status: IN PROGRESS\nhandoff_owner: PRODUCER\nhandoff_status: IN PROGRESS\ncompleted_task: APPGUIDE-001\naudit_decision: PASS\nnext_action: Producer implements and verifies APPGUIDE-002 navigation and production completion only, then hands it to Auditor'''
+          new_state = '''project_status: ACTIVE\nactive_task: APPGUIDE-002\nactive_task_status: IN REVIEW\nhandoff_owner: AUDITOR\nhandoff_status: READY_FOR_AUDIT\ncompleted_task: APPGUIDE-001\naudit_decision: PENDING\nnext_action: Auditor independently audits APPGUIDE-002 final navigation and production completion only'''
+          assert old_state in journal
+          journal = journal.replace(old_state, new_state, 1)
+          journal += f'''\n\n### {now} — PRODUCER_HANDOFF\n\n```yaml\ntask_id: APPGUIDE-002\nhandoff_from: PRODUCER\nhandoff_to: AUDITOR\nhandoff_status: READY_FOR_AUDIT\nimplementation_commit_or_range: bed0f674f6b317f7d13390d5f262d1e9b8b290f6\nfiles_changed:\n  - components/AppNav.tsx\n  - documentation/README.md\n  - documentation/frontend-route-map.md\n  - documentation/user-guide.md\n  - tests/in-app-user-guide.test.mjs\ngenerated_or_build_only_artifacts:\n  - public/generated/user-guide/* remains generated from canonical documentation screenshots and ignored by Git\nroutes_and_viewports_verified:\n  - local production-mode /help at desktop and exactly 390x844\n  - current production /help on deployment dpl_EKWjsb1AGoiU95rcdE5WmaETucf1 at desktop and exactly 390x844\n  - /help#compact-glossary direct heading navigation\ndata_or_schema_effects: none\ntests_and_checks:\n  - npm install --no-package-lock: zero reported vulnerabilities\n  - npm test: 10/10 PASS\n  - npm run check:palette: PASS\n  - npm run build: PASS; /help static prerender and six canonical screenshot assets published\n  - local browser QA: run 32935199838 / job 98074993878 PASS\n  - production HTML/alias verification: dpl_EKWjsb1AGoiU95rcdE5WmaETucf1 shows active Help navigation and canonical in-app wording\n  - production browser QA: run 32935393876 / job 98075534280 PASS\n  - privacy/secret-pattern checks: PASS\n  - temporary APPGUIDE-002 workflows removed before handoff\ndocumentation_impact:\n  - canonical user guide minimally identifies its in-app /help rendering route and Help access row\n  - documentation/README.md records the canonical guide is rendered in-app\n  - documentation/frontend-route-map.md records the primary Help navigation contract\nsingle_source_of_truth_evidence:\n  - documentation/user-guide.md remains the only editable guide prose source\n  - APPGUIDE-002 did not change app/help/page.tsx, lib/user-guide.ts or the canonical screenshot generation pipeline\n  - Help navigation only links to /help; it does not duplicate guide prose\nknown_limitations:\n  - no blocking limitations\n  - owner-only Watchlists/Alerts/Strategy screenshots remain under the completed canonical guide's AUTH_REQUIRED policy; this gate does not alter that policy\nacceptance_criteria_evidence:\n  functional_commit: bed0f674f6b317f7d13390d5f262d1e9b8b290f6\n  producer_evidence: documentation/in-app-user-guide-audits/APPGUIDE-002.md\n  production_deployment: dpl_EKWjsb1AGoiU95rcdE5WmaETucf1\n  local_browser_run: 32935199838 / 98074993878\n  production_browser_run: 32935393876 / 98075534280\n  mobile_metrics: document 375px; article 355px; Help target 44px; nav 350/818px client/scroll; table 319/680px client/scroll; image 321px at 390x844\nexact_next_action: Auditor retrieves the current plan, journal, APPGUIDE-002 evidence record, functional commit and current production fresh; independently reproduces the final acceptance criteria and either returns one complete correction set or records IN_APP_USER_GUIDE_PROJECT_COMPLETE. Producer does not continue in this run.\n```\n'''
+          journal_path.write_text(journal)
+          PY
+          git config user.name 'ClimbingBuddies In-App Guide Producer'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add documentation/in-app-user-guide-project-plan.md documentation/in-app-user-guide-controller-journal.md
+          git commit -m 'docs(APPGUIDE-002): hand final gate to Auditor'
+          git push origin HEAD:main
