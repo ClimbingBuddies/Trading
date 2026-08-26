@@ -63,7 +63,7 @@ assert 'max-width: 100%' in css
 assert not re.search(r'#[0-9a-fA-F]{3,8}\b|(?:rgb|rgba|hsl|hsla)\s*\(', css), 'raw colour literal in help CSS'
 
 # Route documentation.
-assert '| `/help` | Canonical in-app user guide' in route_map
+assert '| `/help` | Render the canonical Trading Platform User Guide inside the app |' in route_map
 assert '`documentation/user-guide.md`' in route_map
 assert 'Public read-only' in route_map
 
