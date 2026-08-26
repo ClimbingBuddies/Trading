@@ -11,6 +11,7 @@ const items = [
   { href: '/watchlists', label: 'Watchlists', icon: '☆' },
   { href: '/alerts', label: 'Alerts', icon: '!' },
   { href: '/strategies', label: 'Strategies', icon: '⬡' },
+  { href: '/help', label: 'Help', icon: '?' },
 ]
 
 export default function AppNav() {

@@ -43,6 +43,7 @@ The frontend is a presentation and owner-workspace layer over Supabase. It does 
 - Missing data stays explicit; the frontend must not infer or fabricate values.
 - Owner workspaces resolve Supabase Auth before reading or mutating private rows.
 - `/help` renders repository-authored Markdown from `documentation/user-guide.md`; generated public screenshot copies are build artifacts and are not a second editable guide source.
+- Primary navigation exposes **Help** at `/help` using the same link and active-state behaviour as the other workspaces.
 
 ## Data and security contract
 

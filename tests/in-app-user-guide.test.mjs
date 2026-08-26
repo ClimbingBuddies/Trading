@@ -8,6 +8,8 @@ import test from 'node:test'
 const root = process.cwd()
 const guidePath = join(root, 'documentation', 'user-guide.md')
 const pagePath = join(root, 'app', 'help', 'page.tsx')
+const appNavPath = join(root, 'components', 'AppNav.tsx')
+const documentationIndexPath = join(root, 'documentation', 'README.md')
 const loaderPath = join(root, 'lib', 'user-guide.ts')
 const routeMapPath = join(root, 'documentation', 'frontend-route-map.md')
 const packagePath = join(root, 'package.json')
@@ -15,6 +17,8 @@ const generatedRoot = join(root, 'public', 'generated', 'user-guide')
 
 const guide = readFileSync(guidePath, 'utf8')
 const page = readFileSync(pagePath, 'utf8')
+const appNav = readFileSync(appNavPath, 'utf8')
+const documentationIndex = readFileSync(documentationIndexPath, 'utf8')
 const loader = readFileSync(loaderPath, 'utf8')
 const routeMap = readFileSync(routeMapPath, 'utf8')
 const packageJson = JSON.parse(readFileSync(packagePath, 'utf8'))
@@ -73,4 +77,14 @@ test('route and build contracts include the public canonical help route', () => 
   assert.equal(packageJson.dependencies['react-markdown'], '^10.1.0')
   assert.equal(packageJson.dependencies['remark-gfm'], '^4.0.1')
   assert.equal(packageJson.dependencies['rehype-slug'], '^6.0.0')
+})
+
+
+test('primary navigation and canonical documentation expose the in-app Help route', () => {
+  assert.match(appNav, /\{ href: '\/help', label: 'Help', icon: '\?' \}/)
+  assert.match(appNav, /pathname === item\.href \|\| pathname\.startsWith\(`\$\{item\.href\}\/`\)/)
+  assert.match(guide, /\*\*In-app Help:\*\* `\/help`/)
+  assert.match(guide, /\| Help \| `\/help` \| Public read-only \| Read this canonical user guide inside the app \|/)
+  assert.match(documentationIndex, /rendered in-app at `\/help`/)
+  assert.match(routeMap, /Primary navigation exposes \*\*Help\*\* at `\/help`/)
 })

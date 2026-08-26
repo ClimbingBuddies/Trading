@@ -1,6 +1,7 @@
 # Discover Boulders Markets — User Guide
 
 **Production:** https://discoverbouldersmarkets.vercel.app  
+**In-app Help:** `/help` — this same canonical guide, rendered inside the app  
 **Audience:** first-time users with general market knowledge  
 **Guide status:** final production user guide; independently audited 26 August 2026  
 **Last production check:** 26 August 2026
@@ -34,8 +35,9 @@ Most research dashboards are public and read-only. Personal monitoring and strat
 | Watchlists | `/watchlists` | Signed-in owner | Maintain private instrument lists |
 | Alerts | `/alerts` | Signed-in owner | Maintain private alert definitions and inspect event history |
 | Strategies | `/strategies` | Signed-in owner | Review private strategy definitions, tests and decision outcomes |
+| Help | `/help` | Public read-only | Read this canonical user guide inside the app |
 
-Opening the production root currently lands on the Admin dashboard. Use the persistent left navigation to move between workspaces.
+Opening the production root currently lands on the Admin dashboard. Use the persistent left navigation to move between workspaces; **Help** opens this same canonical guide at `/help`.
 
 ## Recommended first visit
 

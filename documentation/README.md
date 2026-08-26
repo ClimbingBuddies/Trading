@@ -23,7 +23,7 @@ The [canonical project plan](project-plan.md) controls authorised work. The [dev
 
 ## User guide
 
-- [Platform user guide](user-guide.md) — canonical user documentation for the production platform
+- [Platform user guide](user-guide.md) — canonical user documentation for the production platform; rendered in-app at `/help`
 - [User guide project plan](user-guide-project-plan.md)
 - [User guide controller journal](user-guide-controller-journal.md)
 - [In-app User Guide agentic project](in-app-user-guide-project-plan.md) — publishes the canonical guide at `/help`
