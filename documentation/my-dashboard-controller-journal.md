@@ -13,8 +13,8 @@
     handoff_owner: PRODUCER
     handoff_status: REWORK_REQUIRED
     owner_review: NONE
-    last_event: AUDIT_REVISE
-    next_action: Producer revises MYDASH-001 against the complete five-item Auditor correction set and returns a new exact candidate for independent audit.
+    last_event: BUILD_ATTEMPT_STARTED
+    next_action: Complete the bounded MYDASH-001 correction set, persist a new exact candidate and return it to the independent Auditor.
 
 ## Gate ledger
 
@@ -117,3 +117,24 @@ Not authorised by this decision:
 - Production schema/data/jobs/UI/deployment effects: none.
 - Handoff: `AUDITOR -> PRODUCER / REWORK_REQUIRED`
 - Exact next action: Producer revises only MYDASH-001 against the complete correction set in the audit record, persists a new candidate identity and returns it for independent audit.
+
+### 27 August 2026 — MYDASH-001_REWORK_BUILD_ATTEMPT_STARTED
+
+- Starting repository commit: `b29b701992d7ef8fc8cd943e4cfa0798bb1144bf`
+- Active gate: `MYDASH-001`
+- Selected role: `PRODUCER`
+- Observed handoff: `IN_PROGRESS / PRODUCER / REWORK_REQUIRED`
+- Bounded scope: the five-item correction set in `documentation/my-dashboard-audits/MYDASH-001.md` only.
+- Production schema/data/jobs/UI/deployment authority: none.
+- Fresh source identities:
+  - controller: `aa7855a2d3f4246ffa4d5808eec12dcd1f313313`
+  - project plan: `9df07b5ed2f85206ad9928e445c15059c447c48b`
+  - opening journal: `c38209b2fa79870a9a0526842f9b2e0477a53394`
+  - contract candidate: `7c649a1188e36992e91e81e4ba7ccecbe8d91ff4`
+  - audit record: `ab68f150519117c8ca177d5cbcb7c776bad14785`
+  - development workflow: `e04dfa048b5b42767db4feb43d86f3738cd3c07c`
+  - platform architecture: `4f9ee606554f14ee3ef4dd2ac6431fc00461e143`
+  - frontend route map: `a57db9b091f90ef6fac58bd9b37000f7f234e3e2`
+  - Supabase data model: `745b0b1c470437fba6427f54da0f354d33f400a0`
+  - watchlist auth model: `38022b972872b15aba150c869524b4b47aee98a5`
+- Exact next action: Revise the contract's observation selection, bps conversion, exact dictionary, recommendation independence/freshness, derived-write authority and quality precedence; change nothing in production.
