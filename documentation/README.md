@@ -55,6 +55,8 @@ The [canonical project plan](project-plan.md) controls authorised work. The [dev
 ## Monitoring and private workspaces
 
 - [My Dashboard agentic project plan](my-dashboard-agentic-project-plan.md) — personal recommendations, watchlists, Opportunities, portfolio health and forward paper-decision feedback
+- [My Dashboard controller journal](my-dashboard-controller-journal.md)
+- [My Dashboard agentic controller](../automation/my-dashboard-agentic-controller.md)
 - [Watchlist access model](security/watchlist-auth-model.md)
 - [Watchlist activation](watchlist-activation.md)
 - [Alert trigger specification](specifications/alert-trigger-specification.md)
