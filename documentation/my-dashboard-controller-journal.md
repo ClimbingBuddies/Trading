@@ -7,21 +7,21 @@
 
 ## Current state
 
-    project_status: IN_PROGRESS
+    project_status: BLOCKED
     active_gate: MYDASH-002
-    active_gate_status: IN_PROGRESS
-    handoff_owner: PRODUCER
-    handoff_status: BUILD_ATTEMPT_STARTED
+    active_gate_status: BLOCKED
+    handoff_owner: TRAVIS
+    handoff_status: PRODUCTION_PROMOTION_REQUIRED
     owner_review: NONE
-    last_event: MYDASH-002_BUILD_ATTEMPT_STARTED
-    next_action: Producer implements the audited MYDASH-002 private preferences/interests foundation and authenticated dashboard shell, then hands the exact candidate to the independent Auditor.
+    last_event: MYDASH-002_PRODUCER_BLOCKED_ON_PRODUCTION_PROMOTION
+    next_action: Travis explicitly authorises merge and production promotion of candidate 3692e12a51868497b4e346ffdab167ba7cb5f156; Producer then completes deployed UI verification before Auditor handoff.
 
 ## Gate ledger
 
 | Gate | Status | Owner | Review requirement |
 |---|---|---|---|
 | MYDASH-001 | DONE | NONE | Owner Review A — APPROVED 27 August 2026 |
-| MYDASH-002 | NEXT | PRODUCER | Independent audit |
+| MYDASH-002 | BLOCKED | TRAVIS | Production promotion, then independent audit |
 | MYDASH-003 | PLANNED | NONE | Independent audit |
 | MYDASH-004 | PLANNED | NONE | Independent audit, then Owner Review B |
 | MYDASH-005 | PLANNED | NONE | Independent audit |
@@ -246,3 +246,17 @@ Not authorised by this decision:
   - Supabase schema fingerprint: `72c2e0831eda483db9e82eba581d09e6` captured `2026-08-27 14:05:02.729086+00`
   - latest production deployment: `dpl_6JijjEs8mgqvR42nug25DwwBLnvy` / commit `f0c7a5e4d6cd52d3371d1102f8fb49f5b0d91d1c` / `READY`
 - Exact next action: Implement only MYDASH-002, apply and commit one aligned migration, verify schema/RLS/UI evidence, persist the Producer handoff and stop for independent audit.
+
+### 27 August 2026 — MYDASH-002_PRODUCER_BLOCKED_ON_PRODUCTION_PROMOTION
+
+- Role performed: `PRODUCER` only.
+- Functional candidate: branch `codex/mydash-002-secure-foundation`, commit `3692e12a51868497b4e346ffdab167ba7cb5f156`.
+- Producer evidence: `documentation/my-dashboard-audits/MYDASH-002.md`.
+- Production schema effects: migrations `20260827141424_my_dashboard_secure_personal_foundation_v1` and `20260827141836_my_dashboard_interest_fk_indexes` applied successfully.
+- Post-migration schema fingerprint: `0a543ca0a5c02f37dde674dd986b9908`.
+- Privacy evidence: owner A read own row; owner B could neither read nor write owner A's row; anonymous read returned zero and anonymous write failed; all fixtures rolled back.
+- Local checks: `npm test` 12/12 passed; `npm run build` passed; `git diff --check` passed.
+- Preview evidence: deployment `dpl_EcbDxNqcyougutshNyPqY3AynzqR` is `READY`; authorised browser access reached the route, which entered the error boundary because Preview lacks the two public Supabase frontend variables.
+- Exact blocker: repository safety policy rejected direct publication of the multi-file candidate to `main`; production remains on `abc0f4d4fd879b781dd9c84d3aed8396f67cd355`. Preview was not connected to production Supabase because that would broaden the unaudited environment boundary.
+- Gate decision: remain `BLOCKED`; do not assign the independent Auditor because deployed desktop, 390 × 844, keyboard and authenticated-state evidence is incomplete.
+- Exact next action: Travis explicitly authorises merge/production promotion of candidate `3692e12a51868497b4e346ffdab167ba7cb5f156`; Producer verifies the deployed UI without changing the candidate, persists a complete `READY_FOR_AUDIT` handoff and stops.
