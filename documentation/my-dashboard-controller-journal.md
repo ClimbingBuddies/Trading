@@ -13,7 +13,7 @@
     handoff_owner: PRODUCER
     handoff_status: AUTHORISED
     owner_review: NONE
-    last_event: PLAN_APPROVED_AND_CONTROLLER_BOOTSTRAPPED
+    last_event: CONTROLLER_SCHEDULED
     next_action: Run one Producer iteration for MYDASH-001 only. Produce the product, data, security and calculation contract without production schema, data or UI changes.
 
 ## Gate ledger
@@ -59,3 +59,13 @@ Not authorised by this decision:
 - Production effects: none
 - Schema/data effects: none
 - Exact next action: Produce the complete MYDASH-001 contract, persist evidence and hand it to the independent Auditor.
+
+### 27 August 2026 — CONTROLLER_SCHEDULED
+
+- Task: My Dashboard Controller
+- State: enabled
+- Timing: every two hours on a flexible Australia/Perth schedule
+- First planned window: around 12:00 pm Australia/Perth on 27 August 2026
+- Execution contract: one bounded role and one active gate per run
+- First permitted work: MYDASH-001 Producer contract only
+- Production schema/UI authority before Owner Review A: none
