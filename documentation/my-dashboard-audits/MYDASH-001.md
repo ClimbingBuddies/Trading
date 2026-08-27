@@ -2,7 +2,7 @@
 
 **Gate:** MYDASH-001  
 **Role:** Producer  
-**Record status:** PRODUCER REVISED CANDIDATE — AWAITING INDEPENDENT RE-AUDIT  
+**Record status:** SECOND AUDIT REVISE — RETURNED TO PRODUCER  
 **Candidate:** [My Dashboard contract v1](../specifications/my-dashboard-contract-v1.md)  
 **Date:** 27 August 2026
 
@@ -214,3 +214,47 @@ Fresh read-only verification at `2026-08-27 06:02:04.335310+00` confirmed:
     known_limitations: No implementation exists; corporate-action total-return semantics remain unverified; no historical decisions, provider fallback, FX carry-forward or broker capability is authorised.
     acceptance_criteria_evidence: Revised contract sections 1–14, especially sections 3, 5, 6, 9 and 10.
     exact_next_action: Independent Auditor reviews revised candidate eb145922543a065e48b3fd4daf324dc989f9de1d against the persisted five-item correction set and either routes a pass to Owner Review A or returns one complete correction set.
+
+## Independent Auditor re-audit — REVISE
+
+**Audited revised candidate:** `eb145922543a065e48b3fd4daf324dc989f9de1d`  
+**Auditor opening journal:** `70be89259b1cbb5df6be2097b0a8c6a2b0bdaafd`  
+**Production observation time:** `2026-08-27 07:02:17.713272+00`  
+**Decision:** `REVISE`
+
+The five prior correction areas were independently rechecked. Canonical Tiingo selection, distinct session counting, exact FX/benchmark rules, bps conversion, the exact table/RPC inventory, evidence-dependency collapse, freshness windows and quality precedence now satisfy the prior correction set. The NVDA 5/20/60 sample reproduced byte-equivalent source values and no production personal tables exist.
+
+### Remaining complete correction set
+
+1. **P0 — Resolve decision immutability versus mutable status.** The dictionary stores `personal_decisions.decision_status` with transitions from `PENDING_ENTRY` to `OPEN`, `COMPLETE`, `CANCELLED` or `ERROR`, while the same contract withholds UPDATE and says internal writers may INSERT only. Choose one exact model:
+   - preferred: remove mutable `decision_status` and derive lifecycle from immutable decision events and return snapshots; or
+   - explicitly permit a named internal transition helper to update only `decision_status`, with an allowed transition graph and trigger/constraint evidence that immutable clock, source, action, instrument and assumption fields cannot change.
+   
+   Also replace “reruns upsert” with the exact idempotence action: `INSERT ... ON CONFLICT DO NOTHING` for immutable snapshots, or explicitly name any narrowly permitted update fields. The result must preserve immutable AI/user clocks and source snapshots.
+
+2. **P0 — Correct the UUID default rule.** “All UUID primary keys default to gen_random_uuid()” conflicts with `user_market_preferences.owner_user_id` being the natural PK/FK. State that generated surrogate `id` primary keys default to `gen_random_uuid()`, while `owner_user_id` never receives a generated default and is derived from the permanent authenticated owner.
+
+No other correction from this audit is outstanding. JSON payload schemas may be finalised in their implementing gates under the named methodology versions, provided they do not weaken the exact relational, ownership or calculation invariants already approved.
+
+### Re-audit evidence
+
+- Active Tiingo provider count: one.
+- Proposed personal table count: zero.
+- Daily observations: 90,318.
+- NVDA entry 6894 and exits 6899/6914/6954 reproduced price returns 8.4404132023%, 13.0561854371%, -4.2529604434%.
+- With 10 bps fee and 5 bps slippage per side, net returns reproduced as 8.1154712603%, 12.7174123232%, -4.5398666628%.
+- Existing Watchlist RLS still enforces permanent-user and owner/parent-owner access.
+- Production schema/data/jobs/UI/deployment effects: none; browser/Vercel checks remain not applicable to this contract-only gate.
+
+### Auditor handoff
+
+    task_id: MYDASH-001
+    handoff_from: AUDITOR
+    handoff_to: PRODUCER
+    handoff_status: REWORK_REQUIRED
+    audit_decision: REVISE
+    audited_candidate: eb145922543a065e48b3fd4daf324dc989f9de1d
+    accepted_corrections: canonical observations; bps conversion; exact relational dictionary/RPC authority; recommendation independence/freshness; quality precedence
+    remaining_correction_set: decision lifecycle immutability/idempotence; UUID natural-key default exception
+    production_effects: None
+    exact_next_action: Producer revises only the two remaining contract inconsistencies, preserves every accepted clause, writes a new exact candidate identity and returns it for independent audit.
