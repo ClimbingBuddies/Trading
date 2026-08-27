@@ -9,12 +9,12 @@
 
     project_status: IN_PROGRESS
     active_gate: MYDASH-002
-    active_gate_status: NEXT
+    active_gate_status: IN_PROGRESS
     handoff_owner: PRODUCER
-    handoff_status: AUTHORISED
+    handoff_status: BUILD_ATTEMPT_STARTED
     owner_review: NONE
-    last_event: OWNER_REVIEW_A_APPROVED
-    next_action: Controller performs one bounded Producer iteration on MYDASH-002, beginning with fresh GitHub, Supabase and production-state verification.
+    last_event: MYDASH-002_BUILD_ATTEMPT_STARTED
+    next_action: Producer implements the audited MYDASH-002 private preferences/interests foundation and authenticated dashboard shell, then hands the exact candidate to the independent Auditor.
 
 ## Gate ledger
 
@@ -223,3 +223,26 @@ Not authorised by this decision:
 - Handoff: `OWNER -> PRODUCER / MYDASH-002 NEXT / AUTHORISED`.
 - Exact next action: On the next controller invocation, retrieve all MYDASH-002 sources and production truth fresh, record `BUILD_ATTEMPT_STARTED`, perform one bounded Producer iteration and hand only that gate to the independent Auditor.
 
+
+
+### 27 August 2026 — MYDASH-002_BUILD_ATTEMPT_STARTED
+
+- Starting repository commit: `f0c7a5e4d6cd52d3371d1102f8fb49f5b0d91d1c`
+- Active gate: `MYDASH-002`
+- Selected role: `PRODUCER`
+- Observed handoff: `NEXT / PRODUCER / AUTHORISED`
+- Bounded scope: approved `user_market_preferences` and `user_market_interests` schema/RLS/grants, authenticated `/my-dashboard` shell, primary navigation and Today real-data states only.
+- Preserved boundaries: permanent-user ownership, explicit anonymous denial, no service-role browser access, assessment independence, no fabricated values and no live trading or broker capability.
+- Source identities:
+  - controller blob: `aa7855a2d3f4246ffa4d5808eec12dcd1f313313`
+  - project-plan blob: `9df07b5ed2f85206ad9928e445c15059c447c48b`
+  - opening journal blob: `a9580c4654ae2404d675020b3194046738c4d0d2`
+  - approved contract blob: `bd1d1556015b12967cb57c39f3922f92019a0cc4`
+  - MYDASH-001 audit blob: `d64132edee811304b6ff47823edaa1730facf2f9`
+  - development-workflow blob: `e04dfa048b5b42767db4feb43d86f3738cd3c07c`
+  - platform-architecture blob: `4f9ee606554f14ee3ef4dd2ac6431fc00461e143`
+  - frontend-route-map blob: `a57db9b091f90ef6fac58bd9b37000f7f234e3e2`
+  - Supabase-data-model blob: `745b0b1c470437fba6427f54da0f354d33f400a0`
+  - Supabase schema fingerprint: `72c2e0831eda483db9e82eba581d09e6` captured `2026-08-27 14:05:02.729086+00`
+  - latest production deployment: `dpl_6JijjEs8mgqvR42nug25DwwBLnvy` / commit `f0c7a5e4d6cd52d3371d1102f8fb49f5b0d91d1c` / `READY`
+- Exact next action: Implement only MYDASH-002, apply and commit one aligned migration, verify schema/RLS/UI evidence, persist the Producer handoff and stop for independent audit.
