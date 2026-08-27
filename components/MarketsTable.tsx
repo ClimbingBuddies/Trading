@@ -157,7 +157,7 @@ export default function MarketsTable({ rows }: { rows: MarketRow[] }) {
           </div>
           <div className="filterTabs" aria-label="Asset class filter">
           {filters.map((filter) => {
-            const count = filter.key === 'all' ? rows.length : rows.filter((row) => row.asset_type === filter.key).length
+            const count = filter.key === 'all' ? sourceRows.length : sourceRows.filter((row) => row.asset_type === filter.key).length
             return (
               <button
                 className={asset === filter.key ? 'filterTab filterTabActive' : 'filterTab'}
@@ -173,7 +173,7 @@ export default function MarketsTable({ rows }: { rows: MarketRow[] }) {
         </div>
         <label className="searchBox">
           <span className="srOnly">Search instruments</span>
-          <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search instruments…" />
+          <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder={view === 'watchlist' ? 'Search watchlist…' : 'Search instruments…'} />
         </label>
       </div>
 
