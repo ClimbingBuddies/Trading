@@ -9,18 +9,18 @@
 
     project_status: IN_PROGRESS
     active_gate: MYDASH-001
-    active_gate_status: IN_REVIEW
-    handoff_owner: AUDITOR
-    handoff_status: READY_FOR_AUDIT
-    owner_review: NONE
-    last_event: PRODUCER_HANDOFF_COMPLETE
-    next_action: Independent Auditor reviews final corrected MYDASH-001 candidate 9be18c0dff46ff959521810461b37995bf49aec5.
+    active_gate_status: DONE
+    handoff_owner: OWNER
+    handoff_status: OWNER_REVIEW
+    owner_review: OWNER_REVIEW_A
+    last_event: AUDIT_PASS
+    next_action: Travis reviews the exact MYDASH-001 contract package and chooses APPROVE, RETAIN, or REQUEST_BOUNDED_REVISION.
 
 ## Gate ledger
 
 | Gate | Status | Owner | Review requirement |
 |---|---|---|---|
-| MYDASH-001 | IN_REVIEW | AUDITOR | Independent audit, then Owner Review A |
+| MYDASH-001 | DONE | OWNER | Owner Review A |
 | MYDASH-002 | PLANNED | NONE | Independent audit |
 | MYDASH-003 | PLANNED | NONE | Independent audit |
 | MYDASH-004 | PLANNED | NONE | Independent audit, then Owner Review B |
@@ -189,3 +189,23 @@ Not authorised by this decision:
 - Production schema/data/jobs/UI/deployment effects: none.
 - Handoff: `PRODUCER -> AUDITOR / READY_FOR_AUDIT`
 - Exact next action: Independent Auditor reviews exact candidate `9be18c0dff46ff959521810461b37995bf49aec5` and either routes a pass to Owner Review A or returns one complete correction set.
+
+
+### 27 August 2026 — MYDASH-001_FINAL_AUDIT_PASS_AND_OWNER_REVIEW_A
+
+- Role performed: `AUDITOR` only.
+- Audited final candidate: `9be18c0dff46ff959521810461b37995bf49aec5`.
+- Audit decision: `PASS`.
+- Audit record: `documentation/my-dashboard-audits/MYDASH-001.md`.
+- Audit commit: `261835006f8b8dccde7c667e345629a7eb0ddceb`.
+- Opening journal identity: `a2b51fdb8becee08e5fbf19e73f5274863a0261c`.
+- Contract blob identity: `bd1d1556015b12967cb57c39f3922f92019a0cc4`.
+- Independent Supabase verification: `2026-08-27 09:00:23.876622+00`; three permanent users, zero anonymous users, zero production My Dashboard personal tables, one active Tiingo provider and eight Watchlist policies with explicit anonymous rejection.
+- Independent formula sample: canonical NVDA observation `6894` with 5/20/60-session exits `6899`, `6914`, `6954`; net returns after 10 bps fee and 5 bps slippage per side reproduced as 8.1154712603%, 12.7174123232% and -4.5398666628%.
+- Final corrections verified: no mutable `decision_status`; lifecycle derived from immutable evidence; conflict-safe `INSERT ... ON CONFLICT DO NOTHING`; authenticated owner natural key has no generated UUID default.
+- Previously accepted provisions preserved: owner-scoped RLS; recommendation independence/freshness; exact provider/session, FX and benchmark rules; bps conversion; missing-data precedence; immutable separate AI/user clocks; no live trading or historical look-ahead.
+- Production schema/data/jobs/UI/deployment effects: none.
+- Owner review: `OWNER_REVIEW_A`.
+- Review package: exact contract, final audit record and this journal.
+- Owner choices: `APPROVE` authorises MYDASH-002; `RETAIN` keeps the project paused here; `REQUEST_BOUNDED_REVISION` must name the exact contract changes.
+- Exact next action: Await Travis's explicit Owner Review A decision. MYDASH-002 remains `PLANNED / NONE` and no implementation may begin before `APPROVE`.
