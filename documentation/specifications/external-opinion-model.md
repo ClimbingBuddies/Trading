@@ -2,7 +2,7 @@
 
 **Task:** RES-001 — Review external opinion model  
 **Specification version:** `external-opinion-v1`  
-**Date:** 24 August 2026  
+**Date:** 27 August 2026  
 **System:** Discover Boulders Markets / Trading  
 **Supabase project:** `glvbqcplgjdfgjyknzsa`
 
@@ -104,7 +104,7 @@ Use the strongest available identity, in this order:
 3. `content_hash`;
 4. when none of the above exists, a deterministic fallback based on source identity + source publication time/date + normalized headline/claim text.
 
-Normalisation removes purely transport/tracking differences without merging genuinely different source documents. RES-002 implements one canonical routine through the approved ingestion helper rather than allowing each collector to invent its own rules.
+Normalisation removes purely transport/tracking differences without merging genuinely different source documents. RES-002 implements one canonical routine through the approved ingestion helper rather than allowing each collector to invent its own rules. The live store additionally enforces a uniqueness guard over `(instrument_id, canonical_source_key, opinion_type, source_published_at)`; when publication time is absent, `external_reference` completes the identity. This preserves separate dated snapshots from dynamic pages while preventing a rewritten representation of the same dated filing from becoming a second observation.
 
 ### Same source in opinion store and direct web research
 
@@ -174,7 +174,7 @@ The external-opinion subsystem defined here is short-term Market research suppor
 
 RES-002 operationalises this contract with:
 
-1. an approved source registry and source-specific collection rules;
+A historical duplicate is never deleted: it is marked `deduplication_status = 'superseded'`, linked to the retained canonical row through `superseded_by_opinion_id`, and excluded from consensus membership. The service-only `external_opinion.resolve_duplicate_v1` helper records the reason and timestamp for this correction.\n\n1. an approved source registry and source-specific collection rules;
 2. deterministic canonical source identity and URL normalisation;
 3. idempotent observation insertion and retry-safe review identity;
 4. preserved publication/observation timestamps and source URLs;
