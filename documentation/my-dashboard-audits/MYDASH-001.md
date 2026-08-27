@@ -2,7 +2,7 @@
 
 **Gate:** MYDASH-001  
 **Role:** Producer  
-**Record status:** PRODUCER FINAL CORRECTED CANDIDATE — AWAITING INDEPENDENT AUDIT  
+**Record status:** INDEPENDENT AUDIT PASS — OWNER REVIEW A  
 **Candidate:** [My Dashboard contract v1](../specifications/my-dashboard-contract-v1.md)  
 **Date:** 27 August 2026
 
@@ -292,3 +292,76 @@ Fresh checks confirmed the exact contract contains no `decision_status`, include
     known_limitations: No implementation exists; the independent Auditor must validate this exact candidate before Owner Review A.
     acceptance_criteria_evidence: Contract sections 3, 8 and 10 plus all previously accepted sections.
     exact_next_action: Independent Auditor reviews exact candidate 9be18c0dff46ff959521810461b37995bf49aec5 and either passes MYDASH-001 to Owner Review A or returns one complete correction set.
+
+
+## Independent Auditor final audit — PASS
+
+**Audited candidate:** `9be18c0dff46ff959521810461b37995bf49aec5`  
+**Auditor opening journal:** `a2b51fdb8becee08e5fbf19e73f5274863a0261c`  
+**Production observation time:** `2026-08-27 09:00:23.876622+00`  
+**Decision:** `PASS — OWNER REVIEW A`
+
+The independent Auditor selected this role once from the persisted beginning-of-run state and reviewed only the exact final corrected candidate. The two remaining migration blockers are resolved: decision lifecycle is derived from immutable events and snapshots with no mutable `decision_status`, snapshot reruns are conflict-safe and non-mutating, and the authenticated owner natural key has no generated UUID default. Every previously accepted contract provision remains intact.
+
+### Fresh source identities
+
+| Source | Blob identity |
+|---|---|
+| automation/my-dashboard-agentic-controller.md | aa7855a2d3f4246ffa4d5808eec12dcd1f313313 |
+| documentation/my-dashboard-agentic-project-plan.md | 9df07b5ed2f85206ad9928e445c15059c447c48b |
+| documentation/my-dashboard-controller-journal.md | a2b51fdb8becee08e5fbf19e73f5274863a0261c |
+| documentation/specifications/my-dashboard-contract-v1.md | bd1d1556015b12967cb57c39f3922f92019a0cc4 |
+| documentation/my-dashboard-audits/MYDASH-001.md | c577bd8e5c8cd9fae6655bb7916d0e9cf0645575 |
+| documentation/development-workflow.md | e04dfa048b5b42767db4feb43d86f3738cd3c07c |
+| documentation/platform-architecture.md | 4f9ee606554f14ee3ef4dd2ac6431fc00461e143 |
+| documentation/frontend-route-map.md | a57db9b091f90ef6fac58bd9b37000f7f234e3e2 |
+| documentation/supabase-data-model.md | 745b0b1c470437fba6427f54da0f354d33f400a0 |
+| documentation/security/watchlist-auth-model.md | 38022b972872b15aba150c869524b4b47aee98a5 |
+| documentation/strategy-framework.md | c92937bf966382582da554c8fc0f19997d7a104a |
+| documentation/specifications/strategy-test-run-ingestion.md | e93f9ad408031981d1125d65cb371a3a0e428284 |
+| documentation/pipelines/historical-market-data-backfill.md | 009cc1ccfba109f6b4243e6886dd5887be16dfec |
+| documentation/pipelines/market-assessment-pipeline.md | 406b32cbc2298cc58ca3beae28be0fdab19b6703 |
+| documentation/pipelines/opportunity-assessment-pipeline.md | 4042dfe36d1a12c9337faec749e282049814a2ba |
+
+### Independent Supabase verification
+
+All inspection was read-only against project `glvbqcplgjdfgjyknzsa`.
+
+- Three permanent users and zero anonymous users were observed.
+- No proposed My Dashboard personal tables exist in production.
+- Exactly one active canonical Tiingo provider was observed.
+- Eight Watchlist policies retain explicit anonymous rejection across `watchlists` and `watchlist_items` CRUD paths.
+- The final contract contains no `decision_status`, derives lifecycle from immutable evidence, uses `INSERT ... ON CONFLICT DO NOTHING` for immutable snapshot reruns, and excludes `user_market_preferences.owner_user_id` from generated UUID defaults.
+
+The forward-return sample was independently reproduced from canonical NVDA Tiingo daily observations:
+
+| Horizon | Entry / exit observations | Entry / exit price | Price return | Net return after 10 bps fee + 5 bps slippage per side |
+|---|---|---:|---:|---:|
+| 5 sessions | 6894 / 6899 | 198.45 / 215.20 | 8.4404132023% | 8.1154712603% |
+| 20 sessions | 6894 / 6914 | 198.45 / 224.36 | 13.0561854371% | 12.7174123232% |
+| 60 sessions | 6894 / 6954 | 198.45 / 190.01 | -4.2529604434% | -4.5398666628% |
+
+### Acceptance decision
+
+MYDASH-001 passes because the exact contract now provides a coherent, migration-ready product, ownership, RLS, recommendation-lineage, Portfolio Health, immutable AI/user decision-clock and reproducible forward-return contract. It preserves assessment independence, explicit missing-data states and the prohibition on live trading, broker access, future-information replay and fabricated values.
+
+Known limitations remain intentional and transparent:
+
+- no production implementation exists yet;
+- v1 measures raw price return until corporate-action and adjusted total-return semantics are separately verified;
+- Tiingo is the sole canonical provider and there is no provider fallback;
+- FX and benchmark alignment require exact dates; missing evidence remains explicitly missing;
+- historical decision replay and broker/live-trading capability remain prohibited;
+- implementing gates may finalise JSON payload schemas only if they preserve the accepted relational, ownership, lineage and calculation invariants.
+
+### Auditor handoff
+
+    task_id: MYDASH-001
+    handoff_from: AUDITOR
+    handoff_to: OWNER
+    handoff_status: OWNER_REVIEW
+    audit_decision: PASS
+    audited_candidate: 9be18c0dff46ff959521810461b37995bf49aec5
+    owner_review: OWNER_REVIEW_A
+    production_effects: None
+    exact_next_action: Travis chooses APPROVE, RETAIN, or REQUEST_BOUNDED_REVISION for the exact MYDASH-001 contract package. MYDASH-002 remains unauthorised until APPROVE.
