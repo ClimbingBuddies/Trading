@@ -9,18 +9,18 @@
 
     project_status: IN_PROGRESS
     active_gate: MYDASH-001
-    active_gate_status: IN_PROGRESS
-    handoff_owner: PRODUCER
-    handoff_status: REWORK_REQUIRED
+    active_gate_status: IN_REVIEW
+    handoff_owner: AUDITOR
+    handoff_status: READY_FOR_AUDIT
     owner_review: NONE
-    last_event: BUILD_ATTEMPT_STARTED
-    next_action: Complete the two-item MYDASH-001 lifecycle/default correction and return the exact candidate to the independent Auditor.
+    last_event: PRODUCER_HANDOFF_COMPLETE
+    next_action: Independent Auditor reviews final corrected MYDASH-001 candidate 9be18c0dff46ff959521810461b37995bf49aec5.
 
 ## Gate ledger
 
 | Gate | Status | Owner | Review requirement |
 |---|---|---|---|
-| MYDASH-001 | IN_PROGRESS | PRODUCER | Independent audit, then Owner Review A |
+| MYDASH-001 | IN_REVIEW | AUDITOR | Independent audit, then Owner Review A |
 | MYDASH-002 | PLANNED | NONE | Independent audit |
 | MYDASH-003 | PLANNED | NONE | Independent audit |
 | MYDASH-004 | PLANNED | NONE | Independent audit, then Owner Review B |
@@ -177,3 +177,15 @@ Not authorised by this decision:
 - Production schema/data/jobs/UI/deployment authority: none.
 - Fresh source identities: controller `aa7855a2d3f4246ffa4d5808eec12dcd1f313313`; plan `9df07b5ed2f85206ad9928e445c15059c447c48b`; opening journal `a67639d855f18799f07dfd5da1ebcee13ff62047`; contract `ca5c3be704916803e205e617c680685712063156`; audit `a84f7e9ab5073158919097ca69dbcbdd29728a70`.
 - Exact next action: Revise only the two remaining contract inconsistencies and persist a new Auditor handoff.
+
+### 27 August 2026 — MYDASH-001_SECOND_REWORK_PRODUCER_HANDOFF_COMPLETE
+
+- Role performed: `PRODUCER` only.
+- Corrected candidate: `9be18c0dff46ff959521810461b37995bf49aec5`
+- Producer evidence/handoff: `documentation/my-dashboard-audits/MYDASH-001.md`
+- Evidence commit: `8c32d2ddfc1bda23d0d746fe996c430daba8787f`
+- Corrections completed: removed mutable decision status and defined lifecycle from immutable events/snapshots; defined `INSERT ... ON CONFLICT DO NOTHING` idempotence; exempted owner natural key from generated UUID defaults.
+- Supabase recheck: `2026-08-27 08:03:40.063448+00`; zero personal tables; one active Tiingo provider.
+- Production schema/data/jobs/UI/deployment effects: none.
+- Handoff: `PRODUCER -> AUDITOR / READY_FOR_AUDIT`
+- Exact next action: Independent Auditor reviews exact candidate `9be18c0dff46ff959521810461b37995bf49aec5` and either routes a pass to Owner Review A or returns one complete correction set.
