@@ -2,7 +2,7 @@
 
 **Gate:** MYDASH-001  
 **Role:** Producer  
-**Record status:** AUDIT REVISE — RETURNED TO PRODUCER  
+**Record status:** PRODUCER REVISED CANDIDATE — AWAITING INDEPENDENT RE-AUDIT  
 **Candidate:** [My Dashboard contract v1](../specifications/my-dashboard-contract-v1.md)  
 **Date:** 27 August 2026
 
@@ -168,3 +168,49 @@ This verifies the formulas when the Auditor explicitly applies `decimal_rate = b
     source_evidence: GitHub blobs recorded above; Supabase read-only observation at 2026-08-27 05:00:18.320386+00
     formula_evidence: NVDA observation 6894 with 5/20/60 exits 6899/6914/6954; QQQ and AUD/USD exact-date observations; results recorded above
     exact_next_action: Producer revises only MYDASH-001 against the complete five-item correction set, preserves all accepted boundaries, writes a new exact candidate identity and returns it for independent audit.
+
+## Producer correction response
+
+**Role:** Producer only  
+**Prior audit:** REVISE  
+**Revised candidate identity:** `eb145922543a065e48b3fd4daf324dc989f9de1d`  
+**Production effects:** none
+
+The Producer addressed the complete correction set without changing schema, data, jobs, UI or deployment:
+
+1. Canonical v1 daily observations now require the sole active Tiingo provider, a persisted instrument/observed_at session key, distinct-session counting and no provider fallback. FX and benchmark require exact timestamp alignment; direct/inverse semantics and missing states are explicit.
+2. Stored fee/slippage bps now convert by `bps / 10000`, with ranges, precision rules and the independently reproduced NVDA example.
+3. Section 3 is migration-ready: exact names, types, nullability, defaults, FK/CHECK/UNIQUE constraints, source invariants, parent ownership and immutability rules are specified.
+4. Recommendation dependency groups, shared Convergence-input collapse, URL-first fact deduplication and 5/20/60-horizon freshness windows are explicit.
+5. Browser capture RPCs, internal evaluators, EXECUTE grants, permanent-user/owner checks and quality-status precedence are explicit.
+
+Fresh read-only verification at `2026-08-27 06:02:04.335310+00` confirmed:
+
+- production schema/policy fingerprint: `83f71532822fd3b614238b95b3e34180`;
+- proposed personal table count: zero;
+- active Tiingo provider count: one;
+- 90,318 daily and 8,804 quote observations;
+- NVDA observation 6894 still resolves to 5/20/60 exits 6899/6914/6954;
+- price returns: 8.4404132023%, 13.0561854371%, -4.2529604434%;
+- net returns with 10 bps fees and 5 bps slippage each side: 8.1154712603%, 12.7174123232%, -4.5398666628%.
+
+### Revised Producer handoff
+
+    task_id: MYDASH-001
+    handoff_from: PRODUCER
+    handoff_to: AUDITOR
+    handoff_status: READY_FOR_AUDIT
+    implementation_commit_or_range: e0ca61a1ec2dc66954c4189f07bc74273399911c through eb145922543a065e48b3fd4daf324dc989f9de1d
+    delivery_control_commits: 81ea1124514ffbe6fb84b2d8540f47f53c73f72e
+    files_changed: documentation/specifications/my-dashboard-contract-v1.md
+    migrations_and_schema_effects: None
+    rls_and_permission_evidence: Exact table/RPC grant and owner-isolation contract in sections 3 and 5; existing Watchlist template unchanged; production personal table count remains zero.
+    source_data_and_cutoffs: Supabase fingerprint 83f71532822fd3b614238b95b3e34180 at 2026-08-27 06:02:04.335310+00; one active Tiingo provider; sample observation identities above.
+    calculation_or_methodology_version: my-dashboard-contract-v1; personal-forward-return-v1; portfolio-health-v1; personal-research-relevance-v1
+    tests_and_checks: All five audit corrections mapped to exact contract clauses; read-only provider uniqueness, observation counts and 5/20/60 bps-converted formula sample reproduced.
+    routes_and_viewports_verified: Contract-only; browser and viewport verification not applicable because no UI changed.
+    privacy_and_cross_user_evidence: Exact permanent-user predicates, table/RPC grants and two-user/anonymous test matrix specified; execution deferred to MYDASH-002.
+    documentation_impact: Contract only; deployed architecture/data-model/route documentation remains unchanged because production remains unchanged.
+    known_limitations: No implementation exists; corporate-action total-return semantics remain unverified; no historical decisions, provider fallback, FX carry-forward or broker capability is authorised.
+    acceptance_criteria_evidence: Revised contract sections 1–14, especially sections 3, 5, 6, 9 and 10.
+    exact_next_action: Independent Auditor reviews revised candidate eb145922543a065e48b3fd4daf324dc989f9de1d against the persisted five-item correction set and either routes a pass to Owner Review A or returns one complete correction set.
