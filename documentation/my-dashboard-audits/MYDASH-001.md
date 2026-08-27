@@ -1,12 +1,12 @@
 # MYDASH-001 — Producer Evidence
 
 **Gate:** MYDASH-001  
-**Role:** Producer  
+**Role:** Producer and independent Auditor  
 **Record status:** INDEPENDENT AUDIT PASS — OWNER REVIEW A  
 **Candidate:** [My Dashboard contract v1](../specifications/my-dashboard-contract-v1.md)  
 **Date:** 27 August 2026
 
-This is a Producer handoff, not an audit decision. No production schema, data, job, route, UI or deployment change was made.
+This append-only record preserves the Producer handoffs and independent audit decisions for MYDASH-001. No production schema, data, job, route, UI or deployment change was made.
 
 ## Opening persisted state
 
