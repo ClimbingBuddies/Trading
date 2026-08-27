@@ -9,18 +9,18 @@
 
     project_status: IN_PROGRESS
     active_gate: MYDASH-001
-    active_gate_status: IN_REVIEW
-    handoff_owner: AUDITOR
-    handoff_status: READY_FOR_AUDIT
+    active_gate_status: IN_PROGRESS
+    handoff_owner: PRODUCER
+    handoff_status: REWORK_REQUIRED
     owner_review: NONE
-    last_event: PRODUCER_HANDOFF_COMPLETE
-    next_action: Independent Auditor reviews revised MYDASH-001 candidate eb145922543a065e48b3fd4daf324dc989f9de1d against the complete correction set.
+    last_event: AUDIT_REVISE
+    next_action: Producer resolves the two remaining MYDASH-001 contract inconsistencies and returns a new exact candidate for independent audit.
 
 ## Gate ledger
 
 | Gate | Status | Owner | Review requirement |
 |---|---|---|---|
-| MYDASH-001 | IN_REVIEW | AUDITOR | Independent audit, then Owner Review A |
+| MYDASH-001 | IN_PROGRESS | PRODUCER | Independent audit, then Owner Review A |
 | MYDASH-002 | PLANNED | NONE | Independent audit |
 | MYDASH-003 | PLANNED | NONE | Independent audit |
 | MYDASH-004 | PLANNED | NONE | Independent audit, then Owner Review B |
@@ -152,3 +152,17 @@ Not authorised by this decision:
 - Production schema/data/jobs/UI/deployment effects: none.
 - Handoff: `PRODUCER -> AUDITOR / READY_FOR_AUDIT`
 - Exact next action: Independent Auditor reviews revised candidate `eb145922543a065e48b3fd4daf324dc989f9de1d` against the persisted correction set and either routes a pass to Owner Review A or returns one complete correction set.
+
+### 27 August 2026 — MYDASH-001_SECOND_AUDIT_REVISE
+
+- Role performed: `AUDITOR` only.
+- Audited revised candidate: `eb145922543a065e48b3fd4daf324dc989f9de1d`
+- Audit decision: `REVISE`
+- Audit record: `documentation/my-dashboard-audits/MYDASH-001.md`
+- Audit commit: `87e18c5174848b9e58663372d017120ddc0da465`
+- Prior corrections accepted: canonical session/provider selection; bps conversion; relational dictionary and RPC authority; recommendation dependency/freshness; quality precedence.
+- Remaining correction set: resolve mutable decision_status versus immutable/INSERT-only decisions and define exact snapshot conflict behaviour; exempt natural owner_user_id PK from generated UUID defaults.
+- Supabase recheck: `2026-08-27 07:02:17.713272+00`; zero personal tables; one active Tiingo provider; formula sample reproduced.
+- Production schema/data/jobs/UI/deployment effects: none.
+- Handoff: `AUDITOR -> PRODUCER / REWORK_REQUIRED`
+- Exact next action: Producer revises only the two remaining inconsistencies in MYDASH-001 and returns a new exact candidate for independent audit.
