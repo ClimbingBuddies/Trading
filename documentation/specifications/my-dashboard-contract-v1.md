@@ -1,7 +1,7 @@
 # My Dashboard Contract v1
 
 **Gate:** MYDASH-001 — Product, data and calculation contract  
-**Status:** PRODUCER REVISED CANDIDATE — IN REVIEW  
+**Status:** PRODUCER FINAL CORRECTED CANDIDATE — IN REVIEW  
 **Contract version:** `my-dashboard-contract-v1`  
 **Calculation version:** `personal-forward-return-v1`  
 **Portfolio Health version:** `portfolio-health-v1`  
@@ -59,7 +59,7 @@ The My Dashboard ledger therefore remains separate. Strategy rows may be linked 
 
 ## 3. Proposed migration-ready data dictionary
 
-All UUID primary keys default to gen_random_uuid(). All owner_user_id columns are uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE. All created_at values are timestamptz NOT NULL DEFAULT clock_timestamp(). All three-letter currencies use char(3) with CHECK (value = upper(value) AND value ~ '^[A-Z]{3}$'). Exact SQL remains Gate MYDASH-002+ work; these names and invariants are contractual.
+All generated surrogate id UUID primary keys default to gen_random_uuid(). The natural-key user_market_preferences.owner_user_id never has a generated default: the trusted insert path derives it from the permanent authenticated auth.uid(). All owner_user_id columns are uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE. All created_at values are timestamptz NOT NULL DEFAULT clock_timestamp(). All three-letter currencies use char(3) with CHECK (value = upper(value) AND value ~ '^[A-Z]{3}$'). Exact SQL remains Gate MYDASH-002+ work; these names and invariants are contractual.
 
 ### User and portfolio domain
 
@@ -82,12 +82,22 @@ All UUID primary keys default to gen_random_uuid(). All owner_user_id columns ar
 
 | Table | Exact columns and constraints | Browser authority |
 |---|---|---|
-| personal_decisions | id PK; owner_user_id; instrument_id uuid NOT NULL REFERENCES instruments(id); source_type text NOT NULL CHECK IN ('AI_SIGNAL','USER_PAPER'); source_action text NOT NULL; action text NOT NULL CHECK IN ('BUY','WATCH','HOLD','PASS','AVOID'); horizon_sessions smallint NOT NULL CHECK IN (5,20,60); decision_at timestamptz NOT NULL; source_table text NOT NULL; source_record_key text NOT NULL; source_snapshot jsonb NOT NULL CHECK jsonb_typeof='object'; source_hash text NOT NULL; source_cutoff timestamptz NOT NULL CHECK <= decision_at; entry_rule text NOT NULL DEFAULT 'NEXT_DAILY_CLOSE' CHECK = 'NEXT_DAILY_CLOSE'; decision_status text NOT NULL DEFAULT 'PENDING_ENTRY' CHECK IN ('PENDING_ENTRY','OPEN','COMPLETE','CANCELLED','ERROR'); benchmark_mode text NOT NULL DEFAULT 'NONE' CHECK IN ('NONE','OWNER_SELECTED','APPROVED_MAPPING'); benchmark_instrument_id uuid NULL REFERENCES instruments(id); notional_amount numeric(30,12) NOT NULL DEFAULT 1000 CHECK >0; entry_fee_bps numeric(9,4) NOT NULL DEFAULT 0 CHECK BETWEEN 0 AND 1000; exit_fee_bps numeric(9,4) NOT NULL DEFAULT 0 CHECK BETWEEN 0 AND 1000; entry_slippage_bps numeric(9,4) NOT NULL DEFAULT 0 CHECK BETWEEN 0 AND 1000; exit_slippage_bps numeric(9,4) NOT NULL DEFAULT 0 CHECK BETWEEN 0 AND 1000; base_currency char(3) NOT NULL; instrument_currency char(3) NOT NULL; calculation_version text NOT NULL; created_at; AI_SIGNAL requires source_table='gpt_market_assessments', decision_at=source_cutoff and source_record_key/source hash; USER_PAPER requires source_table='user_action_snapshot', server decision_at=source_cutoff=clock_timestamp(); benchmark NONE requires null benchmark ID, other modes require it; no UPDATE/DELETE | Owner SELECT and capture RPC only |
+| personal_decisions | id PK; owner_user_id; instrument_id uuid NOT NULL REFERENCES instruments(id); source_type text NOT NULL CHECK IN ('AI_SIGNAL','USER_PAPER'); source_action text NOT NULL; action text NOT NULL CHECK IN ('BUY','WATCH','HOLD','PASS','AVOID'); horizon_sessions smallint NOT NULL CHECK IN (5,20,60); decision_at timestamptz NOT NULL; source_table text NOT NULL; source_record_key text NOT NULL; source_snapshot jsonb NOT NULL CHECK jsonb_typeof='object'; source_hash text NOT NULL; source_cutoff timestamptz NOT NULL CHECK <= decision_at; entry_rule text NOT NULL DEFAULT 'NEXT_DAILY_CLOSE' CHECK = 'NEXT_DAILY_CLOSE'; benchmark_mode text NOT NULL DEFAULT 'NONE' CHECK IN ('NONE','OWNER_SELECTED','APPROVED_MAPPING'); benchmark_instrument_id uuid NULL REFERENCES instruments(id); notional_amount numeric(30,12) NOT NULL DEFAULT 1000 CHECK >0; entry_fee_bps numeric(9,4) NOT NULL DEFAULT 0 CHECK BETWEEN 0 AND 1000; exit_fee_bps numeric(9,4) NOT NULL DEFAULT 0 CHECK BETWEEN 0 AND 1000; entry_slippage_bps numeric(9,4) NOT NULL DEFAULT 0 CHECK BETWEEN 0 AND 1000; exit_slippage_bps numeric(9,4) NOT NULL DEFAULT 0 CHECK BETWEEN 0 AND 1000; base_currency char(3) NOT NULL; instrument_currency char(3) NOT NULL; calculation_version text NOT NULL; created_at; AI_SIGNAL requires source_table='gpt_market_assessments', decision_at=source_cutoff and source_record_key/source hash; USER_PAPER requires source_table='user_action_snapshot', server decision_at=source_cutoff=clock_timestamp(); benchmark NONE requires null benchmark ID, other modes require it; no UPDATE/DELETE | Owner SELECT and capture RPC only |
 | personal_decision_events | id PK; owner_user_id; decision_id uuid NOT NULL REFERENCES personal_decisions(id) ON DELETE CASCADE; event_type text NOT NULL CHECK IN ('EXIT','CANCEL','NOTE','REVIEW'); event_at timestamptz NOT NULL DEFAULT clock_timestamp(); payload jsonb NOT NULL DEFAULT '{}'; created_at; composite parent-owner check required | Owner SELECT and append RPC only; no UPDATE/DELETE |
 | personal_return_snapshots | id PK; owner_user_id; decision_id uuid NOT NULL REFERENCES personal_decisions(id) ON DELETE CASCADE; checkpoint_code text NOT NULL CHECK IN ('OPEN','5D','20D','60D','EXIT'); evaluation_cutoff timestamptz NOT NULL; evaluated_at timestamptz NOT NULL DEFAULT clock_timestamp(); entry_observation_id bigint NULL REFERENCES market_observations(id); exit_observation_id bigint NULL REFERENCES market_observations(id); entry_price numeric(30,12) NULL CHECK >0; exit_price numeric(30,12) NULL CHECK >0; entry_fx_observation_id bigint NULL REFERENCES market_observations(id); exit_fx_observation_id bigint NULL REFERENCES market_observations(id); entry_fx_rate numeric(30,16) NULL CHECK >0; exit_fx_rate numeric(30,16) NULL CHECK >0; benchmark_entry_observation_id bigint NULL REFERENCES market_observations(id); benchmark_exit_observation_id bigint NULL REFERENCES market_observations(id); price_return numeric(30,16) NULL; adjusted_return numeric(30,16) NULL; base_currency_return numeric(30,16) NULL; benchmark_return numeric(30,16) NULL; excess_return numeric(30,16) NULL; net_simulated_return numeric(30,16) NULL; maximum_drawdown numeric(30,16) NULL CHECK <=0; quality_status text NOT NULL; quality_reasons text[] NOT NULL DEFAULT '{}'; source_identity_hash text NOT NULL; calculation_version text NOT NULL; created_at; UNIQUE(decision_id,checkpoint_code,evaluation_cutoff,calculation_version); composite parent-owner check required | Owner SELECT only; internal evaluator writes |
 | portfolio_health_snapshots | id PK; owner_user_id; portfolio_id uuid NOT NULL REFERENCES portfolios(id) ON DELETE CASCADE; source_cutoff timestamptz NOT NULL; evaluated_at timestamptz NOT NULL DEFAULT clock_timestamp(); total_value numeric(30,12) NULL CHECK >=0; base_currency char(3) NOT NULL; measures jsonb NOT NULL CHECK jsonb_typeof='object'; summary_status text NOT NULL CHECK IN ('INCOMPLETE_DATA','NEEDS_REVIEW','HEALTHY'); completeness_pct numeric(5,2) NOT NULL CHECK BETWEEN 0 AND 100; completeness_reasons text[] NOT NULL DEFAULT '{}'; methodology_version text NOT NULL; source_hash text NOT NULL; created_at; UNIQUE(portfolio_id,source_cutoff,methodology_version); composite parent-owner check required | Owner SELECT only; internal evaluator writes |
 
 AI rating normalisation is explicit: persisted Buy maps to BUY, Hold maps to HOLD and Sell maps to AVOID while source_action retains the original rating. Only BUY is scored as a simulated long position. Other actions record the later market move as observational evidence and never create a short return.
+
+Decision lifecycle is derived and is not stored on personal_decisions:
+
+1. ERROR when the latest applicable evaluator attempt persists CALCULATION_ERROR;
+2. CANCELLED when a valid CANCEL event exists before a completed configured-horizon or EXIT snapshot;
+3. COMPLETE when a COMPLETE_PRICE_ONLY or COMPLETE_BASE_CURRENCY snapshot exists for the decision's configured 5D/20D/60D horizon, or for EXIT after an EXIT event;
+4. OPEN when any snapshot has persisted a canonical entry_observation_id but no terminal condition applies;
+5. PENDING_ENTRY otherwise.
+
+Capture/append helpers reject a second terminal event and any EXIT/CANCEL event that violates this order. NOTE and REVIEW events never alter lifecycle. Lifecycle queries are security-invoker owner-scoped reads over immutable events/snapshots.
 
 Immutability is enforced by withholding UPDATE/DELETE grants and policies from recommendation snapshots/sources, decisions, decision events and return snapshots. Internal writers may INSERT only; a methodology change creates a new versioned snapshot. No table stores broker credentials, order authority or actual trade execution.
 
@@ -268,7 +278,7 @@ Every contributing value and threshold remains visible. These are transparent co
 - decision time: trusted server/database `clock_timestamp()`, never a client-supplied backdate;
 - source snapshot stores the evidence visible to the user and its cutoffs at that time.
 
-Both use `NEXT_DAILY_CLOSE` in v1: the first eligible `1day` observation strictly after that decision's own timestamp. The clocks remain distinct; identical entry must never be assumed. If no qualifying observation exists, state is `PENDING_ENTRY`.
+Both use `NEXT_DAILY_CLOSE` in v1: the first eligible `1day` observation strictly after that decision's own timestamp. The clocks remain distinct; identical entry must never be assumed. If no qualifying observation exists, the derived lifecycle is `PENDING_ENTRY`; no mutable decision field is written.
 
 BUY decisions receive return scoring. WATCH, HOLD, PASS and AVOID preserve the subsequent observed market move for learning but are labelled observational; they are not treated as short positions or simulated profit.
 
@@ -371,7 +381,7 @@ Orthogonal warnings are retained in quality_reasons, including MISSING_BENCHMARK
 - unique decision/checkpoint/evaluation-cutoff key;
 - calculation version `personal-forward-return-v1`;
 - same inputs and version must produce byte-equivalent numeric outputs;
-- reruns upsert the same logical checkpoint only when source identity matches;
+- immutable snapshot writers execute `INSERT ... ON CONFLICT DO NOTHING`; after a conflict they compare the persisted source_identity_hash, and any non-identical hash produces CALCULATION_ERROR without mutating the existing row;
 - a method change creates a new calculation version and snapshot, never rewrites prior results;
 - all decimal rounding occurs only for presentation; database calculations retain numeric precision;
 - source queries are bounded by persisted decision/checkpoint cutoffs, preventing look-ahead.
