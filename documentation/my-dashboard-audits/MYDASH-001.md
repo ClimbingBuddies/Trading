@@ -2,7 +2,7 @@
 
 **Gate:** MYDASH-001  
 **Role:** Producer  
-**Record status:** SECOND AUDIT REVISE — RETURNED TO PRODUCER  
+**Record status:** PRODUCER FINAL CORRECTED CANDIDATE — AWAITING INDEPENDENT AUDIT  
 **Candidate:** [My Dashboard contract v1](../specifications/my-dashboard-contract-v1.md)  
 **Date:** 27 August 2026
 
@@ -258,3 +258,37 @@ No other correction from this audit is outstanding. JSON payload schemas may be 
     remaining_correction_set: decision lifecycle immutability/idempotence; UUID natural-key default exception
     production_effects: None
     exact_next_action: Producer revises only the two remaining contract inconsistencies, preserves every accepted clause, writes a new exact candidate identity and returns it for independent audit.
+
+## Producer response to second audit
+
+**Role:** Producer only  
+**Corrected candidate:** `9be18c0dff46ff959521810461b37995bf49aec5`  
+**Production effects:** none
+
+The two remaining corrections are complete:
+
+1. `personal_decisions.decision_status` was removed. Lifecycle is now derived deterministically from immutable decision events and return snapshots with explicit ERROR, CANCELLED, COMPLETE, OPEN and PENDING_ENTRY precedence. Terminal-event ordering is enforced by constrained append helpers. Immutable snapshot reruns use `INSERT ... ON CONFLICT DO NOTHING`; a conflicting non-identical source hash records CALCULATION_ERROR without mutating the existing row.
+2. Only generated surrogate `id` UUID primary keys default to `gen_random_uuid()`. The natural-key `user_market_preferences.owner_user_id` has no generated default and is derived from permanent authenticated `auth.uid()`.
+
+Fresh checks confirmed the exact contract contains no `decision_status`, includes the owner-key exception, derived lifecycle and conflict behaviour. Read-only Supabase evidence at `2026-08-27 08:03:40.063448+00` still found zero personal tables and one active Tiingo provider.
+
+### Final corrected Producer handoff
+
+    task_id: MYDASH-001
+    handoff_from: PRODUCER
+    handoff_to: AUDITOR
+    handoff_status: READY_FOR_AUDIT
+    implementation_commit_or_range: 9be18c0dff46ff959521810461b37995bf49aec5
+    delivery_control_commits: 3d3fec8dbc94173637e1519ef1708ca2ce13013b
+    files_changed: documentation/specifications/my-dashboard-contract-v1.md
+    migrations_and_schema_effects: None
+    rls_and_permission_evidence: Accepted prior contract unchanged; owner natural key is explicitly derived from permanent auth.uid and has no generated default.
+    source_data_and_cutoffs: Supabase read-only recheck at 2026-08-27 08:03:40.063448+00; zero personal tables; one active Tiingo provider.
+    calculation_or_methodology_version: my-dashboard-contract-v1; personal-forward-return-v1; portfolio-health-v1; personal-research-relevance-v1
+    tests_and_checks: No decision_status remains; derived lifecycle and INSERT ON CONFLICT DO NOTHING rules present; UUID natural-key exception present; accepted prior formula/security checks unchanged.
+    routes_and_viewports_verified: Contract-only; browser and viewport verification not applicable.
+    privacy_and_cross_user_evidence: Accepted prior permanent-user/owner matrix unchanged; no production writes.
+    documentation_impact: Contract only; no deployed documentation requires reconciliation.
+    known_limitations: No implementation exists; the independent Auditor must validate this exact candidate before Owner Review A.
+    acceptance_criteria_evidence: Contract sections 3, 8 and 10 plus all previously accepted sections.
+    exact_next_action: Independent Auditor reviews exact candidate 9be18c0dff46ff959521810461b37995bf49aec5 and either passes MYDASH-001 to Owner Review A or returns one complete correction set.
