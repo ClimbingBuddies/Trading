@@ -2,7 +2,7 @@
 
 **Gate:** MYDASH-001  
 **Role:** Producer  
-**Record status:** PRODUCER EVIDENCE — AWAITING INDEPENDENT AUDIT  
+**Record status:** AUDIT REVISE — RETURNED TO PRODUCER  
 **Candidate:** [My Dashboard contract v1](../specifications/my-dashboard-contract-v1.md)  
 **Date:** 27 August 2026
 
@@ -114,3 +114,57 @@ All Supabase inspection was read-only.
     known_limitations: No implementation; adjusted/total-return lineage unverified; no historical personal decisions may be synthesized; incomplete FX/benchmark inputs remain explicit.
     acceptance_criteria_evidence: Contract sections 1–15 and the mapping above.
     exact_next_action: Independent Auditor validates this exact candidate, reproduces formula samples from persisted observations, then either passes it to Owner Review A or returns one complete correction set.
+
+## Independent Auditor decision — REVISE
+
+**Audited candidate:** `4301bd9c2da904d08b3b08de644b9a537b1bab37`  
+**Auditor source journal:** `813addb6100c5a7a2b414d9f7bc190776a32a123`  
+**Production observation time:** `2026-08-27 05:00:18.320386+00`  
+**Decision:** `REVISE`
+
+The contract is directionally sound and preserves the project's privacy, independence, clock separation, missing-data and no-live-trading boundaries. It is not yet deterministic enough to authorise a migration.
+
+### Independently reproduced evidence
+
+Read-only production inspection confirmed:
+
+- three permanent users, zero anonymous users and zero proposed My Dashboard personal tables;
+- Watchlist RLS includes permanent-user and owner/parent-owner checks;
+- 90,318 daily observations and 8,797 quote observations; no current adjusted_close gaps;
+- the exact Market, Opportunity and Convergence run cutoffs cited by the candidate;
+- the candidate commit creates documentation only.
+
+A representative read-only calculation used NVDA raw daily closes with a synthetic audit cutoff of `2026-04-30 23:59:59+00`, exact-date QQQ and AUD/USD observations, AUD conversion by `1 / AUDUSD`, a 1,000-unit notional, 10 bps fees and 5 bps slippage on each side:
+
+| Checkpoint | Entry / exit observation | Price return | AUD-base return | QQQ return | Excess | Net simulated | Max drawdown |
+|---|---|---:|---:|---:|---:|---:|---:|
+| 5th later session | 6894 / 6899 | 8.4404% | 7.7761% | 5.5003% | 2.9402% | 8.1155% | -0.9976% |
+| 20th later session | 6894 / 6914 | 13.0562% | 13.6653% | 10.1743% | 2.8819% | 12.7174% | -10.4352% |
+| 60th later session | 6894 / 6954 | -4.2530% | -0.8958% | -1.8423% | -2.4106% | -4.5399% | -19.3985% |
+
+This verifies the formulas when the Auditor explicitly applies `decimal_rate = bps / 10000` and exact timestamp matches. Those implementation choices are not currently stated in the candidate.
+
+### Complete correction set
+
+1. **P0 — Make observation selection deterministic.** Define the canonical daily observation when more than one provider/row exists for an instrument and session, define the session key and provider precedence, count distinct eligible sessions rather than raw rows, and persist the selected provider/observation identity. State the exact FX and benchmark alignment rule, inverse-pair rule, permitted gap (if any), and the precise missing-data outcome when alignment fails. This must prevent duplicate rows or provider ordering from changing entry or checkpoint selection.
+
+2. **P0 — Reconcile basis-point storage with decimal formulae.** State exactly that each stored fee/slippage bps value is divided by 10,000 before calculation; define allowed ranges, numeric precision and where presentation-only rounding occurs. Add a worked example matching the independent result above.
+
+3. **P0 — Make the proposed data dictionary migration-ready.** Replace shorthand such as “owner”, “instrument”, “timestamps”, “source table/ID/hash/cutoff”, “state”, “unit/notional basis”, “methodology” and “evaluation cutoff” with exact column names, types, nullability, defaults, CHECK/FK/UNIQUE constraints and referenced tables. Include the currently implied but unnamed `evaluation_cutoff` used by the return-snapshot unique key. Specify source-type invariants, parent-owner constraints and how immutability is enforced.
+
+4. **P1 — Define recommendation independence and freshness exactly.** Provide an evidence-family dependency matrix so a Market assessment and a Convergence row containing that same assessment cannot count as two independent families. Define family-specific freshness windows or an exact versioned lookup rule for each supported horizon. Preserve canonical-source/URL deduplication for sourced facts.
+
+5. **P1 — Define derived-write authority and quality-state precedence.** Name the constrained capture/evaluator interfaces or state that they are internal-only, specify EXECUTE grants and ownership validation, and define the primary quality-state precedence when multiple conditions coexist while retaining all reasons.
+
+### Auditor handoff
+
+    task_id: MYDASH-001
+    handoff_from: AUDITOR
+    handoff_to: PRODUCER
+    handoff_status: REWORK_REQUIRED
+    audit_decision: REVISE
+    audited_candidate: 4301bd9c2da904d08b3b08de644b9a537b1bab37
+    production_effects: None
+    source_evidence: GitHub blobs recorded above; Supabase read-only observation at 2026-08-27 05:00:18.320386+00
+    formula_evidence: NVDA observation 6894 with 5/20/60 exits 6899/6914/6954; QQQ and AUD/USD exact-date observations; results recorded above
+    exact_next_action: Producer revises only MYDASH-001 against the complete five-item correction set, preserves all accepted boundaries, writes a new exact candidate identity and returns it for independent audit.
