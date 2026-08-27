@@ -1,7 +1,7 @@
 # Daily External Opinion Review
 
 **Specification version:** 1.0  
-**Last updated:** 24 August 2026  
+**Last updated:** 27 August 2026  
 **System:** Discover Boulders Markets / Trading  
 **Repository:** `ClimbingBuddies/Trading`  
 **Supabase project:** `glvbqcplgjdfgjyknzsa`  
@@ -113,11 +113,11 @@ from external_opinion.ingest_opinion_v1(
 );
 ```
 
-The helper is the canonical persistence path. It validates active instruments/sources and approved static domains, creates the canonical source/claim identity and deduplicates the observation.
+The helper is the canonical persistence path. It validates active instruments/sources and approved static domains, creates the canonical source/claim identity and deduplicates the observation. The live model enforces one canonical observation for an instrument, canonical source, opinion type and publication timestamp; undated observations also use the external reference. Dated snapshots from a dynamic page remain distinct when their publication dates differ.
 
 Do not insert directly into `instrument_opinions` from the scheduled workflow.
 
-Treat `inserted = false` as an idempotent duplicate, not an error.
+Treat `inserted = false` as an idempotent duplicate, not an error. Historical duplicates are retained for audit with `deduplication_status = 'superseded'` and excluded from consensus. A controlled service-only repair uses `external_opinion.resolve_duplicate_v1(...)`; do not delete or rewrite the original evidence.
 
 ## 5. Non-double-counting rule
 
@@ -125,6 +125,8 @@ Apply `external-opinion-v1` throughout the research process:
 
 - one underlying source/claim contributes once;
 - a derived consensus is not another independent source;
+- a rewritten summary of the same dated filing is still the same observation and must not create a second evidence family;
+
 - the same source discovered from Supabase and direct web research is one logical evidence item;
 - syndicated/reposted versions of one wire story, press release or analyst note do not become independent confirmations;
 - preserve canonical provenance so the later Market Assessment can enforce the same rule.
