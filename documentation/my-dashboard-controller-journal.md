@@ -8,20 +8,20 @@
 ## Current state
 
     project_status: IN_PROGRESS
-    active_gate: MYDASH-001
-    active_gate_status: DONE
-    handoff_owner: OWNER
-    handoff_status: OWNER_REVIEW
-    owner_review: OWNER_REVIEW_A
-    last_event: AUDIT_PASS
-    next_action: Travis reviews the exact MYDASH-001 contract package and chooses APPROVE, RETAIN, or REQUEST_BOUNDED_REVISION.
+    active_gate: MYDASH-002
+    active_gate_status: NEXT
+    handoff_owner: PRODUCER
+    handoff_status: AUTHORISED
+    owner_review: NONE
+    last_event: OWNER_REVIEW_A_APPROVED
+    next_action: Controller performs one bounded Producer iteration on MYDASH-002, beginning with fresh GitHub, Supabase and production-state verification.
 
 ## Gate ledger
 
 | Gate | Status | Owner | Review requirement |
 |---|---|---|---|
-| MYDASH-001 | DONE | OWNER | Owner Review A |
-| MYDASH-002 | PLANNED | NONE | Independent audit |
+| MYDASH-001 | DONE | NONE | Owner Review A — APPROVED 27 August 2026 |
+| MYDASH-002 | NEXT | PRODUCER | Independent audit |
 | MYDASH-003 | PLANNED | NONE | Independent audit |
 | MYDASH-004 | PLANNED | NONE | Independent audit, then Owner Review B |
 | MYDASH-005 | PLANNED | NONE | Independent audit |
@@ -209,3 +209,17 @@ Not authorised by this decision:
 - Review package: exact contract, final audit record and this journal.
 - Owner choices: `APPROVE` authorises MYDASH-002; `RETAIN` keeps the project paused here; `REQUEST_BOUNDED_REVISION` must name the exact contract changes.
 - Exact next action: Await Travis's explicit Owner Review A decision. MYDASH-002 remains `PLANNED / NONE` and no implementation may begin before `APPROVE`.
+
+### 27 August 2026 — OWNER_REVIEW_A_APPROVED_AND_MYDASH_002_AUTHORISED
+
+- Owner decision verbatim: `Please approve and continoue`
+- Normalized decision: `APPROVE`.
+- Approved package: MYDASH-001 contract candidate `9be18c0dff46ff959521810461b37995bf49aec5`, its independent PASS audit and Owner Review A package.
+- Accepted boundaries: six-tab personal dashboard; owner-scoped privacy and RLS; recommendation independence and provenance; separate immutable AI/user decision clocks; reproducible forward returns; explicit incomplete-data states; no live trading, broker access or historical look-ahead.
+- Newly authorised gate: `MYDASH-002 — Secure personal foundation and dashboard shell`.
+- MYDASH-002 authority: implement the audited private schema/RLS and trusted write boundaries; add authenticated `/my-dashboard` shell, navigation, loading/signed-out/empty/error states and Today tab using real persisted data; prove cross-user isolation and anonymous denial.
+- Not authorised: MYDASH-003 or later gates, live trading, broker access, weakened RLS/grants, fabricated values, or changes to assessment independence.
+- Production effects of this owner-decision record: none.
+- Handoff: `OWNER -> PRODUCER / MYDASH-002 NEXT / AUTHORISED`.
+- Exact next action: On the next controller invocation, retrieve all MYDASH-002 sources and production truth fresh, record `BUILD_ATTEMPT_STARTED`, perform one bounded Producer iteration and hand only that gate to the independent Auditor.
+
