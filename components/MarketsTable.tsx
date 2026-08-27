@@ -1,8 +1,9 @@
 'use client'
 
 import Link from 'next/link'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import type { MarketRow } from '@/lib/dashboard'
+import { getBrowserSupabase } from '@/lib/supabase-browser'
 
 const filters = [
   { key: 'all', label: 'All' },
@@ -55,20 +56,106 @@ function symbolSlug(symbol: string) {
 export default function MarketsTable({ rows }: { rows: MarketRow[] }) {
   const [asset, setAsset] = useState('all')
   const [search, setSearch] = useState('')
+  const [view, setView] = useState<'tracked' | 'watchlist'>('tracked')
+  const [watchlistIds, setWatchlistIds] = useState<string[]>([])
+  const [watchlistState, setWatchlistState] = useState<'loading' | 'signed_out' | 'ready' | 'error'>('loading')
+  const [watchlistError, setWatchlistError] = useState('')
+
+  useEffect(() => {
+    let mounted = true
+    const supabase = getBrowserSupabase()
+
+    async function loadWatchlist() {
+      try {
+        const { data: sessionData, error: sessionError } = await supabase.auth.getSession()
+        if (sessionError) throw sessionError
+        const user = sessionData.session?.user
+        if (!user || user.is_anonymous) {
+          if (!mounted) return
+          setWatchlistIds([])
+          setWatchlistError('')
+          setWatchlistState('signed_out')
+          return
+        }
+
+        const { data: listRows, error: listError } = await supabase
+          .from('watchlists')
+          .select('id')
+          .eq('owner_user_id', user.id)
+        if (listError) throw listError
+
+        const listIds = (listRows ?? []).map((list) => list.id as string)
+        if (!listIds.length) {
+          if (!mounted) return
+          setWatchlistIds([])
+          setWatchlistError('')
+          setWatchlistState('ready')
+          return
+        }
+
+        const { data: itemRows, error: itemError } = await supabase
+          .from('watchlist_items')
+          .select('instrument_id')
+          .in('watchlist_id', listIds)
+        if (itemError) throw itemError
+
+        if (!mounted) return
+        setWatchlistIds((itemRows ?? []).map((item) => item.instrument_id as string))
+        setWatchlistError('')
+        setWatchlistState('ready')
+      } catch (loadError) {
+        if (!mounted) return
+        setWatchlistIds([])
+        setWatchlistError(loadError instanceof Error ? loadError.message : 'Watchlist data could not be loaded.')
+        setWatchlistState('error')
+      }
+    }
+
+    loadWatchlist()
+    const { data: authListener } = supabase.auth.onAuthStateChange(() => {
+      window.setTimeout(() => { void loadWatchlist() }, 0)
+    })
+
+    return () => {
+      mounted = false
+      authListener.subscription.unsubscribe()
+    }
+  }, [])
+
+  const sourceRows = view === 'watchlist' ? rows.filter((row) => watchlistIds.includes(row.id)) : rows
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase()
-    return rows.filter((row) => {
+    return sourceRows.filter((row) => {
       const matchesAsset = asset === 'all' || row.asset_type === asset
       const matchesSearch = !q || row.symbol.toLowerCase().includes(q) || row.instrument_name.toLowerCase().includes(q)
       return matchesAsset && matchesSearch
     })
-  }, [asset, rows, search])
+  }, [asset, search, sourceRows])
 
   return (
     <>
       <div className="tableTools">
-        <div className="filterTabs" aria-label="Asset class filter">
+        <div className="tableFilterStack">
+          <div className="viewTabs" aria-label="Instrument view">
+            <button
+              className={view === 'tracked' ? 'viewTab viewTabActive' : 'viewTab'}
+              onClick={() => { setView('tracked'); setAsset('all') }}
+              type="button"
+              aria-pressed={view === 'tracked'}
+            >
+              Tracked <span>{rows.length}</span>
+            </button>
+            <button
+              className={view === 'watchlist' ? 'viewTab viewTabActive' : 'viewTab'}
+              onClick={() => { setView('watchlist'); setAsset('all') }}
+              type="button"
+              aria-pressed={view === 'watchlist'}
+            >
+              Watchlist <span>{watchlistState === 'ready' ? watchlistIds.length : '—'}</span>
+            </button>
+          </div>
+          <div className="filterTabs" aria-label="Asset class filter">
           {filters.map((filter) => {
             const count = filter.key === 'all' ? rows.length : rows.filter((row) => row.asset_type === filter.key).length
             return (
@@ -82,6 +169,7 @@ export default function MarketsTable({ rows }: { rows: MarketRow[] }) {
               </button>
             )
           })}
+          </div>
         </div>
         <label className="searchBox">
           <span className="srOnly">Search instruments</span>
@@ -116,7 +204,21 @@ export default function MarketsTable({ rows }: { rows: MarketRow[] }) {
             }) : (
               <tr>
                 <td colSpan={9}>
-                  <div className="tableEmpty">No instruments match this filter yet.</div>
+                  <div className="tableEmpty">
+                    {view === 'watchlist' ? (
+                      watchlistState === 'signed_out' ? (
+                        <>Sign in to view your private watchlist. <Link className="inlineLink" href="/watchlists">Open Watchlists</Link></>
+                      ) : watchlistState === 'loading' ? (
+                        'Loading your watchlist…'
+                      ) : watchlistState === 'error' ? (
+                        <>Watchlist unavailable{watchlistError ? ': ' + watchlistError : '.'} <Link className="inlineLink" href="/watchlists">Open Watchlists</Link></>
+                      ) : (
+                        <>Your watchlist is empty. <Link className="inlineLink" href="/watchlists">Add instruments in Watchlists</Link>.</>
+                      )
+                    ) : (
+                      'No instruments match this filter yet.'
+                    )}
+                  </div>
                 </td>
               </tr>
             )}
