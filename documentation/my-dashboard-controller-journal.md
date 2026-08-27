@@ -197,7 +197,7 @@ Not authorised by this decision:
 - Audited final candidate: `9be18c0dff46ff959521810461b37995bf49aec5`.
 - Audit decision: `PASS`.
 - Audit record: `documentation/my-dashboard-audits/MYDASH-001.md`.
-- Audit commit: `261835006f8b8dccde7c667e345629a7eb0ddceb`.
+- Audit commits: `261835006f8b8dccde7c667e345629a7eb0ddceb` and final record clarification `5453b8c405799e3d00130d62b5ba4749bee020b7`.
 - Opening journal identity: `a2b51fdb8becee08e5fbf19e73f5274863a0261c`.
 - Contract blob identity: `bd1d1556015b12967cb57c39f3922f92019a0cc4`.
 - Independent Supabase verification: `2026-08-27 09:00:23.876622+00`; three permanent users, zero anonymous users, zero production My Dashboard personal tables, one active Tiingo provider and eight Watchlist policies with explicit anonymous rejection.
