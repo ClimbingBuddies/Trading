@@ -54,6 +54,7 @@ The [canonical project plan](project-plan.md) controls authorised work. The [dev
 
 ## Monitoring and private workspaces
 
+- [My Dashboard agentic project plan](my-dashboard-agentic-project-plan.md) — personal recommendations, watchlists, Opportunities, portfolio health and forward paper-decision feedback
 - [Watchlist access model](security/watchlist-auth-model.md)
 - [Watchlist activation](watchlist-activation.md)
 - [Alert trigger specification](specifications/alert-trigger-specification.md)
@@ -82,6 +83,7 @@ The first strategy review outcome is `VALIDATE_ROBUSTNESS / continue_testing`. L
 ## Delivery and audit evidence
 
 - [Canonical project plan](project-plan.md)
+- [My Dashboard agentic project plan](my-dashboard-agentic-project-plan.md)
 - [Controller journal](project-controller-journal.md)
 - [Independent task audits](project-audits/)
 - [User guide delivery plan](user-guide-project-plan.md)
