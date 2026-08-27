@@ -13,8 +13,8 @@
     handoff_owner: PRODUCER
     handoff_status: REWORK_REQUIRED
     owner_review: NONE
-    last_event: AUDIT_REVISE
-    next_action: Producer resolves the two remaining MYDASH-001 contract inconsistencies and returns a new exact candidate for independent audit.
+    last_event: BUILD_ATTEMPT_STARTED
+    next_action: Complete the two-item MYDASH-001 lifecycle/default correction and return the exact candidate to the independent Auditor.
 
 ## Gate ledger
 
@@ -166,3 +166,14 @@ Not authorised by this decision:
 - Production schema/data/jobs/UI/deployment effects: none.
 - Handoff: `AUDITOR -> PRODUCER / REWORK_REQUIRED`
 - Exact next action: Producer revises only the two remaining inconsistencies in MYDASH-001 and returns a new exact candidate for independent audit.
+
+### 27 August 2026 — MYDASH-001_SECOND_REWORK_BUILD_ATTEMPT_STARTED
+
+- Starting repository commit: `eb0f882ea9d1dd59a6e21e82eb407b6d46451f6b`
+- Active gate: `MYDASH-001`
+- Selected role: `PRODUCER`
+- Observed handoff: `IN_PROGRESS / PRODUCER / REWORK_REQUIRED`
+- Bounded scope: remove mutable decision status in favour of derived immutable lifecycle; define immutable conflict behaviour; correct the generated UUID natural-key exception.
+- Production schema/data/jobs/UI/deployment authority: none.
+- Fresh source identities: controller `aa7855a2d3f4246ffa4d5808eec12dcd1f313313`; plan `9df07b5ed2f85206ad9928e445c15059c447c48b`; opening journal `a67639d855f18799f07dfd5da1ebcee13ff62047`; contract `ca5c3be704916803e205e617c680685712063156`; audit `a84f7e9ab5073158919097ca69dbcbdd29728a70`.
+- Exact next action: Revise only the two remaining contract inconsistencies and persist a new Auditor handoff.
