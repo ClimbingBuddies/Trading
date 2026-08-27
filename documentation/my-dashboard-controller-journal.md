@@ -9,18 +9,18 @@
 
     project_status: IN_PROGRESS
     active_gate: MYDASH-001
-    active_gate_status: NEXT
+    active_gate_status: IN_PROGRESS
     handoff_owner: PRODUCER
     handoff_status: AUTHORISED
     owner_review: NONE
-    last_event: CONTROLLER_SCHEDULED
-    next_action: Run one Producer iteration for MYDASH-001 only. Produce the product, data, security and calculation contract without production schema, data or UI changes.
+    last_event: BUILD_ATTEMPT_STARTED
+    next_action: Complete the bounded MYDASH-001 Producer contract, persist evidence and hand the exact candidate to the independent Auditor.
 
 ## Gate ledger
 
 | Gate | Status | Owner | Review requirement |
 |---|---|---|---|
-| MYDASH-001 | NEXT | PRODUCER | Independent audit, then Owner Review A |
+| MYDASH-001 | IN_PROGRESS | PRODUCER | Independent audit, then Owner Review A |
 | MYDASH-002 | PLANNED | NONE | Independent audit |
 | MYDASH-003 | PLANNED | NONE | Independent audit |
 | MYDASH-004 | PLANNED | NONE | Independent audit, then Owner Review B |
@@ -69,3 +69,22 @@ Not authorised by this decision:
 - Execution contract: one bounded role and one active gate per run
 - First permitted work: MYDASH-001 Producer contract only
 - Production schema/UI authority before Owner Review A: none
+
+
+### 27 August 2026 — BUILD_ATTEMPT_STARTED
+
+- Starting repository commit: `19bfd8ea92459bedebf28d191461160aa3306df5`
+- Active gate: `MYDASH-001`
+- Selected role: `PRODUCER`
+- Observed handoff: `NEXT / PRODUCER / AUTHORISED`
+- Bounded scope: Product, route, data, ownership, security, recommendation, Portfolio Health, decision-clock, forward-return, migration and operational-job contract only.
+- Production schema/data/UI authority: none.
+- Source identities:
+  - controller blob: `aa7855a2d3f4246ffa4d5808eec12dcd1f313313`
+  - project-plan blob: `9df07b5ed2f85206ad9928e445c15059c447c48b`
+  - opening journal blob: `0d74c42a0fada79c9053cab3d9bf0f22f4d85c31`
+  - development-workflow blob: `e04dfa048b5b42767db4feb43d86f3738cd3c07c`
+  - platform-architecture blob: `4f9ee606554f14ee3ef4dd2ac6431fc00461e143`
+  - frontend-route-map blob: `a57db9b091f90ef6fac58bd9b37000f7f234e3e2`
+  - Supabase-data-model blob: `745b0b1c470437fba6427f54da0f354d33f400a0`
+- Exact next action: Inspect current production schema, policies, grants, functions, jobs and reusable application contracts; produce one complete MYDASH-001 candidate; stop for independent audit.
