@@ -9,18 +9,18 @@
 
     project_status: IN_PROGRESS
     active_gate: MYDASH-001
-    active_gate_status: IN_PROGRESS
-    handoff_owner: PRODUCER
-    handoff_status: AUTHORISED
+    active_gate_status: IN_REVIEW
+    handoff_owner: AUDITOR
+    handoff_status: READY_FOR_AUDIT
     owner_review: NONE
-    last_event: BUILD_ATTEMPT_STARTED
-    next_action: Complete the bounded MYDASH-001 Producer contract, persist evidence and hand the exact candidate to the independent Auditor.
+    last_event: PRODUCER_HANDOFF_COMPLETE
+    next_action: Independent Auditor reviews the exact MYDASH-001 contract candidate and evidence; pass it to Owner Review A or return one complete correction set.
 
 ## Gate ledger
 
 | Gate | Status | Owner | Review requirement |
 |---|---|---|---|
-| MYDASH-001 | IN_PROGRESS | PRODUCER | Independent audit, then Owner Review A |
+| MYDASH-001 | IN_REVIEW | AUDITOR | Independent audit, then Owner Review A |
 | MYDASH-002 | PLANNED | NONE | Independent audit |
 | MYDASH-003 | PLANNED | NONE | Independent audit |
 | MYDASH-004 | PLANNED | NONE | Independent audit, then Owner Review B |
@@ -88,3 +88,17 @@ Not authorised by this decision:
   - frontend-route-map blob: `a57db9b091f90ef6fac58bd9b37000f7f234e3e2`
   - Supabase-data-model blob: `745b0b1c470437fba6427f54da0f354d33f400a0`
 - Exact next action: Inspect current production schema, policies, grants, functions, jobs and reusable application contracts; produce one complete MYDASH-001 candidate; stop for independent audit.
+
+### 27 August 2026 — MYDASH-001_PRODUCER_HANDOFF_COMPLETE
+
+- Role performed: `PRODUCER` only.
+- Contract candidate: `documentation/specifications/my-dashboard-contract-v1.md`
+- Contract commit: `4301bd9c2da904d08b3b08de644b9a537b1bab37`
+- Documentation index commit: `02c138e629dfbdb5de38cf3dae9fdffdd2d36224`
+- Producer evidence: `documentation/my-dashboard-audits/MYDASH-001.md`
+- Evidence commit: `0629573aef9319f6a5440cba69086412ee18214f`
+- Supabase evidence fingerprint: `63807c58a0ec0403ad060a49a70a11e8` at `2026-08-27 04:06:20.748193+00`
+- Methodology versions: `my-dashboard-contract-v1`; `personal-forward-return-v1`; `portfolio-health-v1`; `personal-research-relevance-v1`
+- Production schema/data/jobs/UI/deployment effects: none.
+- Handoff: `PRODUCER -> AUDITOR / READY_FOR_AUDIT`
+- Exact next action: Independent Auditor validates this exact contract and evidence, reproduces formula samples using persisted observations, then either passes MYDASH-001 to Owner Review A or returns one complete correction set.
