@@ -9,18 +9,18 @@
 
     project_status: IN_PROGRESS
     active_gate: MYDASH-001
-    active_gate_status: IN_REVIEW
-    handoff_owner: AUDITOR
-    handoff_status: READY_FOR_AUDIT
+    active_gate_status: IN_PROGRESS
+    handoff_owner: PRODUCER
+    handoff_status: REWORK_REQUIRED
     owner_review: NONE
-    last_event: PRODUCER_HANDOFF_COMPLETE
-    next_action: Independent Auditor reviews the exact MYDASH-001 contract candidate and evidence; pass it to Owner Review A or return one complete correction set.
+    last_event: AUDIT_REVISE
+    next_action: Producer revises MYDASH-001 against the complete five-item Auditor correction set and returns a new exact candidate for independent audit.
 
 ## Gate ledger
 
 | Gate | Status | Owner | Review requirement |
 |---|---|---|---|
-| MYDASH-001 | IN_REVIEW | AUDITOR | Independent audit, then Owner Review A |
+| MYDASH-001 | IN_PROGRESS | PRODUCER | Independent audit, then Owner Review A |
 | MYDASH-002 | PLANNED | NONE | Independent audit |
 | MYDASH-003 | PLANNED | NONE | Independent audit |
 | MYDASH-004 | PLANNED | NONE | Independent audit, then Owner Review B |
@@ -102,3 +102,18 @@ Not authorised by this decision:
 - Production schema/data/jobs/UI/deployment effects: none.
 - Handoff: `PRODUCER -> AUDITOR / READY_FOR_AUDIT`
 - Exact next action: Independent Auditor validates this exact contract and evidence, reproduces formula samples using persisted observations, then either passes MYDASH-001 to Owner Review A or returns one complete correction set.
+
+### 27 August 2026 — MYDASH-001_AUDIT_REVISE
+
+- Role performed: `AUDITOR` only.
+- Audited candidate: `4301bd9c2da904d08b3b08de644b9a537b1bab37`
+- Audit decision: `REVISE`
+- Audit record: `documentation/my-dashboard-audits/MYDASH-001.md`
+- Audit commit: `99427392ed00088c0be4ca85cd22a8963dd3c065`
+- Production observation time: `2026-08-27 05:00:18.320386+00`
+- Independent formula sample: NVDA entry observation `6894`; 5/20/60 exits `6899`, `6914`, `6954`; exact-date QQQ and AUD/USD evidence.
+- Accepted boundaries: owner privacy, permanent-user denial for anonymous sessions, assessment independence, separate AI/user clocks, forward-only evaluation, explicit missing data and no live trading.
+- Substantive corrections: canonical observation/session selection; basis-point conversion; migration-ready exact dictionary; recommendation independence/freshness; derived-write grants and quality-state precedence.
+- Production schema/data/jobs/UI/deployment effects: none.
+- Handoff: `AUDITOR -> PRODUCER / REWORK_REQUIRED`
+- Exact next action: Producer revises only MYDASH-001 against the complete correction set in the audit record, persists a new candidate identity and returns it for independent audit.
