@@ -9,18 +9,18 @@
 
     project_status: IN_PROGRESS
     active_gate: MYDASH-001
-    active_gate_status: IN_PROGRESS
-    handoff_owner: PRODUCER
-    handoff_status: REWORK_REQUIRED
+    active_gate_status: IN_REVIEW
+    handoff_owner: AUDITOR
+    handoff_status: READY_FOR_AUDIT
     owner_review: NONE
-    last_event: BUILD_ATTEMPT_STARTED
-    next_action: Complete the bounded MYDASH-001 correction set, persist a new exact candidate and return it to the independent Auditor.
+    last_event: PRODUCER_HANDOFF_COMPLETE
+    next_action: Independent Auditor reviews revised MYDASH-001 candidate eb145922543a065e48b3fd4daf324dc989f9de1d against the complete correction set.
 
 ## Gate ledger
 
 | Gate | Status | Owner | Review requirement |
 |---|---|---|---|
-| MYDASH-001 | IN_PROGRESS | PRODUCER | Independent audit, then Owner Review A |
+| MYDASH-001 | IN_REVIEW | AUDITOR | Independent audit, then Owner Review A |
 | MYDASH-002 | PLANNED | NONE | Independent audit |
 | MYDASH-003 | PLANNED | NONE | Independent audit |
 | MYDASH-004 | PLANNED | NONE | Independent audit, then Owner Review B |
@@ -138,3 +138,17 @@ Not authorised by this decision:
   - Supabase data model: `745b0b1c470437fba6427f54da0f354d33f400a0`
   - watchlist auth model: `38022b972872b15aba150c869524b4b47aee98a5`
 - Exact next action: Revise the contract's observation selection, bps conversion, exact dictionary, recommendation independence/freshness, derived-write authority and quality precedence; change nothing in production.
+
+### 27 August 2026 — MYDASH-001_REWORK_PRODUCER_HANDOFF_COMPLETE
+
+- Role performed: `PRODUCER` only.
+- Prior Auditor decision: `REVISE`
+- Revised contract commits: `e0ca61a1ec2dc66954c4189f07bc74273399911c` through `eb145922543a065e48b3fd4daf324dc989f9de1d`
+- Revised candidate identity: `eb145922543a065e48b3fd4daf324dc989f9de1d`
+- Producer evidence/handoff: `documentation/my-dashboard-audits/MYDASH-001.md`
+- Evidence commit: `ac0e28d622904246eca72f0f7ca7509ecdb89572`
+- Corrections completed: canonical session/provider selection; bps conversion and worked example; exact migration dictionary; recommendation dependency/freshness rules; derived-write grants and quality-state precedence.
+- Supabase verification: fingerprint `83f71532822fd3b614238b95b3e34180` at `2026-08-27 06:02:04.335310+00`; zero personal tables; one active Tiingo provider.
+- Production schema/data/jobs/UI/deployment effects: none.
+- Handoff: `PRODUCER -> AUDITOR / READY_FOR_AUDIT`
+- Exact next action: Independent Auditor reviews revised candidate `eb145922543a065e48b3fd4daf324dc989f9de1d` against the persisted correction set and either routes a pass to Owner Review A or returns one complete correction set.
