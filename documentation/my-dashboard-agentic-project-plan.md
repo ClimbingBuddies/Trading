@@ -4,9 +4,9 @@
 **Production:** https://discoverbouldersmarkets.vercel.app  
 **Supabase project:** glvbqcplgjdfgjyknzsa  
 **Proposed route:** /my-dashboard  
-**Future controller specification:** automation/my-dashboard-agentic-controller.md  
-**Future controller journal:** documentation/my-dashboard-controller-journal.md  
-**Future audit records:** documentation/my-dashboard-audits/<GATE-ID>.md  
+**Controller specification:** automation/my-dashboard-agentic-controller.md  
+**Controller journal:** documentation/my-dashboard-controller-journal.md  
+**Audit records:** documentation/my-dashboard-audits/<GATE-ID>.md  
 **Plan created:** 27 August 2026  
 **Project size:** medium-to-large, eight independently audited gates and three intentional owner-review pauses
 
@@ -206,7 +206,7 @@ CSV import, broker integration, historical replay and more advanced risk analyti
 
 ## Source-of-truth order
 
-1. This approved project plan and the future controller specification for process and authority.
+1. This approved project plan and the controller specification for process and authority.
 2. Supabase production schema, RLS and persisted rows for current application data.
 3. GitHub application source, methodologies, migrations, tests and durable audit evidence.
 4. Vercel production for deployed UI behaviour.
@@ -277,7 +277,7 @@ A successful build or task execution is not sufficient evidence of gate completi
 
 ## Agentic role selection
 
-The future Controller selects exactly one role once from persisted state at the beginning of each run:
+The Controller selects exactly one role once from persisted state at the beginning of each run:
 
 1. If project_status is MY_DASHBOARD_PROJECT_COMPLETE, report completion and make no changes.
 2. If the active gate is NEXT or returned IN_PROGRESS and handoff_owner is PRODUCER, perform one bounded Producer iteration on that gate only.
@@ -367,7 +367,7 @@ For financial calculations, schema/security boundaries and final completion, the
 ## Evidence and handoff protocol
 
 - Durable evidence belongs in documentation/my-dashboard-audits/<GATE-ID>.md.
-- The future controller journal is append-only except for its Current state block.
+- The controller journal is append-only except for its Current state block.
 - Functional implementation commits must be separated from control/evidence-only commits.
 - Migration identity and deployed schema state must be unambiguous.
 - Temporary browser, test-user or audit helpers are permitted only when necessary, must contain no real secrets or private portfolio information, and must be removed after evidence is captured.
@@ -395,11 +395,12 @@ The project is complete only when:
 
 ## Current project state
 
-    project_status: PLAN_CREATED_AWAITING_OWNER_APPROVAL
+    project_status: IN_PROGRESS
     active_gate: MYDASH-001
-    active_gate_status: NEXT_AFTER_PLAN_APPROVAL
-    handoff_owner: OWNER
-    controller_created: false
-    controller_journal_created: false
-    production_changes_authorised: false
-    next_action: Travis reviews this plan. After approval, create the Controller specification and journal, then begin MYDASH-001 only.
+    active_gate_status: NEXT
+    handoff_owner: PRODUCER
+    controller_created: true
+    controller_journal_created: true
+    production_changes_authorised: MYDASH-001 contract and audit only
+    owner_approval_recorded: 27 August 2026
+    next_action: Controller performs one Producer iteration on MYDASH-001 only.
