@@ -136,6 +136,19 @@ Rules:
 8. Prefer security-invoker functions. Any security-definer function requires explicit necessity, internal placement, `auth.uid()`/owner validation where user invoked, restricted EXECUTE and independent audit.
 9. Browser code uses only the publishable key. Provider, service-role and vault secrets never enter browser bundles.
 
+### Derived-write authority
+
+| Interface | Security / grants contract |
+|---|---|
+| public.capture_personal_decision_v1(...) | SECURITY DEFINER is justified solely to derive owner_user_id and decision_at from auth.uid()/clock_timestamp() while withholding table INSERT. SET search_path to pg_catalog,public; reject null/anonymous auth; never accept owner_user_id or client decision time; validate instrument, source and optional benchmark; REVOKE ALL FROM PUBLIC, anon; GRANT EXECUTE TO authenticated only. |
+| public.append_personal_decision_event_v1(...) | Same permanent-user and parent-owner checks; server event time only; REVOKE ALL FROM PUBLIC, anon; GRANT EXECUTE TO authenticated only. |
+| public.append_personal_recommendation_event_v1(...) | Same permanent-user and parent-owner checks; append only; REVOKE ALL FROM PUBLIC, anon; GRANT EXECUTE TO authenticated only. |
+| private.generate_personal_recommendations_v1(...) | Internal SECURITY DEFINER; service_role/postgres EXECUTE only; no browser grant; fixed safe search_path; inserts immutable snapshots/sources. |
+| private.evaluate_personal_returns_v1(...) | Internal SECURITY DEFINER; service_role/postgres EXECUTE only; no browser grant; fixed safe search_path; deterministic reads and INSERT-only snapshots. |
+| private.refresh_portfolio_health_v1(...) | Internal SECURITY DEFINER; service_role/postgres EXECUTE only; no browser grant; fixed safe search_path; inserts versioned health snapshots. |
+
+Every privileged function must be owned by the migration owner, explicitly revoke default PUBLIC execution, use fully qualified relations, and verify owner/parent identities internally. MYDASH-002/005/006/007 must independently inspect ACLs and execute cross-user denial tests before pass.
+
 ### Cross-user test matrix
 
 | Scenario | User A | User B | Anonymous Auth | Signed out |
@@ -167,6 +180,32 @@ Eligibility requires all of:
 3. at least two independent evidence families for `INVESTIGATE` or `REVIEW_RISK`;
 4. explicit principal risk and missing-data disclosure;
 5. source freshness appropriate to the intended horizon.
+
+### Evidence independence
+
+The versioned evidence units are MARKET_AI, TECHNICAL, OPPORTUNITY and EXTERNAL_FACT. A Market Convergence row is a presentation container, not an additional independent family:
+
+| Pair | Counts as independent? | Rule |
+|---|---|---|
+| MARKET_AI + TECHNICAL | Yes only when the Market row has technical_engine_input_used = false and the Technical source has its own technical_score_id/methodology | Otherwise collapse to one dependency group |
+| MARKET_AI + a Convergence row citing the same ai_assessment_id | No | The Convergence AI component is the same source |
+| TECHNICAL + a Convergence row citing the same technical_score_id | No | The Convergence Technical component is the same source |
+| OPPORTUNITY + MARKET_AI or TECHNICAL | Yes | Opportunity remains methodologically independent and may contribute relevance, never a Buy label |
+| EXTERNAL_FACT + another EXTERNAL_FACT | Yes only across distinct canonical URLs and distinct publishers | Same normalized URL counts once regardless of claim hash or snapshot count |
+
+INVESTIGATE and REVIEW_RISK require at least two dependency groups after this collapse. MONITOR and THEME_EXPOSURE may use one qualifying group but must disclose that limitation.
+
+### Freshness rule
+
+Freshness is measured at generated_at without using later evidence. A source cutoff must be no later than generated_at. Version personal-research-relevance-v1 applies:
+
+| Intended horizon | MARKET_AI | TECHNICAL | OPPORTUNITY | EXTERNAL_FACT |
+|---:|---:|---:|---:|---:|
+| 5 sessions | <=2 eligible instrument sessions | <=2 eligible instrument sessions | <=30 calendar days | <=30 calendar days |
+| 20 sessions | <=5 eligible instrument sessions | <=5 eligible instrument sessions | <=60 calendar days | <=60 calendar days |
+| 60 sessions | <=10 eligible instrument sessions | <=10 eligible instrument sessions | <=90 calendar days | <=90 calendar days |
+
+An unavailable market calendar is a disclosed STALE_SOURCE condition, not a wall-clock substitution. Failed/partial source rows cannot qualify as positive evidence; they may appear only as disclosed limitations.
 
 Sources remain separated on the card:
 
@@ -245,22 +284,27 @@ price_return = (P_t / P_0) - 1
 
 ### Trading-session horizons
 
-For one instrument, order eligible daily observations after the entry observation. The 5D, 20D and 60D checkpoints are the fifth, twentieth and sixtieth later eligible observations, not wall-clock days. `OPEN` uses the latest eligible observation and remains provisional.
+V1 canonical daily source is the active data_providers row whose provider_code is tiingo. No fallback provider is allowed under personal-forward-return-v1; absence produces MAPPING_REQUIRED and no price.
+
+A session key is (instrument_id, observed_at) for a canonical interval_code='1day' row. The existing unique constraint (instrument_id,provider_id,interval_code,observed_at) makes one canonical-provider row per key. If production ever contains more than one active provider row for the configured provider_code, calculation fails with CALCULATION_ERROR; provider UUID ordering is never a tie-breaker.
+
+Entry is the canonical session with observed_at strictly greater than the decision clock. Later checkpoints count distinct canonical session keys after the persisted entry key: the 5th, 20th and 60th later sessions. OPEN uses the latest canonical session at or before evaluation_cutoff and remains provisional. Every snapshot persists provider-backed entry/exit observation IDs; raw row order can never alter the result.
 
 ### Fees and slippage
 
-Assumptions are stored on the decision. V1 defaults may be explicit zeroes, but the UI must display them.
+Stored fee/slippage fields are basis points. Each is converted before arithmetic:
 
-For unit notional (N), entry fee (f_0), exit fee (f_t), entry slippage (s_0) and exit slippage (s_t):
+    decimal_rate = stored_bps / 10000
 
-```text
-units = N * (1 - f_0) / (P_0 * (1 + s_0))
-proceeds = units * P_t * (1 - s_t) * (1 - f_t)
-net_simulated_return = (proceeds / N) - 1
-```
+Allowed stored range is 0 through 1000.0000 bps inclusive. Calculations use PostgreSQL numeric precision without intermediate rounding; only UI presentation rounds. For notional N, decimal entry fee f0, exit fee ft, entry slippage s0 and exit slippage st:
+
+    units = N * (1 - f0) / (P0 * (1 + s0))
+    proceeds = units * Pt * (1 - st) * (1 - ft)
+    net_simulated_return = (proceeds / N) - 1
+
+Worked persisted-observation example: NVDA entry observation 6894 at 198.45 and fifth-later observation 6899 at 215.20, N=1000, 10 bps entry/exit fee and 5 bps entry/exit slippage. Therefore f0=ft=0.001 and s0=st=0.0005; price_return=0.0844041320231796 and net_simulated_return=0.0811547126028822323532111495 before presentation rounding.
 
 Market return and net simulated return are stored and labelled separately.
-
 ### Base-currency return
 
 Let (q_0) and (q_t) be base-currency units per instrument-currency unit from timestamp-aligned FX observations:
@@ -269,7 +313,15 @@ Let (q_0) and (q_t) be base-currency units per instrument-currency unit from tim
 base_currency_return = ((P_t * q_t) / (P_0 * q_0)) - 1
 ```
 
-Production currently has usable AUD/USD and other FX histories, but v1 verification is limited to direct or inverse pairs with persisted observations. For a USD instrument and AUD base, (q = 1 / AUDUSD). No triangulated or stale FX rate is fabricated.
+V1 accepts only a canonical Tiingo 1day FX row with observed_at exactly equal to the selected instrument observation. Pair symbols use BASE/QUOTE semantics. For instrument currency X and portfolio base B:
+
+- X/B gives base units per instrument unit, so q = close;
+- B/X gives instrument units per base unit, so q = 1 / close;
+- X=B gives q=1 without an FX observation;
+- no exact direct/inverse row means base_currency_return is NULL, primary status INCOMPLETE_FX and reason MISSING_EXACT_FX;
+- triangulation, nearest-row, last-known and stale carry-forward are prohibited in v1.
+
+The entry_fx_observation_id and exit_fx_observation_id persist the exact rows used.
 
 ### Benchmark and excess return
 
@@ -280,7 +332,7 @@ benchmark_return = (B_t / B_0) - 1
 excess_return = comparable_instrument_return - benchmark_return
 ```
 
-If benchmark entry/exit observations are not aligned to the evaluated sessions, benchmark and excess return remain NULL with `MISSING_BENCHMARK`.
+Benchmark uses the same canonical provider and requires exact observed_at equality with both selected instrument entry and checkpoint sessions. No nearest or carried-forward benchmark row is permitted. If either exact row is absent, benchmark_return and excess_return remain NULL and quality_reasons includes MISSING_BENCHMARK; price/base results remain independently reportable.
 
 ### Drawdown
 
@@ -299,9 +351,18 @@ Production stores Tiingo raw OHLC separately from `adjusted_close`, and current 
 
 ### Data-quality states
 
-`PENDING_ENTRY`, `PENDING_HORIZON`, `COMPLETE_PRICE_ONLY`, `COMPLETE_BASE_CURRENCY`, `INCOMPLETE_FX`, `MISSING_BENCHMARK`, `STALE_SOURCE`, `UNVERIFIED_CORPORATE_ACTIONS`, `MAPPING_REQUIRED`, `CALCULATION_ERROR`.
+Primary quality_status uses this first-match precedence:
 
-Missing values remain NULL and carry reasons; they are never converted to zero.
+1. CALCULATION_ERROR;
+2. MAPPING_REQUIRED;
+3. STALE_SOURCE;
+4. PENDING_ENTRY;
+5. PENDING_HORIZON;
+6. INCOMPLETE_FX when base-currency output is required but exact FX is unavailable;
+7. COMPLETE_BASE_CURRENCY when price and required base conversion are complete;
+8. COMPLETE_PRICE_ONLY otherwise.
+
+Orthogonal warnings are retained in quality_reasons, including MISSING_BENCHMARK, UNVERIFIED_CORPORATE_ACTIONS, MISSING_EXACT_FX and any source limitation. Thus a valid raw price result can be COMPLETE_BASE_CURRENCY while still disclosing that adjusted total return and an optional benchmark are unavailable. Missing values remain NULL and are never converted to zero.
 
 ## 10. Determinism and versioning
 
