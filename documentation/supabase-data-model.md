@@ -71,8 +71,10 @@ The model prevents atomic evidence and its derived consensus from being double-c
 | `alert_events` | Owner-visible, evaluator-written event history |
 | `alert_evaluation_state` | Internal transition/deduplication state |
 | `alert_evaluator_runs` | Evaluator reason, filters, status, counts and errors |
+| `user_market_preferences` | Permanent-user base currency, default research horizon and optional presentation preference for My Dashboard |
+| `user_market_interests` | Permanent-user instrument or Opportunity-theme research interests; interests are not Buy recommendations |
 
-Watchlist and alert ownership references `auth.users.id`. Anonymous users and other authenticated users cannot access an owner's rows. Clients cannot forge alert event history. Approved producers and cron trigger evaluation; deterministic event keys prevent duplicates.
+My Dashboard preference/interest, Watchlist and alert ownership references `auth.users.id`. Anonymous users and other authenticated users cannot access an owner's rows. My Dashboard owners may update only approved preference/interest fields, not ownership or timestamps. Clients cannot forge alert event history. Approved producers and cron trigger evaluation; deterministic event keys prevent duplicates.
 
 ## Strategy laboratory
 
