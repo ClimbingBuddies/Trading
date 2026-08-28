@@ -403,4 +403,4 @@ The project is complete only when:
     controller_journal_created: true
     production_changes_authorised: MYDASH-003 candidate implementation only; no production promotion before independent audit
     owner_approval_recorded: Owner Review A approved and MYDASH-002 merged 28 August 2026
-    next_action: Producer makes the exact MYDASH-003 candidate safely runnable in Preview, supplies bounded two-user authenticated test access, completes desktop and 390 × 844 keyboard/state evidence, reconciles PR #25 with current main, and returns the gate to independent audit without merging.
+    next_action: Owner supplies a connected Preview sign-in session for two permanent test identities, or explicitly authorises bounded dedicated test identities. The Preview configuration is repaired and 24/24 tests pass, but the Controller remains at Producer until authenticated desktop, 390 × 844 and keyboard/state evidence can be captured safely; PR #25 remains unmerged.
