@@ -37,10 +37,18 @@
 - `npm test`: 12/12 passed.
 - `npm run build`: passed; Next.js emitted `/my-dashboard`.
 - `git diff --check`: passed.
-- Static gate tests verify six tabs, keyboard handlers, permanent-user ownership predicates, anonymous rejection and absence of service-role browser code.\n- PR correction regression suite: 7/7 passed for owner-transition invalidation, token-refresh edit preservation, default resets, honest global failure states, exact counts and paginated distinct-instrument retrieval.
+- Static gate tests verify six tabs, keyboard handlers, permanent-user ownership predicates, anonymous rejection and absence of service-role browser code.
+- PR correction regression suite: 7/7 passed for owner-transition invalidation, token-refresh edit preservation, default resets, honest global failure states, exact counts and paginated distinct-instrument retrieval.
 - Preview deployment `dpl_EcbDxNqcyougutshNyPqY3AynzqR` reached `READY` for commit `82815e1f1da0e7e40d401345ea790395b3eb53c1`.
 
-## PR review correction cycle\n\n- The initial review found three privacy/honesty defects; commit `ebd18e6f28638e6f4c7b943ade95d1ce0d312db1` corrected them.\n- The first re-review found same-owner token-refresh and cross-tab failure-state defects; commit `f4f1da35fe62f99adab9c3998d1dfa2c8179e118` corrected them.\n- The second re-review found stale candidate identity and response-row-limit defects. Functional commit `82815e1f1da0e7e40d401345ea790395b3eb53c1` now uses exact count queries, paginated watchlist IDs, batched/paginated watchlist-item retrieval, and this handoff names the corrected candidate.\n- Promotion remains prohibited until the corrected candidate receives a clean independent PR review and a READY build.\n\n## Exact blocker
+## PR review correction cycle
+
+- The initial review found three privacy/honesty defects; commit `ebd18e6f28638e6f4c7b943ade95d1ce0d312db1` corrected them.
+- The first re-review found same-owner token-refresh and cross-tab failure-state defects; commit `f4f1da35fe62f99adab9c3998d1dfa2c8179e118` corrected them.
+- The second re-review found stale candidate identity and response-row-limit defects. Functional commit `82815e1f1da0e7e40d401345ea790395b3eb53c1` now uses exact count queries, paginated watchlist IDs, batched/paginated watchlist-item retrieval, and this handoff names the corrected candidate.
+- Promotion remains prohibited until the corrected candidate receives a clean independent PR review and a READY build.
+
+## Exact blocker
 
 The repository safety policy rejected publishing the nine-file implementation directly to the default `main` branch. The candidate was therefore persisted on a review branch. Its Vercel preview is protected and, after authorised preview access, the route rendered the application error boundary because Preview does not have `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`. Production remains on `abc0f4d4fd879b781dd9c84d3aed8396f67cd355` and therefore does not contain the new route.
 
