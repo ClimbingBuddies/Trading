@@ -140,13 +140,15 @@ export default function MyDashboardClient() {
 
     const applySession = (sessionUser: User | null | undefined) => {
       const resolved = permanentUser(sessionUser)
-      clearPrivateState(resolved?.id ?? null)
+      const nextOwnerId = resolved?.id ?? null
+      const ownerChanged = activeOwnerRef.current !== nextOwnerId
+      if (ownerChanged) clearPrivateState(nextOwnerId)
       setUser(resolved)
       setAuthReady(true)
       if (sessionUser?.is_anonymous) {
         setError('Anonymous sessions cannot open My Dashboard. Sign in with a permanent email account.')
       }
-      if (resolved) void loadPrivateData(resolved.id)
+      if (resolved && ownerChanged) void loadPrivateData(resolved.id)
     }
 
     const initialGeneration = ++authGeneration
@@ -291,15 +293,15 @@ export default function MyDashboardClient() {
       {status && <div className={styles.status} role="status">{status}</div>}
 
       <section id={`my-dashboard-panel-${selectedTab}`} role="tabpanel" aria-labelledby={`my-dashboard-tab-${selectedTab}`} tabIndex={0}>
-        {selectedTab === 'today' ? (
-          privateDataState === 'error' ? (
-            <article className={styles.stateCard} aria-live="assertive">
-              <span className={styles.eyebrow}>PRIVATE DATA UNAVAILABLE</span>
-              <h2>My Dashboard could not be loaded</h2>
-              <p>{error || 'The private dashboard could not be loaded.'}</p>
-              <button onClick={() => loadPrivateData(user.id)}>Try again</button>
-            </article>
-          ) : privateDataState !== 'ready' || !counts ? (
+        {privateDataState === 'error' ? (
+          <article className={styles.stateCard} aria-live="assertive">
+            <span className={styles.eyebrow}>PRIVATE DATA UNAVAILABLE</span>
+            <h2>My Dashboard could not be loaded</h2>
+            <p>{error || 'The private dashboard could not be loaded.'}</p>
+            <button onClick={() => loadPrivateData(user.id)}>Try again</button>
+          </article>
+        ) : selectedTab === 'today' ? (
+          privateDataState !== 'ready' || !counts ? (
             <article className={styles.stateCard} aria-live="polite" aria-busy="true">
               <span className={styles.eyebrow}>PRIVATE WORKSPACE</span>
               <h2>Loading your dashboard…</h2>
