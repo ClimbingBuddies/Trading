@@ -39,7 +39,7 @@
     handoff_to: AUDITOR
     handoff_status: READY_FOR_AUDIT
     implementation_commit_or_range: 1a6d0130735f69717c1963a84e64c5a5cbce6fc2 through 1da77ced45b445829e1aaf7c5249d61281bf4031
-    delivery_control_commits: 0de29089744b04983c175d1d27b6087717d8bc29; 050d565ebe399f03ed9438fe1666ea95c68c84ce; final evidence/journal commits follow the functional candidate
+    delivery_control_commits: 0de29089744b04983c175d1d27b6087717d8bc29; 050d565ebe399f03ed9438fe1666ea95c68c84ce; dde4135009265edbd1738f1fecf4294bb234892f; 92b2494e5d190cf1ec17214b810016c422bab8cb; 3e5aa7188138c150e7c251971bd78c746ca2364f
     files_changed: lib/my-dashboard-data.ts; components/MyDashboardClient.tsx; components/MyDashboardClient.module.css; tests/my-dashboard-gate-three.test.mjs; documentation/architecture/frontend-route-map.md; project plan; controller journal; this evidence record
     migrations_and_schema_effects: none
     rls_and_permission_evidence: existing owner-scoped Watchlist policies and anonymous rejection rechecked; no security boundary changed
