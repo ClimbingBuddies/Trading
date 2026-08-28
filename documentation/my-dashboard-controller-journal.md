@@ -9,12 +9,12 @@
 
     project_status: IN_PROGRESS
     active_gate: MYDASH-003
-    active_gate_status: NEXT
-    handoff_owner: PRODUCER
-    handoff_status: AUTHORISED
+    active_gate_status: IN_REVIEW
+    handoff_owner: AUDITOR
+    handoff_status: READY_FOR_AUDIT
     owner_review: APPROVED_AND_MERGED
-    last_event: MYDASH-002_AUDIT_PASS_WITH_ADVICE
-    next_action: Producer performs one bounded MYDASH-003 iteration on private Watchlists and relevant Opportunities, preserving independent Opportunity lineage and explicit data gaps.
+    last_event: MYDASH-003_PR_FINDINGS_CORRECTED
+    next_action: Independent Auditor reviews exact functional candidate 73265fdc6d0cec32386acb8ccd955fe3bea59d99 and either returns one complete correction set or promotes only MYDASH-004.
 
 ## Gate ledger
 
@@ -22,7 +22,7 @@
 |---|---|---|---|
 | MYDASH-001 | DONE | NONE | Owner Review A — APPROVED 27 August 2026 |
 | MYDASH-002 | DONE | NONE | Independent audit complete; PASS_WITH_ADVICE with authenticated/mobile advisory checks |
-| MYDASH-003 | NEXT | PRODUCER | Independent audit |
+| MYDASH-003 | IN_REVIEW | AUDITOR | Independent audit |
 | MYDASH-004 | PLANNED | NONE | Independent audit, then Owner Review B |
 | MYDASH-005 | PLANNED | NONE | Independent audit |
 | MYDASH-006 | PLANNED | NONE | Independent audit |
@@ -317,3 +317,53 @@ Not authorised by this decision:
 - Audit decision: `PASS_WITH_ADVICE`; no implementation or production data changes.
 - Handoff: `AUDITOR -> PRODUCER / MYDASH-003 NEXT`.
 - Exact next action: Producer runs one bounded MYDASH-003 iteration. Repeat authenticated two-user and 390 × 844 keyboard checks when a signed-in verification session is available.
+
+### 28 August 2026 — MYDASH-003_BUILD_ATTEMPT_STARTED
+
+- Starting repository commit: `5bd74070c7e3c6e947d4c7facea97661eef01a1f`.
+- Active gate: `MYDASH-003`.
+- Selected role: `PRODUCER`.
+- Observed handoff: `NEXT / PRODUCER / AUTHORISED`.
+- Bounded scope: activate only the private Watchlists and relevant Opportunities tabs using existing owner-scoped Watchlists plus independent Opportunity mappings and assessments; expose explicit relevance, source dates and missing-data states; preserve all later tabs as empty.
+- Harmless metadata reconciliation: the project-plan footer still named MYDASH-001 although its gate ledger, this journal, MYDASH-002 audit, merged production implementation and production schema all identify MYDASH-003 as NEXT. The footer was corrected without changing scope or prior evidence.
+- Preserved boundaries: no Opportunity-to-Buy conversion, no blended score, no assessment writes, no schema/RLS/grant weakening, no fabricated values, no live trading or broker capability.
+- Fresh source identities:
+  - controller blob: `aa7855a2d3f4246ffa4d5808eec12dcd1f313313`
+  - project plan opening blob: `4dbcf6ebc001fefb7e57a6ea73c5eb2e212ab816`
+  - opening journal blob: `147d689082b0ff3582e4278eab1f15ac8f3474fd`
+  - approved contract blob: `bd1d1556015b12967cb57c39f3922f92019a0cc4`
+  - MYDASH-002 audit blob: `31b50e71261fc61bceea3877ba1027263599519e`
+  - development workflow blob: `e04dfa048b5b42767db4feb43d86f3738cd3c07c`
+  - platform architecture blob: `4f9ee606554f14ee3ef4dd2ac6431fc00461e143`
+  - frontend route map blob: `d405a1c5329db4ecf6edd45122d562b1aed94407`
+  - Supabase data model blob: `596282e1d8ac4a99e19eea537c3ba451c8dec72e`
+  - dashboard component blob: `f9e49639346f620056064155fcacb0539403165b`
+  - dashboard stylesheet blob: `5add7f396551bc79b9e2b44f182b3f01805d065f`
+  - latest production migration: `20260827141836_my_dashboard_interest_fk_indexes`
+- Production truth inspected: two private Watchlists, two private Watchlist items across two owners, zero user interests, seven active Opportunity themes, 24 active tracked-instrument exposure mappings and latest Opportunity assessment date 27 August 2026.
+- Exact next action: implement and verify MYDASH-003 only, persist a complete Producer handoff, and stop for the independent Auditor.
+
+### 28 August 2026 — MYDASH-003_PRODUCER_HANDOFF_COMPLETE
+
+- Role performed: `PRODUCER` only; this run did not audit or promote the gate.
+- Candidate: PR #25, branch `codex/mydash-003-watchlists-opportunities`, functional range `1a6d0130735f69717c1963a84e64c5a5cbce6fc2` through `1da77ced45b445829e1aaf7c5249d61281bf4031`.
+- Scope delivered: private Watchlists and relevant Opportunities only, derived from owner Watchlists/interests plus independent persisted Opportunity mappings and assessments.
+- Preserved boundaries: no Opportunity-to-Buy conversion, no blended score, no assessment writes, no schema/RLS/grant change, no fabricated values, no live trading and no broker access.
+- Producer correction: the complete suite initially detected loss of MYDASH-002 exact-count/pagination behaviour; commit `1da77ced45b445829e1aaf7c5249d61281bf4031` restored it before handoff.
+- Checks: `npm test` 23/23 passed; `git diff --check` passed; exact-candidate Vercel deployment `dpl_CkQ6fyVcSViKUAxijFwAAcveuumA` is `READY` after successful TypeScript/build checks.
+- UI evidence: current production `/my-dashboard` retains the signed-out privacy/no-trading boundary. The exact candidate Preview fails closed because Preview lacks the two public Supabase frontend variables; authenticated and direct 390 × 844 interaction evidence remains explicit for independent reproduction.
+- Schema/data effects: none. Latest production migration remains `20260827141836_my_dashboard_interest_fk_indexes`.
+- Producer evidence: `documentation/my-dashboard-audits/MYDASH-003.md`.
+- Handoff: `PRODUCER -> AUDITOR / MYDASH-003 IN_REVIEW / READY_FOR_AUDIT`.
+- Exact next action: independent Auditor reviews exact functional candidate `1da77ced45b445829e1aaf7c5249d61281bf4031`; it must not trust this summary and may promote no more than MYDASH-004 after a pass.
+
+### 28 August 2026 — MYDASH-003_PR_FINDINGS_CORRECTED
+
+- Role remained `PRODUCER`; no audit or gate promotion occurred.
+- Fresh PR review identified the previously reproduced exact-count regression plus two exposure-identity defects permitted by the Opportunity mapping key.
+- Complete correction set: preserve MYDASH-002 exact count/pagination behaviour; count distinct mapped `theme_id` values rather than exposure rows; include `exposure_type` in each Opportunity exposure React key.
+- Corrected exact functional candidate: `73265fdc6d0cec32386acb8ccd955fe3bea59d99`.
+- Checks after all corrections: `npm test` 23/23 passed; `git diff --check` passed; Vercel deployment `dpl_Djdhcz9Heav4324LQ53wmLceUzX8` is `READY`.
+- Schema/data/production effects: none.
+- Handoff remains `PRODUCER -> AUDITOR / MYDASH-003 IN_REVIEW / READY_FOR_AUDIT`, replacing the earlier candidate identity with `73265fdc6d0cec32386acb8ccd955fe3bea59d99`.
+- Exact next action: independent Auditor reviews only corrected candidate `73265fdc6d0cec32386acb8ccd955fe3bea59d99` and reproduces security, data-lineage, responsive and keyboard evidence independently.
