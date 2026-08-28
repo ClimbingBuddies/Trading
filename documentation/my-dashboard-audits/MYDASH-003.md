@@ -122,6 +122,7 @@ The public-configuration defect is corrected without changing database permissio
 - PR #25 now tracks only `NEXT_PUBLIC_SUPABASE_URL` and the modern `sb_publishable_…` key required by browser builds. The publishable key identifies the public API boundary and remains subject to Auth and RLS; no legacy anon key, service-role key, provider credential or private portfolio value was added.
 - `tests/my-dashboard-preview-config.test.mjs` rejects any unexpected configuration key and secret-like name. The complete suite passes 24/24 and `git diff --check` passes.
 - Candidate commit `9bb1a3c06e5df010ef86ab1defe0f67f3270f677` built successfully as Vercel Preview `dpl_2KL91q1fw2k2XGVsrB5XDkvmnTmq`, state `READY`.
+- PR #25 was reconciled with the persisted `main` handoff in merge commit `0b0bff0efa258838e2ca1a6b8e730b6ea6ef2963`. Exact reconciled Preview `dpl_5y7DJ1T3XYdoMHmgTjuDhpiN5jLf` is `READY`, renders the application sign-in boundary and has no `/my-dashboard` runtime errors in the verification window.
 - A Vercel share session reached the actual `/my-dashboard` application route. The route now renders the permanent-user email sign-in boundary; the prior `Missing required Supabase frontend configuration` runtime failure is removed.
 - Supabase project `glvbqcplgjdfgjyknzsa` remains unchanged: two persisted Watchlists and two items across two permanent owners, owner-scoped policies, anonymous denial and no schema, grant or production-data mutation.
 - Production remains on MYDASH-002. PR #25 is not merged.
@@ -135,7 +136,7 @@ The remaining correction cannot be completed safely in this non-interactive run.
     handoff_to: PRODUCER
     handoff_status: BLOCKED_OWNER_AUTHENTICATED_UI_EVIDENCE
     implementation_commit_or_range: 1a6d0130735f69717c1963a84e64c5a5cbce6fc2 through 9bb1a3c06e5df010ef86ab1defe0f67f3270f677
-    deployment_reviewed: dpl_2KL91q1fw2k2XGVsrB5XDkvmnTmq READY; application sign-in boundary rendered and public configuration error absent
+    deployment_reviewed: dpl_5y7DJ1T3XYdoMHmgTjuDhpiN5jLf READY at reconciled PR head 0b0bff0efa258838e2ca1a6b8e730b6ea6ef2963; application sign-in boundary rendered, public configuration error absent and no route runtime errors observed
     schema_and_rls_effects: none; existing owner isolation and anonymous denial preserved
     tests_and_checks: npm test 24/24 PASS; git diff --check PASS; Vercel build READY
     completed_corrections: safe runnable Preview; public-config regression guard; source documentation; production remains unchanged
