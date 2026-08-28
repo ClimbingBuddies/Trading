@@ -68,6 +68,12 @@ test('MYDASH-002 uses exact counts and paginates all rows needed for distinct in
   assert.doesNotMatch(component, /watchlists: listIds\.length/)
 })
 
+test('MYDASH-002 preference saves recover from same-owner cross-tab creation races', async () => {
+  const component = await readFile(componentPath, 'utf8')
+  assert.match(component, /\.upsert\(payload, \{ onConflict: 'owner_user_id' \}\)/)
+  assert.doesNotMatch(component, /preferences\s*\?\s*await getBrowserSupabase\(\)/)
+})
+
 test('MYDASH-002 keeps failed private-data results unknown and renders only retry state', async () => {
   const component = await readFile(componentPath, 'utf8')
   assert.match(component, /useState<DashboardCounts \| null>\(null\)/)
