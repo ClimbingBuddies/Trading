@@ -403,4 +403,4 @@ The project is complete only when:
     controller_journal_created: true
     production_changes_authorised: MYDASH-003 candidate implementation only; no production promotion before independent audit
     owner_approval_recorded: Owner Review A approved and MYDASH-002 merged 28 August 2026
-    next_action: Independent Auditor reviews exact MYDASH-003 functional candidate 1da77ced45b445829e1aaf7c5249d61281bf4031.
+    next_action: Independent Auditor reviews exact MYDASH-003 functional candidate 73265fdc6d0cec32386acb8ccd955fe3bea59d99.
