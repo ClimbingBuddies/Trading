@@ -4,7 +4,7 @@
 **Role:** PRODUCER
 **Status:** BLOCKED — production promotion permission required
 **Candidate branch:** `codex/mydash-002-secure-foundation`
-**Functional commit:** `82815e1f1da0e7e40d401345ea790395b3eb53c1`
+**Functional commit:** `cf200f005ea6659e2c12daf9177008e10bebf45a`
 
 ## Bounded implementation
 
@@ -38,15 +38,15 @@
 - `npm run build`: passed; Next.js emitted `/my-dashboard`.
 - `git diff --check`: passed.
 - Static gate tests verify six tabs, keyboard handlers, permanent-user ownership predicates, anonymous rejection and absence of service-role browser code.
-- PR correction regression suite: 7/7 passed for owner-transition invalidation, token-refresh edit preservation, default resets, honest global failure states, exact counts and paginated distinct-instrument retrieval.
-- Preview deployment `dpl_EcbDxNqcyougutshNyPqY3AynzqR` reached `READY` for commit `82815e1f1da0e7e40d401345ea790395b3eb53c1`.
+- PR correction regression suite: 8/8 passed for owner-transition invalidation, token-refresh edit preservation, default resets, honest global failure states, exact counts and paginated distinct-instrument retrieval.
+- Preview deployment `dpl_EcbDxNqcyougutshNyPqY3AynzqR` reached `READY` for commit `cf200f005ea6659e2c12daf9177008e10bebf45a`.
 
 ## PR review correction cycle
 
 - The initial review found three privacy/honesty defects; commit `ebd18e6f28638e6f4c7b943ade95d1ce0d312db1` corrected them.
 - The first re-review found same-owner token-refresh and cross-tab failure-state defects; commit `f4f1da35fe62f99adab9c3998d1dfa2c8179e118` corrected them.
-- The second re-review found stale candidate identity and response-row-limit defects. Functional commit `82815e1f1da0e7e40d401345ea790395b3eb53c1` now uses exact count queries, paginated watchlist IDs, batched/paginated watchlist-item retrieval, and this handoff names the corrected candidate.
-- Promotion remains prohibited until the corrected candidate receives a clean independent PR review and a READY build.
+- The second re-review found stale candidate identity and response-row-limit defects. Functional commit `cf200f005ea6659e2c12daf9177008e10bebf45a` now uses exact count queries, paginated watchlist IDs, batched/paginated watchlist-item retrieval, and this handoff names the corrected candidate.
+- The final correction also uses an owner-key upsert for cross-tab preference races and a palette-safe button foreground.\n- Promotion remains prohibited until the corrected candidate receives a clean independent PR review and a READY build.
 
 ## Exact blocker
 
@@ -60,17 +60,17 @@ Copying Production's Supabase settings into Preview would connect an unaudited p
     handoff_from: PRODUCER
     handoff_to: TRAVIS
     handoff_status: PRODUCTION_PROMOTION_REQUIRED
-    implementation_commit_or_range: 82815e1f1da0e7e40d401345ea790395b3eb53c1
+    implementation_commit_or_range: cf200f005ea6659e2c12daf9177008e10bebf45a
     delivery_control_commits: abc0f4d4fd879b781dd9c84d3aed8396f67cd355
     files_changed: app/my-dashboard/page.tsx; components/AppNav.tsx; components/MyDashboardClient.tsx; components/MyDashboardClient.module.css; two Supabase migrations; route/data-model docs; gate test
     migrations_and_schema_effects: two production migrations applied; two empty owner-scoped tables and supporting indexes
     rls_and_permission_evidence: seven permanent-owner policies; narrow grants; cross-user and anonymous denial reproduced
     source_data_and_cutoffs: Supabase project glvbqcplgjdfgjyknzsa at 27 August 2026; no fixtures retained
     calculation_or_methodology_version: my-dashboard-contract-v1; no return calculation in this gate
-    tests_and_checks: original npm test 12/12; corrected focused regression 7/7; original npm run build PASS; corrected-candidate Vercel build pending; diff check PASS; Supabase advisors checked
+    tests_and_checks: original npm test 12/12; corrected focused regression 8/8; original npm run build PASS; corrected-candidate Vercel build pending; diff check PASS; Supabase advisors checked
     routes_and_viewports_verified: preview deployment READY; route blocked by absent Preview public Supabase configuration; production viewports not verified
     privacy_and_cross_user_evidence: two permanent users plus anonymous JWT tested in one rolled-back transaction
     documentation_impact: frontend route map and Supabase data model aligned
     known_limitations: candidate is not on main or production; Preview lacks public Supabase configuration; no authenticated UI evidence
     acceptance_criteria_evidence: schema/RLS/build criteria pass; deployed responsive/authenticated UI criteria remain unverified
-    exact_next_action: obtain a clean independent review and READY build for corrected functional commit 82815e1f1da0e7e40d401345ea790395b3eb53c1; only then merge PR #24, verify production desktop, 390 × 844, keyboard, signed-out and authenticated states, and resume the Controller for independent audit.
+    exact_next_action: obtain a clean independent review and READY build for corrected functional commit cf200f005ea6659e2c12daf9177008e10bebf45a; only then merge PR #24, verify production desktop, 390 × 844, keyboard, signed-out and authenticated states, and resume the Controller for independent audit.
