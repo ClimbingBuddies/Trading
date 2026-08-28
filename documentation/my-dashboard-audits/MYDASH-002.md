@@ -46,7 +46,8 @@
 - The initial review found three privacy/honesty defects; commit `ebd18e6f28638e6f4c7b943ade95d1ce0d312db1` corrected them.
 - The first re-review found same-owner token-refresh and cross-tab failure-state defects; commit `f4f1da35fe62f99adab9c3998d1dfa2c8179e118` corrected them.
 - The second re-review found stale candidate identity and response-row-limit defects. Functional commit `cf200f005ea6659e2c12daf9177008e10bebf45a` now uses exact count queries, paginated watchlist IDs, batched/paginated watchlist-item retrieval, and this handoff names the corrected candidate.
-- The final correction also uses an owner-key upsert for cross-tab preference races and a palette-safe button foreground.\n- Promotion remains prohibited until the corrected candidate receives a clean independent PR review and a READY build.
+- The final correction also uses an owner-key upsert for cross-tab preference races and a palette-safe button foreground.
+- Promotion remains prohibited until the corrected candidate receives a clean independent PR review and a READY build.
 
 ## Exact blocker
 
