@@ -317,3 +317,29 @@ Not authorised by this decision:
 - Audit decision: `PASS_WITH_ADVICE`; no implementation or production data changes.
 - Handoff: `AUDITOR -> PRODUCER / MYDASH-003 NEXT`.
 - Exact next action: Producer runs one bounded MYDASH-003 iteration. Repeat authenticated two-user and 390 × 844 keyboard checks when a signed-in verification session is available.
+
+### 28 August 2026 — MYDASH-003_BUILD_ATTEMPT_STARTED
+
+- Starting repository commit: `5bd74070c7e3c6e947d4c7facea97661eef01a1f`.
+- Active gate: `MYDASH-003`.
+- Selected role: `PRODUCER`.
+- Observed handoff: `NEXT / PRODUCER / AUTHORISED`.
+- Bounded scope: activate only the private Watchlists and relevant Opportunities tabs using existing owner-scoped Watchlists plus independent Opportunity mappings and assessments; expose explicit relevance, source dates and missing-data states; preserve all later tabs as empty.
+- Harmless metadata reconciliation: the project-plan footer still named MYDASH-001 although its gate ledger, this journal, MYDASH-002 audit, merged production implementation and production schema all identify MYDASH-003 as NEXT. The footer was corrected without changing scope or prior evidence.
+- Preserved boundaries: no Opportunity-to-Buy conversion, no blended score, no assessment writes, no schema/RLS/grant weakening, no fabricated values, no live trading or broker capability.
+- Fresh source identities:
+  - controller blob: `aa7855a2d3f4246ffa4d5808eec12dcd1f313313`
+  - project plan opening blob: `4dbcf6ebc001fefb7e57a6ea73c5eb2e212ab816`
+  - opening journal blob: `147d689082b0ff3582e4278eab1f15ac8f3474fd`
+  - approved contract blob: `bd1d1556015b12967cb57c39f3922f92019a0cc4`
+  - MYDASH-002 audit blob: `31b50e71261fc61bceea3877ba1027263599519e`
+  - development workflow blob: `e04dfa048b5b42767db4feb43d86f3738cd3c07c`
+  - platform architecture blob: `4f9ee606554f14ee3ef4dd2ac6431fc00461e143`
+  - frontend route map blob: `d405a1c5329db4ecf6edd45122d562b1aed94407`
+  - Supabase data model blob: `596282e1d8ac4a99e19eea537c3ba451c8dec72e`
+  - dashboard component blob: `f9e49639346f620056064155fcacb0539403165b`
+  - dashboard stylesheet blob: `5add7f396551bc79b9e2b44f182b3f01805d065f`
+  - latest production migration: `20260827141836_my_dashboard_interest_fk_indexes`
+- Production truth inspected: two private Watchlists, two private Watchlist items across two owners, zero user interests, seven active Opportunity themes, 24 active tracked-instrument exposure mappings and latest Opportunity assessment date 27 August 2026.
+- Exact next action: implement and verify MYDASH-003 only, persist a complete Producer handoff, and stop for the independent Auditor.
+
