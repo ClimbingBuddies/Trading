@@ -5,6 +5,7 @@ import { FormEvent, KeyboardEvent, useCallback, useEffect, useMemo, useRef, useS
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import type { User } from '@supabase/supabase-js'
 import { getBrowserSupabase } from '@/lib/supabase-browser'
+import { loadMyDashboardGateThree, type MyDashboardGateThreeData } from '@/lib/my-dashboard-data'
 import styles from './MyDashboardClient.module.css'
 
 const tabs = [
@@ -19,8 +20,6 @@ const tabs = [
 const DEFAULT_BASE_CURRENCY = 'AUD'
 const DEFAULT_HORIZON = 20 as const
 const DEFAULT_RISK = 'unspecified' as const
-const PAGE_SIZE = 500
-const WATCHLIST_ID_BATCH_SIZE = 100
 
 type TabKey = (typeof tabs)[number]['key']
 type Preferences = {
@@ -41,6 +40,204 @@ function validTab(value: string | null): TabKey {
   return tabs.some((tab) => tab.key === value) ? (value as TabKey) : 'today'
 }
 
+
+function formatObservedAt(value: string) {
+  return new Intl.DateTimeFormat('en-AU', {
+    timeZone: 'Australia/Perth',
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  }).format(new Date(value))
+}
+
+function formatAssessmentDate(value: string) {
+  return new Intl.DateTimeFormat('en-AU', {
+    timeZone: 'Australia/Perth',
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  }).format(new Date(`${value}T00:00:00Z`))
+}
+
+function formatNumber(value: number | null, digits = 0) {
+  return value === null ? 'Unavailable' : value.toLocaleString('en-AU', { maximumFractionDigits: digits })
+}
+
+function label(value: string | null | undefined) {
+  if (!value) return 'Not recorded'
+  return value.replaceAll('_', ' ').replace(/\b\w/g, (character) => character.toUpperCase())
+}
+
+function WatchlistsPanel({ data }: { data: MyDashboardGateThreeData }) {
+  return (
+    <div className={styles.sectionGrid}>
+      <div className={styles.sectionIntro}>
+        <div>
+          <span className={styles.eyebrow}>PRIVATE WATCHLISTS</span>
+          <h2>Your watched instruments</h2>
+          <p>These lists and notes come from your owner-scoped Watchlist records. Prices show the latest persisted quote or daily close—not a live trading feed.</p>
+        </div>
+        <Link className={styles.primaryLink} href="/watchlists">Manage Watchlists</Link>
+      </div>
+
+      <div className={styles.summaryStrip}>
+        <div><span>Lists</span><strong>{data.watchlists.length}</strong></div>
+        <div><span>Distinct instruments</span><strong>{data.watchedInstrumentCount}</strong></div>
+        <div><span>Relevant themes</span><strong>{data.opportunities.length}</strong></div>
+      </div>
+
+      {data.dataGaps.length ? (
+        <aside className={styles.dataWarning} aria-label="Watchlist data gaps">
+          <strong>Data gaps remain visible</strong>
+          <ul>{data.dataGaps.map((gap) => <li key={gap}>{gap}</li>)}</ul>
+        </aside>
+      ) : null}
+
+      {data.watchlists.length ? (
+        <div className={styles.watchlistCards}>
+          {data.watchlists.map((watchlist) => (
+            <article className={styles.watchlistCard} key={watchlist.id}>
+              <header className={styles.cardHeader}>
+                <div>
+                  <div className={styles.titleLine}>
+                    <h3>{watchlist.name}</h3>
+                    {watchlist.isDefault ? <span className={styles.tag}>Default</span> : null}
+                  </div>
+                  <p>{watchlist.description || 'No private list description has been stored.'}</p>
+                </div>
+                <span>{watchlist.items.length} instrument{watchlist.items.length === 1 ? '' : 's'}</span>
+              </header>
+
+              {watchlist.items.length ? (
+                <div className={styles.instrumentRows}>
+                  {watchlist.items.map((item) => (
+                    <div className={styles.instrumentRow} key={`${watchlist.id}-${item.instrumentId}`}>
+                      <div className={styles.instrumentIdentity}>
+                        <Link href={`/markets/${encodeURIComponent(item.symbol.toLowerCase())}`}>{item.symbol}</Link>
+                        <span>{item.instrumentName}</span>
+                        <small>{label(item.assetType)} · {item.exchangeCode} · {item.currencyCode}</small>
+                      </div>
+                      <div className={styles.observation}>
+                        {item.observedPrice ? (
+                          <>
+                            <strong>{item.observedPrice.currencyCode || item.currencyCode} {item.observedPrice.close.toLocaleString('en-AU', { maximumFractionDigits: 6 })}</strong>
+                            <span>{label(item.observedPrice.intervalCode)} · {formatObservedAt(item.observedPrice.observedAt)} AWST</span>
+                            {item.observedPrice.isDelayed ? <small>Provider marked this observation delayed.</small> : null}
+                          </>
+                        ) : (
+                          <><strong>Price unavailable</strong><span>No persisted quote or daily close was found.</span></>
+                        )}
+                      </div>
+                      <div className={styles.relevance}>
+                        <strong>{item.relatedThemeCount} mapped theme{item.relatedThemeCount === 1 ? '' : 's'}</strong>
+                        <span>{item.relatedThemeCount ? 'Long-term Opportunity mappings only; this is not a Buy label.' : 'No active Opportunity mapping is stored.'}</span>
+                      </div>
+                      <div className={styles.privateNote}>
+                        <span>Private note</span>
+                        <p>{item.notes || 'No note stored.'}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className={styles.empty}><strong>This list is empty.</strong><p>Add an instrument from the Watchlists workspace; My Dashboard will not invent suggestions.</p></div>
+              )}
+            </article>
+          ))}
+        </div>
+      ) : (
+        <div className={styles.empty}><strong>No private Watchlists yet.</strong><p>Create a list in the Watchlists workspace. Relevant Opportunities appear only after a persisted watch or research interest exists.</p></div>
+      )}
+    </div>
+  )
+}
+
+function OpportunitiesPanel({ data }: { data: MyDashboardGateThreeData }) {
+  return (
+    <div className={styles.sectionGrid}>
+      <div className={styles.sectionIntro}>
+        <div>
+          <span className={styles.eyebrow}>RELEVANT OPPORTUNITIES</span>
+          <h2>Long-term themes connected to you</h2>
+          <p>Relevance comes only from your watched instruments or stored research interests. Opportunity assessments remain independent of short-term Market and Technical ratings.</p>
+        </div>
+        <Link className={styles.primaryLink} href="/opportunities">All Opportunities</Link>
+      </div>
+
+      <div className={styles.boundaryNote}>
+        <strong>Research relevance—not a recommendation</strong>
+        <span>An Opportunity score never becomes a Buy label here, and no blended personal score is calculated.</span>
+      </div>
+
+      {data.dataGaps.length ? (
+        <aside className={styles.dataWarning} aria-label="Opportunity data gaps">
+          <strong>Incomplete mappings or evidence</strong>
+          <ul>{data.dataGaps.map((gap) => <li key={gap}>{gap}</li>)}</ul>
+        </aside>
+      ) : null}
+
+      {data.opportunities.length ? (
+        <div className={styles.opportunityGrid}>
+          {data.opportunities.map((opportunity) => {
+            const assessment = opportunity.assessment
+            return (
+              <article className={styles.opportunityCard} key={opportunity.themeId}>
+                <header className={styles.cardHeader}>
+                  <div>
+                    <span className={styles.eyebrow}>{opportunity.themeCode.replaceAll('_', ' ')}</span>
+                    <h3><Link href={`/opportunities/${encodeURIComponent(opportunity.themeCode.toLowerCase())}`}>{opportunity.themeName}</Link></h3>
+                  </div>
+                  <div className={styles.scoreBlock}>
+                    <strong>{formatNumber(assessment?.opportunityScore ?? null, 1)}</strong>
+                    <span>{assessment ? '/100 stored score' : 'No assessment'}</span>
+                  </div>
+                </header>
+
+                <p>{assessment?.summary || opportunity.description || 'No persisted theme summary is available.'}</p>
+
+                <div className={styles.tagRow}>
+                  <span className={styles.tag}>{label(assessment?.level)}</span>
+                  <span className={styles.tag}>{label(assessment?.commercialReadiness)}</span>
+                  <span className={styles.tag}>{assessment?.timeHorizon || (opportunity.horizonYearsMin !== null ? `${opportunity.horizonYearsMin}–${opportunity.horizonYearsMax ?? opportunity.horizonYearsMin} years` : 'Horizon unavailable')}</span>
+                </div>
+
+                <dl className={styles.provenance}>
+                  <div><dt>Evidence date</dt><dd>{assessment ? formatAssessmentDate(assessment.assessmentDate) : 'Unavailable'}</dd></div>
+                  <div><dt>Confidence</dt><dd>{assessment?.confidence === null || assessment?.confidence === undefined ? 'Unavailable' : `${formatNumber(assessment.confidence, 0)}%`}</dd></div>
+                  <div><dt>Methodology</dt><dd>{assessment?.methodologyVersion || 'Unavailable'}</dd></div>
+                  <div><dt>Why relevant</dt><dd>{opportunity.directThemeInterest ? 'Stored theme interest' : 'Mapped from watched or researched instruments'}</dd></div>
+                </dl>
+
+                {opportunity.relatedInstruments.length ? (
+                  <div className={styles.exposureList}>
+                    <strong>Your related instruments</strong>
+                    {opportunity.relatedInstruments.map((instrument) => (
+                      <div key={`${opportunity.themeId}-${instrument.instrumentId}`}>
+                        <Link href={`/markets/${encodeURIComponent(instrument.symbol.toLowerCase())}`}>{instrument.symbol}</Link>
+                        <span>{label(instrument.exposureType)}{instrument.exposureScore === null ? ' · exposure score unavailable' : ` · exposure ${formatNumber(instrument.exposureScore, 0)}`}</span>
+                        <p>{instrument.rationale || 'No mapping rationale is stored.'}</p>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className={styles.empty}><strong>No tracked-instrument mapping.</strong><p>This theme appears because of a stored theme interest; instrument exposure remains unavailable.</p></div>
+                )}
+
+                <Link className={styles.cardLink} href={`/opportunities/${encodeURIComponent(opportunity.themeCode.toLowerCase())}`}>Open full research evidence →</Link>
+              </article>
+            )
+          })}
+        </div>
+      ) : (
+        <div className={styles.empty}><strong>No relevant Opportunity themes yet.</strong><p>Add an instrument to a private Watchlist or store a research interest. My Dashboard will not manufacture relevance from global rankings.</p></div>
+      )}
+    </div>
+  )
+}
+
 export default function MyDashboardClient() {
   const router = useRouter()
   const pathname = usePathname()
@@ -57,6 +254,7 @@ export default function MyDashboardClient() {
   const [email, setEmail] = useState('')
   const [preferences, setPreferences] = useState<Preferences | null>(null)
   const [counts, setCounts] = useState<DashboardCounts | null>(null)
+  const [gateThreeData, setGateThreeData] = useState<MyDashboardGateThreeData | null>(null)
   const [baseCurrency, setBaseCurrency] = useState(DEFAULT_BASE_CURRENCY)
   const [horizon, setHorizon] = useState<5 | 20 | 60>(DEFAULT_HORIZON)
   const [risk, setRisk] = useState<Preferences['risk_preference']>(DEFAULT_RISK)
@@ -66,6 +264,7 @@ export default function MyDashboardClient() {
     loadGenerationRef.current += 1
     setPreferences(null)
     setCounts(null)
+    setGateThreeData(null)
     setBaseCurrency(DEFAULT_BASE_CURRENCY)
     setHorizon(DEFAULT_HORIZON)
     setRisk(DEFAULT_RISK)
@@ -86,63 +285,24 @@ export default function MyDashboardClient() {
     setError('')
     try {
       const supabase = getBrowserSupabase()
-      const [preferencesResult, watchlistsCountResult, interestsCountResult] = await Promise.all([
+      const [preferencesResult, nextGateThreeData] = await Promise.all([
         supabase
           .from('user_market_preferences')
           .select('owner_user_id,base_currency,default_horizon_sessions,risk_preference,updated_at')
           .eq('owner_user_id', ownerId)
           .maybeSingle(),
-        supabase.from('watchlists').select('id', { count: 'exact', head: true }).eq('owner_user_id', ownerId),
-        supabase.from('user_market_interests').select('id', { count: 'exact', head: true }).eq('owner_user_id', ownerId),
+        loadMyDashboardGateThree(supabase, ownerId, isCurrentLoad),
       ])
-      if (!isCurrentLoad()) return
+      if (!isCurrentLoad() || !nextGateThreeData) return
       if (preferencesResult.error) throw preferencesResult.error
-      if (watchlistsCountResult.error) throw watchlistsCountResult.error
-      if (interestsCountResult.error) throw interestsCountResult.error
-      if (watchlistsCountResult.count === null || interestsCountResult.count === null) {
-        throw new Error('Exact private dashboard counts were unavailable.')
-      }
-
-      const listIds: string[] = []
-      for (let offset = 0; ; offset += PAGE_SIZE) {
-        const pageResult = await supabase
-          .from('watchlists')
-          .select('id')
-          .eq('owner_user_id', ownerId)
-          .order('id', { ascending: true })
-          .range(offset, offset + PAGE_SIZE - 1)
-        if (!isCurrentLoad()) return
-        if (pageResult.error) throw pageResult.error
-        const rows = pageResult.data ?? []
-        listIds.push(...rows.map((row) => row.id))
-        if (rows.length < PAGE_SIZE) break
-      }
-
-      const watchedInstrumentIds = new Set<string>()
-      for (let batchStart = 0; batchStart < listIds.length; batchStart += WATCHLIST_ID_BATCH_SIZE) {
-        const listIdBatch = listIds.slice(batchStart, batchStart + WATCHLIST_ID_BATCH_SIZE)
-        for (let offset = 0; ; offset += PAGE_SIZE) {
-          const pageResult = await supabase
-            .from('watchlist_items')
-            .select('watchlist_id,instrument_id')
-            .in('watchlist_id', listIdBatch)
-            .order('watchlist_id', { ascending: true })
-            .order('instrument_id', { ascending: true })
-            .range(offset, offset + PAGE_SIZE - 1)
-          if (!isCurrentLoad()) return
-          if (pageResult.error) throw pageResult.error
-          const rows = pageResult.data ?? []
-          rows.forEach((row) => watchedInstrumentIds.add(row.instrument_id))
-          if (rows.length < PAGE_SIZE) break
-        }
-      }
 
       const nextPreferences = (preferencesResult.data ?? null) as Preferences | null
       setPreferences(nextPreferences)
+      setGateThreeData(nextGateThreeData)
       setCounts({
-        watchlists: watchlistsCountResult.count,
-        watchedInstruments: watchedInstrumentIds.size,
-        interests: interestsCountResult.count,
+        watchlists: nextGateThreeData.watchlists.length,
+        watchedInstruments: nextGateThreeData.watchedInstrumentCount,
+        interests: nextGateThreeData.interestCount,
       })
       if (nextPreferences) {
         setBaseCurrency(nextPreferences.base_currency.trim())
@@ -158,6 +318,7 @@ export default function MyDashboardClient() {
       if (!isCurrentLoad()) return
       setPreferences(null)
       setCounts(null)
+      setGateThreeData(null)
       setPrivateDataState('error')
       setError(loadError instanceof Error ? loadError.message : 'The private dashboard could not be loaded.')
     } finally {
@@ -380,6 +541,10 @@ export default function MyDashboardClient() {
                 <p className={styles.disclosure}>These settings organise research presentation only. They are not a suitability assessment or permission to trade.</p>
               </article>
             </div>
+        ) : selectedTab === 'watchlists' && gateThreeData ? (
+          <WatchlistsPanel data={gateThreeData} />
+        ) : selectedTab === 'opportunities' && gateThreeData ? (
+          <OpportunitiesPanel data={gateThreeData} />
         ) : (
           <article className={styles.panel}>
             <span className={styles.eyebrow}>FOUNDATION READY</span>
