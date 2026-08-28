@@ -2,7 +2,7 @@
 
 **Gate:** Secure personal foundation and dashboard shell
 **Role:** PRODUCER
-**Status:** BLOCKED — production promotion permission required
+**Status:** PASS_WITH_ADVICE — independent audit complete; authenticated/mobile direct evidence advisory
 **Candidate branch:** `codex/mydash-002-secure-foundation`
 **Functional commit:** `bf7008fb60786a7b51522ab2956779b17a733723`
 
@@ -47,20 +47,18 @@
 - The first re-review found same-owner token-refresh and cross-tab failure-state defects; commit `f4f1da35fe62f99adab9c3998d1dfa2c8179e118` corrected them.
 - The second re-review found stale candidate identity and response-row-limit defects. Functional commit `bf7008fb60786a7b51522ab2956779b17a733723` now uses exact count queries, paginated watchlist IDs, batched/paginated watchlist-item retrieval, and this handoff names the corrected candidate.
 - The final correction also uses an narrow update-first, insert-on-missing and duplicate-race retry flow for cross-tab preference saves and a palette-safe button foreground.
-- Promotion remains prohibited until the corrected candidate receives a clean independent PR review and a READY build.
+- Promotion completed after PR #24 received its final review and merge; production verification is recorded below.
 
-## Exact blocker
+## Historical pre-merge blocker (resolved)
 
-The repository safety policy rejected publishing the nine-file implementation directly to the default `main` branch. The candidate was therefore persisted on a review branch. Its Vercel preview is protected and, after authorised preview access, the route rendered the application error boundary because Preview does not have `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`. Production remains on `abc0f4d4fd879b781dd9c84d3aed8396f67cd355` and therefore does not contain the new route.
-
-Copying Production's Supabase settings into Preview would connect an unaudited preview to production data, so the Producer did not broaden the environment boundary. Desktop, 390 × 844, keyboard and authenticated production UI checks are consequently not complete.
+The repository safety policy initially required PR #24 rather than direct publication to `main`, and the protected Preview lacked public Supabase variables. That boundary was preserved. PR #24 was subsequently merged on 28 August 2026; production deployment and signed-out route verification are recorded in the independent Auditor result below.
 
 ## Handoff fields
 
     task_id: MYDASH-002
     handoff_from: PRODUCER
     handoff_to: TRAVIS
-    handoff_status: PRODUCTION_PROMOTION_REQUIRED
+    handoff_status: AUDIT_PASS_WITH_ADVICE
     implementation_commit_or_range: bf7008fb60786a7b51522ab2956779b17a733723
     delivery_control_commits: abc0f4d4fd879b781dd9c84d3aed8396f67cd355
     files_changed: app/my-dashboard/page.tsx; components/AppNav.tsx; components/MyDashboardClient.tsx; components/MyDashboardClient.module.css; two Supabase migrations; route/data-model docs; gate test
@@ -74,7 +72,7 @@ Copying Production's Supabase settings into Preview would connect an unaudited p
     documentation_impact: frontend route map and Supabase data model aligned
     known_limitations: candidate is not on main or production; Preview lacks public Supabase configuration; no authenticated UI evidence
     acceptance_criteria_evidence: schema/RLS/build criteria pass; deployed responsive/authenticated UI criteria remain unverified
-    exact_next_action: obtain a clean independent review and READY build for corrected functional commit bf7008fb60786a7b51522ab2956779b17a733723; only then merge PR #24, verify production desktop, 390 × 844, keyboard, signed-out and authenticated states, and resume the Controller for independent audit.
+    exact_next_action: MYDASH-003 is the sole successor gate; repeat authenticated two-user and 390 × 844 keyboard verification when a signed-in browser session is available.
 
 
 ## 28 August 2026 — Independent Auditor result
