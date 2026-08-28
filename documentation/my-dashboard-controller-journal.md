@@ -13,8 +13,8 @@
     handoff_owner: AUDITOR
     handoff_status: READY_FOR_AUDIT
     owner_review: APPROVED_AND_MERGED
-    last_event: MYDASH-003_PRODUCER_HANDOFF_COMPLETE
-    next_action: Independent Auditor reviews exact functional candidate 1da77ced45b445829e1aaf7c5249d61281bf4031 and either returns one complete correction set or promotes only MYDASH-004.
+    last_event: MYDASH-003_PR_FINDINGS_CORRECTED
+    next_action: Independent Auditor reviews exact functional candidate 73265fdc6d0cec32386acb8ccd955fe3bea59d99 and either returns one complete correction set or promotes only MYDASH-004.
 
 ## Gate ledger
 
@@ -356,3 +356,14 @@ Not authorised by this decision:
 - Producer evidence: `documentation/my-dashboard-audits/MYDASH-003.md`.
 - Handoff: `PRODUCER -> AUDITOR / MYDASH-003 IN_REVIEW / READY_FOR_AUDIT`.
 - Exact next action: independent Auditor reviews exact functional candidate `1da77ced45b445829e1aaf7c5249d61281bf4031`; it must not trust this summary and may promote no more than MYDASH-004 after a pass.
+
+### 28 August 2026 — MYDASH-003_PR_FINDINGS_CORRECTED
+
+- Role remained `PRODUCER`; no audit or gate promotion occurred.
+- Fresh PR review identified the previously reproduced exact-count regression plus two exposure-identity defects permitted by the Opportunity mapping key.
+- Complete correction set: preserve MYDASH-002 exact count/pagination behaviour; count distinct mapped `theme_id` values rather than exposure rows; include `exposure_type` in each Opportunity exposure React key.
+- Corrected exact functional candidate: `73265fdc6d0cec32386acb8ccd955fe3bea59d99`.
+- Checks after all corrections: `npm test` 23/23 passed; `git diff --check` passed; Vercel deployment `dpl_Djdhcz9Heav4324LQ53wmLceUzX8` is `READY`.
+- Schema/data/production effects: none.
+- Handoff remains `PRODUCER -> AUDITOR / MYDASH-003 IN_REVIEW / READY_FOR_AUDIT`, replacing the earlier candidate identity with `73265fdc6d0cec32386acb8ccd955fe3bea59d99`.
+- Exact next action: independent Auditor reviews only corrected candidate `73265fdc6d0cec32386acb8ccd955fe3bea59d99` and reproduces security, data-lineage, responsive and keyboard evidence independently.
