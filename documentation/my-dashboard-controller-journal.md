@@ -9,12 +9,12 @@
 
     project_status: IN_PROGRESS
     active_gate: MYDASH-003
-    active_gate_status: IN_REVIEW
-    handoff_owner: AUDITOR
-    handoff_status: READY_FOR_AUDIT
+    active_gate_status: IN_PROGRESS
+    handoff_owner: PRODUCER
+    handoff_status: REWORK_REQUIRED
     owner_review: APPROVED_AND_MERGED
-    last_event: MYDASH-003_PR_FINDINGS_CORRECTED
-    next_action: Independent Auditor reviews exact functional candidate 73265fdc6d0cec32386acb8ccd955fe3bea59d99 and either returns one complete correction set or promotes only MYDASH-004.
+    last_event: MYDASH-003_AUDIT_REWORK_REQUIRED
+    next_action: Producer completes the persisted MYDASH-003 Preview and two-user live-verification correction set, reconciles PR #25 with current main, then returns the exact candidate to an independent Auditor without merging.
 
 ## Gate ledger
 
@@ -22,7 +22,7 @@
 |---|---|---|---|
 | MYDASH-001 | DONE | NONE | Owner Review A — APPROVED 27 August 2026 |
 | MYDASH-002 | DONE | NONE | Independent audit complete; PASS_WITH_ADVICE with authenticated/mobile advisory checks |
-| MYDASH-003 | IN_REVIEW | AUDITOR | Independent audit |
+| MYDASH-003 | IN_PROGRESS | PRODUCER | Independent re-audit required after correction set |
 | MYDASH-004 | PLANNED | NONE | Independent audit, then Owner Review B |
 | MYDASH-005 | PLANNED | NONE | Independent audit |
 | MYDASH-006 | PLANNED | NONE | Independent audit |
@@ -367,3 +367,49 @@ Not authorised by this decision:
 - Schema/data/production effects: none.
 - Handoff remains `PRODUCER -> AUDITOR / MYDASH-003 IN_REVIEW / READY_FOR_AUDIT`, replacing the earlier candidate identity with `73265fdc6d0cec32386acb8ccd955fe3bea59d99`.
 - Exact next action: independent Auditor reviews only corrected candidate `73265fdc6d0cec32386acb8ccd955fe3bea59d99` and reproduces security, data-lineage, responsive and keyboard evidence independently.
+
+### 28 August 2026 — MYDASH-003_AUDIT_REWORK_REQUIRED
+
+- Role performed: `AUDITOR` only; no implementation fix, merge or gate promotion occurred.
+- Exact implementation reviewed: functional range `1a6d0130735f69717c1963a84e64c5a5cbce6fc2` through `73265fdc6d0cec32386acb8ccd955fe3bea59d99`; PR #25 head at audit start `66652239e1906b1904c80312f3c32bb8deaff5fa`.
+- Independent checks passed: 23/23 automated tests; Vercel compile and TypeScript build; exact-count pagination; distinct theme counting; exposure identity; current Opportunity lineage and current-row reproduction; two permanent-user SQL RLS isolation; authenticated-anonymous denial; production signed-out privacy and no-trading boundaries.
+- Blocking acceptance evidence: exact candidate deployment `dpl_Djdhcz9Heav4324LQ53wmLceUzX8` is `READY` but the route fails closed because Preview lacks `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`. The Auditor therefore could not verify live authenticated Watchlists/Opportunities, direct desktop and 390 × 844 rendering, or keyboard/focus and state behaviour as required by the controller.
+- Complete correction set: make the exact candidate runnable in Preview using only public Supabase configuration; provide bounded permanent two-user authenticated test access; reproduce desktop, direct 390 × 844, keyboard/focus, loading/empty/error/data-gap/provenance/privacy behaviour; reconcile PR #25 with current main without changing the functional candidate; rerun all tests/build; freeze exact identities; do not merge before independent re-audit passes.
+- Durable evidence and mandatory handback: `documentation/my-dashboard-audits/MYDASH-003.md`.
+- Handoff: `AUDITOR -> PRODUCER / MYDASH-003 IN_PROGRESS / REWORK_REQUIRED`.
+- Exact next action: Producer completes only the persisted correction set and returns MYDASH-003 to an independent Auditor.
+
+### 28 August 2026 — MYDASH-003_REWORK_BUILD_ATTEMPT_STARTED
+
+- Starting repository commit: `c8a7ba7e278a3853f3ec5374a6c7dedadcd43b70`.
+- Active gate: `MYDASH-003`.
+- Selected role: `PRODUCER` only.
+- Observed handoff: `IN_PROGRESS / PRODUCER / REWORK_REQUIRED`.
+- Bounded scope: complete only the independent Auditor's persisted correction set by making the exact Watchlists/Opportunities candidate safely runnable in Preview using public browser configuration, preparing bounded two-user verification evidence without exposing real private data, reconciling PR #25 with current `main`, and returning the candidate to independent audit without merging it.
+- Fresh GitHub identities:
+  - controller blob: `aa7855a2d3f4246ffa4d5808eec12dcd1f313313`
+  - project-plan blob: `775f9f5ef33903758db1026e233defe1cf5bf44c`
+  - opening journal blob: `3aa142f420adc9d95b40862cdc0c485cc479dea2`
+  - MYDASH-003 audit blob: `3681fce2e806e49d051c03f01470def27a8fb37e`
+  - approved contract blob: `bd1d1556015b12967cb57c39f3922f92019a0cc4`
+  - development-workflow blob: `e04dfa048b5b42767db4feb43d86f3738cd3c07c`
+  - platform-architecture blob: `4f9ee606554f14ee3ef4dd2ac6431fc00461e143`
+  - opening frontend-route-map blob: `d405a1c5329db4ecf6edd45122d562b1aed94407`
+  - Supabase-data-model blob: `596282e1d8ac4a99e19eea537c3ba451c8dec72e`
+  - PR #25 opening head: `66652239e1906b1904c80312f3c32bb8deaff5fa`
+  - exact audited functional candidate: `73265fdc6d0cec32386acb8ccd955fe3bea59d99`
+- Supabase production: project `glvbqcplgjdfgjyknzsa`; latest migration `20260827141836_my_dashboard_interest_fk_indexes`; two Watchlists across two owners, two items, zero interests, seven active themes, 24 active mappings and latest assessment date 28 August 2026. Owner policies and anonymous denial remain intact.
+- Vercel production: deployment `dpl_81e2pK1LXWGVPJNtpwcxRbMBqAxB`, `READY`, commit `c8a7ba7e278a3853f3ec5374a6c7dedadcd43b70`; production remains MYDASH-002.
+- Preserved boundaries: public Supabase URL/publishable key only; no service-role credential, RLS/grant weakening, private-data exposure, assessment mutation, Opportunity-to-Buy conversion, live trading or broker access.
+- Exact next action: prepare the bounded runnable Preview and verification handoff, run the full checks, reconcile PR #25 and stop for the independent Auditor.
+
+### 28 August 2026 — MYDASH-003_RUNNABLE_PREVIEW_READY_AUTH_EVIDENCE_BLOCKED
+
+- Role performed: `PRODUCER` only; no independent audit, merge, gate promotion, schema change or production-data mutation occurred.
+- Public configuration correction: PR #25 tracks only the Supabase project URL and modern publishable browser key. A regression test rejects unexpected or secret-like configuration names; no service-role, provider credential or private value is present.
+- Corrected candidate: `9bb1a3c06e5df010ef86ab1defe0f67f3270f677`; Vercel Preview `dpl_2KL91q1fw2k2XGVsrB5XDkvmnTmq` is `READY`.
+- Verification: `npm test` 24/24 passed; `git diff --check` passed; a Vercel share session reached the actual `/my-dashboard` permanent-user sign-in boundary and the previous missing-public-configuration error is absent.
+- Supabase verification: project `glvbqcplgjdfgjyknzsa` remains owner scoped with two Watchlists and two items across two permanent owners; anonymous denial remains intact. No schema, RLS, grant, assessment or production-data change was made.
+- Exact blocker: the connected browser has no signed-in permanent test session. Secure browser authentication requires interactive user-provided credentials, which this non-interactive Producer cannot create, inspect, transmit or fabricate. Existing SQL two-owner RLS evidence does not satisfy the Auditor's required live authenticated UI, direct 390 × 844 and keyboard/state checks.
+- Handoff remains `PRODUCER / MYDASH-003 IN_PROGRESS / BLOCKED_OWNER_AUTHENTICATED_UI_EVIDENCE`; PR #25 remains unmerged.
+- Exact next action: provide a connected Preview sign-in session for two permanent test identities, or explicitly authorise bounded dedicated test identities; then resume the Producer to finish live UI evidence and return the reconciled candidate to an independent Auditor.

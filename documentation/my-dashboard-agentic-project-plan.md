@@ -222,7 +222,7 @@ Only one implementation or audit gate may be active at a time.
 |---|---|---|---|
 | MYDASH-001 | NEXT | Product, data and calculation contract | Reconcile existing tables and Strategy Laboratory reuse; produce the final route/tab contract, exact data dictionary, ownership model, RLS test matrix, recommendation provenance contract, portfolio-health definitions, decision clocks, return formulae, benchmark/FX/corporate-action assumptions and migration plan. No production schema or UI changes. Independent audit required, then Owner Review A. |
 | MYDASH-002 | DONE | Secure personal foundation and dashboard shell | Implement audited private schema/RLS and trusted write boundaries; add authenticated /my-dashboard shell, navigation, loading/signed-out/empty/error states and Today tab using real persisted data. Prove cross-user isolation and no anonymous leakage. |
-| MYDASH-003 | IN_REVIEW | Watchlists and relevant Opportunities | Build Watchlists and Opportunities tabs from existing private watchlists and independent Opportunity mappings. Show relevance and data gaps without creating Buy labels or blending methodologies. Verify desktop, narrow-screen and keyboard behaviour. |
+| MYDASH-003 | IN_PROGRESS | Watchlists and relevant Opportunities | Build Watchlists and Opportunities tabs from existing private watchlists and independent Opportunity mappings. Show relevance and data gaps without creating Buy labels or blending methodologies. Verify desktop, narrow-screen and keyboard behaviour. |
 | MYDASH-004 | PLANNED | Portfolio and health | Add manual paper/portfolio position management and Portfolio Health measures. Validate quantity, cost basis, currencies, data freshness, concentration, allocation, theme exposure and incomplete-data behaviour. Independent audit required, then Owner Review B of the first complete personal workspace. |
 | MYDASH-005 | PLANNED | Explainable Recommendations | Implement immutable personal recommendation snapshots and Recommendations UI. Prove source lineage, cutoff dates, methodology separation, risk display, dismissal/feedback behaviour and no unsupported recommendation paths. |
 | MYDASH-006 | PLANNED | Decision Lab capture | Implement separate AI-signal and user-paper decision capture, immutable snapshots, entry-resolution states, horizons, decision events and open/completed views. Reuse Strategy Laboratory structures only where the MYDASH-001 contract proved semantic compatibility. |
@@ -397,10 +397,10 @@ The project is complete only when:
 
     project_status: IN_PROGRESS
     active_gate: MYDASH-003
-    active_gate_status: IN_REVIEW
-    handoff_owner: AUDITOR
+    active_gate_status: IN_PROGRESS
+    handoff_owner: PRODUCER
     controller_created: true
     controller_journal_created: true
     production_changes_authorised: MYDASH-003 candidate implementation only; no production promotion before independent audit
     owner_approval_recorded: Owner Review A approved and MYDASH-002 merged 28 August 2026
-    next_action: Independent Auditor reviews exact MYDASH-003 functional candidate 73265fdc6d0cec32386acb8ccd955fe3bea59d99.
+    next_action: Owner supplies a connected Preview sign-in session for two permanent test identities, or explicitly authorises bounded dedicated test identities. The Preview configuration is repaired and 24/24 tests pass, but the Controller remains at Producer until authenticated desktop, 390 × 844 and keyboard/state evidence can be captured safely; PR #25 remains unmerged.
