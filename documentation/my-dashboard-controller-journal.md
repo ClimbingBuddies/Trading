@@ -14,7 +14,7 @@
     handoff_status: FINAL_REVIEW_REQUIRED
     owner_review: APPROVED_TO_MERGE_AFTER_CLEAN_REVIEW
     last_event: MYDASH-002_CORRECTED_CANDIDATE_AWAITING_FINAL_REVIEW
-    next_action: Independently review corrected functional candidate 82815e1f1da0e7e40d401345ea790395b3eb53c1 and final branch head; only after a clean review and READY build merge PR #24, verify production UI, and resume the My Dashboard Controller for the independent gate audit.
+    next_action: Independently review corrected functional candidate cf200f005ea6659e2c12daf9177008e10bebf45a and final branch head; only after a clean review and READY build merge PR #24, verify production UI, and resume the My Dashboard Controller for the independent gate audit.
 
 ## Gate ledger
 
@@ -250,7 +250,7 @@ Not authorised by this decision:
 ### 27 August 2026 — MYDASH-002_PRODUCER_BLOCKED_ON_PRODUCTION_PROMOTION
 
 - Role performed: `PRODUCER` only.
-- Functional candidate: branch `codex/mydash-002-secure-foundation`, commit `82815e1f1da0e7e40d401345ea790395b3eb53c1`.
+- Functional candidate: branch `codex/mydash-002-secure-foundation`, commit `cf200f005ea6659e2c12daf9177008e10bebf45a`.
 - Producer evidence: `documentation/my-dashboard-audits/MYDASH-002.md`.
 - Production schema effects: migrations `20260827141424_my_dashboard_secure_personal_foundation_v1` and `20260827141836_my_dashboard_interest_fk_indexes` applied successfully.
 - Post-migration schema fingerprint: `0a543ca0a5c02f37dde674dd986b9908`.
@@ -259,16 +259,26 @@ Not authorised by this decision:
 - Preview evidence: deployment `dpl_EcbDxNqcyougutshNyPqY3AynzqR` is `READY`; authorised browser access reached the route, which entered the error boundary because Preview lacks the two public Supabase frontend variables.
 - Exact blocker: repository safety policy rejected direct publication of the multi-file candidate to `main`; production remains on `abc0f4d4fd879b781dd9c84d3aed8396f67cd355`. Preview was not connected to production Supabase because that would broaden the unaudited environment boundary.
 - Gate decision: remain `BLOCKED`; do not assign the independent Auditor because deployed desktop, 390 × 844, keyboard and authenticated-state evidence is incomplete.
-- Exact next action: Travis explicitly authorises merge/production promotion of candidate `82815e1f1da0e7e40d401345ea790395b3eb53c1`; Producer verifies the deployed UI without changing the candidate, persists a complete `READY_FOR_AUDIT` handoff and stops.
+- Exact next action: Travis explicitly authorises merge/production promotion of candidate `cf200f005ea6659e2c12daf9177008e10bebf45a`; Producer verifies the deployed UI without changing the candidate, persists a complete `READY_FOR_AUDIT` handoff and stops.
 
 
 ### 28 August 2026 — MYDASH-002_PR_CORRECTION_CYCLE_READY_FOR_FINAL_REVIEW
 
 - Owner decision: approve repairing the PR findings, then merge and resume only after they pass review.
-- Corrected functional candidate: `82815e1f1da0e7e40d401345ea790395b3eb53c1`.
+- Corrected functional candidate: `cf200f005ea6659e2c12daf9177008e10bebf45a`.
 - Final corrections: stale owner loads invalidated; owner defaults reset only on actual owner changes; token refresh preserves unsaved edits; failures remain unknown and globally retryable; counts use exact queries; distinct watched instruments use deterministic pagination and batching.
-- Focused correction checks: 7/7 passed.
+- Focused correction checks: 8/8 passed.
 - Corrected preview deployments: functional candidate `dpl_9BUHi56Z6TJJRwzaaBvVdxuBf6rH` READY; evidence-head deployment `dpl_3vB2Wc1jrTsvBpJAxsCufTa91q9h` READY.
 - Evidence: `documentation/my-dashboard-audits/MYDASH-002.md` now identifies the corrected candidate.
 - Production effects in this correction cycle: none; PR #24 remains unmerged and the Controller remains paused.
 - Exact next action: run one final independent review against the exact branch head; if and only if clean, merge PR #24, wait for production READY, verify production UI, and resume the Controller.
+
+
+### 28 August 2026 — MYDASH-002_FINAL_ACCESSIBILITY_AND_CONCURRENCY_CORRECTION
+
+- Independent review findings: Stone Paper button contrast and same-owner cross-tab preference creation race.
+- Corrected functional candidate: `cf200f005ea6659e2c12daf9177008e10bebf45a`.
+- Corrections: palette-safe light button foreground; owner-key preference upsert with existing RLS boundaries preserved.
+- Focused correction checks: 8/8 passed.
+- Production effects: none; PR #24 remains unmerged and the Controller remains paused.
+- Exact next action: obtain a clean review and READY build for the exact final branch head; only then merge, verify production, and resume the Controller.
