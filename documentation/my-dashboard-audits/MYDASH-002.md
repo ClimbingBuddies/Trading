@@ -75,3 +75,16 @@ Copying Production's Supabase settings into Preview would connect an unaudited p
     known_limitations: candidate is not on main or production; Preview lacks public Supabase configuration; no authenticated UI evidence
     acceptance_criteria_evidence: schema/RLS/build criteria pass; deployed responsive/authenticated UI criteria remain unverified
     exact_next_action: obtain a clean independent review and READY build for corrected functional commit bf7008fb60786a7b51522ab2956779b17a733723; only then merge PR #24, verify production desktop, 390 × 844, keyboard, signed-out and authenticated states, and resume the Controller for independent audit.
+
+
+## 28 August 2026 — Independent Auditor result
+
+- Role performed: `AUDITOR` only; no implementation, schema or production-data changes were made.
+- Beginning state observed: `MYDASH-002 / IN_REVIEW / INDEPENDENT_PR_REVIEW`. Primary evidence reconciled the stale pre-merge handoff: PR #24 is merged at `9a009e25f5d190810ac3f4e0f40d48178a6e54e7`, with final branch head `445821367aa1f96bdc4b202874b034a23218962f`.
+- Production evidence: `https://discoverbouldersmarkets.vercel.app/my-dashboard` returned HTTP 200 from Vercel deployment `dpl_8fbeGGvrneidEM8EJiPgB84M2Mp1`. The signed-out page visibly states that the workspace is private, does not place trades or connect to a broker, and that signed-out/anonymous sessions cannot read personal dashboard tables.
+- Supabase evidence (project `glvbqcplgjdfgjyknzsa`): `user_market_preferences` and `user_market_interests` exist with RLS enabled; policy counts are 3 and 4 respectively. Policies require a non-null `auth.uid()`, reject `is_anonymous=true`, and require `owner_user_id = auth.uid()` for SELECT/INSERT/UPDATE/DELETE as applicable. Authenticated column grants are narrow; the owner key is not update-granted. The production tables currently contain zero personal rows.
+- Independent SQL checks: two permanent-user authenticated contexts each saw zero personal rows; an anonymous role had no table SELECT privilege. These checks were read-only.
+- Frontend checks: six tab labels and the signed-out privacy boundary were visible; desktop layout had no horizontal overflow at 1363 × 936. Production styles include explicit narrow-screen media rules (including max-width 640px, 760px and 900px). The current browser had no authenticated session and no viewport-resize control, so direct authenticated and 390 × 844 interaction evidence remains advisory rather than a new defect.
+- Static implementation review confirmed shared loading/error guards, owner-change invalidation, exact count/pagination logic, narrow preference writes, no service-role browser code, and explicit empty states for unauthorised later gates.
+- Gate decision: `PASS_WITH_ADVICE`. MYDASH-002 is complete and MYDASH-003 is the sole successor gate. The authenticated two-user UI flow and 390 × 844 keyboard pass should be repeated when a signed-in verification session is available; no implementation defect was found in this iteration.
+- Handoff: `AUDITOR -> PRODUCER / MYDASH-003 NEXT`.
