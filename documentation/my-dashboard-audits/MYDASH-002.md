@@ -4,7 +4,7 @@
 **Role:** PRODUCER
 **Status:** BLOCKED — production promotion permission required
 **Candidate branch:** `codex/mydash-002-secure-foundation`
-**Functional commit:** `cf200f005ea6659e2c12daf9177008e10bebf45a`
+**Functional commit:** `d064c262c9824f75b017d11800a585489fd064d4`
 
 ## Bounded implementation
 
@@ -39,14 +39,14 @@
 - `git diff --check`: passed.
 - Static gate tests verify six tabs, keyboard handlers, permanent-user ownership predicates, anonymous rejection and absence of service-role browser code.
 - PR correction regression suite: 8/8 passed for owner-transition invalidation, token-refresh edit preservation, default resets, honest global failure states, exact counts and paginated distinct-instrument retrieval.
-- Preview deployment `dpl_EcbDxNqcyougutshNyPqY3AynzqR` reached `READY` for commit `cf200f005ea6659e2c12daf9177008e10bebf45a`.
+- Preview deployment `dpl_4kVrM9R4QppDFL4N1xUkL2xVgGFH` reached `READY` for commit `d064c262c9824f75b017d11800a585489fd064d4`.
 
 ## PR review correction cycle
 
 - The initial review found three privacy/honesty defects; commit `ebd18e6f28638e6f4c7b943ade95d1ce0d312db1` corrected them.
 - The first re-review found same-owner token-refresh and cross-tab failure-state defects; commit `f4f1da35fe62f99adab9c3998d1dfa2c8179e118` corrected them.
-- The second re-review found stale candidate identity and response-row-limit defects. Functional commit `cf200f005ea6659e2c12daf9177008e10bebf45a` now uses exact count queries, paginated watchlist IDs, batched/paginated watchlist-item retrieval, and this handoff names the corrected candidate.
-- The final correction also uses an owner-key upsert for cross-tab preference races and a palette-safe button foreground.
+- The second re-review found stale candidate identity and response-row-limit defects. Functional commit `d064c262c9824f75b017d11800a585489fd064d4` now uses exact count queries, paginated watchlist IDs, batched/paginated watchlist-item retrieval, and this handoff names the corrected candidate.
+- The final correction also uses an narrow update-first, insert-on-missing and duplicate-race retry flow for cross-tab preference saves and a palette-safe button foreground.
 - Promotion remains prohibited until the corrected candidate receives a clean independent PR review and a READY build.
 
 ## Exact blocker
@@ -61,7 +61,7 @@ Copying Production's Supabase settings into Preview would connect an unaudited p
     handoff_from: PRODUCER
     handoff_to: TRAVIS
     handoff_status: PRODUCTION_PROMOTION_REQUIRED
-    implementation_commit_or_range: cf200f005ea6659e2c12daf9177008e10bebf45a
+    implementation_commit_or_range: d064c262c9824f75b017d11800a585489fd064d4
     delivery_control_commits: abc0f4d4fd879b781dd9c84d3aed8396f67cd355
     files_changed: app/my-dashboard/page.tsx; components/AppNav.tsx; components/MyDashboardClient.tsx; components/MyDashboardClient.module.css; two Supabase migrations; route/data-model docs; gate test
     migrations_and_schema_effects: two production migrations applied; two empty owner-scoped tables and supporting indexes
@@ -74,4 +74,4 @@ Copying Production's Supabase settings into Preview would connect an unaudited p
     documentation_impact: frontend route map and Supabase data model aligned
     known_limitations: candidate is not on main or production; Preview lacks public Supabase configuration; no authenticated UI evidence
     acceptance_criteria_evidence: schema/RLS/build criteria pass; deployed responsive/authenticated UI criteria remain unverified
-    exact_next_action: obtain a clean independent review and READY build for corrected functional commit cf200f005ea6659e2c12daf9177008e10bebf45a; only then merge PR #24, verify production desktop, 390 × 844, keyboard, signed-out and authenticated states, and resume the Controller for independent audit.
+    exact_next_action: obtain a clean independent review and READY build for corrected functional commit d064c262c9824f75b017d11800a585489fd064d4; only then merge PR #24, verify production desktop, 390 × 844, keyboard, signed-out and authenticated states, and resume the Controller for independent audit.
