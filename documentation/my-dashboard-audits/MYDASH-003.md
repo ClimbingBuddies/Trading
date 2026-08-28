@@ -2,7 +2,7 @@
 
 **Gate:** Watchlists and relevant Opportunities  
 **Role:** PRODUCER → independent AUDITOR → PRODUCER
-**Status:** REWORK_REQUIRED
+**Status:** PRODUCER_BLOCKED_ON_AUTHENTICATED_UI_EVIDENCE
 **Candidate branch:** `codex/mydash-003-watchlists-opportunities`  
 **Pull request:** [#25](https://github.com/ClimbingBuddies/Trading/pull/25)  
 **Functional candidate:** `1a6d0130735f69717c1963a84e64c5a5cbce6fc2` through `73265fdc6d0cec32386acb8ccd955fe3bea59d99`
@@ -114,3 +114,31 @@ No source defect was established in this audit, and the Auditor made no implemen
     complete_correction_set: configure a safe runnable Preview; supply bounded two-user authenticated test access; reproduce live responsive, keyboard, state, provenance and privacy checks; reconcile PR #25 with current main; rerun tests/build and freeze exact identities
     known_limitations: source/static checks passed, but the mandatory live private UI evidence is absent
     exact_next_action: Producer completes only this correction set for MYDASH-003 and returns the exact runnable candidate to an independent Auditor
+
+## Bounded Producer rework — 28 August 2026
+
+The public-configuration defect is corrected without changing database permissions or exposing a privileged credential:
+
+- PR #25 now tracks only `NEXT_PUBLIC_SUPABASE_URL` and the modern `sb_publishable_…` key required by browser builds. The publishable key identifies the public API boundary and remains subject to Auth and RLS; no legacy anon key, service-role key, provider credential or private portfolio value was added.
+- `tests/my-dashboard-preview-config.test.mjs` rejects any unexpected configuration key and secret-like name. The complete suite passes 24/24 and `git diff --check` passes.
+- Candidate commit `9bb1a3c06e5df010ef86ab1defe0f67f3270f677` built successfully as Vercel Preview `dpl_2KL91q1fw2k2XGVsrB5XDkvmnTmq`, state `READY`.
+- A Vercel share session reached the actual `/my-dashboard` application route. The route now renders the permanent-user email sign-in boundary; the prior `Missing required Supabase frontend configuration` runtime failure is removed.
+- Supabase project `glvbqcplgjdfgjyknzsa` remains unchanged: two persisted Watchlists and two items across two permanent owners, owner-scoped policies, anonymous denial and no schema, grant or production-data mutation.
+- Production remains on MYDASH-002. PR #25 is not merged.
+
+The remaining correction cannot be completed safely in this non-interactive run. The connected browser has no signed-in permanent test session, and the browser authentication boundary requires user-provided credentials through a secure interactive handoff. The Producer did not create, inspect, transmit or fabricate a password, magic-link token, session token or service-role bypass. SQL two-owner RLS evidence already proves database isolation, but it is not a substitute for the Auditor's expressly required live authenticated desktop and 390 × 844 interaction evidence.
+
+### Producer blocker handoff
+
+    task_id: MYDASH-003
+    handoff_from: PRODUCER
+    handoff_to: PRODUCER
+    handoff_status: BLOCKED_OWNER_AUTHENTICATED_UI_EVIDENCE
+    implementation_commit_or_range: 1a6d0130735f69717c1963a84e64c5a5cbce6fc2 through 9bb1a3c06e5df010ef86ab1defe0f67f3270f677
+    deployment_reviewed: dpl_2KL91q1fw2k2XGVsrB5XDkvmnTmq READY; application sign-in boundary rendered and public configuration error absent
+    schema_and_rls_effects: none; existing owner isolation and anonymous denial preserved
+    tests_and_checks: npm test 24/24 PASS; git diff --check PASS; Vercel build READY
+    completed_corrections: safe runnable Preview; public-config regression guard; source documentation; production remains unchanged
+    remaining_evidence: authenticated two-owner Watchlists and relevant Opportunities; desktop and direct 390 × 844 rendering; Arrow Left/Right, Home/End, focus and live state checks
+    exact_blocker: no connected signed-in test session or user-approved permanent test credentials; secure browser authentication requires interactive owner input
+    exact_next_action: provide a connected Preview sign-in session for two permanent test identities, or explicitly authorise creation of bounded dedicated test identities; then resume the Producer to capture the live UI evidence and return the reconciled PR to an independent Auditor
