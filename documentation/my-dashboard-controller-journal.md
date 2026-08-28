@@ -12,7 +12,7 @@
     active_gate_status: NEXT
     handoff_owner: PRODUCER
     handoff_status: AUTHORISED
-    owner_review: APPROVED_TO_MERGE_AFTER_CLEAN_REVIEW
+    owner_review: APPROVED_AND_MERGED
     last_event: MYDASH-002_AUDIT_PASS_WITH_ADVICE
     next_action: Producer performs one bounded MYDASH-003 iteration on private Watchlists and relevant Opportunities, preserving independent Opportunity lineage and explicit data gaps.
 
@@ -21,8 +21,8 @@
 | Gate | Status | Owner | Review requirement |
 |---|---|---|---|
 | MYDASH-001 | DONE | NONE | Owner Review A — APPROVED 27 August 2026 |
-| MYDASH-002 | IN_REVIEW | INDEPENDENT_PR_REVIEW | Clean corrected-candidate review and READY build, then production promotion and independent audit |
-| MYDASH-003 | PLANNED | NONE | Independent audit |
+| MYDASH-002 | DONE | NONE | Independent audit complete; PASS_WITH_ADVICE with authenticated/mobile advisory checks |
+| MYDASH-003 | NEXT | PRODUCER | Independent audit |
 | MYDASH-004 | PLANNED | NONE | Independent audit, then Owner Review B |
 | MYDASH-005 | PLANNED | NONE | Independent audit |
 | MYDASH-006 | PLANNED | NONE | Independent audit |
