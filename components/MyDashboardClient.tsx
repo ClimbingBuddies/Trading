@@ -20,6 +20,8 @@ const tabs = [
 const DEFAULT_BASE_CURRENCY = 'AUD'
 const DEFAULT_HORIZON = 20 as const
 const DEFAULT_RISK = 'unspecified' as const
+const PAGE_SIZE = 500
+const WATCHLIST_ID_BATCH_SIZE = 100
 
 type TabKey = (typeof tabs)[number]['key']
 type Preferences = {
@@ -285,24 +287,65 @@ export default function MyDashboardClient() {
     setError('')
     try {
       const supabase = getBrowserSupabase()
-      const [preferencesResult, nextGateThreeData] = await Promise.all([
+      const [preferencesResult, watchlistsCountResult, interestsCountResult, nextGateThreeData] = await Promise.all([
         supabase
           .from('user_market_preferences')
           .select('owner_user_id,base_currency,default_horizon_sessions,risk_preference,updated_at')
           .eq('owner_user_id', ownerId)
           .maybeSingle(),
+        supabase.from('watchlists').select('id', { count: 'exact', head: true }).eq('owner_user_id', ownerId),
+        supabase.from('user_market_interests').select('id', { count: 'exact', head: true }).eq('owner_user_id', ownerId),
         loadMyDashboardGateThree(supabase, ownerId, isCurrentLoad),
       ])
       if (!isCurrentLoad() || !nextGateThreeData) return
       if (preferencesResult.error) throw preferencesResult.error
+      if (watchlistsCountResult.error) throw watchlistsCountResult.error
+      if (interestsCountResult.error) throw interestsCountResult.error
+      if (watchlistsCountResult.count === null || interestsCountResult.count === null) {
+        throw new Error('Exact private dashboard counts were unavailable.')
+      }
+
+      const listIds: string[] = []
+      for (let offset = 0; ; offset += PAGE_SIZE) {
+        const pageResult = await supabase
+          .from('watchlists')
+          .select('id')
+          .eq('owner_user_id', ownerId)
+          .order('id', { ascending: true })
+          .range(offset, offset + PAGE_SIZE - 1)
+        if (!isCurrentLoad()) return
+        if (pageResult.error) throw pageResult.error
+        const rows = pageResult.data ?? []
+        listIds.push(...rows.map((row) => row.id))
+        if (rows.length < PAGE_SIZE) break
+      }
+
+      const watchedInstrumentIds = new Set<string>()
+      for (let batchStart = 0; batchStart < listIds.length; batchStart += WATCHLIST_ID_BATCH_SIZE) {
+        const listIdBatch = listIds.slice(batchStart, batchStart + WATCHLIST_ID_BATCH_SIZE)
+        for (let offset = 0; ; offset += PAGE_SIZE) {
+          const pageResult = await supabase
+            .from('watchlist_items')
+            .select('watchlist_id,instrument_id')
+            .in('watchlist_id', listIdBatch)
+            .order('watchlist_id', { ascending: true })
+            .order('instrument_id', { ascending: true })
+            .range(offset, offset + PAGE_SIZE - 1)
+          if (!isCurrentLoad()) return
+          if (pageResult.error) throw pageResult.error
+          const rows = pageResult.data ?? []
+          rows.forEach((row) => watchedInstrumentIds.add(row.instrument_id))
+          if (rows.length < PAGE_SIZE) break
+        }
+      }
 
       const nextPreferences = (preferencesResult.data ?? null) as Preferences | null
       setPreferences(nextPreferences)
       setGateThreeData(nextGateThreeData)
       setCounts({
-        watchlists: nextGateThreeData.watchlists.length,
-        watchedInstruments: nextGateThreeData.watchedInstrumentCount,
-        interests: nextGateThreeData.interestCount,
+        watchlists: watchlistsCountResult.count,
+        watchedInstruments: watchedInstrumentIds.size,
+        interests: interestsCountResult.count,
       })
       if (nextPreferences) {
         setBaseCurrency(nextPreferences.base_currency.trim())
