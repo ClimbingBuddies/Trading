@@ -402,3 +402,14 @@ Not authorised by this decision:
 - Vercel production: deployment `dpl_81e2pK1LXWGVPJNtpwcxRbMBqAxB`, `READY`, commit `c8a7ba7e278a3853f3ec5374a6c7dedadcd43b70`; production remains MYDASH-002.
 - Preserved boundaries: public Supabase URL/publishable key only; no service-role credential, RLS/grant weakening, private-data exposure, assessment mutation, Opportunity-to-Buy conversion, live trading or broker access.
 - Exact next action: prepare the bounded runnable Preview and verification handoff, run the full checks, reconcile PR #25 and stop for the independent Auditor.
+
+### 28 August 2026 — MYDASH-003_RUNNABLE_PREVIEW_READY_AUTH_EVIDENCE_BLOCKED
+
+- Role performed: `PRODUCER` only; no independent audit, merge, gate promotion, schema change or production-data mutation occurred.
+- Public configuration correction: PR #25 tracks only the Supabase project URL and modern publishable browser key. A regression test rejects unexpected or secret-like configuration names; no service-role, provider credential or private value is present.
+- Corrected candidate: `9bb1a3c06e5df010ef86ab1defe0f67f3270f677`; Vercel Preview `dpl_2KL91q1fw2k2XGVsrB5XDkvmnTmq` is `READY`.
+- Verification: `npm test` 24/24 passed; `git diff --check` passed; a Vercel share session reached the actual `/my-dashboard` permanent-user sign-in boundary and the previous missing-public-configuration error is absent.
+- Supabase verification: project `glvbqcplgjdfgjyknzsa` remains owner scoped with two Watchlists and two items across two permanent owners; anonymous denial remains intact. No schema, RLS, grant, assessment or production-data change was made.
+- Exact blocker: the connected browser has no signed-in permanent test session. Secure browser authentication requires interactive user-provided credentials, which this non-interactive Producer cannot create, inspect, transmit or fabricate. Existing SQL two-owner RLS evidence does not satisfy the Auditor's required live authenticated UI, direct 390 × 844 and keyboard/state checks.
+- Handoff remains `PRODUCER / MYDASH-003 IN_PROGRESS / BLOCKED_OWNER_AUTHENTICATED_UI_EVIDENCE`; PR #25 remains unmerged.
+- Exact next action: provide a connected Preview sign-in session for two permanent test identities, or explicitly authorise bounded dedicated test identities; then resume the Producer to finish live UI evidence and return the reconciled candidate to an independent Auditor.
