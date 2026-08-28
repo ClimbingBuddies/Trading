@@ -413,3 +413,10 @@ Not authorised by this decision:
 - Exact blocker: the connected browser has no signed-in permanent test session. Secure browser authentication requires interactive user-provided credentials, which this non-interactive Producer cannot create, inspect, transmit or fabricate. Existing SQL two-owner RLS evidence does not satisfy the Auditor's required live authenticated UI, direct 390 × 844 and keyboard/state checks.
 - Handoff remains `PRODUCER / MYDASH-003 IN_PROGRESS / BLOCKED_OWNER_AUTHENTICATED_UI_EVIDENCE`; PR #25 remains unmerged.
 - Exact next action: provide a connected Preview sign-in session for two permanent test identities, or explicitly authorise bounded dedicated test identities; then resume the Producer to finish live UI evidence and return the reconciled candidate to an independent Auditor.
+
+### 28 August 2026 — MYDASH-003_PR_RECONCILED_BLOCKER_VERIFIED
+
+- PR #25 was reconciled with persisted `main` handoff state in merge commit `0b0bff0efa258838e2ca1a6b8e730b6ea6ef2963`; no functional Watchlists/Opportunities code changed during reconciliation.
+- Exact reconciled Vercel Preview: `dpl_5y7DJ1T3XYdoMHmgTjuDhpiN5jLf`, `READY`.
+- Browser verification reached the actual permanent-user email sign-in boundary on `/my-dashboard`; Vercel reported no route runtime errors in the verification window. The previous missing-public-Supabase-configuration defect is resolved.
+- Remaining state is unchanged: `MYDASH-003 IN_PROGRESS / PRODUCER / BLOCKED_OWNER_AUTHENTICATED_UI_EVIDENCE`; PR #25 remains unmerged and production remains MYDASH-002.
