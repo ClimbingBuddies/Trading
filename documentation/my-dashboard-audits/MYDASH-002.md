@@ -1,7 +1,7 @@
 # MYDASH-002 — Producer evidence
 
 **Gate:** Secure personal foundation and dashboard shell
-**Role:** PRODUCER
+**Role:** PRODUCER → independent AUDITOR
 **Status:** PASS_WITH_ADVICE — independent audit complete; authenticated/mobile direct evidence advisory
 **Candidate branch:** `codex/mydash-002-secure-foundation`
 **Functional commit:** `bf7008fb60786a7b51522ab2956779b17a733723`
