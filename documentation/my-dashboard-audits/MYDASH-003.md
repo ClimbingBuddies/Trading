@@ -95,7 +95,7 @@ The source and persisted-data checks passed, but the gate cannot pass without th
 1. Make the exact MYDASH-003 candidate independently runnable in a non-production Vercel deployment by providing only the public Supabase URL and publishable key to the Preview environment. Do not expose a service-role key or weaken RLS.
 2. Provide bounded permanent test identities or an equivalent safe authenticated test path, with distinct owner-scoped Watchlist data, so the next Auditor can reproduce both users' Watchlists and relevant Opportunities without seeing the other owner's rows. Preserve signed-out and anonymous denial.
 3. On the runnable candidate, verify desktop and direct 390 × 844 rendering, tab Arrow Left/Right and Home/End focus behaviour, Watchlists and Opportunities loading/empty/error/data-gap states, provenance labels, deep links and the no-recommendation boundary.
-4. Re-run the complete automated suite and Vercel build, record the exact deployment and functional commit, then return the unchanged or corrected candidate to independent audit. Do not merge PR #25 before that pass.
+4. Reconcile PR #25 with the current `main` control state without changing the functional candidate, then re-run the complete automated suite and Vercel build, record the exact deployment and functional commit, and return the candidate to independent audit. Do not merge PR #25 before that pass.
 
 No source defect was established in this audit, and the Auditor made no implementation, schema, data or deployment-promotion change.
 
@@ -111,6 +111,6 @@ No source defect was established in this audit, and the Auditor made no implemen
     schema_and_rls_checks: two permanent-user SQL impersonations isolated owner rows; authenticated anonymous saw zero private rows; signed-out role has no private SELECT grant; no schema change
     calculation_reproduction: not applicable; Opportunity relevance and deterministic latest-assessment selection reproduced without a blended score or Buy conversion
     ui_and_accessibility_checks: production signed-out boundary passed; candidate live authenticated, desktop, 390 × 844 and keyboard checks blocked by absent Preview public Supabase configuration
-    complete_correction_set: configure a safe runnable Preview; supply bounded two-user authenticated test access; reproduce live responsive, keyboard, state, provenance and privacy checks; rerun tests/build and freeze exact identities
+    complete_correction_set: configure a safe runnable Preview; supply bounded two-user authenticated test access; reproduce live responsive, keyboard, state, provenance and privacy checks; reconcile PR #25 with current main; rerun tests/build and freeze exact identities
     known_limitations: source/static checks passed, but the mandatory live private UI evidence is absent
     exact_next_action: Producer completes only this correction set for MYDASH-003 and returns the exact runnable candidate to an independent Auditor
