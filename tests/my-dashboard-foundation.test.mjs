@@ -29,3 +29,31 @@ test('MYDASH-002 shell exposes six accessible tabs and honest private states', a
   assert.match(component, /No placeholder recommendations, holdings or returns are fabricated/)
   assert.doesNotMatch(component, /service_role|SUPABASE_SERVICE/i)
 })
+
+test('MYDASH-002 invalidates stale private loads when the authenticated owner changes', async () => {
+  const component = await readFile(componentPath, 'utf8')
+  assert.match(component, /const activeOwnerRef = useRef<string \| null>\(null\)/)
+  assert.match(component, /const loadGenerationRef = useRef\(0\)/)
+  assert.match(component, /activeOwnerRef\.current === ownerId && loadGenerationRef\.current === loadGeneration/)
+  assert.match(component, /if \(!isCurrentLoad\(\)\) return/g)
+  assert.match(component, /activeOwnerRef\.current = null/)
+})
+
+test('MYDASH-002 resets all owner-scoped preferences at auth boundaries and missing rows', async () => {
+  const component = await readFile(componentPath, 'utf8')
+  assert.match(component, /setBaseCurrency\(DEFAULT_BASE_CURRENCY\)/g)
+  assert.match(component, /setHorizon\(DEFAULT_HORIZON\)/g)
+  assert.match(component, /setRisk\(DEFAULT_RISK\)/g)
+  assert.match(component, /clearPrivateState\(resolved\?\.id \?\? null\)/)
+  assert.match(component, /if \(nextPreferences\)[\s\S]*else \{[\s\S]*setBaseCurrency\(DEFAULT_BASE_CURRENCY\)/)
+})
+
+test('MYDASH-002 keeps failed private-data results unknown and renders only retry state', async () => {
+  const component = await readFile(componentPath, 'utf8')
+  assert.match(component, /useState<DashboardCounts \| null>\(null\)/)
+  assert.match(component, /setCounts\(null\)/g)
+  assert.match(component, /setPrivateDataState\('error'\)/)
+  assert.match(component, /privateDataState === 'error'/)
+  assert.match(component, /PRIVATE DATA UNAVAILABLE/)
+  assert.match(component, /Personal counts and preferences remain hidden until the complete private-data load succeeds/)
+})
