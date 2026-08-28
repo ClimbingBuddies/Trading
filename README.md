@@ -11,6 +11,8 @@ Discover Boulders Markets is a Supabase-backed trading research, monitoring and 
 
 Do not create or use a duplicate Trading deployment project. The frontend uses the Supabase publishable key only; service-role and provider secrets must never be exposed to the browser.
 
+The tracked `.env` contains only the production Supabase URL and modern publishable key required by public and pull-request builds. These values identify the public API boundary and do not bypass authentication or row-level security. Service-role keys, provider credentials and other secrets remain outside the repository and must never use a `NEXT_PUBLIC_` name.
+
 ## Platform capabilities
 
 - Fifteen-minute market-data ingestion and operational monitoring.
