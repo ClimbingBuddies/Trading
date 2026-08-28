@@ -269,9 +269,30 @@ export default function MyDashboardClient() {
       default_horizon_sessions: horizon,
       risk_preference: risk,
     }
-    const { error: writeError } = await getBrowserSupabase()
+    const preferenceValues = {
+      base_currency: payload.base_currency,
+      default_horizon_sessions: horizon,
+      risk_preference: risk,
+    }
+    const supabase = getBrowserSupabase()
+    const updateResult = await supabase
       .from('user_market_preferences')
-      .upsert(payload, { onConflict: 'owner_user_id' })
+      .update(preferenceValues)
+      .eq('owner_user_id', ownerId)
+      .select('owner_user_id')
+      .maybeSingle()
+    let writeError = updateResult.error
+    if (!writeError && !updateResult.data) {
+      const insertResult = await supabase.from('user_market_preferences').insert(payload)
+      writeError = insertResult.error
+      if (writeError?.code === '23505') {
+        const retryResult = await supabase
+          .from('user_market_preferences')
+          .update(preferenceValues)
+          .eq('owner_user_id', ownerId)
+        writeError = retryResult.error
+      }
+    }
     if (activeOwnerRef.current !== ownerId) return
     if (writeError) setError(writeError.message)
     else {
