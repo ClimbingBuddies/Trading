@@ -396,7 +396,7 @@ The project is complete only when:
 ## Current project state
 
     project_status: IN_PROGRESS
-    active_gate: MYDASH-001
+    active_gate: MYDASH-003
     active_gate_status: NEXT
     handoff_owner: PRODUCER
     controller_created: true
