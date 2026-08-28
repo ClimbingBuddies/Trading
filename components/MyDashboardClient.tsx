@@ -350,14 +350,13 @@ export default function MyDashboardClient() {
             <p>{error || 'The private dashboard could not be loaded.'}</p>
             <button onClick={() => loadPrivateData(user.id)}>Try again</button>
           </article>
+        ) : privateDataState !== 'ready' || !counts ? (
+          <article className={styles.stateCard} aria-live="polite" aria-busy="true">
+            <span className={styles.eyebrow}>PRIVATE WORKSPACE</span>
+            <h2>Loading your dashboard…</h2>
+            <p>Personal counts and preferences remain hidden until the complete private-data load succeeds.</p>
+          </article>
         ) : selectedTab === 'today' ? (
-          privateDataState !== 'ready' || !counts ? (
-            <article className={styles.stateCard} aria-live="polite" aria-busy="true">
-              <span className={styles.eyebrow}>PRIVATE WORKSPACE</span>
-              <h2>Loading your dashboard…</h2>
-              <p>Personal counts and preferences remain hidden until the complete private-data load succeeds.</p>
-            </article>
-          ) : (
             <div className={styles.todayGrid} aria-busy={loading}>
               <div className={styles.metrics}>
                 <article><span>Private watchlists</span><strong>{counts.watchlists}</strong><Link href="/watchlists">Manage lists</Link></article>
@@ -381,7 +380,6 @@ export default function MyDashboardClient() {
                 <p className={styles.disclosure}>These settings organise research presentation only. They are not a suitability assessment or permission to trade.</p>
               </article>
             </div>
-          )
         ) : (
           <article className={styles.panel}>
             <span className={styles.eyebrow}>FOUNDATION READY</span>
