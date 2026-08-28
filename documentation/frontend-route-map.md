@@ -11,7 +11,7 @@ The frontend is a presentation and owner-workspace layer over Supabase. It does 
 | Route | Purpose | Primary persisted sources | Access |
 |---|---|---|---|
 | `/` | Redirect to the Admin operational dashboard | None | Public |
-| `/my-dashboard` | Private six-tab personal research shell; MYDASH-002 activates Today and audited preferences/interests while later tabs remain explicit empty states | `user_market_preferences`, `user_market_interests`, private `watchlists` / `watchlist_items` | Permanent authenticated owner; anonymous and signed-out sessions receive no personal rows |
+| `/my-dashboard` | Private six-tab personal research workspace; Today, Watchlists and relevant Opportunities are active while later tabs remain explicit empty states | `user_market_preferences`, `user_market_interests`, private `watchlists` / `watchlist_items`, public `instruments` / latest observations, independent Opportunity themes / mappings / assessments | Permanent authenticated owner; anonymous and signed-out sessions receive no personal rows |
 | `/admin` | Loader health, freshness, operational telemetry and performance monitoring | `sync_runs`, `instruments`, `market_observations`, Technical/Convergence/evaluator run telemetry | Operational dashboard |
 | `/admin/loads/[id]` | Individual market-data load drill-through | `sync_runs`, related observations | Operational dashboard |
 | `/markets` | Active instrument overview, search, filters and freshness | `instruments`, latest observations | Public read-only |
