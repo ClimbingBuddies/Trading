@@ -70,8 +70,12 @@ test('MYDASH-002 uses exact counts and paginates all rows needed for distinct in
 
 test('MYDASH-002 preference saves recover from same-owner cross-tab creation races', async () => {
   const component = await readFile(componentPath, 'utf8')
-  assert.match(component, /\.upsert\(payload, \{ onConflict: 'owner_user_id' \}\)/)
-  assert.doesNotMatch(component, /preferences\s*\?\s*await getBrowserSupabase\(\)/)
+  assert.match(component, /\.update\(preferenceValues\)[\s\S]*\.eq\('owner_user_id', ownerId\)/)
+  assert.match(component, /if \(!writeError && !updateResult\.data\)/)
+  assert.match(component, /if \(writeError\?\.code === '23505'\)/)
+  assert.match(component, /const retryResult = await supabase[\s\S]*\.update\(preferenceValues\)/)
+  assert.doesNotMatch(component, /\.upsert\(payload/)
+  assert.doesNotMatch(component, /\.update\(\{[^}]*owner_user_id/s)
 })
 
 test('MYDASH-002 keeps failed private-data results unknown and renders only retry state', async () => {
