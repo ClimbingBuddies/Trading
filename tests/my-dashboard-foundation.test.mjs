@@ -85,6 +85,6 @@ test('MYDASH-002 keeps failed private-data results unknown and renders only retr
   assert.match(component, /setPrivateDataState\('error'\)/)
   assert.match(component, /privateDataState === 'error'/)
   assert.match(component, /PRIVATE DATA UNAVAILABLE/)
-  assert.match(component, /\{privateDataState === 'error' \? \([\s\S]*\) : selectedTab === 'today' \? \(/)
+  assert.match(component, /\{privateDataState === 'error' \? \([\s\S]*\) : privateDataState !== 'ready' \|\| !counts \? \([\s\S]*\) : selectedTab === 'today' \? \(/)
   assert.match(component, /Personal counts and preferences remain hidden until the complete private-data load succeeds/)
 })
