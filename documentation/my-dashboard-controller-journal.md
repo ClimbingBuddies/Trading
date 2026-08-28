@@ -8,13 +8,13 @@
 ## Current state
 
     project_status: IN_PROGRESS
-    active_gate: MYDASH-002
-    active_gate_status: IN_REVIEW
-    handoff_owner: INDEPENDENT_PR_REVIEW
-    handoff_status: FINAL_REVIEW_REQUIRED
+    active_gate: MYDASH-003
+    active_gate_status: NEXT
+    handoff_owner: PRODUCER
+    handoff_status: AUTHORISED
     owner_review: APPROVED_TO_MERGE_AFTER_CLEAN_REVIEW
-    last_event: MYDASH-002_CORRECTED_CANDIDATE_AWAITING_FINAL_REVIEW
-    next_action: Independently review corrected functional candidate bf7008fb60786a7b51522ab2956779b17a733723 and final branch head; only after a clean review and READY build merge PR #24, verify production UI, and resume the My Dashboard Controller for the independent gate audit.
+    last_event: MYDASH-002_AUDIT_PASS_WITH_ADVICE
+    next_action: Producer performs one bounded MYDASH-003 iteration on private Watchlists and relevant Opportunities, preserving independent Opportunity lineage and explicit data gaps.
 
 ## Gate ledger
 
@@ -304,3 +304,16 @@ Not authorised by this decision:
 - Focused correction checks: 8/8 passed.
 - Production effects: none; PR #24 remains unmerged and the Controller remains paused.
 - Exact next action: obtain a clean exact-head review; only then merge, verify production, and resume the Controller.
+
+
+### 28 August 2026 — MYDASH-002_INDEPENDENT_AUDIT_PASS_WITH_ADVICE
+
+- Role performed: `AUDITOR` only.
+- Beginning state: `MYDASH-002 / IN_REVIEW / INDEPENDENT_PR_REVIEW`.
+- Fresh source identities: controller `aa7855a2d3f4246ffa4d5808eec12dcd1f313313`; project plan `9df07b5ed2f85206ad9928e445c15059c447c48b`; opening journal `8432f6860b0db19da796cd86ed796defed061dfa`; development workflow `e04dfa048b5b42767db4feb43d86f3738cd3c07c`; platform architecture `4f9ee606554f14ee3ef4dd2ac6431fc00461e143`; frontend route map `d405a1c5329db4ecf6edd45122d562b1aed94407`; Supabase data model `596282e1d8ac4a99e19eea537c3ba451c8dec72e`; approved contract `bd1d1556015b12967cb57c39f3922f92019a0cc4`; MYDASH-002 audit opening blob `37215b217762d3c96e87f7b803ff9731c3a3c166`.
+- Primary reconciliation: PR #24 merged at `9a009e25f5d190810ac3f4e0f40d48178a6e54e7`; production deployment `dpl_8fbeGGvrneidEM8EJiPgB84M2Mp1` returned HTTP 200 for `/my-dashboard`.
+- Supabase verification: both new personal tables exist with RLS enabled, 3/4 owner policies, narrow authenticated grants and zero persisted personal rows. Owner-context reads returned zero rows; anonymous access had no table SELECT privilege.
+- UI verification: signed-out privacy and no-trading boundary visible; six tabs and desktop no-overflow verified. Narrow-screen media rules are present. Authenticated and direct 390 × 844 interaction evidence remain advisory because no signed-in browser session or viewport-resize control was available.
+- Audit decision: `PASS_WITH_ADVICE`; no implementation or production data changes.
+- Handoff: `AUDITOR -> PRODUCER / MYDASH-003 NEXT`.
+- Exact next action: Producer runs one bounded MYDASH-003 iteration. Repeat authenticated two-user and 390 × 844 keyboard checks when a signed-in verification session is available.
