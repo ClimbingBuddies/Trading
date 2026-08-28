@@ -44,8 +44,17 @@ test('MYDASH-002 resets all owner-scoped preferences at auth boundaries and miss
   assert.match(component, /setBaseCurrency\(DEFAULT_BASE_CURRENCY\)/g)
   assert.match(component, /setHorizon\(DEFAULT_HORIZON\)/g)
   assert.match(component, /setRisk\(DEFAULT_RISK\)/g)
-  assert.match(component, /clearPrivateState\(resolved\?\.id \?\? null\)/)
+  assert.match(component, /const ownerChanged = activeOwnerRef\.current !== nextOwnerId/)
+  assert.match(component, /if \(ownerChanged\) clearPrivateState\(nextOwnerId\)/)
   assert.match(component, /if \(nextPreferences\)[\s\S]*else \{[\s\S]*setBaseCurrency\(DEFAULT_BASE_CURRENCY\)/)
+})
+
+test('MYDASH-002 preserves unsaved edits when an auth event keeps the same owner', async () => {
+  const component = await readFile(componentPath, 'utf8')
+  assert.match(component, /const ownerChanged = activeOwnerRef\.current !== nextOwnerId/)
+  assert.match(component, /if \(ownerChanged\) clearPrivateState\(nextOwnerId\)/)
+  assert.match(component, /if \(resolved && ownerChanged\) void loadPrivateData\(resolved\.id\)/)
+  assert.doesNotMatch(component, /clearPrivateState\(resolved\?\.id \?\? null\)/)
 })
 
 test('MYDASH-002 keeps failed private-data results unknown and renders only retry state', async () => {
@@ -55,5 +64,6 @@ test('MYDASH-002 keeps failed private-data results unknown and renders only retr
   assert.match(component, /setPrivateDataState\('error'\)/)
   assert.match(component, /privateDataState === 'error'/)
   assert.match(component, /PRIVATE DATA UNAVAILABLE/)
+  assert.match(component, /\{privateDataState === 'error' \? \([\s\S]*\) : selectedTab === 'today' \? \(/)
   assert.match(component, /Personal counts and preferences remain hidden until the complete private-data load succeeds/)
 })
