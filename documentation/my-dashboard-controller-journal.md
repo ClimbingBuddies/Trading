@@ -9,12 +9,12 @@
 
     project_status: IN_PROGRESS
     active_gate: MYDASH-003
-    active_gate_status: IN_REVIEW
-    handoff_owner: AUDITOR
-    handoff_status: READY_FOR_AUDIT
+    active_gate_status: IN_PROGRESS
+    handoff_owner: PRODUCER
+    handoff_status: REWORK_REQUIRED
     owner_review: APPROVED_AND_MERGED
-    last_event: MYDASH-003_PR_FINDINGS_CORRECTED
-    next_action: Independent Auditor reviews exact functional candidate 73265fdc6d0cec32386acb8ccd955fe3bea59d99 and either returns one complete correction set or promotes only MYDASH-004.
+    last_event: MYDASH-003_AUDIT_REWORK_REQUIRED
+    next_action: Producer completes the persisted MYDASH-003 Preview and two-user live-verification correction set, then returns the exact candidate to an independent Auditor without merging PR #25.
 
 ## Gate ledger
 
@@ -22,7 +22,7 @@
 |---|---|---|---|
 | MYDASH-001 | DONE | NONE | Owner Review A — APPROVED 27 August 2026 |
 | MYDASH-002 | DONE | NONE | Independent audit complete; PASS_WITH_ADVICE with authenticated/mobile advisory checks |
-| MYDASH-003 | IN_REVIEW | AUDITOR | Independent audit |
+| MYDASH-003 | IN_PROGRESS | PRODUCER | Independent re-audit required after correction set |
 | MYDASH-004 | PLANNED | NONE | Independent audit, then Owner Review B |
 | MYDASH-005 | PLANNED | NONE | Independent audit |
 | MYDASH-006 | PLANNED | NONE | Independent audit |
@@ -367,3 +367,14 @@ Not authorised by this decision:
 - Schema/data/production effects: none.
 - Handoff remains `PRODUCER -> AUDITOR / MYDASH-003 IN_REVIEW / READY_FOR_AUDIT`, replacing the earlier candidate identity with `73265fdc6d0cec32386acb8ccd955fe3bea59d99`.
 - Exact next action: independent Auditor reviews only corrected candidate `73265fdc6d0cec32386acb8ccd955fe3bea59d99` and reproduces security, data-lineage, responsive and keyboard evidence independently.
+
+### 28 August 2026 — MYDASH-003_AUDIT_REWORK_REQUIRED
+
+- Role performed: `AUDITOR` only; no implementation fix, merge or gate promotion occurred.
+- Exact implementation reviewed: functional range `1a6d0130735f69717c1963a84e64c5a5cbce6fc2` through `73265fdc6d0cec32386acb8ccd955fe3bea59d99`; PR #25 head at audit start `66652239e1906b1904c80312f3c32bb8deaff5fa`.
+- Independent checks passed: 23/23 automated tests; Vercel compile and TypeScript build; exact-count pagination; distinct theme counting; exposure identity; current Opportunity lineage and current-row reproduction; two permanent-user SQL RLS isolation; authenticated-anonymous denial; production signed-out privacy and no-trading boundaries.
+- Blocking acceptance evidence: exact candidate deployment `dpl_Djdhcz9Heav4324LQ53wmLceUzX8` is `READY` but the route fails closed because Preview lacks `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`. The Auditor therefore could not verify live authenticated Watchlists/Opportunities, direct desktop and 390 × 844 rendering, or keyboard/focus and state behaviour as required by the controller.
+- Complete correction set: make the exact candidate runnable in Preview using only public Supabase configuration; provide bounded permanent two-user authenticated test access; reproduce desktop, direct 390 × 844, keyboard/focus, loading/empty/error/data-gap/provenance/privacy behaviour; rerun all tests/build; freeze exact identities; do not merge before independent re-audit passes.
+- Durable evidence and mandatory handback: `documentation/my-dashboard-audits/MYDASH-003.md`.
+- Handoff: `AUDITOR -> PRODUCER / MYDASH-003 IN_PROGRESS / REWORK_REQUIRED`.
+- Exact next action: Producer completes only the persisted correction set and returns MYDASH-003 to an independent Auditor.
