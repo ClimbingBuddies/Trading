@@ -57,6 +57,17 @@ test('MYDASH-002 preserves unsaved edits when an auth event keeps the same owner
   assert.doesNotMatch(component, /clearPrivateState\(resolved\?\.id \?\? null\)/)
 })
 
+test('MYDASH-002 uses exact counts and paginates all rows needed for distinct instruments', async () => {
+  const component = await readFile(componentPath, 'utf8')
+  assert.match(component, /select\('id', \{ count: 'exact', head: true \}\)/g)
+  assert.match(component, /watchlistsCountResult\.count === null \|\| interestsCountResult\.count === null/)
+  assert.match(component, /\.range\(offset, offset \+ PAGE_SIZE - 1\)/g)
+  assert.match(component, /WATCHLIST_ID_BATCH_SIZE/)
+  assert.match(component, /new Set<string>\(\)/)
+  assert.match(component, /watchedInstrumentIds\.add\(row\.instrument_id\)/)
+  assert.doesNotMatch(component, /watchlists: listIds\.length/)
+})
+
 test('MYDASH-002 keeps failed private-data results unknown and renders only retry state', async () => {
   const component = await readFile(componentPath, 'utf8')
   assert.match(component, /useState<DashboardCounts \| null>\(null\)/)
