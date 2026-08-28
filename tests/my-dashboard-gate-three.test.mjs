@@ -19,6 +19,7 @@ test('MYDASH-003 derives relevance only from persisted watchlist, interest and O
   assert.match(source, /from\('opportunity_theme_instruments'\)/)
   assert.match(source, /eq\('is_active', true\)/)
   assert.match(source, /const relevantThemeIds = \[\.\.\.new Set\(\[\.\.\.mappings\.map/)
+  assert.match(source, /relatedThemeCount: new Set\([\s\S]*mapping\.theme_id[\s\S]*\)\.size/)
   assert.doesNotMatch(source, /gpt_market_assessments|market_scores|technical_indicators|market_convergence_assessments/)
 })
 
@@ -52,6 +53,7 @@ test('MYDASH-003 preserves accessible tab navigation and narrow-screen structure
   assert.match(component, /ArrowLeft/)
   assert.match(component, /<WatchlistsPanel data=\{gateThreeData\} \/>/)
   assert.match(component, /<OpportunitiesPanel data=\{gateThreeData\} \/>/)
+  assert.match(component, /key=\{`\$\{opportunity\.themeId\}-\$\{instrument\.instrumentId\}-\$\{instrument\.exposureType\}`\}/)
   assert.match(component, /Manage Watchlists/)
   assert.match(component, /Open full research evidence/)
 })

@@ -332,7 +332,9 @@ export async function loadMyDashboardGateThree(
             observedAt: observation.observed_at,
             isDelayed: observation.is_delayed,
           } : null,
-          relatedThemeCount: (mappingsByInstrument.get(item.instrument_id) ?? []).length,
+          relatedThemeCount: new Set(
+            (mappingsByInstrument.get(item.instrument_id) ?? []).map((mapping) => mapping.theme_id),
+          ).size,
         }
       }),
   }))

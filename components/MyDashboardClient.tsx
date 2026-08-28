@@ -217,7 +217,7 @@ function OpportunitiesPanel({ data }: { data: MyDashboardGateThreeData }) {
                   <div className={styles.exposureList}>
                     <strong>Your related instruments</strong>
                     {opportunity.relatedInstruments.map((instrument) => (
-                      <div key={`${opportunity.themeId}-${instrument.instrumentId}`}>
+                      <div key={`${opportunity.themeId}-${instrument.instrumentId}-${instrument.exposureType}`}>
                         <Link href={`/markets/${encodeURIComponent(instrument.symbol.toLowerCase())}`}>{instrument.symbol}</Link>
                         <span>{label(instrument.exposureType)}{instrument.exposureScore === null ? ' · exposure score unavailable' : ` · exposure ${formatNumber(instrument.exposureScore, 0)}`}</span>
                         <p>{instrument.rationale || 'No mapping rationale is stored.'}</p>
