@@ -13,8 +13,8 @@
     handoff_owner: PRODUCER
     handoff_status: BLOCKED_OWNER_SECOND_TEST_IDENTITY_AND_MOBILE_EVIDENCE
     owner_review: APPROVED_AND_MERGED
-    last_event: MYDASH-003_SECOND_OWNER_EVIDENCE_BUILD_ATTEMPT_STARTED
-    next_action: Producer verifies current TEST_B Auth and connected-browser truth, completes only remaining MYDASH-003 evidence if available, otherwise persists the unchanged exact owner blocker.
+    last_event: MYDASH-003_SECOND_OWNER_BLOCKER_REVERIFIED
+    next_action: Owner creates and confirms bounded TEST_B and signs it into a separate PR #25 Preview origin/session; a later Producer completes cross-owner and direct 390 × 844 evidence before independent re-audit.
 
 ## Gate ledger
 
@@ -484,3 +484,16 @@ Not authorised by this decision:
   - PR #25 opening head: `a65829e3f1d17177b304ba20318414e81cdbfb0a`
 - Preserved boundaries: no public self-registration, credential fabrication, service-role exposure, RLS/grant weakening, assessment mutation, Opportunity-to-Buy conversion, blended score, historical look-ahead, live trading or broker access.
 - Exact next action: inspect Supabase Auth, owner-scoped rows, Vercel candidate state and connected Preview sessions; then persist one Producer result and stop.
+
+
+### 29 August 2026 — MYDASH-003_SECOND_OWNER_BLOCKER_REVERIFIED
+
+- Role performed: `PRODUCER` only; no audit, merge or gate promotion occurred.
+- Supabase primary evidence: confirmed TEST_A exists with one owner-scoped Watchlist and one item; TEST_B is absent from Auth.
+- Vercel primary evidence: exact PR #25 deployment `dpl_Dge8g2VAzbqEn6NtbXbBVh7bCRo8` remains `READY` at commit `a65829e3f1d17177b304ba20318414e81cdbfb0a`.
+- Browser primary evidence: both Preview tabs use the same deployment origin and retain the same TEST_A session. TEST_A Opportunities continue to show stored source dates, confidence, methodology and explicit no-recommendation/no-blended-score boundaries. No TEST_B session exists.
+- Mismatch classification: none. GitHub, Supabase, Vercel and browser state agree with the persisted blocker.
+- Effects: no application, schema, RLS, grant, fixture, assessment, deployment, PR or production mutation.
+- Durable evidence: `documentation/my-dashboard-audits/MYDASH-003.md`.
+- Handoff remains `PRODUCER / MYDASH-003 IN_PROGRESS / BLOCKED_OWNER_SECOND_TEST_IDENTITY_AND_MOBILE_EVIDENCE`.
+- Exact next action: owner creates/confirms TEST_B and signs it into a separate Preview origin/session; a later Producer run creates distinct TEST_B fixture data through RLS, verifies both directions of cross-owner UI isolation and direct 390 × 844 behaviour, and returns the unchanged candidate to an independent Auditor.
