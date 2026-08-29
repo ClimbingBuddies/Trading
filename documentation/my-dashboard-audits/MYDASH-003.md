@@ -2,7 +2,7 @@
 
 **Gate:** Watchlists and relevant Opportunities  
 **Role:** PRODUCER → independent AUDITOR → PRODUCER
-**Status:** PRODUCER_BLOCKED_ON_AUTHENTICATED_UI_EVIDENCE
+**Status:** PRODUCER_BLOCKED_ON_SECOND_OWNER_AND_MOBILE_EVIDENCE
 **Candidate branch:** `codex/mydash-003-watchlists-opportunities`  
 **Pull request:** [#25](https://github.com/ClimbingBuddies/Trading/pull/25)  
 **Functional candidate:** `1a6d0130735f69717c1963a84e64c5a5cbce6fc2` through `73265fdc6d0cec32386acb8ccd955fe3bea59d99`
@@ -143,3 +143,54 @@ The remaining correction cannot be completed safely in this non-interactive run.
     remaining_evidence: authenticated two-owner Watchlists and relevant Opportunities; desktop and direct 390 × 844 rendering; Arrow Left/Right, Home/End, focus and live state checks
     exact_blocker: no connected signed-in test session or user-approved permanent test credentials; secure browser authentication requires interactive owner input
     exact_next_action: provide a connected Preview sign-in session for two permanent test identities, or explicitly authorise creation of bounded dedicated test identities; then resume the Producer to capture the live UI evidence and return the reconciled PR to an independent Auditor
+
+
+## Bounded Producer authenticated-UI continuation — 29 August 2026
+
+**Result:** `PARTIAL_REWORK_COMPLETE_BLOCKED_ON_SECOND_OWNER_AND_DIRECT_MOBILE_EVIDENCE`
+
+This was one Producer-only continuation of the persisted MYDASH-003 correction set. It did not audit, merge, promote the gate or change production application code.
+
+### Sources and exact identities used
+
+- Controller blob: `aa7855a2d3f4246ffa4d5808eec12dcd1f313313`.
+- Project-plan blob: `8fefbacf26ba2725ece3ddfbf24e0148f850d427`.
+- Opening journal blob: `0be59e672a5a41f3dde901c3112500b5bb9c692f`; post-start journal blob: `28c9ead88d0c9c973b6b7154704d491520704c2a`.
+- Opening MYDASH-003 audit blob: `4cd097edf9b3c24090a75c1f2530f7b19a7fafd8`.
+- Approved contract blob: `bd1d1556015b12967cb57c39f3922f92019a0cc4`.
+- Development workflow: `e04dfa048b5b42767db4feb43d86f3738cd3c07c`.
+- Platform architecture: `4f9ee606554f14ee3ef4dd2ac6431fc00461e143`.
+- Frontend route map: `d405a1c5329db4ecf6edd45122d562b1aed94407`.
+- Supabase data model: `596282e1d8ac4a99e19eea537c3ba451c8dec72e`.
+- PR #25 head and exact Preview candidate: `a65829e3f1d17177b304ba20318414e81cdbfb0a`.
+- Candidate component/data/test blobs: `af2946961d460006e49456cba6ce0c5a2bd0d0f4`, `937be9af4ac928027dac6d694b03f9d9b201ef28`, `972ebdfe211cf068a416f0352c3243aa59a0af04`, `8556212e347b23919e8d0bde113bcec74896f799`.
+- Exact Preview deployment: `dpl_Dge8g2VAzbqEn6NtbXbBVh7bCRo8`, `READY`; application host `boulders-market-mtpkm27xr-travis-walker.vercel.app`.
+- Supabase project: `glvbqcplgjdfgjyknzsa`.
+
+### Evidence completed
+
+- Supabase Auth contains one confirmed permanent test identity, labelled TEST_A in evidence. No TEST_B identity exists.
+- Existing Watchlist and Watchlist-item policies remain scoped to permanent authenticated owners, require `owner_user_id = auth.uid()` directly or through the parent Watchlist, and reject anonymous identities.
+- A clearly labelled temporary TEST_A Watchlist and one NVDA item were created through `SET LOCAL ROLE authenticated` with TEST_A JWT claims, so the write exercised RLS rather than bypassing it. A first combined-CTE attempt failed its child-row policy and rolled back completely; the successful two-transaction form was independently read back through the same authenticated RLS context.
+- Live Preview TEST_A session persisted across tabs and reloads. Before fixture creation the Today view showed 0 lists and 0 watched instruments; after the RLS-authenticated fixture it showed exactly 1 and 1.
+- Watchlists rendered the TEST_A list, NVDA persisted quote timestamp, delayed-provider warning, three mapped themes, private note and the explicit statement that long-term Opportunity mappings are not Buy labels.
+- Relevant Opportunities rendered three independently stored themes with assessment date, confidence, methodology, exposure type/rationale and deep links. The UI explicitly states that relevance is not a recommendation, no Opportunity score becomes a Buy label, and no blended personal score is calculated.
+- Loading and empty states were observed directly. Arrow Right, Home and End moved tab focus correctly; URL/selected-tab state remained deterministic.
+- No assessment, recommendation, schema, RLS, grant, production UI, live-trading or broker change occurred. PR #25 remains unmerged.
+
+### Remaining exact blocker
+
+The correction set requires two authenticated permanent owners with distinct data and direct desktop plus 390 × 844 interaction evidence. Persisted Auth contains TEST_A only, and the connected browser exposes no viewport-resize capability. Creating or fabricating TEST_B credentials is outside this run; database impersonation alone cannot replace the required second signed-in UI session.
+
+The temporary TEST_A fixture must be removed after MYDASH-003 closes (Watchlist `MYDASH-003 Test A` and its single NVDA item).
+
+    task_id: MYDASH-003
+    handoff_from: PRODUCER
+    handoff_to: PRODUCER
+    handoff_status: BLOCKED_OWNER_SECOND_TEST_IDENTITY_AND_MOBILE_EVIDENCE
+    candidate_commit: a65829e3f1d17177b304ba20318414e81cdbfb0a
+    deployment_verified: dpl_Dge8g2VAzbqEn6NtbXbBVh7bCRo8 READY
+    completed_live_evidence: TEST_A persistent authenticated session; loading and empty states; owner-scoped fixture data; Watchlists; relevant Opportunities; provenance; delayed-data warning; deep links; no-recommendation boundary; Arrow Right/Home/End focus
+    production_data_effect: one temporary TEST_A Watchlist and one NVDA Watchlist item, both owner scoped and deletion-labelled
+    exact_blocker: TEST_B does not exist in Supabase Auth and no second signed-in Preview session is available; direct 390 × 844 viewport control is also unavailable
+    exact_next_action: owner creates and confirms the bounded TEST_B identity and signs it into a separate Preview session; Producer then creates a distinct TEST_B fixture through RLS, verifies both owners cannot see each other's rows, obtains direct 390 × 844 evidence in a capable session, removes neither fixture until audit completes, and returns the unchanged candidate to an independent Auditor
