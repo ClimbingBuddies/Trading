@@ -11,10 +11,10 @@
     active_gate: MYDASH-003
     active_gate_status: IN_PROGRESS
     handoff_owner: PRODUCER
-    handoff_status: BLOCKED_OWNER_SECOND_TEST_IDENTITY_AND_MOBILE_EVIDENCE
+    handoff_status: BLOCKED_OWNER_TEST_B_CONFIRMATION_AND_CONNECTED_UI_EVIDENCE
     owner_review: APPROVED_AND_MERGED
-    last_event: MYDASH-003_SECOND_OWNER_BLOCKER_REVERIFIED
-    next_action: Owner creates and confirms bounded TEST_B and signs it into a separate PR #25 Preview origin/session; a later Producer completes cross-owner and direct 390 × 844 evidence before independent re-audit.
+    last_event: MYDASH-003_TEST_B_CONFIRMATION_BLOCKER_PERSISTED
+    next_action: Owner confirms existing TEST_B in Supabase Auth and signs TEST_A and TEST_B into separate PR #25 Preview origins/sessions; a later Producer completes cross-owner and direct 390 × 844 evidence before independent re-audit.
 
 ## Gate ledger
 
@@ -522,3 +522,17 @@ Not authorised by this decision:
 - Vercel candidate identity: `dpl_Dge8g2VAzbqEn6NtbXbBVh7bCRo8`, commit `a65829e3f1d17177b304ba20318414e81cdbfb0a`, `READY`.
 - Preserved boundaries: no public self-registration, credential fabrication, service-role exposure, RLS/grant weakening, assessment mutation, Opportunity-to-Buy conversion, blended score, historical look-ahead, live trading or broker access.
 - Exact next action: inspect TEST_B confirmation, owner-scoped rows and connected Preview sessions; then persist one Producer result and stop.
+
+
+### 29 August 2026 — MYDASH-003_TEST_B_CONFIRMATION_BLOCKER_PERSISTED
+
+- Role performed: `PRODUCER` only; no audit, merge or gate promotion occurred.
+- Supabase Auth primary evidence: TEST_A is confirmed and has signed in; TEST_B now exists but remains unconfirmed and has never signed in.
+- Fixture state: the deletion-labelled TEST_A fixture remains one owner-scoped Watchlist and one item; no TEST_B fixture was created.
+- GitHub/Vercel state: PR #25 remains open and unmerged at `a65829e3f1d17177b304ba20318414e81cdbfb0a`; exact Preview `dpl_Dge8g2VAzbqEn6NtbXbBVh7bCRo8` is `READY`. Current production `dpl_3kmBhkof3avnww7Dg5YTN8Li93AP` is `READY` at `8db54f6a1ebe10ea9020895433e4e4ca37aa68ac`.
+- Browser state: no connected user Preview tab/session was available. Tab discovery and a fresh-tab recovery attempt timed out; this transient browser condition was not classified as a candidate defect.
+- Mismatch classification: harmless evidence lag. The persisted blocker previously said TEST_B did not exist; primary evidence now shows it exists but is not confirmed. The active gate, selected role and functional candidate are unchanged.
+- Effects: no application, schema, RLS, grant, Auth record, fixture, assessment, deployment, PR or production mutation.
+- Durable evidence: `documentation/my-dashboard-audits/MYDASH-003.md`, evidence blob `bad08c80252e71a36d7140c5d7e4a7edc6819073`, commit `32762c202aa01cebb06c3d20c070e65c74290336`.
+- Handoff remains `PRODUCER / MYDASH-003 IN_PROGRESS / BLOCKED_OWNER_TEST_B_CONFIRMATION_AND_CONNECTED_UI_EVIDENCE`.
+- Exact next action: owner confirms TEST_B in Supabase Auth and signs TEST_A and TEST_B into separate PR #25 Preview origins/sessions; a later Producer creates distinct TEST_B data through RLS, verifies both directions of cross-owner UI isolation and direct 390 × 844 behaviour, and returns the unchanged candidate to an independent Auditor.
