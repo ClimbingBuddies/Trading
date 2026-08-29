@@ -254,6 +254,7 @@ export default function MyDashboardClient() {
   const [error, setError] = useState('')
   const [status, setStatus] = useState('')
   const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const [preferences, setPreferences] = useState<Preferences | null>(null)
   const [counts, setCounts] = useState<DashboardCounts | null>(null)
   const [gateThreeData, setGateThreeData] = useState<MyDashboardGateThreeData | null>(null)
@@ -442,13 +443,27 @@ export default function MyDashboardClient() {
     document.getElementById(`my-dashboard-tab-${tabs[target].key}`)?.focus()
   }
 
-  async function signIn(event: FormEvent<HTMLFormElement>) {
+  async function signInWithPassword(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
+    if (!email.trim() || !password) return
+    setError('')
+    setStatus('')
+    const { error: authError } = await getBrowserSupabase().auth.signInWithPassword({
+      email: email.trim(),
+      password,
+    })
+    setPassword('')
+    if (authError) setError(authError.message)
+    else setStatus('Signed in securely.')
+  }
+
+  async function sendSecureLink() {
     if (!email.trim()) return
     setError('')
+    setStatus('')
     const { error: authError } = await getBrowserSupabase().auth.signInWithOtp({
       email: email.trim(),
-      options: { emailRedirectTo: `${window.location.origin}/my-dashboard`, shouldCreateUser: true },
+      options: { emailRedirectTo: `${window.location.origin}/my-dashboard`, shouldCreateUser: false },
     })
     if (authError) setError(authError.message)
     else setStatus('Check your email for the secure sign-in link.')
@@ -518,11 +533,14 @@ export default function MyDashboardClient() {
         <p className={styles.lede}>Track your own watchlists, research interests, portfolio health and paper decisions. This workspace never places trades or connects to a broker.</p>
         {error && <div className={styles.error} role="alert">{error}</div>}
         {status && <div className={styles.status} role="status">{status}</div>}
-        <form className={styles.signInForm} onSubmit={signIn}>
+        <form className={styles.signInForm} onSubmit={signInWithPassword}>
           <label htmlFor="dashboard-email">Email</label>
+          <input id="dashboard-email" name="email" type="email" autoComplete="username" value={email} onChange={(event) => setEmail(event.target.value)} required />
+          <label htmlFor="dashboard-password">Password</label>
+          <input id="dashboard-password" name="password" type="password" autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} required />
           <div>
-            <input id="dashboard-email" type="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} required />
-            <button type="submit">Send secure link</button>
+            <button type="submit">Sign in</button>
+            <button type="button" onClick={() => void sendSecureLink()}>Send secure link instead</button>
           </div>
         </form>
         <small>Signed-out and anonymous sessions cannot read personal dashboard tables.</small>
