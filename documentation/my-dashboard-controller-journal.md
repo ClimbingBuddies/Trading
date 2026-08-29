@@ -533,6 +533,7 @@ Not authorised by this decision:
 - Browser state: no connected user Preview tab/session was available. Tab discovery and a fresh-tab recovery attempt timed out; this transient browser condition was not classified as a candidate defect.
 - Mismatch classification: harmless evidence lag. The persisted blocker previously said TEST_B did not exist; primary evidence now shows it exists but is not confirmed. The active gate, selected role and functional candidate are unchanged.
 - Effects: no application, schema, RLS, grant, Auth record, fixture, assessment, deployment, PR or production mutation.
+- Controller schedule: paused while the owner-only TEST_B confirmation and connected-session prerequisites remain unresolved, preventing repeated unchanged runs.
 - Durable evidence: `documentation/my-dashboard-audits/MYDASH-003.md`, evidence blob `bad08c80252e71a36d7140c5d7e4a7edc6819073`, commit `32762c202aa01cebb06c3d20c070e65c74290336`.
 - Handoff remains `PRODUCER / MYDASH-003 IN_PROGRESS / BLOCKED_OWNER_TEST_B_CONFIRMATION_AND_CONNECTED_UI_EVIDENCE`.
 - Exact next action: owner confirms TEST_B in Supabase Auth and signs TEST_A and TEST_B into separate PR #25 Preview origins/sessions; a later Producer creates distinct TEST_B data through RLS, verifies both directions of cross-owner UI isolation and direct 390 × 844 behaviour, and returns the unchanged candidate to an independent Auditor.
