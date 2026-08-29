@@ -194,3 +194,19 @@ The temporary TEST_A fixture must be removed after MYDASH-003 closes (Watchlist 
     production_data_effect: one temporary TEST_A Watchlist and one NVDA Watchlist item, both owner scoped and deletion-labelled
     exact_blocker: TEST_B does not exist in Supabase Auth and no second signed-in Preview session is available; direct 390 × 844 viewport control is also unavailable
     exact_next_action: owner creates and confirms the bounded TEST_B identity and signs it into a separate Preview session; Producer then creates a distinct TEST_B fixture through RLS, verifies both owners cannot see each other's rows, obtains direct 390 × 844 evidence in a capable session, removes neither fixture until audit completes, and returns the unchanged candidate to an independent Auditor
+
+
+## Producer blocker re-verification — 29 August 2026
+
+One bounded Producer-only iteration re-read the complete active-gate authority and checked the remaining prerequisites from primary sources.
+
+- Supabase Auth contains confirmed TEST_A only; TEST_B is absent.
+- TEST_A retains exactly one owner-scoped Watchlist and one item.
+- The exact PR #25 Preview deployment `dpl_Dge8g2VAzbqEn6NtbXbBVh7bCRo8` remains `READY` at `a65829e3f1d17177b304ba20318414e81cdbfb0a`.
+- The connected browser retains two tabs on the same Preview origin and therefore the same TEST_A session; there is no separate TEST_B session.
+- TEST_A still renders only its NVDA-derived relevant Opportunities with assessment lineage, methodology, confidence and explicit no-recommendation/no-blended-score wording.
+- No source, schema, RLS, grant, fixture, assessment, deployment, PR or production change was made in this iteration.
+
+    handoff_status: BLOCKED_OWNER_SECOND_TEST_IDENTITY_AND_MOBILE_EVIDENCE
+    exact_blocker: TEST_B does not exist in authoritative Supabase Auth, so a second authenticated owner session cannot be established or cross-owner UI isolation reproduced; the connected browser still exposes no direct 390 × 844 viewport control
+    exact_next_action: owner creates and confirms bounded TEST_B and signs it into a separate Preview origin/session; a later Producer run creates distinct TEST_B data through RLS and completes the remaining two-owner and direct mobile evidence before independent re-audit
