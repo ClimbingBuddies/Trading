@@ -11,10 +11,10 @@
     active_gate: MYDASH-003
     active_gate_status: IN_PROGRESS
     handoff_owner: PRODUCER
-    handoff_status: REWORK_REQUIRED
+    handoff_status: BLOCKED_OWNER_SECOND_TEST_IDENTITY_AND_MOBILE_EVIDENCE
     owner_review: APPROVED_AND_MERGED
-    last_event: MYDASH-003_AUTHENTICATED_UI_REWORK_BUILD_ATTEMPT_STARTED
-    next_action: Producer verifies the exact PR #25 candidate and connected permanent-user sessions, completes only the persisted live UI correction set, then either returns the candidate to an independent Auditor or records the remaining exact blocker.
+    last_event: MYDASH-003_TEST_A_LIVE_EVIDENCE_COMPLETE_SECOND_OWNER_BLOCKED
+    next_action: Owner creates and confirms bounded TEST_B and signs it into a separate PR #25 Preview session; Producer then completes cross-owner UI isolation and direct 390 × 844 evidence before independent re-audit.
 
 ## Gate ledger
 
@@ -447,3 +447,18 @@ Not authorised by this decision:
   - Preview-config test blob: `8556212e347b23919e8d0bde113bcec74896f799`
 - Preserved boundaries: no public self-registration, service-role exposure, RLS/grant weakening, assessment mutation, blended score, Opportunity-to-Buy conversion, fabricated values, live trading or broker access.
 - Exact next action: verify Supabase/auth truth, exact Preview deployment, persistent User A UI state and remaining two-user/responsive/keyboard evidence; persist one bounded Producer handoff and stop.
+
+
+### 29 August 2026 — MYDASH-003_TEST_A_LIVE_EVIDENCE_COMPLETE_SECOND_OWNER_BLOCKED
+
+- Role performed: `PRODUCER` only; no audit, PR merge or gate promotion occurred.
+- Exact candidate: PR #25 head `a65829e3f1d17177b304ba20318414e81cdbfb0a`; Preview `dpl_Dge8g2VAzbqEn6NtbXbBVh7bCRo8`, `READY`.
+- Auth truth: Supabase Auth contains one confirmed bounded identity, TEST_A. No TEST_B identity exists; no credential or second owner was fabricated.
+- RLS fixture: one deletion-labelled TEST_A Watchlist and one NVDA item were written as `authenticated` with TEST_A JWT claims and read back through owner-scoped RLS. A failed combined transaction rolled back; no partial row survived it.
+- Live TEST_A evidence: signed-in session persisted across reloads; Today changed deterministically from 0/0 to 1/1 after fixture creation; Watchlists showed owner data, price timestamp, delayed-data warning, provenance and private note; Opportunities showed independent stored assessments and explicit no-Buy/no-blended-score boundaries.
+- Keyboard/state evidence: loading and empty states were directly observed; Arrow Right, Home and End moved tab focus correctly.
+- Preserved boundaries: owner privacy, anonymous denial, assessment independence, source lineage and no live trading/broker access remain unchanged. Production application code and schema were not changed; PR #25 remains unmerged.
+- Remaining exact blocker: the required second permanent owner and signed-in Preview session do not exist, so cross-owner UI isolation cannot be reproduced. Direct 390 × 844 evidence is also unavailable because the connected session exposes no viewport-resize control.
+- Durable evidence: `documentation/my-dashboard-audits/MYDASH-003.md`.
+- Handoff remains `PRODUCER / MYDASH-003 IN_PROGRESS / BLOCKED_OWNER_SECOND_TEST_IDENTITY_AND_MOBILE_EVIDENCE`.
+- Exact next action: owner creates/confirms TEST_B and signs it into a separate Preview session; Producer creates distinct TEST_B data through RLS, verifies both directions of UI isolation and direct 390 × 844 behaviour, then hands the unchanged candidate to an independent Auditor.
