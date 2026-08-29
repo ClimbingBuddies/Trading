@@ -11,10 +11,10 @@
     active_gate: MYDASH-003
     active_gate_status: IN_PROGRESS
     handoff_owner: PRODUCER
-    handoff_status: BLOCKED_OWNER_TEST_B_CONFIRMATION_AND_CONNECTED_UI_EVIDENCE
+    handoff_status: OWNER_PAUSE_VERCEL_CREDITS
     owner_review: APPROVED_AND_MERGED
-    last_event: MYDASH-003_TEST_B_CONFIRMATION_BLOCKER_PERSISTED
-    next_action: Owner confirms existing TEST_B in Supabase Auth and signs TEST_A and TEST_B into separate PR #25 Preview origins/sessions; a later Producer completes cross-owner and direct 390 × 844 evidence before independent re-audit.
+    last_event: MYDASH-003_OWNER_PAUSE_VERCEL_CREDITS
+    next_action: Wait for Travis to explicitly resume My Dashboard web development. On resumption, first confirm TEST_B and reconnect separate Preview sessions, then complete the remaining MYDASH-003 evidence without broadening scope.
 
 ## Gate ledger
 
@@ -537,3 +537,14 @@ Not authorised by this decision:
 - Durable evidence: `documentation/my-dashboard-audits/MYDASH-003.md`, evidence blob `bad08c80252e71a36d7140c5d7e4a7edc6819073`, commit `32762c202aa01cebb06c3d20c070e65c74290336`.
 - Handoff remains `PRODUCER / MYDASH-003 IN_PROGRESS / BLOCKED_OWNER_TEST_B_CONFIRMATION_AND_CONNECTED_UI_EVIDENCE`.
 - Exact next action: owner confirms TEST_B in Supabase Auth and signs TEST_A and TEST_B into separate PR #25 Preview origins/sessions; a later Producer creates distinct TEST_B data through RLS, verifies both directions of cross-owner UI isolation and direct 390 × 844 behaviour, and returns the unchanged candidate to an independent Auditor.
+
+
+### 29 August 2026 — MYDASH-003_OWNER_PAUSE_VERCEL_CREDITS
+
+- Owner decision: Travis paused My Dashboard web development because available Vercel credits are running low.
+- Effective state: intentional owner pause; this is not a gate failure.
+- Controller schedule: verified paused.
+- Frozen candidate: PR #25 remains open and unmerged at `a65829e3f1d17177b304ba20318414e81cdbfb0a`; no further Preview or production deployment is authorised.
+- Paused scope: web/UI implementation, Vercel builds or deployments, PR merge/promotion, browser audit and additional project database work.
+- Preserved state: MYDASH-003 remains `IN_PROGRESS / PRODUCER`; existing RLS, production MYDASH-002, temporary TEST_A fixture and durable audit evidence are unchanged.
+- Resume condition: Travis explicitly authorises resumption. The first resumed Producer run must retrieve fresh state, confirm TEST_B, establish separate TEST_A/TEST_B Preview sessions, complete cross-owner and direct 390 × 844 evidence, and return the unchanged candidate to an independent Auditor.
