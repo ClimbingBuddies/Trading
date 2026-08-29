@@ -57,3 +57,12 @@ test('MYDASH-003 preserves accessible tab navigation and narrow-screen structure
   assert.match(component, /Manage Watchlists/)
   assert.match(component, /Open full research evidence/)
 })
+
+
+test('MYDASH-003 supports existing-user password login without enabling public sign-up', async () => {
+  const component = await readFile(componentPath, 'utf8')
+  assert.match(component, /auth\.signInWithPassword\(/)
+  assert.match(component, /autoComplete="current-password"/)
+  assert.match(component, /shouldCreateUser: false/)
+  assert.doesNotMatch(component, /shouldCreateUser: true/)
+})
