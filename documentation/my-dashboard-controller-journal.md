@@ -497,3 +497,28 @@ Not authorised by this decision:
 - Durable evidence: `documentation/my-dashboard-audits/MYDASH-003.md`.
 - Handoff remains `PRODUCER / MYDASH-003 IN_PROGRESS / BLOCKED_OWNER_SECOND_TEST_IDENTITY_AND_MOBILE_EVIDENCE`.
 - Exact next action: owner creates/confirms TEST_B and signs it into a separate Preview origin/session; a later Producer run creates distinct TEST_B fixture data through RLS, verifies both directions of cross-owner UI isolation and direct 390 × 844 behaviour, and returns the unchanged candidate to an independent Auditor.
+
+
+### 29 August 2026 — MYDASH-003_TEST_B_CONFIRMATION_CHECK_BUILD_ATTEMPT_STARTED
+
+- Starting default-branch production identity: Vercel production deployment `dpl_3kmBhkof3avnww7Dg5YTN8Li93AP`, commit `8db54f6a1ebe10ea9020895433e4e4ca37aa68ac`, `READY`.
+- Active gate: `MYDASH-003`.
+- Selected role: `PRODUCER` only.
+- Observed handoff: `IN_PROGRESS / PRODUCER / BLOCKED_OWNER_SECOND_TEST_IDENTITY_AND_MOBILE_EVIDENCE`.
+- Bounded scope: determine from authoritative Supabase Auth and the connected browser whether TEST_B is now confirmed and separately signed in; if prerequisites exist, complete only the remaining two-owner and direct responsive evidence; otherwise persist the exact blocker. Do not audit, merge or promote.
+- Fresh GitHub identities:
+  - controller blob: `aa7855a2d3f4246ffa4d5808eec12dcd1f313313`
+  - project-plan blob: `8fefbacf26ba2725ece3ddfbf24e0148f850d427`
+  - opening journal blob: `40cb3e31136d4eaaf7dff56aeb1fa90492af412c`
+  - MYDASH-003 audit blob: `f3b92e6f09f4fce08feec58463033cbc393cf08d`
+  - approved contract blob: `bd1d1556015b12967cb57c39f3922f92019a0cc4`
+  - development-workflow blob: `e04dfa048b5b42767db4feb43d86f3738cd3c07c`
+  - platform-architecture blob: `4f9ee606554f14ee3ef4dd2ac6431fc00461e143`
+  - frontend-route-map blob: `d405a1c5329db4ecf6edd45122d562b1aed94407`
+  - Supabase-data-model blob: `596282e1d8ac4a99e19eea537c3ba451c8dec72e`
+  - PR #25 head: `a65829e3f1d17177b304ba20318414e81cdbfb0a`
+  - candidate source blobs: data loader `937be9af4ac928027dac6d694b03f9d9b201ef28`; dashboard component `af2946961d460006e49456cba6ce0c5a2bd0d0f4`; stylesheet `f9499c6c088dea14c062e86b5a003842cbe74c2d`; gate-three test `972ebdfe211cf068a416f0352c3243aa59a0af04`; Preview-config test `8556212e347b23919e8d0bde113bcec74896f799`.
+- Supabase production identity: project `glvbqcplgjdfgjyknzsa`, status `ACTIVE_HEALTHY`, latest migration `20260827141836_my_dashboard_interest_fk_indexes`.
+- Vercel candidate identity: `dpl_Dge8g2VAzbqEn6NtbXbBVh7bCRo8`, commit `a65829e3f1d17177b304ba20318414e81cdbfb0a`, `READY`.
+- Preserved boundaries: no public self-registration, credential fabrication, service-role exposure, RLS/grant weakening, assessment mutation, Opportunity-to-Buy conversion, blended score, historical look-ahead, live trading or broker access.
+- Exact next action: inspect TEST_B confirmation, owner-scoped rows and connected Preview sessions; then persist one Producer result and stop.
