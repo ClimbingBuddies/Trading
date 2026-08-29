@@ -210,3 +210,19 @@ One bounded Producer-only iteration re-read the complete active-gate authority a
     handoff_status: BLOCKED_OWNER_SECOND_TEST_IDENTITY_AND_MOBILE_EVIDENCE
     exact_blocker: TEST_B does not exist in authoritative Supabase Auth, so a second authenticated owner session cannot be established or cross-owner UI isolation reproduced; the connected browser still exposes no direct 390 × 844 viewport control
     exact_next_action: owner creates and confirms bounded TEST_B and signs it into a separate Preview origin/session; a later Producer run creates distinct TEST_B data through RLS and completes the remaining two-owner and direct mobile evidence before independent re-audit
+
+
+## Producer TEST_B confirmation check — 29 August 2026
+
+One bounded Producer-only iteration re-read the active-gate authority and checked the owner-supplied second identity and browser prerequisites from primary evidence.
+
+- Supabase Auth now contains both bounded identities, but only TEST_A is confirmed. TEST_B has `email_confirmed_at IS NULL` and no successful sign-in.
+- The deletion-labelled TEST_A fixture remains exactly one owner-scoped Watchlist and one item. No TEST_B fixture was created because the identity cannot yet establish a permanent authenticated session.
+- PR #25 remains open and unmerged at `a65829e3f1d17177b304ba20318414e81cdbfb0a`; the exact Preview deployment `dpl_Dge8g2VAzbqEn6NtbXbBVh7bCRo8` remains `READY`.
+- Current production deployment `dpl_3kmBhkof3avnww7Dg5YTN8Li93AP` is `READY` at `8db54f6a1ebe10ea9020895433e4e4ca37aa68ac`; production remains MYDASH-002.
+- Connected-browser primary evidence did not expose a user Preview tab/session. Tab discovery and a fresh-tab recovery attempt timed out; no authenticated TEST_B state or direct 390 × 844 evidence could be obtained. This browser timeout is treated as transient and was not used as evidence of a product defect.
+- No source, schema, RLS, grant, Auth record, fixture, assessment, deployment, PR or production mutation occurred.
+
+    handoff_status: BLOCKED_OWNER_TEST_B_CONFIRMATION_AND_CONNECTED_UI_EVIDENCE
+    exact_blocker: TEST_B exists but is not confirmed and has never signed in; no connected authenticated Preview session is currently available, and direct 390 × 844 evidence remains outstanding
+    exact_next_action: owner confirms TEST_B in Supabase Auth and signs TEST_A and TEST_B into separate PR #25 Preview origins/sessions; a later Producer creates distinct TEST_B fixture data through RLS, verifies both directions of cross-owner UI isolation and direct 390 × 844 behaviour, then returns the unchanged candidate to an independent Auditor
