@@ -13,8 +13,8 @@
     handoff_owner: PRODUCER
     handoff_status: REWORK_REQUIRED
     owner_review: APPROVED_AND_MERGED
-    last_event: MYDASH-003_AUDIT_REWORK_REQUIRED
-    next_action: Producer completes the persisted MYDASH-003 Preview and two-user live-verification correction set, reconciles PR #25 with current main, then returns the exact candidate to an independent Auditor without merging.
+    last_event: MYDASH-003_AUTHENTICATED_UI_REWORK_BUILD_ATTEMPT_STARTED
+    next_action: Producer verifies the exact PR #25 candidate and connected permanent-user sessions, completes only the persisted live UI correction set, then either returns the candidate to an independent Auditor or records the remaining exact blocker.
 
 ## Gate ledger
 
@@ -420,3 +420,30 @@ Not authorised by this decision:
 - Exact reconciled Vercel Preview: `dpl_5y7DJ1T3XYdoMHmgTjuDhpiN5jLf`, `READY`.
 - Browser verification reached the actual permanent-user email sign-in boundary on `/my-dashboard`; Vercel reported no route runtime errors in the verification window. The previous missing-public-Supabase-configuration defect is resolved.
 - Remaining state is unchanged: `MYDASH-003 IN_PROGRESS / PRODUCER / BLOCKED_OWNER_AUTHENTICATED_UI_EVIDENCE`; PR #25 remains unmerged and production remains MYDASH-002.
+
+
+### 29 August 2026 — MYDASH-003_AUTHENTICATED_UI_REWORK_BUILD_ATTEMPT_STARTED
+
+- Starting production/main identity: Vercel production deployment `dpl_9jQJ9FQS5uqb4pzsAn2X8hgiGqjW`, commit `e556a1a5339392f61ebfc87452c7dc3104b88b17`, `READY`.
+- Active gate: `MYDASH-003`.
+- Selected role: `PRODUCER` only.
+- Observed handoff: `IN_PROGRESS / PRODUCER / REWORK_REQUIRED`.
+- Bounded scope: verify the exact PR #25 Preview after the owner-authorised existing-user password login addition; capture live authenticated owner-scoped Watchlists and relevant Opportunities evidence; preserve public sign-up denial, RLS, assessment independence and all later gates; do not merge or audit.
+- Beginning-of-run mismatch classification: harmless control/evidence lag. PR #25 already contains owner-authorised password-login commits `e1bfadafe801a3b6bedcd645bbebbfa35340d2b7` and `a65829e3f1d17177b304ba20318414e81cdbfb0a`, while the main journal still records the earlier absence of an authenticated session. The gate and responsible role are unchanged.
+- Fresh source identities:
+  - controller blob: `aa7855a2d3f4246ffa4d5808eec12dcd1f313313`
+  - project-plan blob: `8fefbacf26ba2725ece3ddfbf24e0148f850d427`
+  - opening journal blob: `0be59e672a5a41f3dde901c3112500b5bb9c692f`
+  - MYDASH-003 audit blob: `4cd097edf9b3c24090a75c1f2530f7b19a7fafd8`
+  - approved contract blob: `bd1d1556015b12967cb57c39f3922f92019a0cc4`
+  - development-workflow blob: `e04dfa048b5b42767db4feb43d86f3738cd3c07c`
+  - platform-architecture blob: `4f9ee606554f14ee3ef4dd2ac6431fc00461e143`
+  - frontend-route-map blob: `d405a1c5329db4ecf6edd45122d562b1aed94407`
+  - Supabase-data-model blob: `596282e1d8ac4a99e19eea537c3ba451c8dec72e`
+  - PR #25 head: `a65829e3f1d17177b304ba20318414e81cdbfb0a`
+  - dashboard component blob: `af2946961d460006e49456cba6ce0c5a2bd0d0f4`
+  - data-loader blob: `937be9af4ac928027dac6d694b03f9d9b201ef28`
+  - gate-three test blob: `972ebdfe211cf068a416f0352c3243aa59a0af04`
+  - Preview-config test blob: `8556212e347b23919e8d0bde113bcec74896f799`
+- Preserved boundaries: no public self-registration, service-role exposure, RLS/grant weakening, assessment mutation, blended score, Opportunity-to-Buy conversion, fabricated values, live trading or broker access.
+- Exact next action: verify Supabase/auth truth, exact Preview deployment, persistent User A UI state and remaining two-user/responsive/keyboard evidence; persist one bounded Producer handoff and stop.
