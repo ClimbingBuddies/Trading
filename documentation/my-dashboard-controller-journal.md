@@ -13,8 +13,8 @@
     handoff_owner: PRODUCER
     handoff_status: BLOCKED_OWNER_SECOND_TEST_IDENTITY_AND_MOBILE_EVIDENCE
     owner_review: APPROVED_AND_MERGED
-    last_event: MYDASH-003_TEST_A_LIVE_EVIDENCE_COMPLETE_SECOND_OWNER_BLOCKED
-    next_action: Owner creates and confirms bounded TEST_B and signs it into a separate PR #25 Preview session; Producer then completes cross-owner UI isolation and direct 390 × 844 evidence before independent re-audit.
+    last_event: MYDASH-003_SECOND_OWNER_EVIDENCE_BUILD_ATTEMPT_STARTED
+    next_action: Producer verifies current TEST_B Auth and connected-browser truth, completes only remaining MYDASH-003 evidence if available, otherwise persists the unchanged exact owner blocker.
 
 ## Gate ledger
 
@@ -462,3 +462,25 @@ Not authorised by this decision:
 - Durable evidence: `documentation/my-dashboard-audits/MYDASH-003.md`.
 - Handoff remains `PRODUCER / MYDASH-003 IN_PROGRESS / BLOCKED_OWNER_SECOND_TEST_IDENTITY_AND_MOBILE_EVIDENCE`.
 - Exact next action: owner creates/confirms TEST_B and signs it into a separate Preview session; Producer creates distinct TEST_B data through RLS, verifies both directions of UI isolation and direct 390 × 844 behaviour, then hands the unchanged candidate to an independent Auditor.
+
+
+### 29 August 2026 — MYDASH-003_SECOND_OWNER_EVIDENCE_BUILD_ATTEMPT_STARTED
+
+- Starting default-branch identity: `489a3f76aff2764d0bb72c8c5fda1859f57125e5`.
+- Active gate: `MYDASH-003`.
+- Selected role: `PRODUCER` only.
+- Observed handoff: `IN_PROGRESS / PRODUCER / BLOCKED_OWNER_SECOND_TEST_IDENTITY_AND_MOBILE_EVIDENCE`.
+- Bounded scope: determine from authoritative Supabase Auth and connected-browser state whether TEST_B and a second signed-in Preview session now exist; if so, complete only the remaining two-owner and direct responsive evidence; otherwise preserve the exact blocker. Do not audit, merge or promote.
+- Fresh source identities:
+  - controller blob: `aa7855a2d3f4246ffa4d5808eec12dcd1f313313`
+  - project-plan blob: `8fefbacf26ba2725ece3ddfbf24e0148f850d427`
+  - opening journal blob: `60f0a4834f1df1443ddf828c953a39a6f8ee8be0`
+  - MYDASH-003 audit blob: `6f540aca03b5599556c9480e030a956489c39e76`
+  - approved contract blob: `bd1d1556015b12967cb57c39f3922f92019a0cc4`
+  - development workflow blob: `e04dfa048b5b42767db4feb43d86f3738cd3c07c`
+  - platform architecture blob: `4f9ee606554f14ee3ef4dd2ac6431fc00461e143`
+  - frontend route-map blob: `d405a1c5329db4ecf6edd45122d562b1aed94407`
+  - Supabase data-model blob: `596282e1d8ac4a99e19eea537c3ba451c8dec72e`
+  - PR #25 opening head: `a65829e3f1d17177b304ba20318414e81cdbfb0a`
+- Preserved boundaries: no public self-registration, credential fabrication, service-role exposure, RLS/grant weakening, assessment mutation, Opportunity-to-Buy conversion, blended score, historical look-ahead, live trading or broker access.
+- Exact next action: inspect Supabase Auth, owner-scoped rows, Vercel candidate state and connected Preview sessions; then persist one Producer result and stop.
