@@ -1,281 +1,200 @@
 # Daily Trading Controller
 
-**Specification version:** 1.0  
+**Specification version:** 1.1  
 **Last updated:** 01 September 2026  
 **System:** Discover Boulders Markets / Trading  
 **Supabase project:** `glvbqcplgjdfgjyknzsa`
 
 ## Purpose
 
-This is the canonical supervisory specification for the **Daily Trading Controller**.
+This is the canonical execution specification for the **single scheduled Daily Trading Controller**.
 
-The controller coordinates the early-morning Trading workflow without merging the analytical methodologies or weakening their independence.
+The controller is the only ChatGPT scheduled task required for the morning Trading workflow. It runs several times through the early Perth morning, inspects current timezone-aware clock state and persisted Supabase state, and executes the next eligible stage itself.
 
-The governed morning pipeline is:
+The downstream analytical specifications remain authoritative for methodology:
 
-```text
-Daily Opportunity Assessment
-        |
-        +------------------------------+
-                                       |
-External Opinion Review -> Daily Trading Market Assessment
-                                       |
-                                       v
-                    Opportunity Exposure History Cleanup
-                                       |
-                                       v
-                          Morning controller report
-```
+1. `automation/daily-opportunity-assessment.md`
+2. `automation/daily-external-opinion-review.md`
+3. `automation/daily-market-assessment.md`
+4. `documentation/pipelines/opportunity-exposure-history-cleanup.md`
+5. `documentation/pipelines/historical-market-data-backfill.md` when a provider seed is required
 
-The first three workflows remain authoritative in their own GitHub specifications. The controller is responsible for scheduling alignment, persisted-state inspection, safe retry/resume, sequencing and the post-assessment historical coverage cleanup.
+Do not duplicate or paraphrase those methodologies here. Retrieve the applicable file fresh immediately before executing its stage.
 
-## 1. Required fresh GitHub sources
+## Single-task schedule
 
-At the beginning of every controller run retrieve these files fresh from `ClimbingBuddies/Trading` and record their source identities:
+Run this same controller task at:
 
-1. `automation/daily-trading-controller.md`
-2. `automation/daily-opportunity-assessment.md`
-3. `automation/daily-external-opinion-review.md`
-4. `automation/daily-market-assessment.md`
-5. `documentation/pipelines/opportunity-exposure-history-cleanup.md`
-6. `documentation/pipelines/historical-market-data-backfill.md` when the cleanup requires a provider seed
+- 04:30 Australia/Perth
+- 05:30 Australia/Perth
+- 06:30 Australia/Perth
+- 07:30 Australia/Perth
+- 08:30 Australia/Perth
+- 09:30 Australia/Perth
 
-Treat each downstream file as complete authority for its own analytical or operational work.
+This hourly morning cadence intentionally spans both US daylight-saving states.
 
-If the controller file cannot be retrieved, stop without changing schedules or production data.
+The controller must derive the actual current `Australia/Perth` and `America/New_York` date/time on every invocation. Never assume a fixed offset between them.
 
-If a required downstream specification cannot be retrieved, do not substitute remembered logic for that stage. Record the exact blocked stage and continue only with stages whose independence and prerequisites remain safe.
+The three former dedicated task schedules are not part of the operating model. Their scheduled tasks should remain disabled while this controller is enabled.
 
-## 2. Systems of record
+## Required fresh GitHub sources
 
-### GitHub
+At the beginning of every invocation retrieve this controller file fresh from `ClimbingBuddies/Trading` and record its source identity.
 
-GitHub is authoritative for workflow methodology and controller sequencing.
+Before executing a downstream stage, retrieve that stage's specification fresh. If a required specification cannot be retrieved, do not execute that stage from memory.
 
-### Supabase
+## Systems of record
 
-Trading Supabase project `glvbqcplgjdfgjyknzsa` is authoritative for persisted run state, active instruments, Opportunity themes/exposures, external-opinion evidence, Market Assessment state, historical observations and backfill queues.
+- **GitHub** is authoritative for methodology and sequencing.
+- **Supabase** is authoritative for run state, dates, instruments, exposures, external opinions, Market Assessment state, historical observations and backfill queues.
+- **Scheduled-task history is not authoritative** for whether a subsystem actually completed.
 
-### Scheduled tasks
+## Stage eligibility
 
-Scheduled tasks are thin execution runners. Do not treat task text or task history as a substitute for persisted Supabase state.
+### A. Daily Opportunity Assessment
 
-## 3. Normal early-morning schedule
+Due once per current Australia/Perth date, beginning at or after the first 04:30 Perth controller invocation.
 
-The intended normal schedule is:
+Inspect `public.opportunity_assessment_runs` and the current daily Opportunity state according to `automation/daily-opportunity-assessment.md`.
 
-### Daily Opportunity Assessment
+If today's work is already truthfully terminal and complete enough under that specification, skip it.
 
-- **04:30 Australia/Perth daily**
-- uses the current Australia/Perth assessment date
-- remains analytically independent from Market Assessment and External Opinion
+If it is missing, partial or failed and the specification permits safe resume/retry, execute it once in the current controller invocation.
 
-### External Opinion Review
+Opportunity remains analytically independent from short-term Market Assessment, Technical Engine and external-opinion conclusions.
 
-- **17:00 America/New_York, Monday-Friday**
-- this naturally lands in the early Perth morning after the relevant US session
-- retain New York scheduling so daylight-saving changes do not move the research to the wrong US market day
+### B. External Opinion Review
 
-### Daily Trading Market Assessment
+Due only when:
 
-- **18:15 America/New_York, Monday-Friday**
-- runs after the External Opinion Review
-- retain New York scheduling for the same reason
+- the applicable America/New_York date is a scheduled production weekday; and
+- the current New York time is at or after **17:00**.
 
-### Daily Trading Controller
+At the first controller invocation meeting those conditions, inspect persisted External Opinion state according to `automation/daily-external-opinion-review.md`.
 
-- **09:00 Australia/Perth daily**
-- inspects the morning's durable state
-- safely repairs/resumes incomplete due work when possible
-- runs or starts Opportunity Exposure History Cleanup only after prerequisites are terminal
-- produces one morning status report
+If already terminal for that New York date, skip it. Otherwise execute/resume it exactly as its specification allows.
 
-Do not start all three analytical workflows simultaneously merely to reduce elapsed wall-clock time. External Opinion should precede Market Assessment because the Market Assessment is allowed to use current external-opinion evidence. Opportunity Assessment remains independent and can run earlier in parallel with the overall short-term pipeline.
+A terminal partial review may still satisfy the prerequisite for Market Assessment, provided failures are preserved truthfully.
 
-## 4. Date reconciliation
+### C. Daily Trading Market Assessment
 
-The workflows deliberately use different business dates:
+Due only when:
 
-- Opportunity Assessment uses the current `Australia/Perth` date.
-- External Opinion Review uses the current `America/New_York` date at its scheduled execution.
-- Market Assessment uses the current `America/New_York` date at its scheduled execution.
+- the applicable America/New_York date is a scheduled production weekday;
+- current New York time is at or after **18:15**; and
+- External Opinion for that New York date is terminal.
 
-At 09:00 Perth, the applicable New York date is commonly the previous Perth calendar date.
+At the first controller invocation meeting those conditions, inspect persisted Market Assessment state according to `automation/daily-market-assessment.md`.
 
-The controller must derive both dates from actual timezone-aware current time. Never assume that `Perth date - 1` is always the applicable New York date.
+If already complete, skip it. Otherwise execute/resume it exactly as its specification allows.
 
-For External Opinion and Market Assessment, only require a production run when their New York weekday/session schedule makes that run due. Do not manufacture Sunday or exchange-holiday assessments merely because the Perth controller itself runs daily.
+Preserve Market Assessment independence from Opportunity, Technical Engine and Market Convergence. External opinion may be consumed only under the existing `external-opinion-v1` rules.
 
-## 5. Controller preflight
+### D. Opportunity Exposure History Cleanup
 
-Before doing any recovery or cleanup:
+Eligible after:
 
-1. retrieve the required GitHub files fresh;
-2. verify Trading Supabase access;
-3. determine current Perth date and current New York date;
-4. determine whether the External Opinion and Market stages are due for that New York date;
-5. inspect durable state for all relevant stages;
-6. inspect whether an Opportunity exposure historical batch is already running;
-7. detect overlapping controller/backfill work before creating anything new.
-
-Do not rely on a previous chat summary for completion state.
-
-## 6. Stage A — Daily Opportunity Assessment
-
-Inspect `public.opportunity_assessment_runs` and the current Perth-date Opportunity records according to `automation/daily-opportunity-assessment.md`.
-
-If today's scheduled Opportunity Assessment already reached a truthful terminal state, do not duplicate it.
-
-If it is missing, failed or incomplete and a safe retry is permitted by the Opportunity specification, execute/resume that specification once in the controller run using `execution_source` appropriate to controller recovery. Preserve all Opportunity independence rules.
-
-The controller must not use Market Assessment ratings, Technical Engine outputs or external-opinion conclusions to form Opportunity results.
-
-A failed Opportunity Assessment prevents the controller from treating today's exposure set as freshly reconciled. Historical cleanup may inspect existing coverage, but it must not auto-onboard newly discovered/external symbols from an untrustworthy incomplete Opportunity run.
-
-## 7. Stage B — External Opinion Review
-
-When a New York production review is due, inspect the persisted `external_opinion` review state and source-family telemetry according to `automation/daily-external-opinion-review.md`.
-
-If the review is already terminal for the applicable New York date, do not duplicate it.
-
-If it is missing/partial/failed and its specification permits retry, execute/resume it once before any controller recovery of the Market Assessment.
-
-A terminal `partial` review may still allow Market Assessment to proceed, provided the Market Assessment treats missing source families truthfully and does not fabricate evidence.
-
-External Opinion remains an evidence pipeline only. It must not calculate Opportunity signals, Technical Engine results or Market Convergence.
-
-## 8. Stage C — Daily Trading Market Assessment
-
-When a New York Market Assessment is due, require the External Opinion stage for that date to be terminal before controller recovery of the Market Assessment.
-
-Inspect `public.gpt_market_runs`, queue state and persisted assessment rows according to `automation/daily-market-assessment.md`.
-
-If the run is already complete, do not duplicate it.
-
-If it is missing/partial/failed and safe idempotent retry is permitted, execute/resume the Market Assessment specification once.
-
-Preserve the Market Assessment's independence from Opportunity, Technical Engine and Market Convergence. External opinion may be used only under `external-opinion-v1` and must not be double-counted.
-
-## 9. Prerequisite gate before historical cleanup
-
-The post-assessment historical cleanup may start only when:
-
-1. the current Perth-date Opportunity Assessment is terminal and sufficiently complete to trust its current exposure set; and
+1. the current Perth-date Opportunity Assessment is terminal and its exposure set is trustworthy; and
 2. any External Opinion Review due for the applicable New York date is terminal; and
 3. any Market Assessment due for that New York date is terminal; and
-4. there is no conflicting running Opportunity exposure historical seed batch.
+4. no conflicting Opportunity exposure historical batch is already running.
 
-A downstream analytical failure is not silently converted into success merely to release cleanup.
+Retrieve `documentation/pipelines/opportunity-exposure-history-cleanup.md` and follow it exactly.
 
-If a short-term stage is terminal `partial`, the controller may still perform historical coverage cleanup because that cleanup is based on Opportunity exposure identity, not on the short-term rating. The final report must preserve the partial status prominently.
+The cleanup must be coverage-driven. Do not download five years every morning merely to obtain one new daily bar. Seed only new or materially incomplete exposure history under the existing Tiingo backfill procedure.
 
-If Opportunity itself failed or its current exposure write state is unreliable, do not auto-onboard new exposure history that day.
+For external Opportunity exposures, preserve the approved history-only boundary:
 
-## 10. Stage D — Opportunity Exposure History Cleanup
+- inactive supporting `public.instruments` rows may exist solely for Tiingo history;
+- they are not active tracked Trading-universe instruments;
+- do not create Twelve Data mappings for them;
+- do not set them permanently active;
+- ambiguous or unsupported provider identities become `mapping_required`, never guesses.
 
-When the prerequisite gate is satisfied, retrieve and follow:
+## Per-invocation behaviour
 
-`documentation/pipelines/opportunity-exposure-history-cleanup.md`
+On every controller invocation:
 
-The cleanup must:
+1. retrieve this file fresh;
+2. verify Trading Supabase access;
+3. calculate current Perth and New York timezone-aware date/time;
+4. inspect persisted states for Opportunity, External Opinion, Market Assessment and Opportunity-history cleanup;
+5. determine the earliest eligible unfinished stage;
+6. execute **at most one analytical stage** in that invocation;
+7. after a Market Assessment execution completes, history cleanup may also be started in the same invocation if every prerequisite is now terminal and doing so is safe;
+8. if no analytical stage is due, advance or verify history cleanup if applicable;
+9. never race a currently running recent stage;
+10. never create a duplicate same-date logical run merely because the controller is invoked again.
 
-- inspect all current active Opportunity exposures;
-- skip already-complete five-year-or-since-listing Tiingo seeds;
-- never redownload five years merely because one new daily bar may exist;
-- use the Owner-approved historical-only inactive instrument boundary for unambiguous external exposures;
-- keep those supporting rows outside the active Trading universe;
-- create no Twelve Data mapping for historical-only external exposures;
-- queue only missing/incomplete approved seeds;
-- use one actual Tiingo history request every two minutes;
-- record unresolved provider identities rather than guessing;
-- ensure the temporary two-minute cron removes itself after the batch is no longer running.
+Later morning invocations are deliberate checkpoints. They should normally find earlier stages already terminal and advance the next eligible stage rather than repeat work.
 
-If there is nothing to seed, report a clean no-op.
+## Expected morning timing
 
-## 11. Normal schedule versus controller recovery
+During US daylight saving, the normal pattern is approximately:
 
-The normal path is for the three dedicated scheduled tasks to perform their own work at their scheduled times. The controller should normally find them already terminal.
+- 04:30 Perth — Opportunity Assessment
+- 05:30 Perth — External Opinion Review, after 17:00 New York
+- 06:30 Perth — Market Assessment, after 18:15 New York
+- 06:30/07:30 onward — history cleanup and verification
 
-The controller is **not** a second routine copy of all three analyses.
+During US standard time, External Opinion and Market Assessment naturally shift roughly one Perth hour later, while the controller schedule remains unchanged.
 
-Only perform controller-side recovery when durable evidence shows a due stage is missing, failed or incomplete and the downstream specification explicitly supports safe retry/resume.
+The objective is normally to have the complete morning pipeline settled by the final 09:30 Perth invocation without maintaining separate ChatGPT task cards.
 
-This prevents duplicate research cost and preserves one logical run per business date where the subsystem is designed to be idempotent.
+## Retry, idempotency and overlap
 
-## 12. Overlap and retry rules
+- Reuse same-date subsystem lifecycle and idempotency mechanisms exactly as their specifications require.
+- Do not replay completed instruments or evidence.
+- Do not create a second External Opinion or Market Assessment for the same applicable New York date.
+- Opportunity run-audit semantics remain governed by its specification.
+- Do not create a second Opportunity exposure historical batch while one is running.
+- If a stage is `running` with recent activity, do not race it.
+- If a stale running state is suspected, diagnose from durable timestamps and runbook rules before repairing it.
 
-- Never run two controller recoveries for the same stage concurrently.
-- Never create a second Opportunity exposure seed batch while one is running.
-- Reuse same-date External Opinion and Market Assessment lifecycle helpers exactly as their specifications require.
-- Respect Opportunity Assessment daily idempotency and run-audit rules.
-- If another stage is currently `running` and its latest activity is reasonably current, do not race it. Report it as still running and avoid conflicting writes.
-- If a stale orphaned running state is suspected, diagnose from durable timestamps and existing runbook rules before repairing it.
+## Weekend and non-session behaviour
 
-## 13. Active Trading-universe boundary
+The controller itself runs daily.
 
-For controller purposes:
+Opportunity Assessment remains due daily under its own Perth-date specification.
 
-- `public.instruments.is_active = true` means the active tracked Trading universe;
-- an inactive supporting instrument row used only for approved Opportunity history is **not** a tracked short-term instrument;
-- historical-only rows must not receive Twelve Data mappings from the cleanup;
-- the live Market Assessment and External Opinion workflows continue to process only their own active Trading-universe scope.
+External Opinion and Market Assessment are required only when their New York production schedule makes them due. Do not fabricate weekend or non-session short-term assessments.
 
-The controller must not expand the active Trading universe merely because an external Opportunity exposure has historical trend data.
+History cleanup may still run when its prerequisites for that morning are satisfied.
 
-## 14. Failure handling
+## Failure handling
 
-### GitHub unavailable
+If GitHub or Supabase is unavailable, do not fabricate execution or completion.
 
-Do not execute a stage whose authoritative specification could not be retrieved fresh.
+If External Opinion fails, follow its required finalisation and source-family telemetry; Market Assessment waits until the review reaches a truthful terminal state.
 
-### Supabase unavailable
+If Opportunity is incomplete or unreliable, do not auto-onboard newly discovered external exposure history from that run.
 
-Do not fabricate run state or completion. Stop production writes and report the failure.
+If Tiingo identity is ambiguous, record `mapping_required` and continue other safe symbols.
 
-### External Opinion failure
+If Tiingo returns a quota/rate-limit condition, stop new provider calls and preserve truthful batch state.
 
-Follow its source-family/finalisation rules. Market Assessment recovery waits until the review is terminal, not necessarily fully successful.
+## Reporting
 
-### Market Assessment failure
+Each invocation should report only material state changes. Do not produce six repetitive morning notifications when nothing changed.
 
-Follow its prepare/resume/finalise rules. Do not fabricate ratings.
+The final morning state should summarise:
 
-### Opportunity failure
-
-Do not auto-onboard new exposure-history symbols from an incomplete Opportunity state.
-
-### Historical mapping ambiguity
-
-Mark/report `mapping_required` and continue other unambiguous symbols.
-
-### Tiingo quota/rate-limit
-
-Stop new provider requests for the batch and preserve truthful batch/queue state.
-
-## 15. Morning completion report
-
-At the end of every controller run provide one concise report with:
-
-- controller Perth date/time;
+- current Perth controller time/date;
 - applicable New York business date;
-- Opportunity Assessment: `SUCCEEDED`, `PARTIAL`, `FAILED`, `RUNNING`, `NOT_DUE` or `MISSING`;
-- External Opinion Review: same status vocabulary;
-- Market Assessment: same status vocabulary;
-- Opportunity Exposure History Cleanup: `NO_OP`, `QUEUED`, `RUNNING`, `SUCCEEDED`, `PARTIAL`, `BLOCKED`;
-- current active tracked-instrument count;
-- current distinct active Opportunity exposure count;
-- history coverage already complete/skipped;
-- newly queued history symbols and batch ID when applicable;
-- mapping/validation unresolved symbols;
-- any recovery the controller performed;
-- the minimum Owner action actually required, if any.
+- Opportunity status;
+- External Opinion status;
+- Market Assessment status;
+- Opportunity Exposure History Cleanup status;
+- any recovery/resume performed;
+- newly queued or completed history symbols;
+- unresolved mapping/validation items;
+- minimum Owner action actually required.
 
-If all normal stages completed and history cleanup had nothing to do, say that the morning pipeline completed normally without inventing additional commentary.
+If everything completed normally, say that the Daily Trading pipeline completed normally.
 
-Do not provide automatic trade execution or broker actions.
+## Operating principle
 
-## 16. Operating principle
+The Daily Trading Controller is one scheduled orchestrator, not a fourth analytical opinion.
 
-The Daily Trading Controller is an orchestrator, not a fourth analytical opinion.
-
-Its job is to make the morning pipeline **ordered, idempotent, observable and self-cleaning** while preserving the analytical independence of the underlying systems.
+Its job is to execute the right independent subsystem at the right time, using durable state to avoid duplicates, then leave the morning Trading data reconciled and observable.
