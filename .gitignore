@@ -1,3 +1,5 @@
 node_modules/
 .next/
 public/generated/user-guide/
+.env*
+!.env.example

@@ -54,7 +54,6 @@ export default function MyDashboardClient() {
   const [privateDataState, setPrivateDataState] = useState<PrivateDataState>('idle')
   const [error, setError] = useState('')
   const [status, setStatus] = useState('')
-  const [email, setEmail] = useState('')
   const [preferences, setPreferences] = useState<Preferences | null>(null)
   const [counts, setCounts] = useState<DashboardCounts | null>(null)
   const [baseCurrency, setBaseCurrency] = useState(DEFAULT_BASE_CURRENCY)
@@ -210,6 +209,12 @@ export default function MyDashboardClient() {
     }
   }, [clearPrivateState, loadPrivateData])
 
+  useEffect(() => {
+    if (authReady && !user) {
+      router.replace('/login?next=/my-dashboard')
+    }
+  }, [authReady, router, user])
+
   const attentionItems = useMemo(() => {
     const items: Array<{ title: string; detail: string; href: string; action: string }> = []
     if (privateDataState !== 'ready' || !counts) return items
@@ -236,18 +241,6 @@ export default function MyDashboardClient() {
     event.preventDefault()
     selectTab(tabs[target].key)
     document.getElementById(`my-dashboard-tab-${tabs[target].key}`)?.focus()
-  }
-
-  async function signIn(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    if (!email.trim()) return
-    setError('')
-    const { error: authError } = await getBrowserSupabase().auth.signInWithOtp({
-      email: email.trim(),
-      options: { emailRedirectTo: `${window.location.origin}/my-dashboard`, shouldCreateUser: true },
-    })
-    if (authError) setError(authError.message)
-    else setStatus('Check your email for the secure sign-in link.')
   }
 
   async function signOut() {
@@ -308,20 +301,10 @@ export default function MyDashboardClient() {
 
   if (!user) {
     return (
-      <section className={styles.signInShell}>
-        <span className={styles.eyebrow}>PRIVATE RESEARCH WORKSPACE</span>
-        <h1>My Dashboard</h1>
-        <p className={styles.lede}>Track your own watchlists, research interests, portfolio health and paper decisions. This workspace never places trades or connects to a broker.</p>
-        {error && <div className={styles.error} role="alert">{error}</div>}
-        {status && <div className={styles.status} role="status">{status}</div>}
-        <form className={styles.signInForm} onSubmit={signIn}>
-          <label htmlFor="dashboard-email">Email</label>
-          <div>
-            <input id="dashboard-email" type="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} required />
-            <button type="submit">Send secure link</button>
-          </div>
-        </form>
-        <small>Signed-out and anonymous sessions cannot read personal dashboard tables.</small>
+      <section className={styles.stateCard} aria-live="polite">
+        <span className={styles.eyebrow}>SECURE WORKSPACE</span>
+        <h1>Taking you to sign in…</h1>
+        <p>You’ll return to My Dashboard after authentication.</p>
       </section>
     )
   }
