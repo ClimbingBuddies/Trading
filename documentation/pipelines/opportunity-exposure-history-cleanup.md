@@ -1,252 +1,213 @@
 # Opportunity Exposure History Cleanup
 
-**Specification version:** 1.0  
-**Last updated:** 01 September 2026  
+**Specification version:** 1.1  
+**Last updated:** 02 September 2026  
 **System:** Discover Boulders Markets / Trading  
 **Supabase project:** `glvbqcplgjdfgjyknzsa`
 
 ## Purpose
 
-This document is the canonical procedure for the **post-assessment Opportunity / Exposure historical-data cleanup** used by the Daily Trading Controller.
+This is the canonical post-assessment Opportunity / Exposure historical-data cleanup used by the Daily Trading Controller.
 
-The cleanup answers one operational question:
+It answers:
 
-> **Do the current active Opportunity exposures have the approved historical Tiingo coverage needed for long-term trend research?**
+> Do the current active Opportunity exposures have approved historical coverage needed for long-term trend research?
 
 It is a coverage-maintenance workflow, not another analytical signal and not a short-term Trading-universe expansion mechanism.
 
-At the beginning of every cleanup retrieve this file fresh from GitHub and also retrieve:
+At the beginning of every cleanup retrieve fresh:
 
-- `documentation/pipelines/historical-market-data-backfill.md`
-- `automation/daily-opportunity-assessment.md`
+- this file;
+- `documentation/pipelines/opportunity-exposure-history-mapping-registry.md`;
+- `documentation/pipelines/historical-market-data-backfill.md` when a provider pull is considered;
+- `automation/daily-opportunity-assessment.md`.
 
-Treat the historical backfill document as authoritative for Tiingo provenance, `market_observations`, idempotency, validation and provider identity. This document adds the Opportunity-exposure scope and safety boundary.
+GitHub is authoritative for workflow and identity decisions. Supabase is authoritative for persisted state.
 
-## 1. Owner-approved boundary
+## 1. Active-universe boundary
 
-On 01 September 2026 the Owner approved the Daily Trading Controller architecture in which the first three analytical workflows run and the historical cleanup follows.
+`public.instruments.is_active = true` alone defines the tracked short-term Trading universe.
 
-That approval includes a narrow standing permission for the cleanup to create an **inactive historical-only `public.instruments` row** and an active Tiingo provider mapping when all of the following are true:
+The Owner has approved a narrow history-support boundary in which the cleanup may create inactive supporting `public.instruments` rows and Tiingo mappings when identity is unambiguous. Such rows:
 
-1. the symbol is a current active external Opportunity exposure;
-2. the listed security identity is unambiguous;
-3. the exchange and symbol can be verified without guessing;
-4. the row is required only because `market_observations.instrument_id` references `public.instruments`;
-5. the row is created with `is_active = false` and remains inactive outside the bounded historical provider call;
-6. no Twelve Data mapping is created by this workflow;
-7. the Tiingo mapping metadata records `purpose = 'opportunity_exposure_history'`.
+- remain `is_active = false` outside a bounded provider call;
+- are not promoted into Market Assessment or External Opinion scope;
+- receive no Twelve Data mapping from this workflow;
+- remain external Opportunity exposures unless separately approved for tracking.
 
-This standing permission **does not promote the security into the active Trading universe**. Only `public.instruments.is_active = true` represents a tracked short-term Trading instrument for controller purposes.
+The historical worker may temporarily activate a supporting row only because the canonical backfill function requires an active instrument, and must restore the original state on every success/failure path.
 
-An inactive historical-only instrument must continue to be treated as an **external Opportunity exposure**. The cleanup must not move its Opportunity mapping from `opportunity_theme_external_instruments` into `opportunity_theme_instruments` merely because an inactive supporting instrument row exists.
+## 2. Current Tiingo licensing gate — mandatory
 
-Any future promotion to `is_active = true`, Twelve Data live loading, Market Assessment scope or tracked-instrument status requires a separate explicit Owner decision.
+Before any new Tiingo data is persisted, verify the current Tiingo plan and current Tiingo Terms of Use.
 
-## 2. Scope
+As of 02 September 2026, Tiingo's current Terms state that Starter and trial plans may process Tiingo Data only transiently and may not persist it in durable storage. Eligible paid plans may persist data subject to their terms.
 
-Read the current active unified exposure set from:
+Therefore:
 
-`public.opportunity_theme_all_exposures`
+- provider identity/mapping work may proceed without a data pull;
+- if the account is confirmed Starter/trial, **do not persist new Tiingo raw OHLC/history**;
+- if the account plan is unverified, treat new persistent Tiingo ingestion as `BLOCKED_LICENSE_VERIFICATION` rather than assuming permission;
+- only begin/resume persistent Tiingo pulls after an eligible paid-plan persistence right is verified;
+- do not delete existing stored Tiingo data automatically. Any retention/remediation decision is a separate Owner action after plan/terms review.
 
-using `is_active = true`.
+This gate overrides older documentation that assumed the Starter plan could be used for persistent historical storage.
 
-Deduplicate by stable listed-security identity, normally symbol plus exchange where needed.
+## 3. Scope and classification
 
-For each current exposure classify it as one of:
+Read `public.opportunity_theme_all_exposures` where `is_active = true`, deduplicated by stable listed-security identity.
 
-- `tracked` — an active `public.instruments` row exists;
-- `history_only` — an inactive supporting instrument row exists and the symbol remains an active external Opportunity exposure;
-- `not_seeded` — no supporting instrument row exists;
-- `mapping_required` — the security or Tiingo provider identity cannot be resolved safely;
-- `complete` — acceptable five-year-or-available-since-listing Tiingo seed already exists;
-- `pending_seed` — identity is valid but historical seed is absent/incomplete;
-- `validation_required` — history exists but cannot be accepted safely.
+Classify each exposure as applicable:
 
-Do not infer that an external exposure should become tracked because historical data has been loaded for it.
+- `tracked` — active Trading instrument;
+- `history_only` — inactive same-security support row;
+- `history_proxy` — approved inactive proxy support row from the mapping registry;
+- `not_seeded`;
+- `mapping_required`;
+- `complete`;
+- `pending_seed`;
+- `validation_required`;
+- `blocked_license_verification`.
 
-## 3. Existing-history preflight
+An inactive support/proxy row does not make the canonical exposure tracked.
 
-Before consuming a Tiingo request, inspect the Tiingo provider and `interval_code = '1day'` history for the supporting instrument.
+## 4. Existing-history preflight
 
-A symbol is normally `complete` for this cleanup when durable evidence shows that a five-year backfill has already succeeded and the stored coverage is reasonable for the security's listing history.
+Before consuming a provider request, inspect Tiingo `interval_code = '1day'` coverage for the applicable support instrument.
 
-Accept shorter coverage for a security that listed less than five years ago. Never fabricate pre-listing history.
+Normally accept as complete:
 
-Do not repeatedly download a full five-year history merely to advance the most recent daily bar. This cleanup is primarily a **missing/new exposure coverage seed**.
+- a proven five-year seed with reasonable coverage; or
+- all available data since listing for a security listed less than five years ago.
 
-If a symbol already has a valid five-year seed, skip the provider pull and preserve the existing observations.
+Never fabricate pre-listing history.
 
-Daily/regular tail maintenance of already-seeded histories must use a future bounded incremental design rather than repeatedly downloading five years. Until such a tail-refresh procedure is separately approved, this cleanup must not convert the five-year seeder into a daily full-history downloader.
+Do not repeatedly download five years merely to advance a recent daily bar. Already-seeded histories are skipped by this cleanup. Tail maintenance must use a separately approved incremental design.
 
-## 4. Identity and mapping rules
+## 5. Direct identity rules
 
-For a tracked instrument, use its existing verified Tiingo mapping.
+For tracked instruments use the existing verified Tiingo mapping.
 
-For a current external Opportunity exposure that has no supporting instrument row:
+For external exposures, use stored symbol/name/exchange/source evidence plus the fresh mapping registry. Resolve provider identity only when unambiguous.
 
-1. use the stored symbol, instrument name, exchange and source URLs as the starting identity;
-2. verify the listed security and exchange from reputable current evidence when needed;
-3. resolve the Tiingo provider symbol only when unambiguous;
-4. stop at `mapping_required` rather than guess.
+Plain US-listed/OTC symbols and mainland-China A-shares may be mapped only when Tiingo's current documented coverage and the exact listed ticker support the decision.
 
-Plain US-listed symbols on clearly identified US exchanges may normally use the verified listed ticker as the Tiingo EOD symbol when identity is unambiguous.
+International suffixes, changed listings, delisted ADRs, share classes and other non-trivial cases must not be mechanically stripped/transformed. Use `mapping_required` unless the mapping registry explicitly resolves them.
 
-International exchange suffixes, changed listings, delisted ADRs, share classes and other non-trivial identities require explicit provider-symbol verification. Do not mechanically strip or transform suffixes.
+## 6. Historical proxy boundary
 
-Known examples of symbols that require care include historical ADR/listing changes such as ABB and non-US forms such as `.HK`, `.SZ`, `.DE` and `.PA`.
+A historical proxy is allowed only when the mapping registry explicitly records it as `RESOLVED_PROXY`.
 
-## 5. Historical-only instrument onboarding
+A proxy must:
 
-When the standing Owner-approved conditions are met, create the supporting instrument conservatively:
+- have its own inactive `public.instruments` row;
+- preserve its own exchange and trading currency;
+- have its own Tiingo mapping;
+- record `mapping_kind = 'historical_proxy_adr'` and `proxy_for_external_symbol` in `provider_instruments.metadata`;
+- never cause proxy prices to be stored under the canonical local security's currency or identity;
+- be used for percentage trend/research context, clearly labelled as a proxy.
 
-- preserve the exposure's canonical symbol;
-- preserve the verified listed company/fund name;
-- preserve the verified exchange code;
-- use the verified asset type;
-- use the verified trading currency;
-- set `is_active = false`;
-- do not create a Twelve Data provider mapping.
+The cleanup must find an approved proxy via `provider_instruments.metadata ->> 'proxy_for_external_symbol'` before concluding that the canonical external exposure is unresolved.
 
-Create or update the Tiingo `provider_instruments` row only when the Tiingo identity is unambiguous.
+Do not silently replace a canonical exposure symbol with its proxy, except where the mapping registry explicitly records a corrected current security identity (for example stale ABB/NYSE corrected to current ABBNY/OTC).
 
-Merge useful non-secret metadata including:
+## 7. Supporting-instrument metadata
+
+Direct history-only mappings should include non-secret metadata such as:
 
 ```json
 {
   "purpose": "opportunity_exposure_history",
   "controller": "daily-trading-controller",
-  "tracking_scope": "external_opportunity_history_only"
+  "tracking_scope": "external_opportunity_history_only",
+  "mapping_kind": "direct"
 }
 ```
 
-Never store provider credentials or tokens in metadata.
+Proxy mappings use `tracking_scope = 'external_opportunity_history_proxy'` and record the canonical external symbol.
 
-Historical-only rows must be returned to `is_active = false` after every bounded provider call, including failures.
+Never store credentials/tokens in metadata.
 
-## 6. Seed batch construction
+## 8. Seed batch construction
 
-Only symbols classified `pending_seed` belong in a new provider batch.
+Only `pending_seed` items that also pass the licensing gate belong in a provider batch.
 
 Reuse:
 
-- `public.historical_backfill_batches`
-- `public.historical_backfill_queue`
-- Edge Function `opportunity-exposure-historical-backfill-worker`
-- Edge Function `backfill-market-history`
+- `public.historical_backfill_batches`;
+- `public.historical_backfill_queue`;
+- `opportunity-exposure-historical-backfill-worker`;
+- `backfill-market-history`.
 
-Create one batch for the controller cleanup with:
+Use `years = 5`, one queue row per supporting instrument, and batch metadata containing scope, controller date, source identities, direct/proxy classification and unresolved symbols.
 
-- `years = 5`;
-- `status = 'running'`;
-- `requested_count = <actual queued symbols>`;
-- `skipped_count = <already complete symbols>`;
-- metadata including:
-  - `scope = 'opportunity_exposure'`;
-  - `mode = 'coverage_seed'`;
-  - `source = 'daily-trading-controller'`;
-  - controller Perth date;
-  - applicable New York market date when relevant;
-  - GitHub source identities;
-  - unresolved `mapping_required` symbols, if any.
+If zero provider pulls are permitted/needed, do not create a pointless running batch or temporary cron.
 
-Insert exactly one queue row per supporting instrument needing a provider pull.
+## 9. Pacing and retry
 
-Use `years = 5` and the existing worker's retry/idempotency rules.
+When licensed persistent ingestion is permitted, retain the conservative operational cap:
 
-If there are zero pending provider pulls, do not create a pointless running batch and do not create a Tiingo worker cron.
+- one actual Tiingo historical request every 2 minutes;
+- maximum 30 historical requests per rolling hour for this workflow.
 
-## 7. Provider pacing and temporary worker
+Use temporary cron `trading-opportunity-exposure-backfill-every-2-minutes` only while an Opportunity exposure batch is running. It must unschedule itself after no running batch remains.
 
-Use the established conservative pacing:
+Never run two Opportunity exposure seed batches concurrently.
 
-- one actual Tiingo history request every 2 minutes;
-- maximum 30 history requests per rolling hour for this workflow.
+Preserve existing worker retry/idempotency rules. Mapping ambiguity is not a retryable provider failure.
 
-When a batch has pending queue rows, create or reuse a temporary pg_cron job named:
-
-`trading-opportunity-exposure-backfill-every-2-minutes`
-
-The cron must invoke `opportunity-exposure-historical-backfill-worker` at two-minute cadence.
-
-The cron command must first inspect whether an `opportunity_exposure` historical batch is still `running`:
-
-- if yes, invoke the worker exactly once;
-- if no, unschedule `trading-opportunity-exposure-backfill-every-2-minutes` so the poller does not remain active after completion.
-
-Never leave an idle two-minute poller running indefinitely.
-
-Do not create more than one active Opportunity exposure seed batch at a time. If one already exists, resume/inspect it rather than creating another.
-
-## 8. Worker safety boundary
-
-`opportunity-exposure-historical-backfill-worker` may temporarily set an inactive supporting instrument to `is_active = true` only for the bounded call to `backfill-market-history`, because the canonical backfill function requires an active instrument.
-
-The worker must restore the original inactive state in all success/failure paths.
-
-A historical-only instrument must have no Twelve Data mapping, so this temporary activation must not subscribe it to the normal live quote loader.
-
-If that condition is not true, stop and investigate before running the item.
-
-## 9. Validation
+## 10. Validation
 
 For every completed seed verify:
 
-1. latest relevant `sync_runs.status = 'succeeded'`;
-2. provider attribution is Tiingo;
-3. `interval_code = '1day'`;
-4. first/last coverage dates are plausible;
-5. row count is plausible for the listing history;
-6. duplicate `(instrument_id, provider_id, interval_code, observed_at)` dates = 0;
-7. sample OHLC is sensible and provenance identifies Tiingo;
-8. `high >= low` constraints remain valid;
-9. the supporting external-history instrument is inactive after the call;
-10. no Twelve Data mapping was created by this workflow;
-11. live `latest_market_observations` remains quote-only;
-12. the Opportunity exposure remains external unless separately approved as a tracked instrument.
+1. relevant `sync_runs.status = 'succeeded'`;
+2. provider attribution = Tiingo;
+3. interval = `1day`;
+4. coverage dates/row count are plausible;
+5. duplicate provider/date groups = 0;
+6. sample OHLC and provenance are sensible;
+7. `high >= low` constraints remain valid;
+8. support/proxy instrument is inactive after the call;
+9. no Twelve Data mapping was created;
+10. live current-quote view remains quote-only;
+11. canonical Opportunity exposure remains external unless separately approved;
+12. proxy results are explicitly labelled as proxy history.
 
-Use `validation_required` when history exists but these checks cannot be satisfied.
+Use `validation_required` when any acceptance condition cannot be met.
 
-## 10. Mapping-required and unsupported symbols
+## 11. Mapping-required handling
 
 Do not block safe symbols merely because another exposure cannot be mapped.
 
-Record unresolved symbols with a concise reason, for example:
+Record unresolved symbols and exact reasons such as unsupported primary exchange, no approved long-history proxy, ADR/listing transition requiring continuity validation, or provider identity ambiguity.
 
-- non-US provider symbol not verified;
-- ADR/listing changed;
-- exchange identity ambiguous;
-- Tiingo returned no usable history;
-- security appears delisted or renamed.
+Consult the mapping registry before reporting a symbol unresolved.
 
-A mapping-required item is an Owner/research follow-up, not a reason to invent data.
+## 12. Completion semantics
 
-## 11. Completion semantics
+The cleanup is operationally clean when:
 
-The cleanup is clean when:
+- all high-confidence direct/proxy identities are persisted as mappings;
+- all permitted seeds are complete or truthfully queued;
+- unresolved identities are explicit;
+- licence-blocked pulls are explicit;
+- no exposure-only support row is left active;
+- no idle two-minute cron remains.
 
-- every current active exposure with an approved/unambiguous supporting identity has a valid historical seed or is already complete;
-- every unresolved external symbol is explicitly listed as `mapping_required` or `validation_required`;
-- no duplicate historical observations were created;
-- no exposure-only instrument was left active;
-- no idle temporary cron remains.
+The controller may report the analytical morning pipeline complete while separately reporting unresolved or licence-blocked historical coverage. It must not claim 100% history coverage when any remain.
 
-The Daily Trading Controller may report the analytical morning pipeline as complete while separately reporting unresolved external-history mapping items. It must not describe historical exposure coverage as 100% while unresolved symbols remain.
+## 13. End-of-cleanup report
 
-## 12. End-of-cleanup report
+Report concisely:
 
-Return a concise summary containing:
+- active distinct Opportunity exposures;
+- tracked/external counts;
+- direct-history and proxy-history mappings;
+- already complete/skipped;
+- mappings resolved this run;
+- provider pulls queued/succeeded/pending/failed;
+- `mapping_required`, `validation_required` and `blocked_license_verification` symbols;
+- rows loaded only when a licensed provider pull actually occurred;
+- temporary cron state.
 
-- active distinct Opportunity exposure symbols;
-- tracked symbols;
-- external symbols;
-- already-complete history / skipped;
-- new historical-only instruments created;
-- Tiingo mappings created/verified;
-- queued provider pulls;
-- batch ID when one was created;
-- succeeded / pending / failed / validation_required / mapping_required;
-- historical rows loaded where available;
-- unresolved symbols and exact reasons;
-- whether the temporary two-minute cron is active or has been removed.
-
-Do not expose API keys, service-role keys or Tiingo credentials.
+Do not expose credentials or privileged keys.
