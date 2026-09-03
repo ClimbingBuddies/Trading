@@ -222,12 +222,32 @@ Only one implementation or audit gate may be active at a time.
 |---|---|---|---|
 | MYDASH-001 | NEXT | Product, data and calculation contract | Reconcile existing tables and Strategy Laboratory reuse; produce the final route/tab contract, exact data dictionary, ownership model, RLS test matrix, recommendation provenance contract, portfolio-health definitions, decision clocks, return formulae, benchmark/FX/corporate-action assumptions and migration plan. No production schema or UI changes. Independent audit required, then Owner Review A. |
 | MYDASH-002 | DONE | Secure personal foundation and dashboard shell | Implement audited private schema/RLS and trusted write boundaries; add authenticated /my-dashboard shell, navigation, loading/signed-out/empty/error states and Today tab using real persisted data. Prove cross-user isolation and no anonymous leakage. |
-| MYDASH-003 | IN_PROGRESS | Watchlists and relevant Opportunities | Build Watchlists and Opportunities tabs from existing private watchlists and independent Opportunity mappings. Show relevance and data gaps without creating Buy labels or blending methodologies. Verify desktop, narrow-screen and keyboard behaviour. |
-| MYDASH-004 | PLANNED | Portfolio and health | Add manual paper/portfolio position management and Portfolio Health measures. Validate quantity, cost basis, currencies, data freshness, concentration, allocation, theme exposure and incomplete-data behaviour. Independent audit required, then Owner Review B of the first complete personal workspace. |
+| MYDASH-003 | DONE | Watchlists and relevant Opportunities | Build Watchlists and Opportunities tabs from existing private watchlists and independent Opportunity mappings. Show relevance and data gaps without creating Buy labels or blending methodologies. Verify desktop, narrow-screen and keyboard behaviour. |
+| MYDASH-004 | IN_PROGRESS | Portfolio and health | Add manual paper/portfolio position management and Portfolio Health measures. Validate quantity, cost basis, currencies, data freshness, concentration, allocation, theme exposure and incomplete-data behaviour. Independent audit required, then Owner Review B of the first complete personal workspace. |
 | MYDASH-005 | PLANNED | Explainable Recommendations | Implement immutable personal recommendation snapshots and Recommendations UI. Prove source lineage, cutoff dates, methodology separation, risk display, dismissal/feedback behaviour and no unsupported recommendation paths. |
 | MYDASH-006 | PLANNED | Decision Lab capture | Implement separate AI-signal and user-paper decision capture, immutable snapshots, entry-resolution states, horizons, decision events and open/completed views. Reuse Strategy Laboratory structures only where the MYDASH-001 contract proved semantic compatibility. |
 | MYDASH-007 | PLANNED | Deterministic return evaluator and feedback loop | Implement idempotent forward-return evaluation, benchmark/FX handling, drawdown, data-quality states, scheduled operational execution and AI-versus-user comparison. Independently reproduce calculations from source observations and verify no look-ahead or entry-time conflation. Pause for Owner Review C using real pilot decisions before final completion. |
 | MYDASH-008 | PLANNED | Production hardening and completion | Complete accessibility, privacy, mobile, performance, operational telemetry, documentation, user-guide, deployment and end-to-end production verification. Resolve all pilot findings, remove temporary tooling and persist final completion reconciliation. |
+
+## Outstanding work and remaining-run forecast
+
+**Forecast updated:** 3 September 2026
+
+**Current position:** MYDASH-001 through MYDASH-003 are complete; MYDASH-004 is in progress.
+
+**Estimated remaining controller runs:** **31–50 bounded runs**, assuming tests remain healthy and owner reviews or external approvals do not add rework.
+
+**Publication status:** this forecast is current in the local repository and published in the GitHub `main` project plan. Application-code publication remains separately controlled.
+
+| Remaining stage | Outstanding work | Estimated runs |
+|---|---|---:|
+| MYDASH-004 | Review the corrected watchlist composite source identity; complete trusted runtime evidence integration; resolve or explicitly retain incomplete issuer/calendar states; verify snapshot persistence, authenticated owner isolation, signed-out denial, responsive UI and independent audit; then pause for Owner Review B. | 9–15 |
+| MYDASH-005 | Build explainable immutable recommendations, provenance/risk presentation, feedback boundaries, tests and independent audit. | 5–8 |
+| MYDASH-006 | Build immutable AI-signal and user-paper decision capture, events, entry-resolution states, UI, tests and independent audit. | 5–8 |
+| MYDASH-007 | Build deterministic forward evaluator, benchmark/FX handling, drawdown and scheduled operation; collect a real pilot, independently reproduce results and pause for Owner Review C. | 8–12 |
+| MYDASH-008 | Complete accessibility, privacy, responsive, performance, telemetry, documentation and end-to-end completion audit; remove temporary tooling and reconcile final state. | 4–7 |
+
+The forecast counts one bounded implementation, diagnostic or audit increment as one run. At a 10-minute trigger interval, 31–50 runs represent roughly 5–8½ hours of trigger time, but actual elapsed time will be longer when a run itself exceeds ten minutes, the laptop is unavailable, or the workflow pauses for Owner Reviews B/C, credentials, approvals or real forward-market evidence. Update this table after each gate or material scope change; it is a planning range, not a completion promise.
 
 ## Intentional owner-review pauses
 
@@ -396,11 +416,11 @@ The project is complete only when:
 ## Current project state
 
     project_status: IN_PROGRESS
-    active_gate: MYDASH-003
+    active_gate: MYDASH-004
     active_gate_status: IN_PROGRESS
     handoff_owner: PRODUCER
     controller_created: true
     controller_journal_created: true
-    production_changes_authorised: MYDASH-003 candidate implementation only; no production promotion before independent audit
-    owner_approval_recorded: Owner Review A approved and MYDASH-002 merged 28 August 2026
-    next_action: Owner supplies a connected Preview sign-in session for two permanent test identities, or explicitly authorises bounded dedicated test identities. The Preview configuration is repaired and 24/24 tests pass, but the Controller remains at Producer until authenticated desktop, 390 × 844 and keyboard/state evidence can be captured safely; PR #25 remains unmerged.
+    production_changes_authorised: local MYDASH-004 candidate work only; no deployment or production mutation without exact owner approval
+    owner_approval_recorded: Owner Review A approved; MYDASH-002 and MYDASH-003 complete
+    next_action: Review the corrected watchlist composite identity, canonical ordering, duplicate rejection and collision coverage; correct only reproduced defects and do not add runtime reads or deploy in the same cycle.
