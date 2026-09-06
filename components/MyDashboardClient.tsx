@@ -122,6 +122,24 @@ type PersonalDecision = {
   events: DecisionEvent[]
 }
 type DecisionState = 'idle' | 'loading' | 'ready' | 'error'
+type PersonalReturnSnapshot = {
+  id: string
+  decision_id: string
+  checkpoint_code: 'OPEN' | '5D' | '20D' | '60D' | 'EXIT'
+  evaluation_cutoff: string
+  entry_price: number | string | null
+  exit_price: number | string | null
+  price_return: number | string | null
+  base_currency_return: number | string | null
+  benchmark_return: number | string | null
+  excess_return: number | string | null
+  net_simulated_return: number | string | null
+  maximum_drawdown: number | string | null
+  quality_status: 'CALCULATION_ERROR' | 'MAPPING_REQUIRED' | 'STALE_SOURCE' | 'PENDING_ENTRY' | 'PENDING_HORIZON' | 'INCOMPLETE_FX' | 'COMPLETE_BASE_CURRENCY' | 'COMPLETE_PRICE_ONLY'
+  quality_reasons: string[]
+  source_identity_hash: string
+  calculation_version: string
+}
 type CsvPreviewRow = {
   line: number
   value: HoldingsCsvValue
@@ -250,6 +268,26 @@ function validPersonalDecision(value: unknown): value is Omit<PersonalDecision, 
     && typeof decision.calculation_version === 'string' && decision.calculation_version.length > 0
 }
 
+function validPersonalReturnSnapshot(value: unknown, decisionIds: Set<string>): value is PersonalReturnSnapshot {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return false
+  const snapshot = value as Partial<PersonalReturnSnapshot>
+  const nullableNumbers = [snapshot.entry_price, snapshot.exit_price, snapshot.price_return, snapshot.base_currency_return, snapshot.benchmark_return, snapshot.excess_return, snapshot.net_simulated_return, snapshot.maximum_drawdown]
+  return typeof snapshot.id === 'string'
+    && typeof snapshot.decision_id === 'string' && decisionIds.has(snapshot.decision_id)
+    && ['OPEN', '5D', '20D', '60D', 'EXIT'].includes(snapshot.checkpoint_code ?? '')
+    && typeof snapshot.evaluation_cutoff === 'string' && Number.isFinite(Date.parse(snapshot.evaluation_cutoff))
+    && nullableNumbers.every((number) => number === null || Number.isFinite(Number(number)))
+    && (snapshot.maximum_drawdown === null || Number(snapshot.maximum_drawdown) <= 0)
+    && ['CALCULATION_ERROR', 'MAPPING_REQUIRED', 'STALE_SOURCE', 'PENDING_ENTRY', 'PENDING_HORIZON', 'INCOMPLETE_FX', 'COMPLETE_BASE_CURRENCY', 'COMPLETE_PRICE_ONLY'].includes(snapshot.quality_status ?? '')
+    && Array.isArray(snapshot.quality_reasons) && snapshot.quality_reasons.every((reason) => typeof reason === 'string')
+    && typeof snapshot.source_identity_hash === 'string' && /^[0-9a-f]{64}$/.test(snapshot.source_identity_hash)
+    && snapshot.calculation_version === 'personal-forward-return-v1'
+}
+
+function formatReturn(value: number | string | null) {
+  return value === null ? 'Unavailable' : `${(Number(value) * 100).toFixed(2)}%`
+}
+
 export default function MyDashboardClient() {
   const router = useRouter()
   const pathname = usePathname()
@@ -286,6 +324,7 @@ export default function MyDashboardClient() {
   const [recommendationError, setRecommendationError] = useState('')
   const [recommendationBusyId, setRecommendationBusyId] = useState<string | null>(null)
   const [decisions, setDecisions] = useState<PersonalDecision[]>([])
+  const [returnSnapshots, setReturnSnapshots] = useState<PersonalReturnSnapshot[]>([])
   const [eligibleAiDecisionSourceIds, setEligibleAiDecisionSourceIds] = useState<Set<string>>(new Set())
   const [decisionState, setDecisionState] = useState<DecisionState>('idle')
   const [decisionError, setDecisionError] = useState('')
@@ -333,6 +372,7 @@ export default function MyDashboardClient() {
     setRecommendationError('')
     setRecommendationBusyId(null)
     setDecisions([])
+    setReturnSnapshots([])
     setEligibleAiDecisionSourceIds(new Set())
     setDecisionState('idle')
     setDecisionError('')
@@ -562,21 +602,30 @@ export default function MyDashboardClient() {
         const decisionRows = decisionResult.data ?? []
         if (!decisionRows.every(validPersonalDecision)) throw new Error('A persisted decision failed response validation.')
         const decisionIds = decisionRows.map((decision) => decision.id)
-        const eventResult = decisionIds.length
-          ? await supabase.from('personal_decision_events').select('decision_id,event_type,event_at').eq('owner_user_id', ownerId).in('decision_id', decisionIds).order('event_at', { ascending: false })
-          : { data: [], error: null }
+        const [eventResult, returnResult] = decisionIds.length ? await Promise.all([
+          supabase.from('personal_decision_events').select('decision_id,event_type,event_at').eq('owner_user_id', ownerId).in('decision_id', decisionIds).order('event_at', { ascending: false }),
+          supabase.from('personal_return_snapshots').select('id,decision_id,checkpoint_code,evaluation_cutoff,entry_price,exit_price,price_return,base_currency_return,benchmark_return,excess_return,net_simulated_return,maximum_drawdown,quality_status,quality_reasons,source_identity_hash,calculation_version').eq('owner_user_id', ownerId).in('decision_id', decisionIds).order('evaluation_cutoff', { ascending: false }),
+        ]) : [{ data: [], error: null }, { data: [], error: null }]
         if (!isCurrentLoad()) return
         if (eventResult.error) throw eventResult.error
+        if (returnResult.error) throw returnResult.error
         const eventRows = (eventResult.data ?? []) as DecisionEvent[]
         if (!eventRows.every((event) => decisionIds.includes(event.decision_id) && ['EXIT', 'CANCEL', 'NOTE', 'REVIEW'].includes(event.event_type) && Number.isFinite(Date.parse(event.event_at)))) {
           throw new Error('Persisted decision event history failed response validation.')
         }
+        const decisionIdSet = new Set(decisionIds)
+        const returnRows = returnResult.data ?? []
+        if (!returnRows.every((snapshot) => validPersonalReturnSnapshot(snapshot, decisionIdSet))) {
+          throw new Error('Persisted return evidence failed response validation.')
+        }
         setDecisions(decisionRows.map((decision) => ({ ...decision, events: eventRows.filter((event) => event.decision_id === decision.id) })) as PersonalDecision[])
+        setReturnSnapshots(returnRows as PersonalReturnSnapshot[])
         setEligibleAiDecisionSourceIds(new Set(eligibilityRows.map((row) => row.assessment_id as string)))
         setDecisionState('ready')
       } catch (decisionLoadError) {
         if (!isCurrentLoad()) return
         setDecisions([])
+        setReturnSnapshots([])
         setEligibleAiDecisionSourceIds(new Set())
         setDecisionState('error')
         setDecisionError(decisionLoadError instanceof Error ? decisionLoadError.message : 'Decision Lab could not be loaded.')
@@ -655,6 +704,22 @@ export default function MyDashboardClient() {
     if (counts.watchedInstruments === 0 && counts.watchlists > 0) items.push({ title: 'Add an instrument to a watchlist', detail: 'Today will use persisted watchlist membership; it will not invent suggestions.', href: '/watchlists', action: 'Add instrument' })
     return items
   }, [counts, preferences, privateDataState])
+
+  const decisionCohorts = useMemo(() => (['AI_SIGNAL', 'USER_PAPER'] as const).map((sourceType) => {
+    const cohortDecisions = decisions.filter((decision) => decision.source_type === sourceType)
+    const completedBuyReturns = cohortDecisions.flatMap((decision) => {
+      if (decision.action !== 'BUY') return []
+      const terminalCodes = new Set<string>(['EXIT', `${decision.horizon_sessions}D`])
+      const snapshot = returnSnapshots.find((candidate) => candidate.decision_id === decision.id && terminalCodes.has(candidate.checkpoint_code) && candidate.net_simulated_return !== null)
+      return snapshot ? [Number(snapshot.net_simulated_return)] : []
+    })
+    return {
+      sourceType,
+      decisions: cohortDecisions.length,
+      evidenced: cohortDecisions.filter((decision) => returnSnapshots.some((snapshot) => snapshot.decision_id === decision.id)).length,
+      completedBuyReturns,
+    }
+  }), [decisions, returnSnapshots])
 
   function selectTab(key: TabKey) {
     const params = new URLSearchParams(searchParams.toString())
@@ -1274,20 +1339,28 @@ export default function MyDashboardClient() {
               ) : decisions.length === 0 ? (
                 <div className={styles.empty} role="status"><strong>No forward decisions have been captured.</strong><p>This is the current owner's real private empty state. Historical decisions and returns are not reconstructed.</p></div>
               ) : (
+                <>
+                <div className={styles.recommendationFacts} aria-label="Separate decision evidence cohorts">
+                  {decisionCohorts.map((cohort) => <div key={cohort.sourceType}><span>{cohort.sourceType === 'AI_SIGNAL' ? 'AI-signal cohort' : 'User-paper cohort'}</span><strong>{cohort.evidenced}/{cohort.decisions} with forward evidence</strong><small>{cohort.completedBuyReturns.length ? `${formatReturn(cohort.completedBuyReturns.reduce((total, value) => total + value, 0) / cohort.completedBuyReturns.length)} mean completed BUY simulation · ${cohort.completedBuyReturns.length} outcome${cohort.completedBuyReturns.length === 1 ? '' : 's'}` : 'No completed BUY simulation available'}</small></div>)}
+                </div>
+                <p className={styles.disclosure}>Cohorts remain separate and are not ranked. Means use only the latest persisted configured-horizon or EXIT snapshot per BUY decision; unresolved and observational actions are excluded, not counted as zero.</p>
                 <ul className={styles.decisionList}>
                   {decisions.map((decision) => {
                     const instrument = instruments.find((item) => item.id === decision.instrument_id)
                     const terminal = decision.events.find((event) => event.event_type === 'EXIT' || event.event_type === 'CANCEL')
                     const hasPaperPosition = positions.some((position) => position.source_decision_id === decision.id)
                     const lifecycle = terminal ? 'COMPLETED' : hasPaperPosition ? 'OPEN' : 'PENDING ENTRY'
+                    const snapshots = returnSnapshots.filter((snapshot) => snapshot.decision_id === decision.id)
                     return <li key={decision.id}>
                       <div className={styles.panelHeading}><div><span className={styles.eyebrow}>{decision.source_type.replaceAll('_', ' ')}</span><h3>{instrument?.symbol ?? 'Unresolved instrument'} · {decision.action}</h3></div><span>{lifecycle}</span></div>
                       <div className={styles.recommendationFacts}><div><span>Decision clock</span><strong>{new Date(decision.decision_at).toLocaleString()}</strong></div><div><span>Source cutoff</span><strong>{new Date(decision.source_cutoff).toLocaleString()}</strong></div><div><span>Horizon</span><strong>{decision.horizon_sessions} sessions</strong></div></div>
                       <dl className={styles.provenance}><div><dt>Entry rule</dt><dd>{decision.entry_rule.replaceAll('_', ' ')}</dd></div><div><dt>Calculation</dt><dd>{decision.calculation_version}</dd></div><div><dt>Source identity</dt><dd>{decision.source_hash.slice(0, 12)}…</dd></div></dl>
-                      <p className={styles.disclosure}>{decision.source_type === 'AI_SIGNAL' ? `Assessment action: ${decision.source_action}. The AI cutoff controls this clock.` : `User action snapshot: ${decision.source_action}. The server capture clock controls this record.`} {terminal ? `Latest terminal event: ${terminal.event_type} at ${new Date(terminal.event_at).toLocaleString()}.` : 'Entry price and returns remain unavailable until forward evidence exists.'}</p>
+                      {snapshots.length ? <ul className={styles.decisionSourceList}>{snapshots.map((snapshot) => <li key={snapshot.id}><div><strong>{snapshot.checkpoint_code} · {snapshot.quality_status.replaceAll('_', ' ')}</strong><span>Cutoff {new Date(snapshot.evaluation_cutoff).toLocaleString()} · evidence {snapshot.source_identity_hash.slice(0, 12)}…</span><small>{snapshot.net_simulated_return === null ? `Net simulation unavailable${snapshot.quality_reasons.length ? ` — ${snapshot.quality_reasons.join(', ')}` : ''}` : `Net simulated return ${formatReturn(snapshot.net_simulated_return)} · base return ${formatReturn(snapshot.base_currency_return)} · drawdown ${formatReturn(snapshot.maximum_drawdown)}`}</small></div></li>)}</ul> : <p className={styles.disclosure}>No evaluator snapshot exists yet. Entry price and returns remain unavailable until forward evidence exists; missing evidence is never shown as zero.</p>}
+                      <p className={styles.disclosure}>{decision.source_type === 'AI_SIGNAL' ? `Assessment action: ${decision.source_action}. The AI cutoff controls this clock.` : `User action snapshot: ${decision.source_action}. The server capture clock controls this record.`} {terminal ? `Latest terminal event: ${terminal.event_type} at ${new Date(terminal.event_at).toLocaleString()}.` : 'This decision remains forward-looking from its own immutable clock.'}</p>
                     </li>
                   })}
                 </ul>
+                </>
               )}
               <p className={styles.disclosure}>Decision Lab is simulated research only. It cannot place orders, connect a broker or present an unresolved return as zero.</p>
             </article>

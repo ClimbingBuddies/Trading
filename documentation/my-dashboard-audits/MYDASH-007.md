@@ -26,7 +26,24 @@ Verification on 6 September 2026:
 
 ## Remaining gate scope
 
-Expose honest Decision Lab comparisons; complete whole-gate regression and independent audit; then route real pilot evidence to Owner Review C. The 07:00 operational schedule remains uninstalled pending approval.
+Complete whole-gate regression and independent audit; then route real pilot evidence to Owner Review C. The 07:00 operational schedule remains uninstalled pending approval.
+
+## Producer evidence — owner-scoped Decision Lab comparisons
+
+Decision Lab now reads immutable return snapshots with the permanent owner predicate and the already validated decision-ID set. Response validation rejects unknown parents, timestamps, checkpoint/quality identities, invalid nullable numerics, positive drawdown, malformed source hashes and any calculation version other than `personal-forward-return-v1`; one failure hides the full private decision/result read.
+
+Each decision displays its own ordered snapshot cutoffs, quality state, source identity and nullable return evidence. Separate, non-ranked AI-signal and user-paper cohorts report coverage and completed BUY simulations only. A cohort mean uses at most the latest persisted configured-horizon or EXIT result per BUY decision; OPEN, non-BUY, missing and pending states do not contribute and are never converted to zero. The original AI assessment and user server-capture clocks remain visible on every card.
+
+Verification on 6 September 2026:
+
+- focused Decision Lab checks: 5/5 passed;
+- repository tests: 160/160 passed;
+- TypeScript: passed;
+- palette: passed;
+- `git diff --check`: passed;
+- localhost server: Next.js 16.3.4 started on port 3001;
+- visual/browser execution: deferred because both available browser-control paths failed to initialize in the current sandbox; no authenticated/private row or screenshot was accessed;
+- isolated database/RLS/function execution: deferred because the migration is unapplied.
 
 ## Producer evidence — immutable checkpoint evaluation
 

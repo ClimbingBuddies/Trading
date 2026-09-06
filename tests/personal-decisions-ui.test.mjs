@@ -31,6 +31,18 @@ test('Decision Lab exposes isolated loading, empty and error states without trad
   assert.doesNotMatch(component, /\.from\('personal_decisions'\)\.(insert|update|delete)/)
 })
 
+test('Decision Lab reads immutable owner returns and keeps AI and user comparisons separate', async () => {
+  const component = await readFile(componentUrl, 'utf8')
+  assert.match(component, /\.from\('personal_return_snapshots'\)/)
+  assert.match(component, /\.eq\('owner_user_id', ownerId\)\.in\('decision_id', decisionIds\)/)
+  assert.match(component, /Persisted return evidence failed response validation/)
+  assert.match(component, /\['AI_SIGNAL', 'USER_PAPER'\]/)
+  assert.match(component, /Cohorts remain separate and are not ranked/)
+  assert.match(component, /unresolved and observational actions are excluded, not counted as zero/)
+  assert.match(component, /No evaluator snapshot exists yet\. Entry price and returns remain unavailable until forward evidence exists; missing evidence is never shown as zero/)
+  assert.doesNotMatch(component, /setReturnSnapshots\([^)]*\.concat/i)
+})
+
 test('Decision Lab captures only constrained user-paper and persisted independent AI inputs', async () => {
   const component = await readFile(componentUrl, 'utf8')
   assert.match(component, /\.rpc\('capture_personal_decision_v1'/)
