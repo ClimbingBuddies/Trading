@@ -239,7 +239,7 @@ The status, remaining scope and run forecast are kept together here so gate prog
 
 **Estimated remaining work:** MYDASH-007 retains **3–6 meaningful runs** and MYDASH-008 retains **4–7**, for **7–13 meaningful runs** in aggregate. The forecast will be rebaselined when implementation or pilot evidence changes.
 
-**Publication status:** `GITHUB_STATUS_PUBLICATION_DEFERRED`. The verified comparison phase is committed locally as `29bee68b14f5ae0d81bdacc246f20c0e10d81df6`, one commit ahead of confirmed `origin/main` at `58193a7fdce94f0a690a91ea53b7ca48c0d24c9b`. The execution safety reviewer rejected publishing this exact payload to the shared default branch without a fresh trusted owner instruction naming it. No workaround or force-push was attempted. Unrelated untracked `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` remain excluded.
+**Publication status:** `GITHUB_STATUS_PUBLICATION_DEFERRED`. The verified comparison implementation `29bee68b14f5ae0d81bdacc246f20c0e10d81df6` and localhost evidence `701f2fda02f9a824972fe2530a92438927c694b1` remain local, two commits ahead of confirmed `origin/main` at `58193a7fdce94f0a690a91ea53b7ca48c0d24c9b`. The execution safety reviewer rejected publishing this exact payload to the shared default branch without fresh trusted approval for the exact mutation. No workaround or force-push was attempted. Unrelated untracked `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` remain excluded.
 
 Gate-by-gate outstanding work and estimated runs are maintained in the **Work gates** table above. This section retains the cross-gate forecast assumptions, timing and publication status without duplicating the tracking rows.
 
@@ -419,4 +419,4 @@ The project is complete only when:
     controller_journal_created: true
     production_changes_authorised: recurring bounded GitHub main publication is authorised for owner visibility; refresh-portfolio-health deployment and the supplied CommSec holdings import were separately approved and completed; no further deployment or production mutation without exact owner approval
     owner_approval_recorded: Owner Reviews A and B approved; MYDASH-001 through MYDASH-006 complete
-    next_action: Publish the verified Decision Lab comparison phase, then run whole-gate Producer regression and prepare the independent audit handoff.
+    next_action: Retry and verify publication through 701f2fda02f9a824972fe2530a92438927c694b1, then run whole-gate Producer regression and prepare the independent audit handoff.
