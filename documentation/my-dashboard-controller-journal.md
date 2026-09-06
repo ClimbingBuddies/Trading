@@ -3689,3 +3689,11 @@ Not authorised by this decision:
 - The execution safety reviewer again rejected `git push origin main` because it classified the default-branch update as a consequential remote mutation and stated that trusted user content did not provide acceptable destination authority. The reviewer prohibited workaround or indirect execution, so none was attempted.
 - No implementation, test, audit, database, private-data, provider, deployment, Vercel, broker, trading or automation-state change occurred. MYDASH-005 remains `IN_REVIEW / AUDITOR`; the 1–2 run gate forecast remains unchanged.
 - Exact next action: obtain exact owner approval accepted by the execution safety reviewer to publish the complete verified local branch, including this delivery-control record, confirm the remote identity, and only then independently audit the complete Producer handoff.
+
+### 6 September 2026, 09:32 Australia/Perth — GITHUB_STATUS_PUBLICATION_DEFERRED
+
+- Role selected from persisted state: `AUDITOR`; sole active gate `MYDASH-005 / IN_REVIEW`. The mandatory publication retry was attempted before any independent audit work.
+- An authorised fresh fetch succeeded and confirmed `origin/main` remains `ea143a33a02424b36133f5ad671df33052b3fe82`, with no remote divergence; local `main` was five bounded commits ahead through `1b157624a50175fe5358e3a411db989e2b51cefe`. Unrelated untracked `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` remain untouched and excluded.
+- The execution safety reviewer rejected the exact `git push origin main` because publishing five commits to the shared default branch requires a new explicit owner approval for this exact action. It prohibited workaround or indirect execution, so none was attempted.
+- No implementation, test, audit, database, private-data, provider, deployment, Vercel, broker, trading or automation-state change occurred. MYDASH-005 remains `IN_REVIEW / AUDITOR`; the 1–2 run gate forecast remains unchanged.
+- Exact next action: Travis explicitly approves publishing the complete verified local `main` branch to `origin/main`; then confirm the remote identity and independently audit the Producer handoff.
