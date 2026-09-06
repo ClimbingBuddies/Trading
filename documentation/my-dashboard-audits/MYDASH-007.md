@@ -116,3 +116,5 @@ Verification on 6 September 2026:
 - migration application, the proposed 07:00 schedule, hosted replay and production changes remain outside this gate run's authority.
 
 Handoff: an independent Auditor must reproduce the calculations/source-cutoff invariants from primary evidence, verify security and unsupported-path denial, assess whether the deferred evidence is acceptable for Owner Review C, and record an audit outcome. This Producer run makes no audit conclusion.
+
+The verified Producer regression and audit handoff are published as `329de804793e4d8a9c5007b31b41b7b61853007d` on `origin/main`.

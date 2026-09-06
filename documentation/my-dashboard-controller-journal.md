@@ -4094,3 +4094,9 @@ Not authorised by this decision:
 - Prior localhost browser evidence remains applicable because this regression changed no implementation. Isolated database/RLS/function/concurrency execution, result-bearing success-state evidence and narrow-screen execution remain deferred for the existing environment reasons and were not duplicated or treated as failures.
 - MYDASH-007 transitioned to `IN_REVIEW / AUDITOR`. The audit package now requests independent reproduction of calculations and source-cutoff invariants, security/unsupported-path review and an explicit decision on deferred evidence. This Producer run makes no audit conclusion.
 - Forecast is 2–5 MYDASH-007 runs and 6–12 total remaining runs. No migration, private-data access, hosted mutation, scheduling, deployment, Vercel, provider expansion, broker, order, trading or automation-setting change occurred.
+
+### 6 September 2026, 19:10 Australia/Perth — GITHUB_STATUS_PUBLICATION_COMPLETE
+
+- Committed only the verified MYDASH-007 whole-gate Producer regression, gate transition, audit package and controller handoff as `329de804793e4d8a9c5007b31b41b7b61853007d`.
+- A fresh fetch showed zero remote-only commits; pushed without force, fetched again and confirmed local `HEAD` plus `origin/main` both resolve to that identity.
+- MYDASH-007 remains `IN_REVIEW / AUDITOR`. Publication changes delivery visibility only; no audit conclusion, migration, private-data access, hosted mutation, scheduling, deployment, Vercel, provider, broker, order, trading or automation-setting change occurred.
