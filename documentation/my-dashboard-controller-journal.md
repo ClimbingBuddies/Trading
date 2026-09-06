@@ -3860,3 +3860,11 @@ Not authorised by this decision:
 - Committed only the verified MYDASH-006 capture controls, regression and control evidence as `31616d681258f4b2597e0197cff93a782c66c88c`.
 - A fresh fetch showed no divergence; pushed without force and confirmed local `HEAD` plus `origin/main` both resolve to that identity.
 - Unrelated untracked `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` remain untouched. Publication changes delivery visibility only and grants no deployment, hosted-database, broker or trading authority.
+
+### 6 September 2026, 12:52 Australia/Perth — MYDASH-006_PRODUCER_CANDIDATE_READY_FOR_AUDIT
+
+- Role remained `PRODUCER`; whole-gate regression against published capture-controls candidate `31616d681258f4b2597e0197cff93a782c66c88c` found no implementation defect.
+- Verification passed: all repository tests 136/136, including the focused decision migration/UI checks; TypeScript, palette and `git diff --check` also passed. A fresh fetch first confirmed local `main` and `origin/main` had zero divergence.
+- Prior authenticated localhost desktop evidence remains applicable because no UI changed. Unapplied-schema success states, isolated database policy/ACL/RPC execution and fresh narrow-screen execution remain deferred evidence and do not block the independent source-level audit.
+- MYDASH-006 moved to `IN_REVIEW / AUDITOR`; forecast is 1–2 gate runs and 13–21 total remaining runs. No successor gate was promoted.
+- No migration, private-data access, hosted environment, deployment, Vercel, provider, broker, order, trading or automation-setting change occurred. Exact next action: publish this handoff, then independently audit the exact published Producer candidate without making fixes in the Auditor role.

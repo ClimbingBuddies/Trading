@@ -4,7 +4,7 @@
 
 **Role:** Producer
 
-**Record status:** IN_PROGRESS — PHASES 1–3 LOCALLY VERIFIED
+**Record status:** IN_REVIEW — PRODUCER CANDIDATE READY FOR INDEPENDENT AUDIT
 
 **Date:** 6 September 2026
 
@@ -61,4 +61,12 @@ Both paths make the fixed v1 paper assumptions visible: base-currency notional 1
 
 ## Limitations and next phase
 
-MYDASH-007 remains responsible for deterministic entry resolution and return snapshots. MYDASH-006 still needs whole-gate regression and independent audit handoff. Available localhost success states plus isolated database policy/ACL/RPC execution remain deferred while the migration is unapplied; fresh narrow-screen execution also remains deferred. This is not an Auditor decision and does not promote the gate.
+MYDASH-007 remains responsible for deterministic entry resolution and return snapshots. Available localhost success states plus isolated database policy/ACL/RPC execution remain deferred while the migration is unapplied; fresh narrow-screen execution also remains deferred.
+
+## Whole-gate Producer regression and handoff
+
+On 6 September 2026 at 12:52 Australia/Perth, the Producer re-ran the complete repository suite against the published phase-3 candidate. All **136/136** tests passed, including the nine focused decision migration/UI checks. `npx tsc --noEmit`, palette compliance and `git diff --check` also passed. A fresh fetch confirmed no divergence before the verification run.
+
+No new implementation defect was found. No migration was applied, no private row or hosted environment was accessed, and no deployment, provider, broker, order or trading capability changed. Prior authenticated localhost desktop evidence remains applicable because the implementation did not change during this regression-only phase.
+
+Handoff: `PRODUCER -> AUDITOR / MYDASH-006 IN_REVIEW / READY_FOR_INDEPENDENT_AUDIT`. The Auditor must review the exact published candidate independently and must not implement fixes while acting in that role.

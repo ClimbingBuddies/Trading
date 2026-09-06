@@ -227,17 +227,17 @@ The status, remaining scope and run forecast are kept together here so gate prog
 | MYDASH-003 | DONE | Watchlists and relevant Opportunities | Build Watchlists and Opportunities tabs from existing private watchlists and independent Opportunity mappings. Show relevance and data gaps without creating Buy labels or blending methodologies. Verify desktop, narrow-screen and keyboard behaviour. | Complete. | 0 |
 | MYDASH-004 | DONE | Portfolio and health | Feature scope is closed: manual holdings, optional private CSV import with preview/validation/explicit confirmation, deterministic Portfolio Health, required immutable snapshots and authenticated owner-scoped UI are implemented in the local candidate. Broker linking, live trading, provider expansion, issuer enrichment, exchange-registration work, hosted replay and speculative hardening are not part of this gate. | Complete; independent audit passed with advice and Owner Review B accepted on 5 September 2026. Unavailable database/runtime execution remains deferred evidence and does not grant deployment or production authority. | 0 |
 | MYDASH-005 | DONE | Explainable Recommendations | Immutable owner-scoped storage/event boundaries, the Recommendations UI, deterministic `personal-research-relevance-v1` generator, service-only owner/cutoff source selection and private atomic writer are implemented. The corrected loader requires Market run analysis cutoffs and emits fail-closed canonical daily-session freshness evidence; loader-to-generator denial paths are regression-tested. | Complete; independent re-audit passed with advice. Unavailable isolated database execution remains deferred evidence and does not grant deployment or production authority. | 0 |
-| MYDASH-006 | IN_PROGRESS | Decision Lab capture | Phases 1–3 are locally verified: the immutable two-clock ledger, owner-scoped reads/lifecycle UI and constrained user-paper/eligible Market-AI capture controls preserve source lineage, fixed simulation assumptions and the no-trade boundary. | Producer next completes whole-gate regression and the independent audit handoff. Unapplied-schema success states, isolated database execution and fresh narrow-screen execution remain deferred evidence. | 2–4 |
+| MYDASH-006 | IN_REVIEW | Decision Lab capture | Producer candidate is complete: the immutable two-clock ledger, owner-scoped reads/lifecycle UI and constrained user-paper/eligible Market-AI capture controls preserve source lineage, fixed simulation assumptions and the no-trade boundary. Whole-gate regression passes. | Auditor next independently reviews the exact published Producer candidate. Unapplied-schema success states, isolated database execution and fresh narrow-screen execution remain deferred evidence. | 1–2 |
 | MYDASH-007 | PLANNED | Deterministic return evaluator and feedback loop | Implement idempotent forward-return evaluation, benchmark/FX handling, drawdown, data-quality states, scheduled operational execution and AI-versus-user comparison. Independently reproduce calculations from source observations and verify no look-ahead or entry-time conflation. Pause for Owner Review C using real pilot decisions before final completion. | Build the deterministic forward evaluator, benchmark/FX handling, drawdown and scheduled operation; collect a real pilot, independently reproduce results and complete Owner Review C. | 8–12 |
 | MYDASH-008 | PLANNED | Production hardening and completion | Complete accessibility, privacy, mobile, performance, operational telemetry, documentation, user-guide, deployment and end-to-end production verification. Resolve all pilot findings, remove temporary tooling and persist final completion reconciliation. | Complete accessibility, privacy, responsive, performance, telemetry, documentation and end-to-end completion audit; remove temporary tooling and reconcile final state. | 4–7 |
 
 ## Outstanding work and remaining-run forecast
 
-**Forecast updated:** 6 September 2026, 12:46 Australia/Perth
+**Forecast updated:** 6 September 2026, 12:52 Australia/Perth
 
-**Current position:** MYDASH-005 remains complete after independent `PASS_WITH_ADVICE`. MYDASH-006 is the sole active gate at `IN_PROGRESS / PRODUCER`: the immutable two-clock ledger and owner-scoped lifecycle reads now have separate constrained capture controls for user-paper decisions and persisted independent Market-AI signals. Focused decision checks pass 9/9 and all repository tests pass 136/136 with TypeScript, palette and diff checks. Authenticated localhost desktop verification rendered the controls and fixed assumptions without overflow, framework overlay or console warning/error; no mutation was submitted.
+**Current position:** MYDASH-005 remains complete after independent `PASS_WITH_ADVICE`. MYDASH-006 is the sole active gate at `IN_REVIEW / AUDITOR`: the complete Producer candidate preserves immutable two-clock capture, owner-scoped lifecycle reads, constrained user-paper and persisted Market-AI inputs, visible fixed simulation assumptions and the no-trade boundary. Whole-gate regression passes 136/136 with TypeScript, palette and diff checks. Prior authenticated localhost desktop evidence remains applicable; no mutation was submitted.
 
-**Estimated remaining work:** MYDASH-006 retains **2–4 meaningful runs**. MYDASH-006 through MYDASH-008 retain **14–23 meaningful runs** in aggregate and will be rebaselined when evidence changes.
+**Estimated remaining work:** MYDASH-006 retains **1–2 meaningful runs** for independent audit and any evidence-led response. MYDASH-006 through MYDASH-008 retain **13–21 meaningful runs** in aggregate and will be rebaselined when evidence changes.
 
 **Publication status:** `GITHUB_STATUS_PUBLICATION_COMPLETE` through capture-controls commit `31616d681258f4b2597e0197cff93a782c66c88c`; local and `origin/main` identities were confirmed equal. Unrelated untracked `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` remain excluded.
 
@@ -413,10 +413,10 @@ The project is complete only when:
 
     project_status: IN_PROGRESS
     active_gate: MYDASH-006
-    active_gate_status: IN_PROGRESS
-    handoff_owner: PRODUCER
+    active_gate_status: IN_REVIEW
+    handoff_owner: AUDITOR
     controller_created: true
     controller_journal_created: true
     production_changes_authorised: recurring bounded GitHub main publication is authorised for owner visibility; refresh-portfolio-health deployment and the supplied CommSec holdings import were separately approved and completed; no further deployment or production mutation without exact owner approval
     owner_approval_recorded: Owner Reviews A and B approved; MYDASH-001 through MYDASH-005 complete
-    next_action: Complete whole-gate regression and prepare the exact MYDASH-006 Producer candidate for independent audit.
+    next_action: Independently audit the exact published MYDASH-006 Producer candidate; do not implement fixes while acting as Auditor.
