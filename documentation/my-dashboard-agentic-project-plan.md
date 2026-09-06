@@ -239,7 +239,7 @@ The status, remaining scope and run forecast are kept together here so gate prog
 
 **Estimated remaining work:** MYDASH-005 has no remaining runs. MYDASH-006 through MYDASH-008 retain **17–27 meaningful runs** in aggregate and will be rebaselined when evidence changes.
 
-**Publication status:** `GITHUB_STATUS_PUBLICATION_COMPLETE`. Functional correction `934c9dc23e50d49adab1fb04e147c1952f451099` and Producer handoff `b756221f6b6ed7008748388ac44fcf0ce56dd6c8` are verified on `origin/main`. Unrelated untracked `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` remain excluded. This cycle did not deploy to Vercel, mutate hosted Supabase or production data, access a broker, or trade.
+**Publication status:** `GITHUB_STATUS_PUBLICATION_DEFERRED`. A fresh fetch found no divergence and local audit commit `f7a806ae74f338121a413e4209a7a768338d7b83` is one commit ahead of `origin/main`, but the execution safety reviewer rejected the exact push because it requires fresh explicit owner approval for this external shared-default-branch mutation. No workaround or force-push was attempted. Unrelated untracked `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` remain excluded.
 
 Gate-by-gate outstanding work and estimated runs are maintained in the **Work gates** table above. This section retains the cross-gate forecast assumptions, timing and publication status without duplicating the tracking rows.
 
@@ -419,4 +419,4 @@ The project is complete only when:
     controller_journal_created: true
     production_changes_authorised: recurring bounded GitHub main publication is authorised for owner visibility; refresh-portfolio-health deployment and the supplied CommSec holdings import were separately approved and completed; no further deployment or production mutation without exact owner approval
     owner_approval_recorded: Owner Reviews A and B approved; MYDASH-001 through MYDASH-005 complete
-    next_action: Begin one bounded MYDASH-006 Producer phase from the approved distinct AI-signal and user-paper decision-clock contract. Consecutive failure count remains zero.
+    next_action: Retry publication of local audit/control commits to origin/main before beginning one bounded MYDASH-006 Producer phase. Consecutive failure count remains zero.

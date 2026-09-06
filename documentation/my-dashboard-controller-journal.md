@@ -3773,3 +3773,9 @@ Not authorised by this decision:
 - Recorded `PASS_WITH_ADVICE`. The unapplied migration's isolated RLS/RPC/atomicity execution and fresh authenticated browser replay remain deferred evidence; no deployment, hosted/private data, provider, broker, trading or automation-setting change occurred.
 - MYDASH-005 is `DONE`. Promoted only MYDASH-006 to `NEXT / PRODUCER`; forecast is 5–8 runs for that gate and 17–27 across the remaining three gates.
 - Handoff: `PRODUCER / MYDASH-006 NEXT`. Begin one bounded Decision Lab phase from the approved distinct AI-signal and user-paper decision-clock contract.
+
+### 6 September 2026, 10:27 Australia/Perth — GITHUB_STATUS_PUBLICATION_DEFERRED
+
+- A fresh fetch confirmed no divergence; local audit commit `f7a806ae74f338121a413e4209a7a768338d7b83` is one commit ahead of `origin/main`.
+- The execution safety reviewer rejected the exact push because fresh explicit owner approval is required for this external shared-default-branch mutation. No workaround, indirect execution or force-push was attempted.
+- MYDASH-005 remains complete locally with `PASS_WITH_ADVICE`; MYDASH-006 remains `NEXT / PRODUCER`. Retry publication before new material work.
