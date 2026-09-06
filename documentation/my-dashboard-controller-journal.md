@@ -3670,7 +3670,7 @@ Not authorised by this decision:
 ### 6 September 2026, 09:18 Australia/Perth — MYDASH-005_PRODUCER_HANDOFF_READY
 
 - Added explicit busy/status semantics to recommendation loading and empty states and extended the unavailable-state retry to a 44 px keyboard target with a visible focus ring. Added focused regression coverage for all three state contracts.
-- Bounded implementation commit: `5069979e1474cb3e3297cb3f5a16116822c34e5b`.
+- Bounded implementation commit: `5069979cec1660822abd6005f06a7ad3b23077e3`.
 - Fresh verification passed: focused Recommendations UI 5/5, complete repository 126/126, TypeScript, palette and `git diff --check` with existing line-ending notices only.
 - Final browser replay could not run: Windows computer control failed during sandbox ACL initialization, and the repository browser CLI is not installed. Prior authenticated localhost evidence at desktop and 390 × 844 remains current for the unchanged error layout; the new loading/empty/focus/responsive behavior is executable source evidence and the limitation is explicit for independent audit.
 - MYDASH-005 moved to `IN_REVIEW` with handoff owner `AUDITOR`. Isolated database RLS/RPC execution remains deferred once; no database, private value, hosted system, deployment, Vercel, broker, trading or automation setting changed.

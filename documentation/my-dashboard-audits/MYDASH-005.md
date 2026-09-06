@@ -36,7 +36,7 @@
     handoff_from: PRODUCER
     handoff_to: AUDITOR
     handoff_status: READY_FOR_AUDIT
-    implementation_commit_or_range: 53fedde20ecb0ec5a1f1e757c0ab124535b0809c..5069979e1474cb3e3297cb3f5a16116822c34e5b
+    implementation_commit_or_range: 53fedde20ecb0ec5a1f1e757c0ab124535b0809c..5069979cec1660822abd6005f06a7ad3b23077e3
     delivery_control_commits: ea143a33a02424b36133f5ad671df33052b3fe82 plus the commit containing this handoff, verified in automation memory after publication
     files_changed: recommendation migration, deterministic generator/adapters, dashboard client/styles and focused regression suites
     migrations_and_schema_effects: one unapplied immutable owner-scoped recommendation snapshot/source/event migration; private service-role source loader/writer; constrained authenticated event append
