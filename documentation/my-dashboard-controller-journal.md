@@ -3983,3 +3983,19 @@ Not authorised by this decision:
 - Committed only the verified MYDASH-007 return-ledger foundation, static regressions and canonical evidence as `7953062704d2df34ac3fc274c98d7fe0f0626d70`.
 - Fresh fetches showed zero remote-only commits; pushed without force and confirmed local `HEAD` plus `origin/main` both resolve to that identity.
 - Publication changes delivery visibility only. The migration remains unapplied, and no private data, hosted database, deployment, Vercel, provider, broker, order, trading or automation-setting change occurred.
+
+### 6 September 2026, 14:32 Australia/Perth — BUILD_ATTEMPT_STARTED — MYDASH-007_IDEMPOTENT_CHECKPOINT_EVALUATION
+
+- Role selected from durable starting state: `PRODUCER`; sole active gate `MYDASH-007 / IN_PROGRESS`; handoff `PRODUCER / IMMUTABLE_IDEMPOTENT_CHECKPOINT_EVALUATION`.
+- Publication prerequisite is clear: local `HEAD` and `origin/main` both resolve to `895408fa8a49eee27ddc56d0052448f7e46aa611` with zero divergence.
+- Starting SHA-256 identities: controller `e02b67fd46745ccab1e78f3b1fea76f7a3f7e4ae7a728d2b1571d6f200f44736`; plan `51118b1e9ab898c1b654002640a1413bb051c6eb71b8e89bf79aa379a96a8903`; approved contract `8f9e729905e87be12798b3f2b7e4bb7946d1368ac223504ace29948d83b218da`; return migration `37885fc50acef4d6005fd9f4232aa47cd3cd38bd9422dd3d4f0d1d525833f770`.
+- Bounded scope: implement internal immutable OPEN/5D/20D/60D/EXIT checkpoint selection, raw and fee/slippage return arithmetic, canonical source hashing, identical-retry idempotency and divergent-conflict denial. Exact FX, benchmark, drawdown, scheduling and UI remain later phases. No migration application, private-row access, deployment, Vercel, broker, order or trading action is authorised.
+
+### 6 September 2026, 14:47 Australia/Perth — MYDASH-007_IDEMPOTENT_CHECKPOINT_EVALUATION_VERIFIED
+
+- Role remained `PRODUCER`; MYDASH-007 remains `IN_PROGRESS`. No independent audit, successor promotion or owner review occurred.
+- The internal INSERT-only evaluator selects OPEN at the latest cutoff-bounded session, exact 5D/20D/60D sessions after immutable entry, and EXIT only from the first canonical session after a persisted owner-matched EXIT event. Missing entry, mapping, exit event and checkpoint evidence stays explicit; the evaluator never reads beyond its persisted cutoff.
+- Raw close return and unrounded fee/slippage simulated return now reproduce the approved formulas. Only BUY receives simulated profit; WATCH, HOLD, PASS and AVOID remain observational. Same-currency base return is explicit, while unavailable exact FX, optional benchmark and unverified corporate-action evidence remains null with stable reasons.
+- SHA-256 source identity binds the decision source hash, checkpoint, cutoff, chosen observation IDs and quality result. INSERT-on-conflict returns identical immutable retries; divergent evidence raises `CALCULATION_ERROR` without update or duplication.
+- Verification passed: focused return migration 12/12, repository 150/150, TypeScript, palette and `git diff --check`. The migration remains intentionally unapplied, so isolated database/RLS/function/concurrency execution is deferred and not claimed; browser verification is not applicable to this schema-only phase.
+- Forecast is 6–10 MYDASH-007 runs and 10–17 total remaining runs. Exact next action: implement exact timestamp-aligned FX and benchmark resolution plus deterministic drawdown. No private row, hosted database, deployment, Vercel, provider expansion, broker, order, trading or automation-setting change occurred.
