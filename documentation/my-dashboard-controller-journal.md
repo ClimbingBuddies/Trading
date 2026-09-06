@@ -16,7 +16,7 @@
     last_event: MYDASH-005_INDEPENDENT_AUDIT_REWORK_REQUIRED
     consecutive_failure_count: 0
     consecutive_failure_reason: NONE
-    next_action: Correct the persisted-source cutoff and calendar-freshness bridge, add an end-to-end loader-to-generator regression, rerun acceptance checks and return MYDASH-005 for independent re-audit.
+    next_action: Retry publication of local audit handback commit 6fc142a458903b2e74868ec8e0e6ba8dd4450dda; after confirmation, correct the persisted-source cutoff/calendar-freshness bridge and return MYDASH-005 for independent re-audit.
 
 ## Gate ledger
 
@@ -3713,7 +3713,7 @@ Not authorised by this decision:
 - Unrelated untracked `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` were preserved and excluded. No Vercel deployment, hosted Supabase or production mutation, broker access or trading occurred.
 - MYDASH-005 remains `IN_REVIEW / AUDITOR`; publication is no longer a prerequisite blocker. Exact next action: independently audit the published Producer candidate.
 
-### 6 September 2026, 10:05 Australia/Perth — MYDASH-005_INDEPENDENT_AUDIT_REWORK_REQUIRED
+### 6 September 2026, 09:55 Australia/Perth — MYDASH-005_INDEPENDENT_AUDIT_REWORK_REQUIRED
 
 - Role performed: `AUDITOR` only against published candidate `869dec0eda772299a7f2cfd5b80aab17e112d303`; no implementation fix or successor promotion occurred.
 - Reproduced 126/126 repository tests, TypeScript and palette compliance. The passing suites do not exercise the concrete persisted loader output through the deterministic generator.
@@ -3722,3 +3722,9 @@ Not authorised by this decision:
 - Complete correction set: join and require the authoritative Market AI analysis cutoff; derive explicit, reproducible trading-session freshness evidence for Market AI and Technical rows at the requested generation cutoff; pass those exact fields through the service-only loader; fail closed when the calendar cannot be established; and add one integration regression that feeds the concrete loader response into `buildRecommendationCandidate`, proving eligible current sources succeed while unavailable/stale/future evidence remains denied.
 - Existing isolated database/RLS/RPC execution and final browser replay limitations remain deferred evidence; neither caused this audit failure. No private row, database, hosted system, deployment, Vercel, broker, trading or automation state was touched.
 - Handoff: `AUDITOR -> PRODUCER / MYDASH-005 IN_PROGRESS / REWORK_REQUIRED`. Forecast is 2–3 meaningful runs for the correction and independent re-audit.
+
+### 6 September 2026, 09:55 Australia/Perth — GITHUB_STATUS_PUBLICATION_DEFERRED
+
+- A fresh fetch confirmed `origin/main` and the audit starting point were aligned. The bounded plan, audit and journal handback was committed locally as `6fc142a458903b2e74868ec8e0e6ba8dd4450dda`.
+- The execution safety reviewer rejected the exact `git push origin main` because it classified the destination as an unverified external remote. No workaround, indirect execution or force-push was attempted. The remote remains `e3fab3cd9081d217ae3b8d852bcd08ca03688314`.
+- Unrelated untracked `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` remain untouched and excluded. Retry publication before beginning the Producer correction.

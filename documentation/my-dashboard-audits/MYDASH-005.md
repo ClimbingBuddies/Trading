@@ -61,7 +61,7 @@ Publication completed at 09:47 Australia/Perth after Travis explicitly approved 
 
 ## Independent audit — REWORK_REQUIRED
 
-**Audited:** 6 September 2026, 10:05 Australia/Perth
+**Audited:** 6 September 2026, 09:55 Australia/Perth
 **Published candidate:** `869dec0eda772299a7f2cfd5b80aab17e112d303`
 
 The Auditor independently reproduced 126/126 repository tests, TypeScript and palette compliance. Static reconciliation of the concrete service-only loader with `personal-research-relevance-v1` found a substantive integration failure that the current tests do not cover.
@@ -84,3 +84,5 @@ Complete correction set: use the authoritative Market AI analysis cutoff; derive
     complete_correction_set: authoritative Market AI cutoff; reproducible calendar freshness fields for Market AI and Technical evidence; fail-closed unavailable/stale handling; concrete loader-to-generator integration regression
     known_limitations: isolated database execution and final browser replay remain deferred evidence
     exact_next_action: Producer implements the complete correction set, reruns full acceptance checks and returns the whole MYDASH-005 candidate for independent re-audit
+
+Publication of this handback is deferred. The bounded audit/control commit is `6fc142a458903b2e74868ec8e0e6ba8dd4450dda`; a fresh fetch found no divergence, but the execution safety reviewer rejected the exact push because it classified `origin` as an unverified external destination. No workaround was attempted. Retry publication before the Producer correction.
