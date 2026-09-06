@@ -132,3 +132,18 @@ Primary migration, implementation and test inspection found no locally reproduci
 Prior localhost evidence remains applicable because the implementation did not change: signed-out redirect, authenticated fail-closed private loading/error states, six-tab keyboard operation, Help content and genuine 390 × 844 containment passed with no browser warning/error entries. Hosted migration execution, isolated two-user/anonymous RLS/function/concurrency checks, real private-row and result-bearing browser evidence, installed evaluator scheduling, deployment and production verification remain deferred, unclaimed and subject to separate exact owner authority.
 
 All eight gates are independently passed and Owner Reviews A, B and C are persisted as accepted. MYDASH-008 is `DONE` and the durable project state is `MY_DASHBOARD_PROJECT_COMPLETE`. The advice is to retain the deferred-evidence list unchanged until each item is separately authorised and actually executed; GitHub publication does not imply deployment or production authority.
+
+## Owner-authorised Vercel production deployment — 6 September 2026
+
+Travis separately authorised publishing the completed dashboard to Vercel. A clean detached worktree at verified commit `45400e2e397c61193a361aa79d8a11dc3b3908b9` was linked to the existing `travis-walker/boulders-market` project and deployed directly to production. Unrelated local files and the unpublished controller-only commits were excluded from the deployment payload.
+
+- deployment: `dpl_AGYuMzEdEZpGTG7obfan76fGM8SL`;
+- target/status: `production / READY`;
+- immutable deployment URL: `https://boulders-market-j4o4i3tu0-travis-walker.vercel.app`;
+- canonical alias: `https://discoverbouldersmarkets.vercel.app`;
+- production `/help`: HTTP 200 with the completed My Dashboard guide and `Open Decision Lab` copy;
+- production `/my-dashboard`: HTTP 200 with the signed-out dashboard shell;
+- recent Vercel error-log scan: no logs found;
+- temporary worktree and its short-lived project environment file: removed after verification.
+
+This deployment does not authorise or claim hosted migration execution, isolated live RLS/function/concurrency tests, authenticated private-row verification, evaluator scheduling, broker access, orders or live trading. Those evidence items remain separately authorised and deferred.

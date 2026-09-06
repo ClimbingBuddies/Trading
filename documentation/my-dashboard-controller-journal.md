@@ -4234,3 +4234,11 @@ Not authorised by this decision:
 - The completion-metadata reconciliation is local commit `691bd8a`. The execution safety reviewer rejected publishing that exact commit to shared GitHub `origin/main` because fresh direct owner approval tied to the commit and destination was unavailable.
 - No workaround, indirect publication or force-push was attempted. `origin/main` remains verified through prior delivery-control commit `45400e2`; retry and verify publication before any future work.
 - `MY_DASHBOARD_PROJECT_COMPLETE` remains unchanged. No application, migration, private-data, hosted environment, schedule, deployment, Vercel, provider, broker, order, trading or automation-setting change occurred.
+
+### 6 September 2026, 21:09 Australia/Perth — VERCEL_PRODUCTION_DEPLOYMENT_COMPLETE
+
+- Travis separately authorised publishing My Dashboard to Vercel. Deployed a clean detached worktree at verified application/completion commit `45400e2e397c61193a361aa79d8a11dc3b3908b9` to the existing `travis-walker/boulders-market` project; unrelated local files and unpublished controller-only commits were excluded.
+- Vercel deployment `dpl_AGYuMzEdEZpGTG7obfan76fGM8SL` is `READY`, targets production and is aliased to `https://discoverbouldersmarkets.vercel.app`. The immutable deployment URL is `https://boulders-market-j4o4i3tu0-travis-walker.vercel.app`.
+- Production `/help` and signed-out `/my-dashboard` returned HTTP 200. The Help page contains the completed My Dashboard guide and `Open Decision Lab` copy. A recent error-level Vercel log scan returned no logs.
+- Removed the validated temporary deployment worktree and its short-lived Vercel environment file after verification. Hosted migrations, isolated live RLS/function/concurrency checks, authenticated private-row and narrow-screen production evidence, installed scheduling, broker access, orders and live trading remain unclaimed and require separate exact authority.
+- GitHub publication of the controller metadata remains deferred as previously recorded; this Vercel authorization did not broaden into a GitHub export or any database/production-data mutation.
