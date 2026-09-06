@@ -4152,3 +4152,24 @@ Not authorised by this decision:
 - Committed only the verified MYDASH-008 lifecycle/user-guide implementation and regressions as `f93e60e9e8ee4f75db3e1204b54d33b0655fcf84`, followed by the separate gate inventory, plan and journal evidence as `e7dd6c58810d08cd4d07e3908d21a6f6c5d87325`.
 - A fresh fetch showed zero remote-only commits; pushed without force, fetched again and confirmed local `HEAD` plus `origin/main` both resolve to `e7dd6c58810d08cd4d07e3908d21a6f6c5d87325`.
 - MYDASH-008 remains `IN_PROGRESS / PRODUCER`. Publication changes delivery visibility only; no deployment, production verification, migration, private-data access, hosted mutation, schedule, Vercel, provider, broker, order or trading change occurred.
+
+### 6 September 2026, 19:47 Australia/Perth — BUILD_ATTEMPT_STARTED — MYDASH-008_LOCAL_COMPLETION_ASSURANCE
+
+- Role selected from durable starting state: `PRODUCER`; sole active gate `MYDASH-008 / IN_PROGRESS`; handoff `PRODUCER / LOCAL_COMPLETION_ASSURANCE`. Local `HEAD` and `origin/main` both resolve to `0882c0d5ecd715e41e5c53dbea169aacc6e2effd`, so the publication prerequisite is clear.
+- Starting SHA-256 identities: controller `e02b67fd46745ccab1e78f3b1fea76f7a3f7e4ae7a728d2b1571d6f200f44736`; plan `22047127f800cdd8ea3283a8d8430c506a4380df69dfa639c54ce1b932dd32d7`; approved contract `10c87bd9a5b743af6c57fb570b0fb0c22b14294fedc26ec7b3d9ce0c4a4aff65`; dashboard client `7cee6df3ae02da0dfdd7508cd51ed244845aad7de82575936eae712d438aed3f`; dashboard styles `620759d67a81f3c1a17d7c2e3f65151ce975dc139e9352628ec8dbee5e87dbd7`.
+- Bounded scope: complete locally available accessibility, responsive, performance, telemetry, privacy and temporary-tooling checks; add only evidence-backed static regressions where a completion invariant is not already protected. Whole-gate transition and independent audit remain later roles/phases.
+- No deployment, production verification, migration application, private-row access, hosted mutation, schedule installation, Vercel, provider, broker, order, trading or automation-setting change is authorised.
+
+### 6 September 2026, 19:48 Australia/Perth — MYDASH-008_LOCAL_COMPLETION_ASSURANCE_VERIFIED
+
+- Role remained `PRODUCER`; MYDASH-008 remains `IN_PROGRESS`. The local completion review found no accessibility, responsive, privacy, performance-boundary, telemetry-boundary or temporary-tooling defect requiring application changes.
+- At 390 × 844, Arrow Right moved focus and selection from Today to Recommendations, the matching tabpanel and URL updated, and body/document width stayed at 375 pixels with no page-level overflow. Browser warning/error logs were empty and the private-load error remained fail closed.
+- Added one focused static regression binding route/loading announcements, tab/tabpanel relationships, Home/End support, focus visibility, touch sizing, overflow containment and absence of browser logging/beacon or privileged credential paths. Operational evaluator telemetry remains internal and unapplied; no new client telemetry or production-observability claim was introduced.
+- Verification passed: focused foundation 16/16, repository 161/161, TypeScript, palette, Next.js 16.3.4 Webpack production build and `git diff --check`. The default Turbopack build remains unavailable because this Windows host loads only the WASM SWC binding; the documented Webpack path passed.
+- No tracked My Dashboard temporary workflow/helper exists. Forecast is 2–5 meaningful runs. Next: final whole-gate Producer regression and complete independent-audit handoff. Deployment, hosted migrations, installed scheduling, production private rows and production verification remain separately authorised and unclaimed.
+
+### 6 September 2026, 19:48 Australia/Perth — GITHUB_STATUS_PUBLICATION_DEFERRED
+
+- Fresh fetch succeeded and confirmed zero divergence: local `main` and `origin/main` both remain at `0882c0d5ecd715e41e5c53dbea169aacc6e2effd` before this bounded local test/evidence payload.
+- Execution safety review rejected creating the commit directly on shared `main`, stating that fresh direct owner approval is required despite the controller's recorded standing recurring publication authorization. No workaround, indirect commit/push or force operation was attempted.
+- Retry publication before beginning the final whole-gate Producer regression. The verified local changes remain unstaged alongside untouched unrelated owner/generated files; no deployment, production verification, migration, private-data access, hosted mutation, schedule, Vercel, broker, order or trading action occurred.

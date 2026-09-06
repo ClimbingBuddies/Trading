@@ -4,6 +4,8 @@ import test from 'node:test'
 
 const migrationPath = new URL('../supabase/migrations/20260827141424_my_dashboard_secure_personal_foundation_v1.sql', import.meta.url)
 const componentPath = new URL('../components/MyDashboardClient.tsx', import.meta.url)
+const stylesPath = new URL('../components/MyDashboardClient.module.css', import.meta.url)
+const pagePath = new URL('../app/my-dashboard/page.tsx', import.meta.url)
 const loginComponentPath = new URL('../components/LoginClient.tsx', import.meta.url)
 
 test('MYDASH-002 migration enforces permanent-user ownership on both personal tables', async () => {
@@ -31,6 +33,26 @@ test('MYDASH-002 shell exposes six accessible tabs and honest private states', a
   assert.match(component, /Your private research workspace is ready/)
   assert.doesNotMatch(component, /Later gates will add|next MYDASH-004 slices/)
   assert.doesNotMatch(component, /service_role|SUPABASE_SERVICE/i)
+})
+
+test('MYDASH-008 preserves accessible, responsive and privacy-safe completion boundaries', async () => {
+  const [component, styles, page] = await Promise.all([
+    readFile(componentPath, 'utf8'),
+    readFile(stylesPath, 'utf8'),
+    readFile(pagePath, 'utf8'),
+  ])
+
+  assert.match(page, /<Suspense fallback=\{<section aria-live="polite">/)
+  assert.match(component, /role="tab" aria-selected=\{selectedTab === tab\.key\} aria-controls=\{`my-dashboard-panel-\$\{tab\.key\}`\} tabIndex=\{selectedTab === tab\.key \? 0 : -1\}/)
+  assert.match(component, /role="tabpanel" aria-labelledby=\{`my-dashboard-tab-\$\{selectedTab\}`\} tabIndex=\{0\}/)
+  assert.match(component, /event\.key === 'Home'/)
+  assert.match(component, /event\.key === 'End'/)
+  assert.match(styles, /\.tabScroller\{overflow-x:auto/)
+  assert.match(styles, /\.dashboard,\.dashboard>\*,\.panel\{min-width:0\}/)
+  assert.match(styles, /\.tab,\.activeTab\{min-height:48px/)
+  assert.match(styles, /@media\(max-width:780px\)[^{]*\{[^}]*[\s\S]*\.tab,\.activeTab\{min-height:44px/)
+  assert.match(styles, /:focus-visible[^}]*outline:3px solid var\(--accent\)/)
+  assert.doesNotMatch(component, /navigator\.sendBeacon|console\.(?:log|info|debug)|service_role|SUPABASE_SERVICE/i)
 })
 
 test('MYDASH-003 keeps the dashboard behind login and identifies the authenticated account', async () => {
