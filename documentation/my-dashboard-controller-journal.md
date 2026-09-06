@@ -3705,3 +3705,10 @@ Not authorised by this decision:
 - The execution safety reviewer again rejected the exact `git push origin main`, classifying six commits to the shared default branch as consequential and requiring explicit owner approval accepted for this exact action. It prohibited workaround or indirect execution, so none was attempted.
 - No implementation, test, audit, database, private-data, provider, deployment, Vercel, broker, trading or automation-state change occurred. MYDASH-005 remains `IN_REVIEW / AUDITOR`; the 1–2 run gate forecast remains unchanged.
 - Exact next action: Travis explicitly approves publishing the complete verified local `main` branch to `origin/main`; then confirm the remote identity and independently audit the Producer handoff.
+
+### 6 September 2026, 09:47 Australia/Perth — GITHUB_STATUS_PUBLICATION_COMPLETE
+
+- Travis explicitly approved publishing the complete verified local `main` branch to GitHub `origin/main` after the distinction from Vercel deployment was clarified.
+- A fresh fetch confirmed no divergence. The seven bounded commits from `5069979` through `869dec0` were pushed without force, and local `HEAD` plus `origin/main` were confirmed at `869dec0eda772299a7f2cfd5b80aab17e112d303`.
+- Unrelated untracked `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` were preserved and excluded. No Vercel deployment, hosted Supabase or production mutation, broker access or trading occurred.
+- MYDASH-005 remains `IN_REVIEW / AUDITOR`; publication is no longer a prerequisite blocker. Exact next action: independently audit the published Producer candidate.
