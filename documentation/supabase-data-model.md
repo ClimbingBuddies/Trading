@@ -81,6 +81,12 @@ My Dashboard preference/interest, recommendation, Watchlist and alert ownership 
 
 Recommendation generation uses a private service-role-only source selector. It accepts an explicit owner, instrument and cutoff; derives relevance from that owner's watchlists, active portfolios and explicit interests; and returns only completed, cutoff-bounded Market AI, Technical and Opportunity evidence with exact record, methodology and dependency identities. Market AI chronology comes from the owning run's required `analysis_cutoff_time`, never assessment-row creation time. Market AI and Technical freshness counts distinct canonical Tiingo `1day` observation session keys after the latest session at or before the source cutoff and through the generation cutoff. The selector reports the calendar unavailable unless exactly one active Tiingo mapping and a source-session anchor exist, causing downstream positive eligibility to fail closed. It is not a browser RPC and does not convert Opportunity evidence into a Buy label.
 
+### Local unapplied MYDASH-006 capture candidate
+
+`20260906120500_my_dashboard_decision_capture_v1.sql` proposes immutable `personal_decisions` and append-only `personal_decision_events`. AI-signal capture derives its instrument, action, complete source snapshot and decision clock from an independent succeeded Market assessment and its required run `analysis_cutoff_time`. User-paper capture derives its decision/source cutoff from one server clock and accepts only the explicit action, instrument, horizon, bounded simulation assumptions and optional note. Both use the approved `NEXT_DAILY_CLOSE` entry rule and `personal-forward-return-v1` calculation identity; neither resolves entry prices or evaluates returns in this phase.
+
+The candidate enables owner-select RLS, rejects anonymous callers, withholds browser table writes, prevents update/delete through immutable triggers, constrains authenticated capture and event appends through security-definer RPCs, permits at most one EXIT/CANCEL terminal event and adds the same-owner decision foreign key for paper portfolio positions. Strategy Laboratory records are not reused because their test-run semantics do not match the personal forward-decision ledger. The migration is local and unapplied; isolated database policy, ACL, cross-user and atomic execution remain required before the gate can pass.
+
 ## Strategy laboratory
 
 | Tables | Purpose |

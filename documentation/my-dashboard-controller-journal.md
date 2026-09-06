@@ -9,14 +9,14 @@
 
     project_status: IN_PROGRESS
     active_gate: MYDASH-006
-    active_gate_status: NEXT
+    active_gate_status: IN_PROGRESS
     handoff_owner: PRODUCER
     handoff_status: READY_FOR_BUILD
     owner_review: OWNER_REVIEW_B_ACCEPTED_2026-09-05
-    last_event: GITHUB_STATUS_PUBLICATION_DEFERRED_2026-09-06T11:02+08:00
+    last_event: MYDASH-006_IMMUTABLE_CAPTURE_FOUNDATION_VERIFIED_2026-09-06T12:08+08:00
     consecutive_failure_count: 0
     consecutive_failure_reason: NONE
-    next_action: Obtain fresh explicit approval to publish local main through the bounded confirmation record, verify origin/main, then begin one MYDASH-006 Producer phase.
+    next_action: Publish the verified phase, then build owner-scoped Decision Lab reads and capture UI on the immutable two-clock foundation.
 
 ## Gate ledger
 
@@ -27,7 +27,7 @@
 | MYDASH-003 | DONE | NONE | Independent local re-audit PASS 2 September 2026 |
 | MYDASH-004 | DONE | NONE | Owner Review B accepted 5 September 2026; deferred database evidence retained |
 | MYDASH-005 | DONE | NONE | Independent re-audit PASS_WITH_ADVICE 6 September 2026 |
-| MYDASH-006 | NEXT | PRODUCER | Independent audit |
+| MYDASH-006 | IN_PROGRESS | PRODUCER | Independent audit |
 | MYDASH-007 | PLANNED | NONE | Independent audit, then Owner Review C |
 | MYDASH-008 | PLANNED | NONE | Independent audit and final reconciliation |
 
@@ -3807,3 +3807,16 @@ Not authorised by this decision:
 - The execution safety reviewer rejected the exact `git push origin main` because the recurring automation authorization is not accepted as a fresh trusted owner instruction for mutating the shared default branch. No workaround, indirect execution or force-push was attempted.
 - The mandatory publication prerequisite therefore remains unresolved, so no MYDASH-006 implementation or tests began. No database, private data, provider, deployment, Vercel, broker, trading or automation setting changed. Forecast remains 5–8 MYDASH-006 runs and 17–27 total remaining runs.
 - Exact next action: Travis explicitly approves publishing the complete local `main` branch including this bounded delivery-control record to `origin/main`; confirm the remote identity, then begin one MYDASH-006 Producer phase.
+
+### 6 September 2026, 12:02 Australia/Perth — BUILD_ATTEMPT_STARTED — MYDASH-006_IMMUTABLE_CAPTURE_FOUNDATION
+
+- Role selected from starting state: `PRODUCER`; sole active gate `MYDASH-006 / NEXT`. A fresh fetch first confirmed the deferred publication prerequisite is resolved: local `HEAD` and `origin/main` are both `82ffb7877c8efd886287391e5c708981998b2635` with zero divergence.
+- Starting source identities: controller `16a24e90569219bd4ed7c2de7a47df1f7989e3e1`; plan `5c153df5e1a9e1995217948e72def6532b1e673a`; approved contract `69aa89ecd4ab08578df3066b60e3299bc2131430`; MYDASH-001 audit `d64132edee811304b6ff47823edaa1730facf2f9`; journal `c119b3bceca67c0d74ba255fbbbd48fa6c374bc8`; recommendations migration `fb5d97c46dff5de8d39d88d8713fca87efda9dd1`.
+- Bounded phase: author the local MYDASH-006 decision-ledger migration and static contract tests only—immutable owner-scoped AI-signal and user-paper snapshots, distinct trusted clocks, constrained capture/event RPCs, the approved entry-rule boundary, portfolio decision linkage and denial paths. UI, entry/return evaluation, jobs, database application, hosted replay, deployment, broker access and trading remain out of scope for this phase.
+
+### 6 September 2026, 12:08 Australia/Perth — MYDASH-006_IMMUTABLE_CAPTURE_FOUNDATION_VERIFIED
+
+- Role remained `PRODUCER`; MYDASH-006 moved from `NEXT` to `IN_PROGRESS` and was not audited or promoted. The local unapplied migration adds immutable owner-scoped AI-signal/user-paper decisions, append-only decision events, constrained permanent-user capture/event RPCs and same-owner paper-position linkage.
+- Distinct clocks are enforced: eligible AI decisions use the succeeded independent Market run's required `analysis_cutoff_time`; user-paper decisions use one server clock and cannot supply owner, decision time, source cutoff or source snapshot. The record preserves source provenance, approved horizons, next-daily-close entry rule and bounded paper-simulation assumptions without broker/order authority.
+- Verification passed: focused migration checks 5/5, all repository tests 132/132, TypeScript and `git diff --check`. No UI changed, so browser verification is deferred to the next UI phase. The migration was not applied; isolated RLS, ACL, RPC, cross-user and atomic execution remains deferred evidence.
+- Forecast: 4–7 MYDASH-006 runs and 16–26 total remaining runs. Exact next action: publish this bounded phase, then build owner-scoped Decision Lab reads and capture UI while preserving the immutable two-clock contract.
