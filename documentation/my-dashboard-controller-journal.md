@@ -13,10 +13,10 @@
     handoff_owner: AUDITOR
     handoff_status: READY_FOR_INDEPENDENT_RE_AUDIT
     owner_review: OWNER_REVIEW_B_ACCEPTED_2026-09-05
-    last_event: MYDASH-006_PRODUCER_CORRECTION_READY_FOR_RE_AUDIT_2026-09-06T13:52+08:00
+    last_event: GITHUB_STATUS_PUBLICATION_DEFERRED_2026-09-06T13:56+08:00
     consecutive_failure_count: 0
     consecutive_failure_reason: NONE
-    next_action: Auditor independently verifies published candidate 08dbdb1b0c8e254420c1b5e46092eb575a004999 and either passes MYDASH-006 or returns one complete correction set.
+    next_action: Obtain fresh exact owner approval to push local handoff through c1bc3af to origin/main, verify remote containment, then Auditor independently verifies candidate 08dbdb1b0c8e254420c1b5e46092eb575a004999.
 
 ## Gate ledger
 
@@ -3936,3 +3936,9 @@ Not authorised by this decision:
     residual_risks: isolated database concurrency/RLS/RPC execution remains deferred while the migration is unapplied
     next_owner: AUDITOR
     exact_next_action: independently audit the exact published candidate and either pass MYDASH-006 or return one complete correction set
+
+### 6 September 2026, 13:56 Australia/Perth — GITHUB_STATUS_PUBLICATION_DEFERRED
+
+- The Producer re-audit handoff was committed locally as `c1bc3af`. The functional candidate `08dbdb1b0c8e254420c1b5e46092eb575a004999` remains confirmed on `origin/main`.
+- The execution safety review rejected pushing the new internal project-plan, audit and journal payload to shared default branch `origin/main` because this run lacks fresh trusted owner approval naming that exact destination and payload. No workaround, indirect execution or force-push was attempted.
+- MYDASH-006 remains `IN_REVIEW / AUDITOR`, but the controller requires this deferred publication to clear before the independent re-audit begins. Exact next action: Travis explicitly approves pushing local `main` through `c1bc3af` to GitHub `origin/main`; verify remote containment, then perform the independent re-audit.

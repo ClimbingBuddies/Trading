@@ -121,3 +121,5 @@ The bounded correction implementation, regression and handoff evidence were publ
 Whole-gate verification reproduced focused Decision Lab **11/11**, repository **138/138**, TypeScript, palette and `git diff --check` passes against functional candidate `08dbdb1b0c8e254420c1b5e46092eb575a004999`. The prior authenticated 390 × 844 evidence remains applicable because no functional code changed afterward. Isolated database/RLS/direct-concurrency execution remains deferred while the migration is intentionally unapplied.
 
 MYDASH-006 is now `IN_REVIEW / AUDITOR`. The independent re-audit must reproduce forward eligibility, identical/concurrent retry idempotency, divergent-conflict denial, owner isolation, anonymous denial, distinct clocks, immutable events and the no-trade boundary against the exact published candidate.
+
+The re-audit handoff is committed locally as `c1bc3af`. Publication of this internal plan/audit/journal payload was rejected by the execution safety review without fresh exact owner approval; audit work must wait until the handoff is published and remotely verified.
