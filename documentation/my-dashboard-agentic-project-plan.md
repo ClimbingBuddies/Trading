@@ -239,7 +239,7 @@ The status, remaining scope and run forecast are kept together here so gate prog
 
 **Estimated remaining work:** Owner Review C retains **1–3 meaningful runs** depending on the owner's decision about deferred pilot/runtime evidence, and MYDASH-008 retains **4–7**, for **5–10 meaningful runs** in aggregate. Work pauses until the owner decision.
 
-**Publication status:** `GITHUB_STATUS_PUBLICATION_COMPLETE` through `329de804793e4d8a9c5007b31b41b7b61853007d`; local `HEAD` and `origin/main` were fetched and verified identical after publishing the bounded Producer regression and independent-audit handoff. Unrelated untracked `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` remain excluded.
+**Publication status:** `GITHUB_STATUS_PUBLICATION_DEFERRED`. The verified Auditor outcome is local commit `9ae3d1f`; fresh fetch confirmed zero prior divergence from `origin/main` at `ca29ab54c9a7d784c0ca39280eb9232cfd51ec11`, but the execution safety review rejected exporting the exact audit payload to the unverified external shared destination without fresh direct owner approval. No workaround was attempted. Unrelated `next-env.d.ts`, `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` remain excluded.
 
 Gate-by-gate outstanding work and estimated runs are maintained in the **Work gates** table above. This section retains the cross-gate forecast assumptions, timing and publication status without duplicating the tracking rows.
 
