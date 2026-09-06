@@ -3758,3 +3758,9 @@ Not authorised by this decision:
 - No UI code changed, so prior authenticated desktop/narrow-screen evidence remains applicable and browser replay was not repeated. The unapplied migration's isolated database/RLS/RPC execution remains deferred evidence.
 - No hosted/private data, provider, migration application, deployment, Vercel, broker, trading or automation-state change occurred. Untracked owner files and generated cache output remain excluded.
 - Handoff: `PRODUCER -> AUDITOR / MYDASH-005 IN_REVIEW / READY_FOR_RE_AUDIT`. Exact next action: publish and verify the functional correction plus this control handoff, then independently re-audit the complete candidate.
+
+### 6 September 2026, 10:13 Australia/Perth — GITHUB_STATUS_PUBLICATION_COMPLETE
+
+- Functional correction `934c9dc23e50d49adab1fb04e147c1952f451099` and Producer handoff `b756221f6b6ed7008748388ac44fcf0ce56dd6c8` were published without force and confirmed on `origin/main`.
+- The published plan now exposes the verified outcome, remaining independent re-audit and one-run MYDASH-005 forecast. Unrelated untracked owner files and generated cache output remain excluded.
+- No deployment, hosted Supabase or production mutation, private-data access, broker access, trading or automation-state change occurred. The next run selects `AUDITOR` from the persisted `IN_REVIEW` state.

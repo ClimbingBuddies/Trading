@@ -239,7 +239,7 @@ The status, remaining scope and run forecast are kept together here so gate prog
 
 **Estimated remaining work:** MYDASH-005 is estimated at **1 meaningful run** for independent re-audit. Later gates retain their table estimates and will be rebaselined when evidence changes.
 
-**Publication status:** The previously deferred audit handback is verified on `origin/main` at `70e740fd25c7750f8baaeefaafa0ea090bbfcd11`. The verified Producer correction is locally committed as `934c9dc23e50d49adab1fb04e147c1952f451099` and is pending the bounded handoff commit and authorised publication for this material cycle. Unrelated untracked `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` remain excluded. This cycle did not deploy to Vercel, mutate hosted Supabase or production data, access a broker, or trade.
+**Publication status:** `GITHUB_STATUS_PUBLICATION_COMPLETE`. Functional correction `934c9dc23e50d49adab1fb04e147c1952f451099` and Producer handoff `b756221f6b6ed7008748388ac44fcf0ce56dd6c8` are verified on `origin/main`. Unrelated untracked `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` remain excluded. This cycle did not deploy to Vercel, mutate hosted Supabase or production data, access a broker, or trade.
 
 Gate-by-gate outstanding work and estimated runs are maintained in the **Work gates** table above. This section retains the cross-gate forecast assumptions, timing and publication status without duplicating the tracking rows.
 

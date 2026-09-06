@@ -119,3 +119,5 @@ Publication retry at 10:02 Australia/Perth: a fresh fetch confirmed no divergenc
     known_limitations: migration unapplied; isolated database execution and final browser replay remain deferred evidence; no deployment/production verification authorised
     acceptance_criteria_evidence: authoritative cutoff, reproducible freshness and fail-closed unsupported paths corrected and regression-tested
     exact_next_action: publish this correction and handoff, then Auditor independently re-audits the complete MYDASH-005 candidate without implementing fixes
+
+Publication completed at 10:13 Australia/Perth: functional correction `934c9dc23e50d49adab1fb04e147c1952f451099` and Producer handoff `b756221f6b6ed7008748388ac44fcf0ce56dd6c8` are verified on `origin/main`. The next run may independently re-audit this exact published candidate.
