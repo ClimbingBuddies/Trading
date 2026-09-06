@@ -233,13 +233,13 @@ The status, remaining scope and run forecast are kept together here so gate prog
 
 ## Outstanding work and remaining-run forecast
 
-**Forecast updated:** 6 September 2026, 10:35 Australia/Perth
+**Forecast updated:** 6 September 2026, 11:02 Australia/Perth
 
 **Current position:** MYDASH-005 is complete after independent `PASS_WITH_ADVICE`. The re-audit reproduced all 127 repository tests, TypeScript and palette compliance, confirmed the authoritative Market run cutoff and fail-closed canonical Tiingo daily-session freshness bridge, and found no remaining acceptance defect. The unapplied migration's isolated database execution and final browser replay remain disclosed deferred evidence. MYDASH-006 is the sole active gate and is authorised for Producer work next.
 
 **Estimated remaining work:** MYDASH-005 has no remaining runs. MYDASH-006 through MYDASH-008 retain **17–27 meaningful runs** in aggregate and will be rebaselined when evidence changes.
 
-**Publication status:** `GITHUB_STATUS_PUBLICATION_DEFERRED`. After Travis's explicit approval, a fresh fetch confirmed no divergence, the three bounded audit/control commits were pushed without force, and local `HEAD` plus `origin/main` were confirmed at `22f6a3c958b5ab4374261a3c8e4037d722a37ee9`. The execution safety reviewer then rejected publishing the new confirmation record because the exact approval ended at that commit; preserve it locally and publish it before MYDASH-006 work after fresh explicit approval. Unrelated untracked `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` remain excluded.
+**Publication status:** `GITHUB_STATUS_PUBLICATION_DEFERRED`. A fresh fetch at 11:02 Australia/Perth confirmed no divergence: local `main` is one bounded confirmation commit ahead at `3ee6c3a3373bdf001a65ecd8fec6181f24d34262`, while `origin/main` remains `22f6a3c958b5ab4374261a3c8e4037d722a37ee9`. The execution safety reviewer rejected the exact push because the recurring automation authorization is not accepted as a fresh trusted owner instruction for mutating the shared default branch. No workaround or force-push was attempted; publish this record before MYDASH-006 work after fresh explicit approval. Unrelated untracked `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` remain excluded.
 
 Gate-by-gate outstanding work and estimated runs are maintained in the **Work gates** table above. This section retains the cross-gate forecast assumptions, timing and publication status without duplicating the tracking rows.
 

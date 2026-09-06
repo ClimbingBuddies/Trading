@@ -8,15 +8,15 @@
 ## Current state
 
     project_status: IN_PROGRESS
-    active_gate: MYDASH-005
-    active_gate_status: IN_REVIEW
-    handoff_owner: AUDITOR
-    handoff_status: READY_FOR_RE_AUDIT
+    active_gate: MYDASH-006
+    active_gate_status: NEXT
+    handoff_owner: PRODUCER
+    handoff_status: READY_FOR_BUILD
     owner_review: OWNER_REVIEW_B_ACCEPTED_2026-09-05
-    last_event: MYDASH-005_PRODUCER_CORRECTION_READY_FOR_RE_AUDIT
+    last_event: GITHUB_STATUS_PUBLICATION_DEFERRED_2026-09-06T11:02+08:00
     consecutive_failure_count: 0
     consecutive_failure_reason: NONE
-    next_action: Publish and verify Producer correction 934c9dc23e50d49adab1fb04e147c1952f451099 plus this bounded handoff, then independently re-audit MYDASH-005 without implementing fixes.
+    next_action: Obtain fresh explicit approval to publish local main through the bounded confirmation record, verify origin/main, then begin one MYDASH-006 Producer phase.
 
 ## Gate ledger
 
@@ -26,8 +26,8 @@
 | MYDASH-002 | DONE | NONE | Independent audit complete; PASS_WITH_ADVICE with authenticated/mobile advisory checks |
 | MYDASH-003 | DONE | NONE | Independent local re-audit PASS 2 September 2026 |
 | MYDASH-004 | DONE | NONE | Owner Review B accepted 5 September 2026; deferred database evidence retained |
-| MYDASH-005 | IN_REVIEW | AUDITOR | Independent audit |
-| MYDASH-006 | PLANNED | NONE | Independent audit |
+| MYDASH-005 | DONE | NONE | Independent re-audit PASS_WITH_ADVICE 6 September 2026 |
+| MYDASH-006 | NEXT | PRODUCER | Independent audit |
 | MYDASH-007 | PLANNED | NONE | Independent audit, then Owner Review C |
 | MYDASH-008 | PLANNED | NONE | Independent audit and final reconciliation |
 
@@ -3799,3 +3799,11 @@ Not authorised by this decision:
 - The execution safety reviewer rejected committing and pushing the new publication-confirmation record because Travis's exact approval ended at `22f6a3c958b5ab4374261a3c8e4037d722a37ee9`. No workaround or indirect execution was attempted.
 - The approved MYDASH-005 audit/control commits remain safely published and verified through `22f6a3c958b5ab4374261a3c8e4037d722a37ee9`; only this delivery-control confirmation remains local.
 - Exact next action: obtain fresh explicit approval to publish the bounded confirmation record, verify the remote, then begin MYDASH-006 Producer work.
+
+### 6 September 2026, 11:02 Australia/Perth — GITHUB_STATUS_PUBLICATION_DEFERRED
+
+- Selected `PRODUCER` from the durable `MYDASH-006 / NEXT` plan state, and reconciled the journal Current state block and gate ledger from stale pre-audit metadata to the already-persisted MYDASH-005 `PASS_WITH_ADVICE` outcome. No gate was promoted in this run.
+- A fresh authorised fetch confirmed no divergence: local `main` is one bounded confirmation commit ahead at `3ee6c3a3373bdf001a65ecd8fec6181f24d34262`, while `origin/main` remains `22f6a3c958b5ab4374261a3c8e4037d722a37ee9`.
+- The execution safety reviewer rejected the exact `git push origin main` because the recurring automation authorization is not accepted as a fresh trusted owner instruction for mutating the shared default branch. No workaround, indirect execution or force-push was attempted.
+- The mandatory publication prerequisite therefore remains unresolved, so no MYDASH-006 implementation or tests began. No database, private data, provider, deployment, Vercel, broker, trading or automation setting changed. Forecast remains 5–8 MYDASH-006 runs and 17–27 total remaining runs.
+- Exact next action: Travis explicitly approves publishing the complete local `main` branch including this bounded delivery-control record to `origin/main`; confirm the remote identity, then begin one MYDASH-006 Producer phase.
