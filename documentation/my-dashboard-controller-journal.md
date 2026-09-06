@@ -3883,3 +3883,9 @@ Not authorised by this decision:
 - Audit result: `FAIL`. The AI RPC accepts any non-future succeeded assessment and assigns its historical analysis cutoff as the newly captured decision time, permitting look-ahead/backdated forward history. It also lacks an owner/source natural key, so direct or concurrent retries can duplicate the same immutable AI decision.
 - Returned MYDASH-006 to `IN_PROGRESS / PRODUCER` with one complete correction set: authoritative contemporaneous capture eligibility, database-enforced owner/source idempotency and divergent-conflict denial, matching UI eligibility, and executable stale/future/missing/direct/concurrent retry regressions.
 - Unapplied-schema isolated database execution and fresh narrow-screen success evidence remain deferred. No database, private data, deployment, Vercel, provider, broker, order, trading or automation-state mutation occurred. Forecast is 2–3 MYDASH-006 runs and 14–22 total remaining runs.
+
+### 6 September 2026, 13:12 Australia/Perth — GITHUB_STATUS_PUBLICATION_DEFERRED
+
+- The independent-audit handback is committed locally as `97a3c890ca4013c5eb3aae8557697a168d086c45`, one commit ahead of the last confirmed `origin/main` identity `f0c399e1b15c1e95f8ef2b25d0a6d746a762bb32`.
+- The execution safety reviewer rejected the exact fetch/push/verification request because this shared-default-branch publication requires fresh trusted owner approval. No workaround, indirect execution or force-push was attempted.
+- Per the controller publication prerequisite, no MYDASH-006 correction work began. The gate remains `IN_PROGRESS / PRODUCER`; retry publication and verify the remote identity before implementing the forward-capture and idempotency correction set.
