@@ -150,7 +150,7 @@ test('MYDASH-004 validates owner-scoped manual positions and preserves incomplet
 
 test('MYDASH-004 loads and displays only owner-scoped stored positions without inventing cost', async () => {
   const component = await readFile(componentPath, 'utf8')
-  assert.match(component, /\.from\('portfolio_positions'\)[\s\S]*\.select\('id,portfolio_id,instrument_id,quantity,average_cost_per_unit,cost_currency,position_source,updated_at'\)[\s\S]*\.eq\('owner_user_id', ownerId\)/)
+  assert.match(component, /\.from\('portfolio_positions'\)[\s\S]*\.select\('id,portfolio_id,instrument_id,quantity,average_cost_per_unit,cost_currency,position_source,source_decision_id,updated_at'\)[\s\S]*\.eq\('owner_user_id', ownerId\)/)
   assert.match(component, /setPositions\(\(positionsResult\.data \?\? \[\]\) as PortfolioPosition\[\]\)/)
   assert.match(component, /setPositions\(\(current\) => \[data as PortfolioPosition, \.\.\.current\]\)/)
   assert.match(component, /position\.average_cost_per_unit === null \? 'Cost basis incomplete'/)

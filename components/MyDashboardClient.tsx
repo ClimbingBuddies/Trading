@@ -49,6 +49,7 @@ type PortfolioPosition = {
   average_cost_per_unit: number | null
   cost_currency: string
   position_source: 'manual' | 'paper_decision'
+  source_decision_id: string | null
   updated_at: string
 }
 type PrivateDataState = 'idle' | 'loading' | 'ready' | 'error'
@@ -99,6 +100,28 @@ type RecommendationSnapshot = {
   latestEvent: 'watch' | 'dismiss' | 'feedback' | null
 }
 type RecommendationState = 'idle' | 'loading' | 'ready' | 'error'
+type DecisionEvent = { decision_id: string; event_type: 'EXIT' | 'CANCEL' | 'NOTE' | 'REVIEW'; event_at: string }
+type PersonalDecision = {
+  id: string
+  instrument_id: string
+  source_type: 'AI_SIGNAL' | 'USER_PAPER'
+  source_action: string
+  action: 'BUY' | 'WATCH' | 'HOLD' | 'PASS' | 'AVOID'
+  horizon_sessions: 5 | 20 | 60
+  decision_at: string
+  source_table: 'gpt_market_assessments' | 'user_action_snapshot'
+  source_record_key: string
+  source_hash: string
+  source_cutoff: string
+  entry_rule: 'NEXT_DAILY_CLOSE'
+  benchmark_mode: 'NONE' | 'OWNER_SELECTED' | 'APPROVED_MAPPING'
+  notional_amount: number | string
+  base_currency: string
+  instrument_currency: string
+  calculation_version: string
+  events: DecisionEvent[]
+}
+type DecisionState = 'idle' | 'loading' | 'ready' | 'error'
 type CsvPreviewRow = {
   line: number
   value: HoldingsCsvValue
@@ -204,6 +227,29 @@ function validRecommendationSource(value: unknown, snapshotsById: Map<string, Om
     && (source.canonical_source_url === null || (typeof source.canonical_source_url === 'string' && /^https:\/\//.test(source.canonical_source_url)))
 }
 
+function validPersonalDecision(value: unknown): value is Omit<PersonalDecision, 'events'> {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return false
+  const decision = value as Partial<PersonalDecision>
+  return typeof decision.id === 'string'
+    && typeof decision.instrument_id === 'string'
+    && ['AI_SIGNAL', 'USER_PAPER'].includes(decision.source_type ?? '')
+    && typeof decision.source_action === 'string' && decision.source_action.trim().length > 0
+    && ['BUY', 'WATCH', 'HOLD', 'PASS', 'AVOID'].includes(decision.action ?? '')
+    && [5, 20, 60].includes(decision.horizon_sessions ?? 0)
+    && typeof decision.decision_at === 'string' && Number.isFinite(Date.parse(decision.decision_at))
+    && ['gpt_market_assessments', 'user_action_snapshot'].includes(decision.source_table ?? '')
+    && typeof decision.source_record_key === 'string' && decision.source_record_key.length > 0
+    && typeof decision.source_hash === 'string' && decision.source_hash.length > 0
+    && typeof decision.source_cutoff === 'string' && Number.isFinite(Date.parse(decision.source_cutoff))
+    && Date.parse(decision.source_cutoff) <= Date.parse(decision.decision_at)
+    && decision.entry_rule === 'NEXT_DAILY_CLOSE'
+    && ['NONE', 'OWNER_SELECTED', 'APPROVED_MAPPING'].includes(decision.benchmark_mode ?? '')
+    && Number.isFinite(Number(decision.notional_amount)) && Number(decision.notional_amount) > 0
+    && typeof decision.base_currency === 'string' && /^[A-Z]{3}$/.test(decision.base_currency.trim())
+    && typeof decision.instrument_currency === 'string' && /^[A-Z]{3}$/.test(decision.instrument_currency.trim())
+    && typeof decision.calculation_version === 'string' && decision.calculation_version.length > 0
+}
+
 export default function MyDashboardClient() {
   const router = useRouter()
   const pathname = usePathname()
@@ -239,6 +285,9 @@ export default function MyDashboardClient() {
   const [recommendationState, setRecommendationState] = useState<RecommendationState>('idle')
   const [recommendationError, setRecommendationError] = useState('')
   const [recommendationBusyId, setRecommendationBusyId] = useState<string | null>(null)
+  const [decisions, setDecisions] = useState<PersonalDecision[]>([])
+  const [decisionState, setDecisionState] = useState<DecisionState>('idle')
+  const [decisionError, setDecisionError] = useState('')
   const [baseCurrency, setBaseCurrency] = useState(DEFAULT_BASE_CURRENCY)
   const [horizon, setHorizon] = useState<5 | 20 | 60>(DEFAULT_HORIZON)
   const [risk, setRisk] = useState<Preferences['risk_preference']>(DEFAULT_RISK)
@@ -277,6 +326,9 @@ export default function MyDashboardClient() {
     setRecommendationState('idle')
     setRecommendationError('')
     setRecommendationBusyId(null)
+    setDecisions([])
+    setDecisionState('idle')
+    setDecisionError('')
     setBaseCurrency(DEFAULT_BASE_CURRENCY)
     setHorizon(DEFAULT_HORIZON)
     setRisk(DEFAULT_RISK)
@@ -321,7 +373,7 @@ export default function MyDashboardClient() {
           .limit(500),
         supabase
           .from('portfolio_positions')
-          .select('id,portfolio_id,instrument_id,quantity,average_cost_per_unit,cost_currency,position_source,updated_at')
+          .select('id,portfolio_id,instrument_id,quantity,average_cost_per_unit,cost_currency,position_source,source_decision_id,updated_at')
           .eq('owner_user_id', ownerId)
           .order('updated_at', { ascending: false }),
       ])
@@ -474,6 +526,38 @@ export default function MyDashboardClient() {
         setRecommendations([])
         setRecommendationState('error')
         setRecommendationError(recommendationLoadError instanceof Error ? recommendationLoadError.message : 'Recommendations could not be loaded.')
+      }
+
+      setDecisionState('loading')
+      setDecisionError('')
+      try {
+        const decisionResult = await supabase
+          .from('personal_decisions')
+          .select('id,instrument_id,source_type,source_action,action,horizon_sessions,decision_at,source_table,source_record_key,source_hash,source_cutoff,entry_rule,benchmark_mode,notional_amount,base_currency,instrument_currency,calculation_version')
+          .eq('owner_user_id', ownerId)
+          .order('decision_at', { ascending: false })
+          .limit(200)
+        if (!isCurrentLoad()) return
+        if (decisionResult.error) throw decisionResult.error
+        const decisionRows = decisionResult.data ?? []
+        if (!decisionRows.every(validPersonalDecision)) throw new Error('A persisted decision failed response validation.')
+        const decisionIds = decisionRows.map((decision) => decision.id)
+        const eventResult = decisionIds.length
+          ? await supabase.from('personal_decision_events').select('decision_id,event_type,event_at').eq('owner_user_id', ownerId).in('decision_id', decisionIds).order('event_at', { ascending: false })
+          : { data: [], error: null }
+        if (!isCurrentLoad()) return
+        if (eventResult.error) throw eventResult.error
+        const eventRows = (eventResult.data ?? []) as DecisionEvent[]
+        if (!eventRows.every((event) => decisionIds.includes(event.decision_id) && ['EXIT', 'CANCEL', 'NOTE', 'REVIEW'].includes(event.event_type) && Number.isFinite(Date.parse(event.event_at)))) {
+          throw new Error('Persisted decision event history failed response validation.')
+        }
+        setDecisions(decisionRows.map((decision) => ({ ...decision, events: eventRows.filter((event) => event.decision_id === decision.id) })) as PersonalDecision[])
+        setDecisionState('ready')
+      } catch (decisionLoadError) {
+        if (!isCurrentLoad()) return
+        setDecisions([])
+        setDecisionState('error')
+        setDecisionError(decisionLoadError instanceof Error ? decisionLoadError.message : 'Decision Lab could not be loaded.')
       }
     } catch (loadError) {
       if (!isCurrentLoad()) return
@@ -1081,6 +1165,36 @@ export default function MyDashboardClient() {
               ) : (
                 <div className={styles.empty}><strong>No positions have been saved.</strong><p>This is the current owner's real private empty state. Holdings and cost values are never inferred.</p></div>
               )}
+            </article>
+          </div>
+        ) : selectedTab === 'decision-lab' ? (
+          <div className={styles.todayGrid} aria-busy={decisionState === 'loading'}>
+            <article className={styles.panel}>
+              <div className={styles.panelHeading}><div><span className={styles.eyebrow}>FORWARD PAPER EVIDENCE</span><h2>Immutable personal decisions</h2></div><span>{decisionState === 'ready' ? `${decisions.length} stored` : 'Owner only'}</span></div>
+              <p>AI-signal decisions keep the original assessment cutoff. User-paper decisions keep the later user clock. They are never combined into one entry timestamp.</p>
+              {decisionState === 'error' ? (
+                <div className={styles.error} role="alert"><strong>Decision Lab unavailable</strong><span>{decisionError}</span><button type="button" onClick={() => void loadPrivateData(user.id)}>Reload private data</button></div>
+              ) : decisionState === 'loading' || decisionState === 'idle' ? (
+                <div className={styles.empty} role="status"><strong>Loading private decisions…</strong><p>No decision or result is shown until the complete owner-scoped read succeeds.</p></div>
+              ) : decisions.length === 0 ? (
+                <div className={styles.empty} role="status"><strong>No forward decisions have been captured.</strong><p>This is the current owner's real private empty state. Historical decisions and returns are not reconstructed.</p></div>
+              ) : (
+                <ul className={styles.decisionList}>
+                  {decisions.map((decision) => {
+                    const instrument = instruments.find((item) => item.id === decision.instrument_id)
+                    const terminal = decision.events.find((event) => event.event_type === 'EXIT' || event.event_type === 'CANCEL')
+                    const hasPaperPosition = positions.some((position) => position.source_decision_id === decision.id)
+                    const lifecycle = terminal ? 'COMPLETED' : hasPaperPosition ? 'OPEN' : 'PENDING ENTRY'
+                    return <li key={decision.id}>
+                      <div className={styles.panelHeading}><div><span className={styles.eyebrow}>{decision.source_type.replaceAll('_', ' ')}</span><h3>{instrument?.symbol ?? 'Unresolved instrument'} · {decision.action}</h3></div><span>{lifecycle}</span></div>
+                      <div className={styles.recommendationFacts}><div><span>Decision clock</span><strong>{new Date(decision.decision_at).toLocaleString()}</strong></div><div><span>Source cutoff</span><strong>{new Date(decision.source_cutoff).toLocaleString()}</strong></div><div><span>Horizon</span><strong>{decision.horizon_sessions} sessions</strong></div></div>
+                      <dl className={styles.provenance}><div><dt>Entry rule</dt><dd>{decision.entry_rule.replaceAll('_', ' ')}</dd></div><div><dt>Calculation</dt><dd>{decision.calculation_version}</dd></div><div><dt>Source identity</dt><dd>{decision.source_hash.slice(0, 12)}…</dd></div></dl>
+                      <p className={styles.disclosure}>{decision.source_type === 'AI_SIGNAL' ? `Assessment action: ${decision.source_action}. The AI cutoff controls this clock.` : `User action snapshot: ${decision.source_action}. The server capture clock controls this record.`} {terminal ? `Latest terminal event: ${terminal.event_type} at ${new Date(terminal.event_at).toLocaleString()}.` : 'Entry price and returns remain unavailable until forward evidence exists.'}</p>
+                    </li>
+                  })}
+                </ul>
+              )}
+              <p className={styles.disclosure}>Decision Lab is simulated research only. It cannot place orders, connect a broker or present an unresolved return as zero.</p>
             </article>
           </div>
         ) : (

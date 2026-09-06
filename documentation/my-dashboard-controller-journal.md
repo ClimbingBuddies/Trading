@@ -3826,3 +3826,17 @@ Not authorised by this decision:
 - The complete verified phase was committed locally as `e9a0f60666b7093536bfd6cbd45bade3c111a009`, one commit ahead of freshly verified `origin/main` at `82ffb7877c8efd886287391e5c708981998b2635`.
 - The execution safety reviewer rejected the exact push because publishing this payload to the shared default branch requires a fresh trusted user approval for the destination and payload. No workaround, indirect execution or force-push was attempted.
 - MYDASH-006 remains `IN_PROGRESS / PRODUCER`; no new phase should begin until this bounded implementation and its delivery-control record are published and remotely verified. No database application, hosted/private data access, deployment, Vercel, broker access, trading or automation-setting change occurred.
+
+### 6 September 2026, 12:33 Australia/Perth — BUILD_ATTEMPT_STARTED — MYDASH-006_DECISION_LAB_READS_UI
+
+- Role selected from durable starting state: `PRODUCER`; sole active gate `MYDASH-006 / IN_PROGRESS`. The scheduler's MYDASH-005 wording is stale; durable evidence records MYDASH-005 `DONE / PASS_WITH_ADVICE`.
+- Cleared the mandatory publication prerequisite first: fetched without divergence, pushed bounded commits through `17cc5b7c977f7d4662b48f5032960efa26b36ea6` without force, then confirmed local `HEAD` and `origin/main` match.
+- Starting source identities: controller `16a24e90569219bd4ed7c2de7a47df1f7989e3e1`; plan `d3f1b254cd73932f41a4b95794cebbb0bc7c4174`; journal `3cd9eb4e1e58a122415914c14f35b8f9eb854165`; dashboard client `e6426e604f714b39e83611acd5b6810fa479f06e`; decision migration `502750e7712b5e5d9244fb9665f7ceee343ecb0d`.
+- Bounded phase: add validated owner-scoped decision/event reads and explicit Decision Lab loading, empty, error and lifecycle presentation for the local unapplied schema. Capture mutations, entry resolution, returns, database application, hosted replay, deployment, broker access and trading remain out of scope.
+
+### 6 September 2026, 12:38 Australia/Perth — MYDASH-006_DECISION_LAB_READS_UI_VERIFIED
+
+- Added separate owner-filtered reads for immutable decisions and append-only events with fail-closed response, chronology and enum validation. Decision cards expose the distinct decision/source clocks, methodology and source identity; lifecycle is derived only from terminal events or exact paper-position linkage.
+- Explicit loading, real empty and isolated error states keep private decision rows hidden until the full read succeeds. Pending entries do not invent an entry price or return, and the UI repeats the no-broker/no-order boundary.
+- Verification passed: focused Decision Lab 8/8, repository 135/135, TypeScript, palette and `git diff --check`. Localhost desktop and 390 × 844 preserved the selected tab and authenticated isolated unavailable state for the intentionally unapplied migration; browser console errors were empty.
+- MYDASH-006 remains `IN_PROGRESS / PRODUCER`; forecast is now 3–6 gate runs and 15–25 total. Capture controls, whole-gate verification and independent audit remain. No database, hosted/private row, deployment, provider, Vercel, broker, trading or automation-state change occurred.
