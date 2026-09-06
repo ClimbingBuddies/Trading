@@ -56,6 +56,7 @@ The [canonical project plan](project-plan.md) controls authorised work. The [dev
 
 - [My Dashboard agentic project plan](my-dashboard-agentic-project-plan.md) — personal recommendations, watchlists, Opportunities, portfolio health and forward paper-decision feedback
 - [My Dashboard contract v1](specifications/my-dashboard-contract-v1.md) — product, data, security and forward-return contract candidate
+- [Portfolio Health core methodology v1](portfolio-health-v1.md) — deterministic concentration and cost-completeness calculation boundary
 - [My Dashboard controller journal](my-dashboard-controller-journal.md)
 - [My Dashboard agentic controller](../automation/my-dashboard-agentic-controller.md)
 - [Watchlist access model](security/watchlist-auth-model.md)

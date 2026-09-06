@@ -226,3 +226,96 @@ One bounded Producer-only iteration re-read the active-gate authority and checke
     handoff_status: BLOCKED_OWNER_TEST_B_CONFIRMATION_AND_CONNECTED_UI_EVIDENCE
     exact_blocker: TEST_B exists but is not confirmed and has never signed in; no connected authenticated Preview session is currently available, and direct 390 × 844 evidence remains outstanding
     exact_next_action: owner confirms TEST_B in Supabase Auth and signs TEST_A and TEST_B into separate PR #25 Preview origins/sessions; a later Producer creates distinct TEST_B fixture data through RLS, verifies both directions of cross-owner UI isolation and direct 390 × 844 behaviour, then returns the unchanged candidate to an independent Auditor
+
+
+## Local authenticated 390 × 844 evidence — 2 September 2026
+
+One bounded Producer-only local verification used the connected authenticated session at `http://localhost:3001/my-dashboard?tab=decision-lab` and an explicit 390 × 844 browser viewport.
+
+- The route remained authenticated and rendered `My Dashboard` with `Decision Lab` selected.
+- Browser viewport was exactly 390 × 844; document and body width were both 375 CSS pixels and did not exceed the viewport.
+- No horizontal overflow was detected.
+- No browser console errors were recorded.
+- The temporary viewport override was reset after verification.
+- No source, schema, RLS, grant, Supabase row, fixture, GitHub, Vercel or production change occurred.
+
+Direct mobile rendering is no longer an outstanding MYDASH-003 Producer prerequisite. Two-owner authenticated UI isolation and remaining state/provenance reproduction are still required before independent re-audit.
+
+
+## Local two-owner prerequisite check — 2 September 2026
+
+One bounded Producer-only read of current Supabase truth confirmed that multiple permanent users have confirmed, previously signed-in identities and distinct owner-scoped Watchlist rows. The labelled test state remains asymmetric: TEST_A is confirmed, has signed in and owns one Watchlist with one item; TEST_B remains unconfirmed, has never signed in and owns no rows.
+
+No email addresses, user IDs, credentials or tokens were persisted in this evidence. No Auth, schema, RLS, grant or application data was changed.
+
+The database prerequisite for multiple permanent owners exists, but the required independent local UI evidence cannot proceed without a second isolated browser session whose permanent owner has distinct rows. The preferred bounded path remains confirming TEST_B and signing it into an isolated local session; an already-confirmed permanent user with an isolated session and clearly distinct fixture data would also satisfy the acceptance intent.
+
+
+## Local two-owner and signed-out privacy evidence — 2 September 2026
+
+- Test A authenticated locally and rendered one private Watchlist, one watched instrument and zero stored interests.
+- After Test A sign-out, the distinct owner Google account authenticated locally and rendered zero private Watchlists, zero watched instruments and zero stored interests; Test A's rows were absent.
+- After owner sign-out, direct My Dashboard navigation redirected to `/login?next=/my-dashboard`; Login was present and private dashboard content was absent.
+- The short-lived Test A verification password was invalidated immediately after the session check. No credential is recorded in this audit.
+- No schema, RLS, grant, application row, GitHub, Vercel or deployment mutation occurred.
+
+This evidence supersedes the earlier connected-session blocker and is ready for independent MYDASH-003 re-audit.
+
+
+## Local authenticated identity clarity — 2 September 2026
+
+The authenticated My Dashboard header now displays the current account identity beside Sign out. This is a read-only presentation of the Supabase session user's email and makes Test A and the owner-authorised Google account distinguishable during two-owner privacy verification.
+
+- Local authenticated rendering showed the identity label and Sign out control.
+- Browser console errors: none.
+- Automated tests: 18/18 passed.
+- Palette compliance: passed for 26 guarded component/style files.
+- `git diff --check`: passed.
+- No authentication flow, data query, schema, RLS, grant, Supabase row, GitHub, Vercel or production change occurred.
+
+This removes session-identity ambiguity but does not by itself prove two-owner isolation; the two accounts must still be exercised sequentially or in isolated local sessions against distinct rows.
+
+
+## Local auth-boundary regression coverage — 2 September 2026
+
+The local source-contract suite now protects the intended account boundary while the remaining multi-user evidence is gathered.
+
+- Signed-out My Dashboard state must redirect to `/login?next=/my-dashboard`.
+- An authenticated dashboard must identify the current account and retain Sign out.
+- The retired passwordless `Send secure link` form must not return to My Dashboard.
+- Automated tests: 19/19 passed.
+- Palette compliance: passed for 26 guarded component/style files.
+- `git diff --check`: passed with only existing line-ending notices.
+
+This evidence reduces regression risk but does not replace the outstanding sequential or isolated Test A versus owner-Google privacy exercise.
+
+
+## Local login-options regression coverage — 2 September 2026
+
+The local suite now also protects the owner-requested authentication choices and return behaviour.
+
+- Google OAuth remains available through Supabase Auth.
+- Email/password sign-in and account creation remain available.
+- Redirect targets are restricted to safe local paths and default to `/my-dashboard`.
+- GitHub OAuth and magic-link authentication are absent.
+- Automated tests: 20/20 passed; palette compliance and `git diff --check` also passed.
+
+This is regression evidence only. The remaining gate evidence is the sequential or isolated Test A versus owner-Google privacy exercise plus the separate signed-out check.
+
+
+## Independent local re-audit — 2 September 2026
+
+**Verdict: PASS**
+
+The Auditor independently reviewed the exact local candidate and reproduced the applicable MYDASH-003 acceptance boundary:
+
+- Supabase RLS is enabled on preferences, interests, Watchlists and Watchlist items. Policies require the permanent authenticated owner, UPDATE checks preserve ownership, authenticated preference/interest writes remain column-limited and `anon` has no private SELECT grant.
+- Independent authenticated-role impersonations returned `1 / 1 / 0` private Watchlists/items/interests for Test A and `0 / 0 / 0` for the distinct owner Google identity.
+- Direct local UI sessions independently reproduced those two distinct owner views; Test A data did not appear for the owner Google account.
+- Signed-out direct dashboard access redirected to `/login?next=/my-dashboard` with Login visible and private dashboard content absent.
+- Arrow Right, End and Home moved tab focus to Recommendations, Decision Lab and Today respectively.
+- At exactly 390 × 844, document/body width remained 375 CSS pixels and horizontal overflow was absent.
+- Automated suite passed 20/20, palette compliance passed for 26 guarded files and `git diff --check` passed with existing line-ending notices only.
+- The browser uses only publishable Supabase configuration. No fabricated recommendation, blended score, Opportunity-to-Buy shortcut, live execution or broker authority was introduced.
+
+No implementation, schema, RLS, grant, application-row, GitHub, Vercel or production change was made by the Auditor. The temporary audit password was invalidated after sign-out. MYDASH-003 passes and the local controller may advance exactly MYDASH-004 to the Producer.

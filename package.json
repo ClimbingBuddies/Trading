@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "predev": "npm run sync:user-guide-assets",
-    "dev": "next dev",
+    "dev": "next dev --webpack",
     "check:palette": "node scripts/check-palette-compliance.mjs",
     "sync:user-guide-assets": "node scripts/sync-user-guide-assets.mjs",
     "prebuild": "npm run sync:user-guide-assets && npm run check:palette",

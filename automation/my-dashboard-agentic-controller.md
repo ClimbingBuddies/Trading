@@ -2,9 +2,11 @@
 
 Run one bounded controller iteration for the Discover Boulders Markets My Dashboard project.
 
+For MYDASH-004, a bounded iteration means one meaningful completion phase, not one microscopic assertion, field check or documentation-only hardening change. Once the agreed feature works and focused tests pass, do not extend the gate without a concrete verification defect or a new explicit owner decision.
+
 ## Authoritative sources
 
-At the beginning of every run, retrieve fresh from GitHub repository ClimbingBuddies/Trading:
+At the beginning of every run, read fresh from the local repository at `C:\Users\ibisx\Documents\GitHub\Trading`:
 
 1. documentation/my-dashboard-agentic-project-plan.md
 2. documentation/my-dashboard-controller-journal.md
@@ -15,9 +17,9 @@ At the beginning of every run, retrieve fresh from GitHub repository ClimbingBud
 7. every current implementation, migration, methodology and audit file relevant to the active gate
 8. documentation/my-dashboard-audits/<GATE-ID>.md when it exists
 
-Retrieve current Supabase production truth from project glvbqcplgjdfgjyknzsa whenever the active gate touches data, schema, RLS, grants, functions, jobs, calculations, auth or persisted evidence. Retrieve current Vercel production state and inspect the deployed UI with the connected browser for production-dependent or UI gates.
+Retrieve current Supabase truth from project glvbqcplgjdfgjyknzsa whenever the active gate touches data, schema, RLS, grants, functions, jobs, calculations, auth or persisted evidence. Inspect the local UI at `http://localhost:3001` with the connected browser for UI gates, starting the local development server when required.
 
-Record the GitHub commit/blob identities, relevant schema identities and production deployment used. GitHub is authoritative for process and source, Supabase for persisted application truth and Vercel production for deployed behaviour. Do not rely on remembered state or prior conversation summaries.
+Record the local commit and working-tree identities plus relevant schema identities used. The local repository is authoritative for process and source during development, Supabase for persisted application truth, and localhost for current UI behaviour. GitHub `main` is the owner-visible progress record. Travis authorised recurring GitHub publication on 6 September 2026 so the project plan, journal, evidence and corresponding verified My Dashboard implementation remain current online. This standing authority covers safe fetch/reconciliation, bounded commits of My Dashboard work, and pushes to `origin/main`; it does not authorise pull requests, merges of unrelated branches, force-pushes, deployment, Vercel, hosted Supabase or production changes. Do not rely on remembered state or prior conversation summaries.
 
 ## Select exactly one role
 
@@ -65,7 +67,7 @@ The Auditor must:
 5. Independently test at least two permanent users plus signed-out/anonymous behaviour for private workspace gates.
 6. Reproduce financial calculations from source observations, cutoffs, benchmark/FX evidence and methodology versions.
 7. Verify no look-ahead bias, entry-clock conflation, silent zero substitution or Opportunity-to-Buy shortcut.
-8. For UI gates, verify desktop and 390 × 844 behaviour, keyboard/focus operation, loading, empty and error states, privacy, data provenance and current production deployment.
+8. For UI gates, verify local desktop and 390 × 844 behaviour, keyboard/focus operation, loading, empty and error states, privacy and data provenance against the current local candidate.
 9. Never implement a fix while acting as Auditor.
 10. On failure, persist one complete prioritised correction set, return the same gate to IN_PROGRESS, assign PRODUCER and stop.
 11. On pass, record PASS or PASS_WITH_ADVICE, mark the gate DONE and promote only the successor authorised by the project plan.
@@ -90,11 +92,13 @@ Producer output must include:
 - migration and operational-job plan;
 - no production schema, data or UI changes.
 
-The Auditor must validate every claim against current GitHub and Supabase truth and test the proposed methodology on representative persisted observations without writing production records. On pass, route to Owner Review A.
+The Auditor must validate every claim against the exact local candidate and current Supabase truth and test the proposed methodology on representative persisted observations without writing production records. On pass, route to Owner Review A.
 
 ### MYDASH-002 to MYDASH-004 — Personal workspace
 
 Verify owner isolation, anonymous denial, browser credential boundaries, real-data states, responsive interaction and no fabricated values. MYDASH-004 routes to Owner Review B.
+
+MYDASH-004 is limited to: manual holdings plus the optional private CSV import already implemented; deterministic Portfolio Health and required immutable snapshots; one isolated migration/privacy/atomicity verification; and one independent audit followed by Owner Review B. Provider expansion, issuer enrichment, Tiingo/Twelve Data integration, exchange-registration work, hosted replay and additional speculative hardening are deferred and cannot block this gate. Per the owner's 5 September 2026 direction, environment-only database or deployment evidence that cannot be obtained locally must be recorded as deferred verification rather than freezing the gate; it may be completed later only with the exact deployment or production authority then required.
 
 ### MYDASH-005 — Recommendations
 
@@ -110,7 +114,7 @@ Verify forward-only idempotent evaluation, trading-calendar horizons, source-obs
 
 ### MYDASH-008 — Completion
 
-Verify end-to-end production behaviour, accessibility, privacy, performance, telemetry, documentation, user guide and removal of temporary helpers.
+Verify end-to-end local-candidate behaviour, accessibility, privacy, performance, telemetry, documentation, user guide and removal of temporary helpers. Production deployment remains a separate owner-authorised action.
 
 ## Owner review handling
 
@@ -128,6 +132,20 @@ Use the mandatory handoff fields in the project plan exactly. Functional impleme
 
 The journal is append-only except for its Current state block. Audit records are durable. A reported task success without its required persisted output is not completion.
 
+After every material cycle, update the active row in the project plan's **Work gates** table so current status, outstanding work / next progression and estimated remaining runs stay side by side. Reconcile the cross-gate total, timing assumptions and publication status in **Outstanding work and remaining-run forecast**, but do not recreate a separate gate-by-gate forecast table there.
+
+## Owner-visible GitHub publication
+
+After a material cycle is verified and its plan/journal/audit handoff is complete:
+
+1. Fetch `origin/main` and reconcile remote changes without discarding, overwriting or silently absorbing unrelated user work.
+2. Commit only the bounded My Dashboard implementation, tests, migrations and documentation that support the reported outcome. Never commit credentials, private values, screenshots, portfolio rows, authentication material, generated caches or unrelated working-tree changes.
+3. Push the reconciled commit to `origin/main` so `documentation/my-dashboard-agentic-project-plan.md` always exposes the latest verified outcomes, outstanding work and forecast at its stable GitHub URL.
+4. Record the published commit identity in the journal, audit and automation memory. A cycle is not reported as published until the remote branch contains that commit.
+5. Never force-push. If reconciliation has a real conflict or publication is unavailable, preserve the local work, record `GITHUB_STATUS_PUBLICATION_DEFERRED` with the exact non-sensitive reason, and retry on the next cycle before beginning new material work.
+
+This publication contract is delivery visibility only. It does not grant deployment, production, hosted-database, provider, broker or trading authority.
+
 ## Project boundaries
 
 This controller may change application source, tests, canonical documentation, reviewed migrations, owner-scoped RLS and constrained server/database calculation jobs only as authorised by the active gate.
@@ -144,4 +162,4 @@ It may not:
 
 ## Terminal behaviour
 
-When all eight gates and Owner Reviews A, B and C are complete, persist MY_DASHBOARD_PROJECT_COMPLETE, remove temporary helpers, report the production /my-dashboard route and stop. The completed recurring controller should then be disabled.
+When all eight gates and Owner Reviews A, B and C are complete, persist MY_DASHBOARD_PROJECT_COMPLETE, remove temporary helpers, report the verified local `/my-dashboard` route and stop. The completed recurring controller should then be disabled. Publishing remains a separate owner decision.

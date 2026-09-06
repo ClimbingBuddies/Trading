@@ -73,8 +73,11 @@ The model prevents atomic evidence and its derived consensus from being double-c
 | `alert_evaluator_runs` | Evaluator reason, filters, status, counts and errors |
 | `user_market_preferences` | Permanent-user base currency, default research horizon and optional presentation preference for My Dashboard |
 | `user_market_interests` | Permanent-user instrument or Opportunity-theme research interests; interests are not Buy recommendations |
+| `personal_recommendation_snapshots` | Immutable owner-scoped research-relevance results with category, horizon, thesis, principal risks, confidence, quality, cutoff, methodology and source hash; categories cannot encode Buy or Sell and database triggers reject later update/delete |
+| `personal_recommendation_sources` | Immutable source-lineage rows separated into Market AI, Technical, Opportunity and External Fact families with source identity, cutoff and methodology; database triggers reject later update/delete |
+| `personal_recommendation_events` | Append-only owner watch, dismiss and feedback history; browser callers use a constrained RPC and database triggers reject later update/delete |
 
-My Dashboard preference/interest, Watchlist and alert ownership references `auth.users.id`. Anonymous users and other authenticated users cannot access an owner's rows. My Dashboard owners may update only approved preference/interest fields, not ownership or timestamps. Clients cannot forge alert event history. Approved producers and cron trigger evaluation; deterministic event keys prevent duplicates.
+My Dashboard preference/interest, recommendation, Watchlist and alert ownership references `auth.users.id`. Anonymous users and other authenticated users cannot access an owner's rows. Recommendation snapshots and sources are browser read-only; events are browser read-only except through `append_personal_recommendation_event_v1`, which derives the permanent owner, verifies parent ownership and accepts only watch, dismiss or feedback. Paper-decision capture remains unavailable until MYDASH-006. Clients cannot forge alert event history. Approved producers and cron trigger evaluation; deterministic event keys prevent duplicates.
 
 ## Strategy laboratory
 
@@ -106,6 +109,10 @@ The first real strategy, backtest and evaluation are persisted. Its review outco
 - Frontend code uses the publishable key and never a service-role/provider secret.
 
 ## Canonical detail
+
+### Local unapplied MYDASH-004 candidate
+
+`20260903023351_my_dashboard_issuer_identity_v1.sql` proposes trusted `canonical_issuers` and effective-dated `instrument_issuer_mappings` relations for issuer-concentration calculation. The candidate is not deployed or seeded. It keeps browser roles denied, enables and forces RLS on both relations, requires lowercase whitespace/control-free canonical issuer keys and trimmed control-free display names, requires canonical non-empty source and methodology labels plus an already-trimmed, whitespace/control-free public credential-free HTTPS provenance URL when one is supplied, distinguishes required issuer identity from explicitly not-applicable instruments, retains mapping history, keeps canonical-issuer update timestamps current through a dedicated security-invoker trigger function with an empty search path and denied browser execution, prevents overlapping validity windows for one instrument, enforces one current mapping and indexes both foreign-key and validity lookups. The local trusted evaluator applies the same provenance boundary, requires required issuer IDs to use lowercase canonical UUID syntax before hashing to match database UUID output, selects the mapping effective at its UTC cutoff date, excludes evidence dated after that cutoff, rejects ambiguous results, expands the exact row to owner-scoped positions and includes applicability, issuer identity, provenance and the validity window in immutable source hashing. Hosted production continues to have no canonical issuer relation until a separate owner-authorised deployment cycle.
 
 - Migrations: [`supabase/migrations`](../supabase/migrations/)
 - Security decisions: [security documentation](security/)
