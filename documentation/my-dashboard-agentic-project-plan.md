@@ -239,7 +239,7 @@ The status, remaining scope and run forecast are kept together here so gate prog
 
 **Estimated remaining work:** MYDASH-005 is estimated at **1–3 meaningful runs**, covering final UI-state proof, Producer handoff and independent audit. Later gates retain their table estimates and will be rebaselined when evidence changes.
 
-**Publication status:** Travis authorised recurring GitHub status publication on 6 September 2026. After each verified material cycle, the controller must reconcile safely and publish the bounded My Dashboard implementation plus current plan, journal and evidence to `origin/main`. This visibility authority does not include deployment, Vercel, hosted Supabase, production data or live trading.
+**Publication status:** Travis authorised recurring GitHub status publication on 6 September 2026. The latest verified persisted-source-selection cycle is present on `origin/main` at `53fedde20ecb0ec5a1f1e757c0ab124535b0809c`; its publication-record follow-up is the delivery-control change after that commit. After each verified material cycle, the controller must reconcile safely and publish the bounded My Dashboard implementation plus current plan, journal and evidence to `origin/main`. This visibility authority does not include deployment, Vercel, hosted Supabase, production data or live trading.
 
 Gate-by-gate outstanding work and estimated runs are maintained in the **Work gates** table above. This section retains the cross-gate forecast assumptions, timing and publication status without duplicating the tracking rows.
 

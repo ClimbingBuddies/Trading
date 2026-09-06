@@ -2,7 +2,7 @@
 
 **Gate:** Explainable Recommendations  
 **State:** PRODUCER IN PROGRESS  
-**Updated:** 6 September 2026, 08:57 Australia/Perth
+**Updated:** 6 September 2026, 09:04 Australia/Perth
 
 ## Current local candidate
 
@@ -26,6 +26,7 @@
 - Concrete source selection is executable only by `service_role`. It derives relevance from the exact owner’s watchlists, active portfolios and explicit interests, and selects only succeeded independent Market AI, complete Technical and structurally complete Opportunity records at or before the requested cutoff. Opportunity evidence is explicitly labelled as non-Buy evidence.
 - A source-level regression found the event RPC referring to trusted-writer-only parameters; the validation was moved into the private writer, leaving the browser RPC constrained to owner events.
 - Verification passed: focused 22/22, repository 125/125, TypeScript and `git diff --check` (existing line-ending notices only).
+- GitHub publication verified: functional/control commit `53fedde20ecb0ec5a1f1e757c0ab124535b0809c` is present on `origin/main`; unrelated untracked owner files and generated cache output were excluded.
 - Localhost at 1280 px and 390 × 844 selected the Recommendations tab without document overflow or captured browser warning/error logs. The authenticated environment correctly showed the isolated Recommendations error state because the new local migration has not been applied to any database. No private value was entered, mutated or retained as evidence.
 
 ## Outstanding before Producer handoff
