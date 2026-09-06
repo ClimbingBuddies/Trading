@@ -3764,3 +3764,12 @@ Not authorised by this decision:
 - Functional correction `934c9dc23e50d49adab1fb04e147c1952f451099` and Producer handoff `b756221f6b6ed7008748388ac44fcf0ce56dd6c8` were published without force and confirmed on `origin/main`.
 - The published plan now exposes the verified outcome, remaining independent re-audit and one-run MYDASH-005 forecast. Unrelated untracked owner files and generated cache output remain excluded.
 - No deployment, hosted Supabase or production mutation, private-data access, broker access, trading or automation-state change occurred. The next run selects `AUDITOR` from the persisted `IN_REVIEW` state.
+
+### 6 September 2026, 10:23 Australia/Perth — MYDASH-005_INDEPENDENT_RE_AUDIT_PASS_WITH_ADVICE
+
+- Role performed: `AUDITOR` only against published candidate `2e8a68ad169afde77b9207fe9a9b6269029dd26d`; no implementation fix was made.
+- Independently reproduced 127/127 repository tests, TypeScript, palette and diff checks. Static reconciliation confirms the prior P1 defects are closed: Market AI uses the required succeeded-run `analysis_cutoff_time`, and Market AI/Technical evidence receives fail-closed canonical Tiingo daily-session freshness through generation.
+- Reconfirmed methodology separation, dependency collapse, Opportunity-only/one-indicator denial, immutable snapshots/sources/events, owner-scoped browser reads, anonymous/cross-owner denial and service-only loader/writer grants.
+- Recorded `PASS_WITH_ADVICE`. The unapplied migration's isolated RLS/RPC/atomicity execution and fresh authenticated browser replay remain deferred evidence; no deployment, hosted/private data, provider, broker, trading or automation-setting change occurred.
+- MYDASH-005 is `DONE`. Promoted only MYDASH-006 to `NEXT / PRODUCER`; forecast is 5–8 runs for that gate and 17–27 across the remaining three gates.
+- Handoff: `PRODUCER / MYDASH-006 NEXT`. Begin one bounded Decision Lab phase from the approved distinct AI-signal and user-paper decision-clock contract.

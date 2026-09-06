@@ -121,3 +121,27 @@ Publication retry at 10:02 Australia/Perth: a fresh fetch confirmed no divergenc
     exact_next_action: publish this correction and handoff, then Auditor independently re-audits the complete MYDASH-005 candidate without implementing fixes
 
 Publication completed at 10:13 Australia/Perth: functional correction `934c9dc23e50d49adab1fb04e147c1952f451099` and Producer handoff `b756221f6b6ed7008748388ac44fcf0ce56dd6c8` are verified on `origin/main`. The next run may independently re-audit this exact published candidate.
+
+## Independent re-audit — PASS_WITH_ADVICE
+
+**Audited:** 6 September 2026, 10:23 Australia/Perth
+**Published candidate:** `2e8a68ad169afde77b9207fe9a9b6269029dd26d`
+
+The Auditor independently reproduced the corrected loader and complete MYDASH-005 candidate. The prior P1 defects are closed: Market AI chronology requires the owning succeeded run's non-null `analysis_cutoff_time`, and Market AI/Technical evidence receives fail-closed freshness derived from one active Tiingo mapping plus distinct canonical `1day` observation keys through generation. The unchanged generator excludes unavailable, stale and future evidence, collapses dependency reuse and continues to deny Opportunity-only and one-indicator recommendation paths.
+
+Fresh verification passed: 127/127 repository tests, direct TypeScript compilation, palette compliance and `git diff --check`. Static schema review reconfirmed append-only snapshots/sources/events, permanent-owner SELECT policies, anonymous/cross-owner denial, service-only loader/writer grants and the constrained feedback RPC. No UI code changed after the prior desktop, 390 x 844 and keyboard/error-state evidence.
+
+Advice: the recommendation migration remains unapplied, so isolated executable RLS/RPC/atomicity proof and a fresh authenticated browser replay remain deferred evidence. This limitation is explicit, does not establish production behaviour and grants no deployment, hosted-database or production authority; it is not a concrete regression in the corrected local candidate.
+
+    task_id: MYDASH-005
+    handoff_from: AUDITOR
+    handoff_to: PRODUCER
+    handoff_status: PASS_WITH_ADVICE
+    implementation_reviewed: 53fedde20ecb0ec5a1f1e757c0ab124535b0809c..934c9dc23e50d49adab1fb04e147c1952f451099, published through 2e8a68ad169afde77b9207fe9a9b6269029dd26d
+    schema_and_rls_checks: source-level immutable ownership, grants, cutoff chronology, atomic writer and unsupported RPC denial reproduced; isolated execution deferred
+    calculation_reproduction: concrete loader contract feeds personal-research-relevance-v1 with authoritative cutoff and canonical session freshness; eligible evidence succeeds and unavailable, stale and future evidence fails closed
+    ui_and_accessibility_checks: unchanged current UI retains prior desktop, 390 x 844, keyboard, loading, empty and error evidence; fresh browser replay deferred
+    tests_and_checks: repository 127/127; TypeScript, palette and diff checks passed
+    gate_result: MYDASH-005 DONE
+    successor: MYDASH-006 NEXT / PRODUCER
+    exact_next_action: begin one bounded MYDASH-006 Producer phase from the approved distinct decision-clock contract
