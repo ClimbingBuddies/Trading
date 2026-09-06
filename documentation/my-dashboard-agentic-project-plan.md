@@ -229,21 +229,21 @@ The status, remaining scope and run forecast are kept together here so gate prog
 | MYDASH-005 | DONE | Explainable Recommendations | Immutable owner-scoped storage/event boundaries, the Recommendations UI, deterministic `personal-research-relevance-v1` generator, service-only owner/cutoff source selection and private atomic writer are implemented. The corrected loader requires Market run analysis cutoffs and emits fail-closed canonical daily-session freshness evidence; loader-to-generator denial paths are regression-tested. | Complete; independent re-audit passed with advice. Unavailable isolated database execution remains deferred evidence and does not grant deployment or production authority. | 0 |
 | MYDASH-006 | DONE | Decision Lab capture | The published candidate preserves immutable AI/user clocks, owner-scoped reads and events, constrained user-paper capture, and corrected forward-only AI capture. Eligibility is database-derived from succeeded-run completion until the first later canonical Tiingo daily observation; an owner/source partial unique key resolves identical retries and rejects divergent assumptions. | Complete; independent re-audit passed with advice. Isolated execution of the unapplied database concurrency/RLS/RPC contract remains deferred evidence and grants no deployment or production authority. | 0 |
 | MYDASH-007 | DONE | Deterministic return evaluator and feedback loop | Implement idempotent forward-return evaluation, benchmark/FX handling, drawdown, data-quality states, scheduled operational execution and AI-versus-user comparison. Independently reproduce calculations from source observations and verify no look-ahead or entry-time conflation. Pause for Owner Review C using real pilot decisions before final completion. | Complete; independent audit passed with advice and Owner Review C accepted on 6 September 2026. Real-pilot results, isolated database execution, result-bearing browser evidence and the proposed 07:00 schedule remain deferred evidence and grant no deployment or production authority. | 0 |
-| MYDASH-008 | IN_REVIEW | Production hardening and completion | Complete accessibility, privacy, mobile, performance, operational telemetry, documentation, user-guide, deployment and end-to-end production verification. Resolve all pilot findings, remove temporary tooling and persist final completion reconciliation. | Complete local-candidate Producer regression passed and the unchanged candidate is ready for independent audit. Deployment, hosted migration execution and production verification remain separately authorised, deferred evidence and are not claimed. | 1–3 |
+| MYDASH-008 | DONE | Production hardening and completion | Complete accessibility, privacy, mobile, performance, operational telemetry, documentation, user-guide, deployment and end-to-end production verification. Resolve all pilot findings, remove temporary tooling and persist final completion reconciliation. | Complete; independent audit passed with advice on 6 September 2026. Hosted migration execution, isolated live RLS/function checks, real private-row evidence, installed scheduling, deployment and production verification remain separately authorised deferred evidence and are not claimed. | 0 |
 
 ## Outstanding work and remaining-run forecast
 
-**Forecast updated:** 6 September 2026, 20:04 Australia/Perth
+**Forecast updated:** 6 September 2026, 20:24 Australia/Perth
 
-**Current position:** MYDASH-008 is the sole active gate at `IN_REVIEW / AUDITOR`. The unchanged local candidate passed the complete Producer regression, including 161/161 repository tests, TypeScript, palette, diff validation and the Next.js 16.3.4 Webpack production build. Prior localhost accessibility, authenticated privacy, Help and genuine 390 × 844 evidence remains applicable. The accepted deferred evidence from MYDASH-007 remains unclaimed. No migration application, scheduling, deployment, Vercel, hosted Supabase or production mutation is authorised.
+**Current position:** `MY_DASHBOARD_PROJECT_COMPLETE`. MYDASH-001 through MYDASH-008 are `DONE`, Owner Reviews A, B and C are accepted, and the unchanged MYDASH-008 candidate passed independent audit with advice. The Auditor independently reproduced 161/161 repository tests, TypeScript, palette, diff validation and the Next.js 16.3.4 Webpack production build, and found no locally reproducible defect. Prior localhost accessibility, authenticated privacy, Help and genuine 390 × 844 evidence remains applicable because the implementation did not change.
 
-**Estimated remaining work:** MYDASH-008 retains **1–3 meaningful runs** for independent audit and final completion reconciliation. Any deployment or production verification remains outside this forecast until separately authorised.
+**Estimated remaining work:** **0 authorised project runs.** Hosted migration execution, isolated live RLS/function/concurrency checks, real private-row evidence, installed scheduling, deployment and production verification remain deferred and require separate exact owner authority; they are not completion claims and do not keep this local-candidate project active.
 
-**Publication status:** `GITHUB_STATUS_PUBLICATION_DEFERRED`. The verified whole-gate Producer regression and independent-audit handoff are committed locally as `fdefaae`; a fresh fetch confirmed zero remote-only commits and `origin/main` at `7a11654161060fd5d3eb858c289d5a3160dd4db7`. Execution safety review rejected publishing this exact commit to the shared default branch without fresh direct owner approval for that payload and destination. Retry publication before the independent audit. Unrelated `AGENTS.md`, `CLAUDE.md`, generated `next-env.d.ts` metadata and `tsconfig.tsbuildinfo` remain excluded.
+**Publication status:** `GITHUB_STATUS_PUBLICATION_COMPLETE` through `a3bb39e26c9d34775e3dc8055c99c12c68b454e6` for the Producer handoff. The final independent-audit and completion record is pending bounded publication. Unrelated `AGENTS.md`, `CLAUDE.md`, generated `next-env.d.ts` metadata and `tsconfig.tsbuildinfo` remain excluded.
 
 Gate-by-gate outstanding work and estimated runs are maintained in the **Work gates** table above. This section retains the cross-gate forecast assumptions, timing and publication status without duplicating the tracking rows.
 
-The forecast counts one bounded implementation, diagnostic or audit increment as one run. At a 10-minute trigger interval, 7–13 runs represent roughly 1⅙–2⅙ hours of trigger time, but actual elapsed time will be longer when a run itself exceeds ten minutes, the laptop is unavailable, or the workflow pauses for Owner Review C, credentials, approvals or real forward-market evidence. Update this section after each gate or material scope change; it is a planning range, not a completion promise.
+The forecast counts one bounded implementation, diagnostic or audit increment as one run. All authorised local-candidate work is complete. Deferred hosted or production evidence is outside the forecast until separately authorised.
 
 ## Intentional owner-review pauses
 
@@ -411,12 +411,12 @@ The project is complete only when:
 
 ## Current project state
 
-    project_status: IN_PROGRESS
-    active_gate: MYDASH-008
-    active_gate_status: NEXT
-    handoff_owner: PRODUCER
+    project_status: MY_DASHBOARD_PROJECT_COMPLETE
+    active_gate: NONE
+    active_gate_status: DONE
+    handoff_owner: NONE
     controller_created: true
     controller_journal_created: true
     production_changes_authorised: recurring bounded GitHub main publication is authorised for owner visibility; refresh-portfolio-health deployment and the supplied CommSec holdings import were separately approved and completed; no further deployment or production mutation without exact owner approval
-    owner_approval_recorded: Owner Reviews A, B and C approved; MYDASH-001 through MYDASH-007 complete
-    next_action: Begin one bounded MYDASH-008 Producer phase by inventorying final local-candidate completion gaps, then implement and verify the highest-priority locally authorised set without deployment or production mutation.
+    owner_approval_recorded: Owner Reviews A, B and C approved; MYDASH-001 through MYDASH-008 independently passed
+    next_action: No further controller work. Preserve the deferred hosted and production evidence until separate exact owner authority is granted.

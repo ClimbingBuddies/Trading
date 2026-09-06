@@ -118,3 +118,17 @@ This Producer run makes no audit or project-completion conclusion.
 ## Publication status — 6 September 2026, 20:07 Australia/Perth
 
 `GITHUB_STATUS_PUBLICATION_DEFERRED`: the verified whole-gate Producer regression and mandatory Auditor handoff are local commit `fdefaae`. A fresh fetch confirmed zero remote-only commits and `origin/main` at `7a11654161060fd5d3eb858c289d5a3160dd4db7`. Execution safety review rejected pushing this exact commit to shared `origin/main` without fresh direct owner approval for that payload and destination. No workaround, indirect publication or force-push was attempted. Publication must be retried and remotely verified before the independent audit begins.
+
+## Independent audit — 6 September 2026
+
+**Outcome:** `PASS_WITH_ADVICE`
+
+The Auditor began only after a fresh fetch, bounded push and post-push fetch proved local `HEAD` and `origin/main` identical at `a3bb39e26c9d34775e3dc8055c99c12c68b454e6`. The implementation candidate was unchanged during audit.
+
+Independent reproduction passed the complete repository suite at **161/161**, TypeScript no-emit, palette compliance, `git diff --check` and the Next.js 16.3.4 Webpack production build. The build compiled, type-checked, generated every route and prerendered `/my-dashboard`. The installed native Windows SWC binding remains invalid; the documented WASM-compatible Webpack path passed.
+
+Primary migration, implementation and test inspection found no locally reproducible defect. The audited contracts preserve permanent-owner predicates and anonymous denial, owner-scoped browser reads, service-only derived writes, immutable recommendation and decision source identities, cutoff chronology, distinct recommendation/decision/return methodologies, explicit risk and missing-evidence display, append-only dismissal/feedback boundaries, forward-only return evaluation and denial of broker, order and live-trading paths. No private value, identifier, row, screenshot or authentication material was accessed or retained.
+
+Prior localhost evidence remains applicable because the implementation did not change: signed-out redirect, authenticated fail-closed private loading/error states, six-tab keyboard operation, Help content and genuine 390 × 844 containment passed with no browser warning/error entries. Hosted migration execution, isolated two-user/anonymous RLS/function/concurrency checks, real private-row and result-bearing browser evidence, installed evaluator scheduling, deployment and production verification remain deferred, unclaimed and subject to separate exact owner authority.
+
+All eight gates are independently passed and Owner Reviews A, B and C are persisted as accepted. MYDASH-008 is `DONE` and the durable project state is `MY_DASHBOARD_PROJECT_COMPLETE`. The advice is to retain the deferred-evidence list unchanged until each item is separately authorised and actually executed; GitHub publication does not imply deployment or production authority.
