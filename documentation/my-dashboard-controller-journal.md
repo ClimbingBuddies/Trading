@@ -3728,3 +3728,11 @@ Not authorised by this decision:
 - A fresh fetch confirmed `origin/main` and the audit starting point were aligned. The bounded plan, audit and journal handback was committed locally as `6fc142a458903b2e74868ec8e0e6ba8dd4450dda`.
 - The execution safety reviewer rejected the exact `git push origin main` because it classified the destination as an unverified external remote. No workaround, indirect execution or force-push was attempted. The remote remains `e3fab3cd9081d217ae3b8d852bcd08ca03688314`.
 - Unrelated untracked `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` remain untouched and excluded. Retry publication before beginning the Producer correction.
+
+### 6 September 2026, 10:02 Australia/Perth — GITHUB_STATUS_PUBLICATION_DEFERRED
+
+- Role selected from persisted state: `PRODUCER`; sole active gate `MYDASH-005 / IN_PROGRESS`. The mandatory publication prerequisite was retried before any correction work.
+- A fresh authorised fetch succeeded and confirmed no divergence: local `main` is two bounded audit-control commits ahead through `393149abb50d34b7ace238be511444a2ce5ebfbf`, while `origin/main` remains `e3fab3cd9081d217ae3b8d852bcd08ca03688314`.
+- The execution safety reviewer rejected the exact `git push origin main` because a fresh explicit owner approval supplied as a trusted user instruction is required for this shared-default-branch mutation. No workaround, indirect execution or force-push was attempted.
+- Per the controller publication contract, the persisted-source correction did not begin. No implementation, test, database, private-data, provider, deployment, Vercel, broker, trading or automation-state change occurred. MYDASH-005 remains `IN_PROGRESS / PRODUCER`, forecast 2–3 meaningful runs.
+- Exact next action: Travis explicitly approves pushing local `main` through `393149abb50d34b7ace238be511444a2ce5ebfbf` to GitHub `origin/main`; after remote verification, implement the complete loader cutoff/calendar-freshness correction set.

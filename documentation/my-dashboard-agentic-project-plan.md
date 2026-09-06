@@ -233,13 +233,13 @@ The status, remaining scope and run forecast are kept together here so gate prog
 
 ## Outstanding work and remaining-run forecast
 
-**Forecast updated:** 6 September 2026, 09:55 Australia/Perth
+**Forecast updated:** 6 September 2026, 10:02 Australia/Perth
 
 **Current position:** MYDASH-005 is the sole active gate and has returned to Producer after independent audit of published candidate `869dec0eda772299a7f2cfd5b80aab17e112d303`. The audit reproduced all 126 repository tests, TypeScript and palette checks, but found that the concrete source loader omits the trading-calendar freshness fields required by `personal-research-relevance-v1`; consequently its Market AI and Technical rows are always ineligible when passed to the generator. The loader also uses Market AI row creation time rather than the run's authoritative analysis cutoff. No implementation fix was made during audit. The unavailable MYDASH-004 execution stays deferred and is not reopened.
 
 **Estimated remaining work:** MYDASH-005 is estimated at **2–3 meaningful runs** for the complete persisted-source correction and independent re-audit. Later gates retain their table estimates and will be rebaselined when evidence changes.
 
-**Publication status:** `GITHUB_STATUS_PUBLICATION_DEFERRED`. A fresh fetch confirmed no divergence and the bounded audit handback was committed locally as `6fc142a458903b2e74868ec8e0e6ba8dd4450dda`, but the execution safety reviewer rejected the exact push because it classified the destination as an unverified external remote. No workaround or force-push was attempted; `origin/main` remains `e3fab3cd9081d217ae3b8d852bcd08ca03688314`. Retry publication before the Producer correction. Unrelated untracked `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` remain excluded. This cycle did not deploy to Vercel, mutate hosted Supabase or production data, access a broker, or trade.
+**Publication status:** `GITHUB_STATUS_PUBLICATION_DEFERRED`. A fresh fetch confirmed no divergence; local `main` is two bounded audit-control commits ahead through `393149abb50d34b7ace238be511444a2ce5ebfbf`, while `origin/main` remains `e3fab3cd9081d217ae3b8d852bcd08ca03688314`. The execution safety reviewer rejected the exact push because publishing to the shared default branch requires a fresh explicit owner approval supplied as a trusted user instruction. No workaround or force-push was attempted. Retry publication before the Producer correction. Unrelated untracked `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` remain excluded. This cycle did not deploy to Vercel, mutate hosted Supabase or production data, access a broker, or trade.
 
 Gate-by-gate outstanding work and estimated runs are maintained in the **Work gates** table above. This section retains the cross-gate forecast assumptions, timing and publication status without duplicating the tracking rows.
 
@@ -419,4 +419,4 @@ The project is complete only when:
     controller_journal_created: true
     production_changes_authorised: recurring bounded GitHub main publication is authorised for owner visibility; refresh-portfolio-health deployment and the supplied CommSec holdings import were separately approved and completed; no further deployment or production mutation without exact owner approval
     owner_approval_recorded: Owner Reviews A and B approved; MYDASH-001 through MYDASH-004 complete
-    next_action: Retry publication of local MYDASH-005 audit handback commit 6fc142a458903b2e74868ec8e0e6ba8dd4450dda; after the remote contains it, correct the persisted-source cutoff/calendar-freshness bridge and return the candidate for re-audit. Consecutive failure count remains zero.
+    next_action: Obtain Travis's fresh explicit approval to push local main through 393149abb50d34b7ace238be511444a2ce5ebfbf to the shared GitHub origin/main branch; after the remote contains it, correct the persisted-source cutoff/calendar-freshness bridge and return the candidate for re-audit. Consecutive failure count remains zero.
