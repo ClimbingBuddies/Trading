@@ -216,13 +216,20 @@ returns jsonb language sql security definer set search_path = pg_catalog stable 
     where umi.owner_user_id = p_owner_user_id and (umi.instrument_id = p_instrument_id or exists (
       select 1 from public.opportunity_theme_instruments oti
       where oti.theme_id = umi.theme_id and oti.instrument_id = p_instrument_id and oti.is_active))
+  ), canonical_provider_mapping as (
+    select min(dp.id) provider_id, count(*)::integer mapping_count
+    from public.data_providers dp
+    join public.provider_instruments pi on pi.provider_id = dp.id
+    where dp.provider_code = 'tiingo' and dp.is_active
+      and pi.instrument_id = p_instrument_id and pi.is_active
   ), latest_ai as (
-    select g.assessment_id::text record_key, g.created_at source_cutoff, g.methodology_version,
+    select g.assessment_id::text record_key, r.analysis_cutoff_time source_cutoff, g.methodology_version,
       g.run_id::text dependency_key from public.gpt_market_assessments g
     join public.gpt_market_runs r on r.run_id = g.run_id and r.status = 'succeeded'
-    where g.instrument_id = p_instrument_id and g.created_at <= p_cutoff
+      and r.analysis_cutoff_time is not null
+    where g.instrument_id = p_instrument_id and r.analysis_cutoff_time <= p_cutoff
       and g.technical_engine_input_used is false and nullif(btrim(g.methodology_version), '') is not null
-    order by g.assessment_date desc, g.created_at desc, g.assessment_id desc limit 1
+    order by r.analysis_cutoff_time desc, g.assessment_date desc, g.assessment_id desc limit 1
   ), latest_technical as (
     select m.id::text record_key, m.calculated_at source_cutoff, m.methodology_version,
       m.id::text dependency_key from public.market_scores m
@@ -244,14 +251,36 @@ returns jsonb language sql security definer set search_path = pg_catalog stable 
       'Completed independent Technical score.', dependency_key from latest_technical
     union all select 'OPPORTUNITY', 'opportunity_assessments', record_key, source_cutoff, methodology_version,
       'Completed independent Opportunity assessment; this does not imply Buy.', dependency_key from latest_opportunity
+  ), evidence_with_freshness as (
+    select e.*,
+      case when e.family in ('MARKET_AI', 'TECHNICAL')
+        then cpm.mapping_count = 1 and anchor.observed_at is not null
+        else null end calendar_available,
+      case when e.family in ('MARKET_AI', 'TECHNICAL') and cpm.mapping_count = 1 and anchor.observed_at is not null
+        then coalesce(missed.missed_sessions, 0) else null end missed_sessions
+    from evidence e
+    cross join canonical_provider_mapping cpm
+    left join lateral (
+      select max(mo.observed_at) observed_at
+      from public.market_observations mo
+      where mo.instrument_id = p_instrument_id and mo.provider_id = cpm.provider_id
+        and mo.interval_code = '1day' and mo.observed_at <= e.source_cutoff
+    ) anchor on e.family in ('MARKET_AI', 'TECHNICAL')
+    left join lateral (
+      select count(distinct mo.observed_at)::integer missed_sessions
+      from public.market_observations mo
+      where mo.instrument_id = p_instrument_id and mo.provider_id = cpm.provider_id
+        and mo.interval_code = '1day' and mo.observed_at > anchor.observed_at and mo.observed_at <= p_cutoff
+    ) missed on anchor.observed_at is not null
   ) select jsonb_build_object(
     'relevance', coalesce((select jsonb_agg(jsonb_build_object('owner_user_id', p_owner_user_id, 'reason', reason) order by reason) from relevance), '[]'::jsonb),
     'evidence', coalesce((select jsonb_agg(jsonb_build_object(
       'family', family, 'table', source_table, 'recordKey', record_key,
       'cutoff', to_char(source_cutoff at time zone 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"'),
       'methodologyVersion', methodology_version, 'relevance', relevance, 'status', 'COMPLETE',
-      'positive', true, 'dependencyIds', jsonb_build_array(dependency_key)) order by family, source_table, record_key)
-      from evidence), '[]'::jsonb));
+      'positive', true, 'calendarAvailable', calendar_available, 'missedSessions', missed_sessions,
+      'dependencyIds', jsonb_build_array(dependency_key)) order by family, source_table, record_key)
+      from evidence_with_freshness), '[]'::jsonb));
 $$;
 revoke all on function private.load_personal_recommendation_context_v1(uuid, uuid, timestamptz) from public, anon, authenticated;
 grant execute on function private.load_personal_recommendation_context_v1(uuid, uuid, timestamptz) to service_role;

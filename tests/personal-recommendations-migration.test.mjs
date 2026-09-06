@@ -16,6 +16,13 @@ test('private source selection is owner-filtered, completed and cutoff-bounded',
   assert.match(sql, /oa\.structural_signal_id is not null and oa\.technology_inflection_signal_id is not null/)
   assert.match(sql, /grant execute on function private\.load_personal_recommendation_context_v1[^;]+to service_role/)
   assert.doesNotMatch(sql, /grant execute on function private\.load_personal_recommendation_context_v1[^;]+to authenticated/)
+  assert.match(sql, /r\.analysis_cutoff_time source_cutoff/)
+  assert.match(sql, /r\.analysis_cutoff_time is not null/)
+  assert.match(sql, /r\.analysis_cutoff_time <= p_cutoff/)
+  assert.match(sql, /dp\.provider_code = 'tiingo' and dp\.is_active/)
+  assert.match(sql, /count\(distinct mo\.observed_at\)::integer missed_sessions/)
+  assert.match(sql, /'calendarAvailable', calendar_available, 'missedSessions', missed_sessions/)
+  assert.doesNotMatch(sql, /g\.created_at source_cutoff/)
 })
 
 test('browser event RPC does not reference trusted writer parameters', async () => {

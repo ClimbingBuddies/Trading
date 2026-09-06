@@ -115,3 +115,19 @@ test('concrete Supabase source store calls the private owner/cutoff RPC once', a
     p_owner_user_id: 'owner-a', p_instrument_id: 'instrument-a', p_cutoff: base.generatedAt,
   } }])
 })
+
+test('concrete loader output feeds the generator and fails closed for unavailable, stale and future session evidence', async () => {
+  const loadAndBuild = async (evidence) => {
+    const store = createSupabaseRecommendationSourceStore({ schema: () => ({ rpc: async () => ({
+      data: { relevance: [{ owner_user_id: 'owner-a', reason: 'WATCHLIST:list-a' }], evidence }, error: null,
+    }) }) })
+    const context = await loadOwnerRecommendationContext(store, 'owner-a', 'instrument-a', base.generatedAt)
+    return buildRecommendationCandidate({ ...base, ...context })
+  }
+
+  const eligible = await loadAndBuild(base.sources)
+  assert.equal(eligible.quality_status, 'COMPLETE')
+  await assert.rejects(loadAndBuild([base.sources[0], { ...base.sources[1], calendarAvailable: false, missedSessions: null }]), /insufficient independent/)
+  await assert.rejects(loadAndBuild([base.sources[0], { ...base.sources[1], missedSessions: 6 }]), /insufficient independent/)
+  await assert.rejects(loadAndBuild([{ ...base.sources[0], cutoff: '2026-09-07T00:00:00.000Z' }, base.sources[1]]), /future or invalid/)
+})

@@ -215,7 +215,7 @@ Freshness is measured at generated_at without using later evidence. A source cut
 | 20 sessions | <=5 eligible instrument sessions | <=5 eligible instrument sessions | <=60 calendar days | <=60 calendar days |
 | 60 sessions | <=10 eligible instrument sessions | <=10 eligible instrument sessions | <=90 calendar days | <=90 calendar days |
 
-An unavailable market calendar is a disclosed STALE_SOURCE condition, not a wall-clock substitution. Failed/partial source rows cannot qualify as positive evidence; they may appear only as disclosed limitations.
+For `personal-research-relevance-v1`, one eligible instrument session is one distinct canonical Tiingo `1day` `market_observations.observed_at` key. Freshness starts at the latest such key at or before the source cutoff and counts later keys through `generated_at`. Market AI uses the owning terminal run's required `gpt_market_runs.analysis_cutoff_time`; assessment-row creation time is never a substitute. The calendar is available only when the instrument has exactly one active Tiingo mapping and a source-session anchor. Otherwise the source receives a disclosed `STALE_SOURCE:CALENDAR_UNAVAILABLE` limitation and cannot qualify positively. Wall-clock or calendar-day subtraction is prohibited for Market AI and Technical freshness. Failed/partial source rows cannot qualify as positive evidence; they may appear only as disclosed limitations.
 
 Sources remain separated on the card:
 
