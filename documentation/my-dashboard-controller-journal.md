@@ -13,10 +13,10 @@
     handoff_owner: PRODUCER
     handoff_status: READY_FOR_BUILD
     owner_review: OWNER_REVIEW_B_ACCEPTED_2026-09-05
-    last_event: MYDASH-006_IMMUTABLE_CAPTURE_FOUNDATION_VERIFIED_2026-09-06T12:08+08:00
+    last_event: GITHUB_STATUS_PUBLICATION_DEFERRED_2026-09-06T12:09+08:00
     consecutive_failure_count: 0
     consecutive_failure_reason: NONE
-    next_action: Publish the verified phase, then build owner-scoped Decision Lab reads and capture UI on the immutable two-clock foundation.
+    next_action: Obtain fresh explicit approval to publish the verified capture foundation and delivery-control record to origin/main; verify the remote, then build the Decision Lab UI phase.
 
 ## Gate ledger
 
@@ -3820,3 +3820,9 @@ Not authorised by this decision:
 - Distinct clocks are enforced: eligible AI decisions use the succeeded independent Market run's required `analysis_cutoff_time`; user-paper decisions use one server clock and cannot supply owner, decision time, source cutoff or source snapshot. The record preserves source provenance, approved horizons, next-daily-close entry rule and bounded paper-simulation assumptions without broker/order authority.
 - Verification passed: focused migration checks 5/5, all repository tests 132/132, TypeScript and `git diff --check`. No UI changed, so browser verification is deferred to the next UI phase. The migration was not applied; isolated RLS, ACL, RPC, cross-user and atomic execution remains deferred evidence.
 - Forecast: 4–7 MYDASH-006 runs and 16–26 total remaining runs. Exact next action: publish this bounded phase, then build owner-scoped Decision Lab reads and capture UI while preserving the immutable two-clock contract.
+
+### 6 September 2026, 12:09 Australia/Perth — GITHUB_STATUS_PUBLICATION_DEFERRED
+
+- The complete verified phase was committed locally as `e9a0f60666b7093536bfd6cbd45bade3c111a009`, one commit ahead of freshly verified `origin/main` at `82ffb7877c8efd886287391e5c708981998b2635`.
+- The execution safety reviewer rejected the exact push because publishing this payload to the shared default branch requires a fresh trusted user approval for the destination and payload. No workaround, indirect execution or force-push was attempted.
+- MYDASH-006 remains `IN_PROGRESS / PRODUCER`; no new phase should begin until this bounded implementation and its delivery-control record are published and remotely verified. No database application, hosted/private data access, deployment, Vercel, broker access, trading or automation-setting change occurred.

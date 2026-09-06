@@ -239,7 +239,7 @@ The status, remaining scope and run forecast are kept together here so gate prog
 
 **Estimated remaining work:** MYDASH-006 retains **4–7 meaningful runs**. MYDASH-006 through MYDASH-008 retain **16–26 meaningful runs** in aggregate and will be rebaselined when evidence changes.
 
-**Publication status:** `LOCAL_VERIFIED_AWAITING_CYCLE_PUBLICATION`. A fresh fetch before this phase confirmed local `HEAD` and `origin/main` aligned at `82ffb7877c8efd886287391e5c708981998b2635`. The new bounded phase will be committed and pushed only after its handoff evidence is complete; unrelated untracked `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` remain excluded.
+**Publication status:** `GITHUB_STATUS_PUBLICATION_DEFERRED`. The verified bounded implementation is committed locally at `e9a0f60666b7093536bfd6cbd45bade3c111a009` with its subsequent delivery-control record; the last freshly verified `origin/main` identity is `82ffb7877c8efd886287391e5c708981998b2635`. The execution safety reviewer rejected the exact push because publishing this payload to the shared default branch requires a fresh trusted user approval for that destination and payload. No workaround, indirect execution or force-push was attempted. Unrelated untracked `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` remain excluded.
 
 Gate-by-gate outstanding work and estimated runs are maintained in the **Work gates** table above. This section retains the cross-gate forecast assumptions, timing and publication status without duplicating the tracking rows.
 
@@ -419,4 +419,4 @@ The project is complete only when:
     controller_journal_created: true
     production_changes_authorised: recurring bounded GitHub main publication is authorised for owner visibility; refresh-portfolio-health deployment and the supplied CommSec holdings import were separately approved and completed; no further deployment or production mutation without exact owner approval
     owner_approval_recorded: Owner Reviews A and B approved; MYDASH-001 through MYDASH-005 complete
-    next_action: Build owner-scoped Decision Lab reads and capture UI on the verified immutable decision-ledger foundation, then complete lifecycle views and whole-gate audit handoff.
+    next_action: Obtain fresh explicit approval to publish the verified MYDASH-006 capture foundation and delivery-control record to origin/main; verify the remote, then build owner-scoped Decision Lab reads and capture UI.

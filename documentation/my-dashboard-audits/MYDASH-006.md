@@ -30,6 +30,10 @@ Implemented boundaries:
 - Database/RLS/RPC execution: deferred; migration intentionally remains unapplied and no hosted/private row was accessed.
 - Browser verification: not applicable to this phase because no UI changed.
 
+## Publication
+
+Functional commit `e9a0f60666b7093536bfd6cbd45bade3c111a009` remains local. The execution safety reviewer rejected the exact `origin/main` push because a fresh trusted user approval is required for this payload and shared default-branch destination. No workaround or force-push was attempted; the last freshly verified remote identity remains `82ffb7877c8efd886287391e5c708981998b2635`.
+
 ## Limitations and next phase
 
 The candidate has no Decision Lab UI yet and MYDASH-007 remains responsible for deterministic entry resolution and return snapshots. MYDASH-006 still needs owner-scoped decision/event reads, user-paper and eligible AI-signal capture controls, explicit pending/open/completed presentation, browser verification and whole-gate security evidence. This is not an Auditor decision and does not promote the gate.
