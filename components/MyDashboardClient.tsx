@@ -937,9 +937,9 @@ export default function MyDashboardClient() {
             {recommendationState === 'error' ? (
               <article className={styles.stateCard} role="alert"><span className={styles.eyebrow}>RECOMMENDATIONS UNAVAILABLE</span><h2>Private recommendations could not be loaded</h2><p>{recommendationError}</p><button type="button" onClick={() => loadPrivateData(user.id)}>Try again</button></article>
             ) : recommendationState !== 'ready' ? (
-              <article className={styles.stateCard} role="status"><span className={styles.eyebrow}>PRIVATE RESEARCH</span><h2>Loading recommendation snapshots…</h2><p>Cards remain hidden until their snapshot, provenance and feedback history load together.</p></article>
+              <article className={styles.stateCard} role="status" aria-busy="true"><span className={styles.eyebrow}>PRIVATE RESEARCH</span><h2>Loading recommendation snapshots…</h2><p>Cards remain hidden until their snapshot, provenance and feedback history load together.</p></article>
             ) : recommendations.filter((item) => item.latestEvent !== 'dismiss').length === 0 ? (
-              <article className={styles.stateCard}><span className={styles.eyebrow}>NO CURRENT SHORTLIST</span><h2>No supported recommendation is available</h2><p>No recommendation is invented from Opportunity alone, momentum, one indicator, stale evidence or an unsupported model opinion.</p></article>
+              <article className={styles.stateCard} role="status"><span className={styles.eyebrow}>NO CURRENT SHORTLIST</span><h2>No supported recommendation is available</h2><p>No recommendation is invented from Opportunity alone, momentum, one indicator, stale evidence or an unsupported model opinion.</p></article>
             ) : recommendations.filter((item) => item.latestEvent !== 'dismiss').map((recommendation) => {
               const instrument = instruments.find((item) => item.id === recommendation.instrument_id)
               const confidence = recommendation.confidence === null ? null : Number(recommendation.confidence)

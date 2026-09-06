@@ -40,6 +40,16 @@ test('unsupported paths remain denied and recommendation actions stay keyboard-s
   assert.doesNotMatch(component, />Buy</i)
   assert.doesNotMatch(component, />Sell</i)
   assert.match(component, /Paper decision — later gate/)
-  assert.match(styles, /\.recommendationActions a,\.recommendationActions button\{[^}]*min-height:44px/)
+  assert.match(styles, /\.recommendationActions a,\.recommendationActions button,[^{]*\.stateCard button\{[^}]*min-height:44px/)
   assert.match(styles, /@media\(max-width:680px\)[\s\S]*\.recommendationActions>\*\{flex:1 1 100%\}/)
+})
+
+test('loading, empty and error states expose honest accessible status and retry semantics', async () => {
+  const [component, styles] = await Promise.all([readFile(componentUrl, 'utf8'), readFile(stylesUrl, 'utf8')])
+  assert.match(component, /role="status" aria-busy="true"[^>]*>[\s\S]*Loading recommendation snapshots/)
+  assert.match(component, /role="status"[^>]*>[\s\S]*NO CURRENT SHORTLIST[\s\S]*No supported recommendation is available/)
+  assert.match(component, /RECOMMENDATIONS UNAVAILABLE[\s\S]*Private recommendations could not be loaded/)
+  assert.match(component, /<article className=\{styles\.stateCard\} role="alert">[\s\S]*Try again<\/button>/)
+  assert.match(styles, /\.stateCard button\{[^}]*min-height:44px/)
+  assert.match(styles, /\.stateCard button:focus-visible\{[^}]*outline:3px solid var\(--accent\)/)
 })
