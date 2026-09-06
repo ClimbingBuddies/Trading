@@ -26,7 +26,7 @@ Verification on 6 September 2026:
 
 ## Remaining gate scope
 
-Implement exact timestamp-aligned FX and benchmark resolution plus deterministic drawdown; expose honest Decision Lab comparisons; define but do not deploy the scheduled operational path without separate authority; complete whole-gate regression and independent audit; then route real pilot evidence to Owner Review C.
+Define but do not deploy the scheduled operational path; expose honest Decision Lab comparisons; complete whole-gate regression and independent audit; then route real pilot evidence to Owner Review C.
 
 ## Producer evidence — immutable checkpoint evaluation
 
@@ -42,4 +42,23 @@ Verification on 6 September 2026:
 - palette: passed;
 - `git diff --check`: passed;
 - isolated database/function/concurrency execution: deferred because the migration is unapplied;
+- browser verification: not applicable to this schema-only phase.
+
+## Producer evidence — exact FX, benchmark and drawdown
+
+The third phase resolves non-base returns only from a single exact-time Tiingo `1day` direct or inverse FX observation. Same-currency decisions use rate one without fabricating an observation; absent endpoints remain `INCOMPLETE_FX`, while direct/inverse ambiguity fails as `CALCULATION_ERROR`. No triangulation, nearest row, carry-forward or fallback provider is accepted.
+
+Optional owner-selected benchmarks require one active Tiingo mapping and observations exactly matching both selected instrument session timestamps. Missing evidence leaves benchmark and excess returns null without suppressing independently valid price/base results. Excess return compares raw instrument price return with raw benchmark return, preserving comparable methodology.
+
+Maximum drawdown is the signed minimum of each raw close divided by its running peak across the inclusive, canonical entry-to-checkpoint path. Invalid intermediate closes fail closed. FX/benchmark observation IDs, exact rates, selected prices, derived base/excess returns and drawdown are all included in immutable source identity.
+
+Verification on 6 September 2026:
+
+- focused migration contract: 16/16 passed;
+- repository tests: 154/154 passed;
+- TypeScript: passed;
+- palette: passed;
+- `git diff --check`: passed;
+- read-only hosted schema inspection: canonical public source tables confirmed; no private rows read;
+- isolated database/RLS/function execution: deferred because the migration is unapplied;
 - browser verification: not applicable to this schema-only phase.

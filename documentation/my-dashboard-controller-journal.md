@@ -4005,3 +4005,21 @@ Not authorised by this decision:
 - Committed only the verified MYDASH-007 checkpoint evaluator, static regressions and canonical evidence locally as `f7ac798` after a fresh fetch confirmed zero divergence from `origin/main` at `895408fa8a49eee27ddc56d0052448f7e46aa611`.
 - The execution safety reviewer rejected publishing `f7ac798` directly to shared default branch `origin/main` because it requires fresh trusted user approval for that exact destination and payload. No workaround, indirect execution or force-push was attempted.
 - MYDASH-007 remains `IN_PROGRESS / PRODUCER`. Retry and verify publication before beginning exact FX, benchmark and drawdown work. No migration, private data, hosted database, deployment, Vercel, provider, broker, order, trading or automation-setting change occurred.
+
+### 6 September 2026, 15:35 Australia/Perth — BUILD_ATTEMPT_STARTED — MYDASH-007_FX_BENCHMARK_DRAWDOWN
+
+- Role selected from durable starting state: `PRODUCER`; sole active gate `MYDASH-007 / IN_PROGRESS`; handoff `PRODUCER / EXACT_FX_BENCHMARK_AND_DRAWDOWN`.
+- Cleared the publication prerequisite first: fresh repository state showed local `HEAD` and `origin/main` both at `683c8d54fb4b9f993a4379d6d043807e4d180a8b`, containing checkpoint evaluator `f7ac798` and its delivery-control record.
+- Starting SHA-256 identities: controller `e02b67fd46745ccab1e78f3b1fea76f7a3f7e4ae7a728d2b1571d6f200f44736`; plan `4326c5978235fc1cbd3c3dc8dd67b964a3b923e05cdc6bc7dd4e3ac9a3aacf12`; approved contract `8f9e729905e87be12798b3f2b7e4bb7946d1368ac223504ace29948d83b218da`; return migration `75444625c01ba287138984b2266edbac650adb36b67f90364e7ccb83bd299664`.
+- Read-only hosted schema inspection confirmed the canonical public provider, mapping, instrument and observation tables exist while the personal decision and return migrations remain unapplied. No private rows were read.
+- Bounded scope: add exact timestamp-aligned direct/inverse Tiingo `1day` FX, exact-session optional benchmark resolution, and deterministic raw-close maximum drawdown to the existing immutable evaluator; bind all selected evidence into the source hash and add focused static regressions. Scheduling and UI remain later phases.
+- No migration application, private-row access, deployment, Vercel, provider expansion, broker, order, trading or automation-setting change is authorised.
+
+### 6 September 2026, 15:42 Australia/Perth — MYDASH-007_FX_BENCHMARK_DRAWDOWN_VERIFIED
+
+- Role remained `PRODUCER`; MYDASH-007 remains `IN_PROGRESS`. No independent audit, successor promotion or owner review occurred.
+- Exact FX resolution accepts only one active Tiingo direct or inverse forex instrument with `1day` observations exactly matching both selected instrument session timestamps. Same-currency rate one needs no observation; missing evidence remains `INCOMPLETE_FX`, and ambiguity fails as `CALCULATION_ERROR`. No triangulation, nearest row, carry-forward or provider fallback exists.
+- Optional benchmarks require one active Tiingo mapping and exact entry/checkpoint timestamps. Missing benchmark evidence remains an orthogonal warning with null benchmark/excess output. Excess return compares raw instrument and raw benchmark price returns without mixing currency methodologies.
+- Maximum drawdown is the signed minimum over the inclusive canonical raw-close path from entry through checkpoint. Invalid intermediate closes fail closed. Selected FX/benchmark identities, exact rates, prices, derived base/excess returns and drawdown now participate in the immutable source hash.
+- Verification passed: focused return migration 16/16, repository 154/154, TypeScript, palette and `git diff --check`. Read-only hosted schema inspection confirmed required public source tables without reading private rows. The migration remains intentionally unapplied, so isolated database/RLS/function execution is deferred and not claimed; browser verification is not applicable to this schema-only phase.
+- Forecast is 5–9 MYDASH-007 runs and 9–16 total remaining runs. Exact next action: define the bounded non-deployed operational evaluator path, then expose honest owner-scoped AI-versus-user Decision Lab comparisons. No migration, private data, hosted mutation, deployment, Vercel, provider expansion, broker, order, trading or automation-setting change occurred.

@@ -48,6 +48,9 @@ create table public.personal_return_snapshots (
   constraint personal_return_snapshots_drawdown_check check (maximum_drawdown is null or maximum_drawdown <= 0),
   constraint personal_return_snapshots_entry_pair_check check ((entry_observation_id is null) = (entry_price is null)),
   constraint personal_return_snapshots_exit_pair_check check ((exit_observation_id is null) = (exit_price is null)),
+  constraint personal_return_snapshots_benchmark_pair_check check (
+    (benchmark_entry_observation_id is null) = (benchmark_exit_observation_id is null)
+  ),
   constraint personal_return_snapshots_source_hash_check check (source_identity_hash ~ '^[0-9a-f]{64}$')
 );
 
@@ -204,11 +207,26 @@ declare
   v_exit_price numeric;
   v_exit_event_at timestamptz;
   v_target_sessions integer;
+  v_entry_fx_id bigint;
+  v_exit_fx_id bigint;
+  v_entry_fx_rate numeric;
+  v_exit_fx_rate numeric;
+  v_entry_fx_count integer;
+  v_exit_fx_count integer;
+  v_benchmark_provider_id uuid;
+  v_benchmark_provider_count integer;
+  v_benchmark_entry_id bigint;
+  v_benchmark_exit_id bigint;
+  v_benchmark_entry_price numeric;
+  v_benchmark_exit_price numeric;
   v_quality text;
   v_reasons text[] := '{}';
   v_price_return numeric;
   v_base_return numeric;
+  v_benchmark_return numeric;
+  v_excess_return numeric;
   v_net_return numeric;
+  v_maximum_drawdown numeric;
   v_units numeric;
   v_source_hash text;
   v_result public.personal_return_snapshots;
@@ -338,15 +356,144 @@ begin
       v_reasons := array['RAW_CLOSE_RETURN', 'UNVERIFIED_CORPORATE_ACTIONS'];
 
       if v_decision.instrument_currency = v_decision.base_currency then
+        v_entry_fx_rate := 1;
+        v_exit_fx_rate := 1;
         v_base_return := v_price_return;
         v_quality := 'COMPLETE_BASE_CURRENCY';
       else
-        v_quality := 'INCOMPLETE_FX';
-        v_reasons := array_append(v_reasons, 'MISSING_EXACT_FX');
+        select count(*) into v_entry_fx_count
+        from public.instruments i
+        join public.provider_instruments pi on pi.instrument_id = i.id and pi.is_active
+        join public.data_providers dp on dp.id = pi.provider_id and dp.is_active
+        join public.market_observations mo on mo.instrument_id = i.id and mo.provider_id = dp.id
+        where i.is_active and i.asset_type = 'forex'
+          and upper(i.symbol) in (
+            upper(btrim(v_decision.instrument_currency) || '/' || btrim(v_decision.base_currency)),
+            upper(btrim(v_decision.base_currency) || '/' || btrim(v_decision.instrument_currency))
+          )
+          and dp.provider_code = 'tiingo'
+          and mo.interval_code = '1day'
+          and mo.observed_at = v_entry_at
+          and mo.close > 0;
+
+        select count(*) into v_exit_fx_count
+        from public.instruments i
+        join public.provider_instruments pi on pi.instrument_id = i.id and pi.is_active
+        join public.data_providers dp on dp.id = pi.provider_id and dp.is_active
+        join public.market_observations mo on mo.instrument_id = i.id and mo.provider_id = dp.id
+        where i.is_active and i.asset_type = 'forex'
+          and upper(i.symbol) in (
+            upper(btrim(v_decision.instrument_currency) || '/' || btrim(v_decision.base_currency)),
+            upper(btrim(v_decision.base_currency) || '/' || btrim(v_decision.instrument_currency))
+          )
+          and dp.provider_code = 'tiingo'
+          and mo.interval_code = '1day'
+          and mo.observed_at = v_exit_at
+          and mo.close > 0;
+
+        if v_entry_fx_count > 1 or v_exit_fx_count > 1 then
+          v_quality := 'CALCULATION_ERROR';
+          v_reasons := array_append(v_reasons, 'AMBIGUOUS_EXACT_FX');
+        elsif v_entry_fx_count = 0 or v_exit_fx_count = 0 then
+          v_quality := 'INCOMPLETE_FX';
+          v_reasons := array_append(v_reasons, 'MISSING_EXACT_FX');
+        else
+          select mo.id,
+                 case
+                   when upper(i.symbol) = upper(btrim(v_decision.instrument_currency) || '/' || btrim(v_decision.base_currency)) then mo.close
+                   else 1 / mo.close
+                 end
+          into strict v_entry_fx_id, v_entry_fx_rate
+          from public.instruments i
+          join public.provider_instruments pi on pi.instrument_id = i.id and pi.is_active
+          join public.data_providers dp on dp.id = pi.provider_id and dp.is_active
+          join public.market_observations mo on mo.instrument_id = i.id and mo.provider_id = dp.id
+          where i.is_active and i.asset_type = 'forex'
+            and upper(i.symbol) in (
+              upper(btrim(v_decision.instrument_currency) || '/' || btrim(v_decision.base_currency)),
+              upper(btrim(v_decision.base_currency) || '/' || btrim(v_decision.instrument_currency))
+            )
+            and dp.provider_code = 'tiingo'
+            and mo.interval_code = '1day' and mo.observed_at = v_entry_at and mo.close > 0;
+
+          select mo.id,
+                 case
+                   when upper(i.symbol) = upper(btrim(v_decision.instrument_currency) || '/' || btrim(v_decision.base_currency)) then mo.close
+                   else 1 / mo.close
+                 end
+          into strict v_exit_fx_id, v_exit_fx_rate
+          from public.instruments i
+          join public.provider_instruments pi on pi.instrument_id = i.id and pi.is_active
+          join public.data_providers dp on dp.id = pi.provider_id and dp.is_active
+          join public.market_observations mo on mo.instrument_id = i.id and mo.provider_id = dp.id
+          where i.is_active and i.asset_type = 'forex'
+            and upper(i.symbol) in (
+              upper(btrim(v_decision.instrument_currency) || '/' || btrim(v_decision.base_currency)),
+              upper(btrim(v_decision.base_currency) || '/' || btrim(v_decision.instrument_currency))
+            )
+            and dp.provider_code = 'tiingo'
+            and mo.interval_code = '1day' and mo.observed_at = v_exit_at and mo.close > 0;
+
+          v_base_return := ((v_exit_price * v_exit_fx_rate) / (v_entry_price * v_entry_fx_rate)) - 1;
+          v_quality := 'COMPLETE_BASE_CURRENCY';
+        end if;
       end if;
 
       if v_decision.benchmark_mode <> 'NONE' then
-        v_reasons := array_append(v_reasons, 'MISSING_BENCHMARK');
+        select count(*) into v_benchmark_provider_count
+        from public.data_providers dp
+        join public.provider_instruments pi on pi.provider_id = dp.id
+        where dp.provider_code = 'tiingo' and dp.is_active and pi.is_active
+          and pi.instrument_id = v_decision.benchmark_instrument_id;
+
+        if v_benchmark_provider_count = 1 then
+          select dp.id into strict v_benchmark_provider_id
+          from public.data_providers dp
+          join public.provider_instruments pi on pi.provider_id = dp.id
+          where dp.provider_code = 'tiingo' and dp.is_active and pi.is_active
+            and pi.instrument_id = v_decision.benchmark_instrument_id;
+
+          select mo.id, mo.close into v_benchmark_entry_id, v_benchmark_entry_price
+          from public.market_observations mo
+          where mo.instrument_id = v_decision.benchmark_instrument_id
+            and mo.provider_id = v_benchmark_provider_id and mo.interval_code = '1day'
+            and mo.observed_at = v_entry_at and mo.close > 0;
+
+          select mo.id, mo.close into v_benchmark_exit_id, v_benchmark_exit_price
+          from public.market_observations mo
+          where mo.instrument_id = v_decision.benchmark_instrument_id
+            and mo.provider_id = v_benchmark_provider_id and mo.interval_code = '1day'
+            and mo.observed_at = v_exit_at and mo.close > 0;
+        end if;
+
+        if v_benchmark_entry_id is null or v_benchmark_exit_id is null then
+          v_benchmark_entry_id := null;
+          v_benchmark_exit_id := null;
+          v_reasons := array_append(v_reasons, 'MISSING_BENCHMARK');
+        else
+          v_benchmark_return := (v_benchmark_exit_price / v_benchmark_entry_price) - 1;
+          v_excess_return := v_price_return - v_benchmark_return;
+        end if;
+      end if;
+
+      if exists (
+        select 1 from public.market_observations mo
+        where mo.instrument_id = v_decision.instrument_id and mo.provider_id = v_provider_id
+          and mo.interval_code = '1day' and mo.observed_at between v_entry_at and v_exit_at
+          and (mo.close is null or mo.close <= 0)
+      ) then
+        v_quality := 'CALCULATION_ERROR';
+        v_reasons := array_append(v_reasons, 'INVALID_DRAWDOWN_CLOSE');
+      else
+        with valuation_path as (
+          select mo.observed_at, mo.close,
+                 max(mo.close) over (order by mo.observed_at rows between unbounded preceding and current row) as running_peak
+          from public.market_observations mo
+          where mo.instrument_id = v_decision.instrument_id and mo.provider_id = v_provider_id
+            and mo.interval_code = '1day' and mo.observed_at between v_entry_at and v_exit_at
+        )
+        select min((vp.close / vp.running_peak) - 1) into v_maximum_drawdown
+        from valuation_path vp;
       end if;
 
       if v_decision.action = 'BUY' then
@@ -373,6 +520,18 @@ begin
     'evaluation_cutoff', p_evaluation_cutoff,
     'entry_observation_id', v_entry_id,
     'exit_observation_id', v_exit_id,
+    'entry_price', v_entry_price,
+    'exit_price', v_exit_price,
+    'entry_fx_observation_id', v_entry_fx_id,
+    'exit_fx_observation_id', v_exit_fx_id,
+    'entry_fx_rate', v_entry_fx_rate,
+    'exit_fx_rate', v_exit_fx_rate,
+    'benchmark_entry_observation_id', v_benchmark_entry_id,
+    'benchmark_exit_observation_id', v_benchmark_exit_id,
+    'benchmark_return', v_benchmark_return,
+    'base_currency_return', v_base_return,
+    'excess_return', v_excess_return,
+    'maximum_drawdown', v_maximum_drawdown,
     'quality_status', v_quality,
     'quality_reasons', to_jsonb(v_reasons)
   )::text, 'UTF8'), 'sha256'), 'hex');
@@ -380,14 +539,18 @@ begin
   insert into public.personal_return_snapshots (
     owner_user_id, decision_id, checkpoint_code, evaluation_cutoff,
     entry_observation_id, exit_observation_id, entry_price, exit_price,
+    entry_fx_observation_id, exit_fx_observation_id, entry_fx_rate, exit_fx_rate,
+    benchmark_entry_observation_id, benchmark_exit_observation_id,
     price_return, adjusted_return, base_currency_return, benchmark_return,
     excess_return, net_simulated_return, maximum_drawdown, quality_status,
     quality_reasons, source_identity_hash, calculation_version
   ) values (
     v_decision.owner_user_id, v_decision.id, p_checkpoint_code, p_evaluation_cutoff,
     v_entry_id, v_exit_id, v_entry_price, v_exit_price,
-    v_price_return, null, v_base_return, null,
-    null, v_net_return, null, v_quality,
+    v_entry_fx_id, v_exit_fx_id, v_entry_fx_rate, v_exit_fx_rate,
+    v_benchmark_entry_id, v_benchmark_exit_id,
+    v_price_return, null, v_base_return, v_benchmark_return,
+    v_excess_return, v_net_return, v_maximum_drawdown, v_quality,
     v_reasons, v_source_hash, 'personal-forward-return-v1'
   )
   on conflict (decision_id, checkpoint_code, evaluation_cutoff, calculation_version)

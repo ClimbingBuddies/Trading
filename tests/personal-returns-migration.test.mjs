@@ -105,7 +105,55 @@ test('missing FX, benchmark and corporate-action evidence stays explicit and nul
   assert.match(evaluator, /'INCOMPLETE_FX'/)
   assert.match(evaluator, /'MISSING_EXACT_FX'/)
   assert.match(evaluator, /'MISSING_BENCHMARK'/)
-  assert.match(evaluator, /v_price_return, null, v_base_return, null[\s\S]*null, v_net_return, null/)
+  assert.match(evaluator, /v_price_return, null, v_base_return, v_benchmark_return/)
+})
+
+test('base-currency conversion uses only exact canonical direct or inverse FX rows', () => {
+  const evaluator = sql.match(/create or replace function private\.evaluate_personal_return_checkpoint_v1[\s\S]+?\$\$;/)?.[0] ?? ''
+  assert.match(evaluator, /i\.asset_type = 'forex'/)
+  assert.match(evaluator, /upper\(btrim\(v_decision\.instrument_currency\) \|\| '\/' \|\| btrim\(v_decision\.base_currency\)\)/)
+  assert.match(evaluator, /upper\(btrim\(v_decision\.base_currency\) \|\| '\/' \|\| btrim\(v_decision\.instrument_currency\)\)/)
+  assert.match(evaluator, /mo\.observed_at = v_entry_at/)
+  assert.match(evaluator, /mo\.observed_at = v_exit_at/)
+  assert.match(evaluator, /else 1 \/ mo\.close/)
+  assert.match(evaluator, /v_base_return := \(\(v_exit_price \* v_exit_fx_rate\) \/ \(v_entry_price \* v_entry_fx_rate\)\) - 1/)
+  assert.match(evaluator, /'AMBIGUOUS_EXACT_FX'/)
+  assert.match(evaluator, /'MISSING_EXACT_FX'/)
+  assert.doesNotMatch(evaluator, /nearest|carry.forward|date_trunc/i)
+})
+
+test('optional benchmark requires exact entry and checkpoint sessions with no inferred default', () => {
+  const evaluator = sql.match(/create or replace function private\.evaluate_personal_return_checkpoint_v1[\s\S]+?\$\$;/)?.[0] ?? ''
+  assert.match(evaluator, /v_decision\.benchmark_mode <> 'NONE'/)
+  assert.match(evaluator, /pi\.instrument_id = v_decision\.benchmark_instrument_id/)
+  assert.match(evaluator, /mo\.observed_at = v_entry_at/)
+  assert.match(evaluator, /mo\.observed_at = v_exit_at/)
+  assert.match(evaluator, /v_benchmark_return := \(v_benchmark_exit_price \/ v_benchmark_entry_price\) - 1/)
+  assert.match(evaluator, /v_excess_return := v_price_return - v_benchmark_return/)
+  assert.match(evaluator, /'MISSING_BENCHMARK'/)
+  assert.doesNotMatch(evaluator, /QQQ|asset_type.*benchmark|benchmark.*coalesce/i)
+})
+
+test('maximum drawdown is deterministic over the bounded raw-close valuation path', () => {
+  const evaluator = sql.match(/create or replace function private\.evaluate_personal_return_checkpoint_v1[\s\S]+?\$\$;/)?.[0] ?? ''
+  assert.match(evaluator, /mo\.observed_at between v_entry_at and v_exit_at/)
+  assert.match(evaluator, /max\(mo\.close\) over \(order by mo\.observed_at rows between unbounded preceding and current row\)/)
+  assert.match(evaluator, /min\(\(vp\.close \/ vp\.running_peak\) - 1\)/)
+  assert.match(evaluator, /'INVALID_DRAWDOWN_CLOSE'/)
+  assert.doesNotMatch(evaluator, /abs\(|round\(/i)
+})
+
+test('FX benchmark and drawdown evidence is persisted and bound into source identity', () => {
+  const evaluator = sql.match(/create or replace function private\.evaluate_personal_return_checkpoint_v1[\s\S]+?\$\$;/)?.[0] ?? ''
+  for (const field of [
+    'entry_fx_observation_id', 'exit_fx_observation_id',
+    'benchmark_entry_observation_id', 'benchmark_exit_observation_id', 'maximum_drawdown',
+  ]) {
+    assert.match(evaluator, new RegExp(`'${field}', v_`))
+  }
+  assert.match(evaluator, /v_entry_fx_id, v_exit_fx_id, v_entry_fx_rate, v_exit_fx_rate/)
+  assert.match(evaluator, /v_benchmark_entry_id, v_benchmark_exit_id/)
+  assert.match(evaluator, /v_base_return, v_benchmark_return[\s\S]*v_excess_return, v_net_return, v_maximum_drawdown/)
 })
 
 test('checkpoint writes are service-only, immutable and idempotent with conflict denial', () => {
