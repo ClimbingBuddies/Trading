@@ -239,7 +239,7 @@ The status, remaining scope and run forecast are kept together here so gate prog
 
 **Estimated remaining work:** MYDASH-007 retains **5–9 meaningful runs** and MYDASH-008 retains **4–7**, for **9–16 meaningful runs** in aggregate. The forecast will be rebaselined when implementation or pilot evidence changes.
 
-**Publication status:** checkpoint evaluator `f7ac798` and its delivery-control record are confirmed on `origin/main` at `683c8d54fb4b9f993a4379d6d043807e4d180a8b`. Exact FX, benchmark and drawdown implementation is verified locally and pending this cycle's bounded publication. Unrelated untracked `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` remain excluded.
+**Publication status:** `GITHUB_STATUS_PUBLICATION_DEFERRED`. Exact FX, benchmark and drawdown implementation is committed locally as `1bbe56c`; the execution safety reviewer rejected publishing that exact payload to `github.com/ClimbingBuddies/Trading` because destination ownership and authorization were not established by trusted user content. The last confirmed remote identity remains `683c8d54fb4b9f993a4379d6d043807e4d180a8b`. Unrelated untracked `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` remain excluded.
 
 Gate-by-gate outstanding work and estimated runs are maintained in the **Work gates** table above. This section retains the cross-gate forecast assumptions, timing and publication status without duplicating the tracking rows.
 

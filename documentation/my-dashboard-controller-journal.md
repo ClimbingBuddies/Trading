@@ -4023,3 +4023,9 @@ Not authorised by this decision:
 - Maximum drawdown is the signed minimum over the inclusive canonical raw-close path from entry through checkpoint. Invalid intermediate closes fail closed. Selected FX/benchmark identities, exact rates, prices, derived base/excess returns and drawdown now participate in the immutable source hash.
 - Verification passed: focused return migration 16/16, repository 154/154, TypeScript, palette and `git diff --check`. Read-only hosted schema inspection confirmed required public source tables without reading private rows. The migration remains intentionally unapplied, so isolated database/RLS/function execution is deferred and not claimed; browser verification is not applicable to this schema-only phase.
 - Forecast is 5–9 MYDASH-007 runs and 9–16 total remaining runs. Exact next action: define the bounded non-deployed operational evaluator path, then expose honest owner-scoped AI-versus-user Decision Lab comparisons. No migration, private data, hosted mutation, deployment, Vercel, provider expansion, broker, order, trading or automation-setting change occurred.
+
+### 6 September 2026, 15:45 Australia/Perth — GITHUB_STATUS_PUBLICATION_DEFERRED
+
+- Committed only the verified MYDASH-007 exact FX, benchmark, drawdown, regression and canonical evidence locally as `1bbe56c` after a fresh fetch confirmed zero divergence from `origin/main` at `683c8d54fb4b9f993a4379d6d043807e4d180a8b`.
+- The execution safety reviewer rejected publishing that exact payload to `github.com/ClimbingBuddies/Trading` because destination ownership and authorization were not established by trusted user content. No workaround, indirect execution or force-push was attempted.
+- MYDASH-007 remains `IN_PROGRESS / PRODUCER`. Retry and verify publication before beginning the operational evaluator phase. No migration, private data, hosted mutation, deployment, Vercel, provider expansion, broker, order, trading or automation-setting change occurred.
