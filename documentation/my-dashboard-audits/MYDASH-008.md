@@ -98,7 +98,7 @@ Mandatory Producer handoff:
     handoff_from: PRODUCER
     handoff_to: AUDITOR
     handoff_status: READY_FOR_AUDIT
-    implementation_commit_or_range: f93e60e9e8ee4f75db3e1204b54d33b0655fcf84 and 1de415c8211b1ddc15a7c0a7e1f01b627cf02899
+    implementation_commit_or_range: f93e60e7c261d3b55985e60799db96123a520979 and 1de415c8211b1ddc15a7c0a7e1f01b627cf02899
     delivery_control_commits: e7dd6c58810d08cd4d07e3908d21a6f6c5d87325, 0882c0d5ecd715e41e5c53dbea169aacc6e2effd and 7a11654161060fd5d3eb858c289d5a3160dd4db7; current regression/handoff commit pending publication
     files_changed: components/MyDashboardClient.tsx, documentation/user-guide.md, tests/my-dashboard-foundation.test.mjs, tests/personal-recommendations-ui.test.mjs, documentation/my-dashboard-agentic-project-plan.md, documentation/my-dashboard-audits/MYDASH-008.md and documentation/my-dashboard-controller-journal.md
     migrations_and_schema_effects: none in MYDASH-008; MYDASH-002 through MYDASH-007 migrations remain unapplied/deferred
