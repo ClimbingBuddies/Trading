@@ -3,8 +3,8 @@
 ## Current status
 
 - Gate: `MYDASH-007`
-- Status: `DONE — OWNER REVIEW C`
-- Current owner: `OWNER`
+- Status: `DONE`
+- Current owner: `COMPLETE`
 - Audit outcome: `PASS_WITH_ADVICE`
 - Deployment: none; the migration is intentionally unapplied
 
@@ -129,4 +129,8 @@ No locally reproducible defect was found. The advice is to retain the unapplied 
 
 Owner Review C decision package: accept MYDASH-007 with the above deferred evidence and authorise progression to MYDASH-008, retain the pause until real pilot/runtime evidence is available under separate exact authority, or request a bounded revision. The verified package presently contains no real pilot-return result and makes no performance claim.
 
-Publication of this independent audit is deferred. The bounded audit/plan/journal commit is local `9ae3d1f`; the execution safety review rejected exporting that payload to the unverified external shared `origin/main` destination without fresh direct owner approval. The last confirmed remote identity remains `ca29ab54c9a7d784c0ca39280eb9232cfd51ec11`.
+The independent audit and its delivery record are published through `6ca544612f3bac4e3a9057f90bbf81124cde6847` on `origin/main`.
+
+## Owner Review C decision — 6 September 2026
+
+Travis accepted the verified MYDASH-007 contract with the documented real-pilot, isolated database, result-bearing browser, narrow-screen and proposed 07:00 schedule evidence retained as deferred and unclaimed. He authorised progression to MYDASH-008. This decision does not authorise applying migrations, installing schedules, deploying, mutating hosted Supabase or production, accessing private rows, connecting a broker or enabling trading.

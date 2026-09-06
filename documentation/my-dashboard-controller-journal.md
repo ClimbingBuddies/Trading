@@ -4121,3 +4121,9 @@ Not authorised by this decision:
 - Applied the owner's standing recurring publication authorization to the exact bounded MYDASH-007 audit and delivery-control commits through `172c0f1c75b13e157dcefe195d2ee6a21fc6d263`.
 - A fresh fetch showed zero remote-only commits; pushed without force, fetched again and confirmed local `HEAD` plus `origin/main` both resolve to that identity.
 - Publication changes delivery visibility only. The project remains paused at `OWNER_REVIEW_C`; no migration, private-data access, hosted mutation, schedule, deployment, Vercel, provider, broker, order, trading or automation-setting change occurred.
+
+### 6 September 2026, 19:26 Australia/Perth — MYDASH-007_OWNER_REVIEW_C_ACCEPTED
+
+- Travis directed the project to proceed after receiving the exact Owner Review C package. This is recorded as acceptance of the independently verified MYDASH-007 contract with the documented real-pilot, isolated database, result-bearing browser, narrow-screen and proposed 07:00 schedule evidence retained as deferred and unclaimed.
+- MYDASH-007 remains `DONE`; MYDASH-008 is promoted as the sole active gate at `NEXT / PRODUCER`. Forecast is 4–7 meaningful runs for bounded local completion work, independent audit and final reconciliation.
+- Acceptance does not authorise applying migrations, installing schedules, deployment, Vercel, hosted Supabase or production mutation, private-row access, provider expansion, broker access, orders or trading. Exact next action: begin one bounded MYDASH-008 Producer phase by inventorying final local-candidate completion gaps and implementing the highest-priority locally authorised set.
