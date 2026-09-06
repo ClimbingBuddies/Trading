@@ -4072,3 +4072,25 @@ Not authorised by this decision:
 - The verified Decision Lab comparison implementation is local commit `29bee68b14f5ae0d81bdacc246f20c0e10d81df6`; corrected localhost evidence is local commit `701f2fda02f9a824972fe2530a92438927c694b1`. A fresh fetch confirmed zero remote-only commits and `origin/main` at `58193a7fdce94f0a690a91ea53b7ca48c0d24c9b`.
 - The execution safety reviewer rejected publishing this exact two-commit payload directly to shared default branch `origin/main` because fresh trusted approval for the exact remote mutation was unavailable. No workaround, indirect publication or force-push was attempted.
 - MYDASH-007 remains `IN_PROGRESS / PRODUCER`. Retry and verify publication through `701f2fd` before whole-gate regression. No database, private data, deployment, Vercel, provider, broker, order, trading or automation-state mutation occurred.
+
+### 6 September 2026, 19:03 Australia/Perth — GITHUB_STATUS_PUBLICATION_COMPLETE
+
+- Fresh direct owner approval authorized the exact three-commit publication through delivery-control record `cebff79f820d3b7441019e9651a0f5fc92ecfc2d` to the explicitly named GitHub `origin/main` destination.
+- A fresh fetch showed zero remote-only commits and local `main` three commits ahead. Pushed without force, fetched again and confirmed local `HEAD` plus `origin/main` both resolve to `cebff79f820d3b7441019e9651a0f5fc92ecfc2d`.
+- Publication changes delivery visibility only. No migration, private-data access, hosted environment, deployment, Vercel, provider, broker, order, trading or automation-setting change occurred.
+
+### 6 September 2026, 19:03 Australia/Perth — BUILD_ATTEMPT_STARTED — MYDASH-007_WHOLE_GATE_PRODUCER_REGRESSION
+
+- Role selected from durable starting state: `PRODUCER`; sole active gate `MYDASH-007 / IN_PROGRESS`; handoff `PRODUCER / WHOLE_GATE_REGRESSION_AND_INDEPENDENT_AUDIT_HANDOFF`.
+- Publication prerequisite is clear: local `HEAD` and `origin/main` both resolve to `cebff79f820d3b7441019e9651a0f5fc92ecfc2d`. Unrelated untracked `AGENTS.md`, `CLAUDE.md` and `tsconfig.tsbuildinfo` remain preserved and excluded.
+- Starting SHA-256 identities: controller `e02b67fd46745ccab1e78f3b1fea76f7a3f7e4ae7a728d2b1571d6f200f44736`; plan `c6db397aa8a473884a3014c6c07efe24d65edef1d47b0ba95adaa5788261551f`; approved contract `10c87bd9a5b743af6c57fb570b0fb0c22b14294fedc26ec7b3d9ce0c4a4aff65`; return migration `53aa30fcafa3d5f4a1a16d79f9da4106f88873a2a1c4f55ffdddfdc21f2e65b7`.
+- Bounded scope: run the complete MYDASH-007 Producer regression across recommendation, decision, return-evaluator and Decision Lab contracts; record deferred environment evidence once; update the audit package and transition the gate to independent Auditor review only if all locally available acceptance checks pass. No audit conclusion will be made in this Producer run.
+- No migration application, private-row access, hosted mutation, scheduling, historical replay, deployment, Vercel, provider expansion, broker, order, trading or automation-setting change is authorised.
+
+### 6 September 2026, 19:08 Australia/Perth — MYDASH-007_WHOLE_GATE_PRODUCER_REGRESSION_VERIFIED
+
+- The focused MYDASH-007 suite passed 57/57 and the repository suite passed 160/160. TypeScript, palette and `git diff --check` passed.
+- Next.js 16.3.4 production build passed with Webpack. The default Turbopack path failed only because the installed Windows native SWC binding is invalid and Turbopack cannot use the loaded WASM binding; the documented Webpack fallback compiled, type-checked, generated all static pages and exited zero.
+- Prior localhost browser evidence remains applicable because this regression changed no implementation. Isolated database/RLS/function/concurrency execution, result-bearing success-state evidence and narrow-screen execution remain deferred for the existing environment reasons and were not duplicated or treated as failures.
+- MYDASH-007 transitioned to `IN_REVIEW / AUDITOR`. The audit package now requests independent reproduction of calculations and source-cutoff invariants, security/unsupported-path review and an explicit decision on deferred evidence. This Producer run makes no audit conclusion.
+- Forecast is 2–5 MYDASH-007 runs and 6–12 total remaining runs. No migration, private-data access, hosted mutation, scheduling, deployment, Vercel, provider expansion, broker, order, trading or automation-setting change occurred.

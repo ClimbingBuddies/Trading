@@ -3,9 +3,9 @@
 ## Current status
 
 - Gate: `MYDASH-007`
-- Status: `IN_PROGRESS`
-- Current owner: `PRODUCER`
-- Audit outcome: not yet submitted for independent audit
+- Status: `IN_REVIEW`
+- Current owner: `AUDITOR`
+- Audit outcome: pending independent audit
 - Deployment: none; the migration is intentionally unapplied
 
 ## Producer evidence — return-ledger and entry-resolution foundation
@@ -46,7 +46,7 @@ Verification on 6 September 2026:
 - narrow-screen browser execution: deferred because the available in-app browser exposes no viewport override; no private result row or screenshot was accessed;
 - isolated database/RLS/function execution: deferred because the migration is unapplied.
 
-Publication of this verified phase is deferred: local commit `29bee68b14f5ae0d81bdacc246f20c0e10d81df6` is one commit ahead of confirmed `origin/main` at `58193a7fdce94f0a690a91ea53b7ca48c0d24c9b`; the execution safety reviewer requires a fresh trusted owner instruction for this exact shared-default-branch mutation.
+The comparison phase and its corrected localhost evidence are published through `cebff79f820d3b7441019e9651a0f5fc92ecfc2d` on `origin/main`.
 
 ## Producer evidence — immutable checkpoint evaluation
 
@@ -98,3 +98,21 @@ Verification on 6 September 2026:
 - read-only hosted schema inspection: canonical public source tables confirmed; no private rows read;
 - isolated database/RLS/function execution: deferred because the migration is unapplied;
 - browser verification: not applicable to this schema-only phase.
+
+## Producer whole-gate regression and Auditor handoff
+
+The Producer reran the complete locally available MYDASH-007 contract surface without changing implementation. The focused suite covers immutable recommendation generation and persistence, unsupported-path denial, risk/methodology/cutoff presentation, constrained feedback, distinct AI/user decision clocks, no-trade boundaries, immutable return snapshots, exact checkpoint/FX/benchmark/drawdown calculations, operational idempotency and owner-scoped Decision Lab comparisons.
+
+Verification on 6 September 2026:
+
+- focused MYDASH-007 suite: 57/57 passed;
+- repository tests: 160/160 passed;
+- TypeScript: passed;
+- palette: passed;
+- Next.js 16.3.4 production build: passed with Webpack; the default Turbopack build is unavailable because the installed native Windows SWC binding is invalid and WASM-only Turbopack is unsupported;
+- `git diff --check`: passed;
+- prior localhost browser evidence remains applicable because implementation did not change;
+- isolated database/RLS/function/concurrency execution, result-bearing success-state browser evidence and narrow-screen execution remain deferred for the previously recorded environment reasons;
+- migration application, the proposed 07:00 schedule, hosted replay and production changes remain outside this gate run's authority.
+
+Handoff: an independent Auditor must reproduce the calculations/source-cutoff invariants from primary evidence, verify security and unsupported-path denial, assess whether the deferred evidence is acceptable for Owner Review C, and record an audit outcome. This Producer run makes no audit conclusion.
