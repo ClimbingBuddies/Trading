@@ -239,7 +239,7 @@ The status, remaining scope and run forecast are kept together here so gate prog
 
 **Estimated remaining work:** **0 authorised project runs.** Hosted migration execution, isolated live RLS/function/concurrency checks, real private-row evidence, installed scheduling, deployment and production verification remain deferred and require separate exact owner authority; they are not completion claims and do not keep this local-candidate project active.
 
-**Publication status:** `GITHUB_STATUS_PUBLICATION_COMPLETE`. The independent-audit and project-completion record was published as `18748a4`; a post-push fetch verified local `HEAD` and `origin/main` identity before this delivery-control update. Unrelated `AGENTS.md`, `CLAUDE.md`, generated `next-env.d.ts` metadata and `tsconfig.tsbuildinfo` remain excluded.
+**Publication status:** `GITHUB_STATUS_PUBLICATION_DEFERRED`. GitHub `origin/main` contains the independent-audit, project-completion and prior delivery-control records through `45400e2`. The completion-metadata reconciliation is local commit `691bd8a`; publication was rejected because fresh direct owner approval tied to that exact commit and shared-default-branch destination was unavailable to the execution safety reviewer. Retry and verify publication before any future work. Unrelated `AGENTS.md`, `CLAUDE.md`, generated `next-env.d.ts` metadata and `tsconfig.tsbuildinfo` remain excluded.
 
 Gate-by-gate outstanding work and estimated runs are maintained in the **Work gates** table above. This section retains the cross-gate forecast assumptions, timing and publication status without duplicating the tracking rows.
 
