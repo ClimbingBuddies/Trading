@@ -3786,3 +3786,16 @@ Not authorised by this decision:
 - The execution safety reviewer rejected the requested fetch/push/verification because recurring approval in automation context is not accepted as a trusted user instruction authorising this shared-default-branch mutation. No workaround, indirect execution or force-push was attempted.
 - MYDASH-005 remains complete locally with `PASS_WITH_ADVICE`; MYDASH-006 remains `NEXT / PRODUCER`, forecast 5–8 gate runs and 17–27 total remaining runs. No implementation, test, database, private-data, provider, deployment, Vercel, broker, trading or automation-state mutation occurred.
 - Exact next action: obtain fresh explicit trusted owner approval, then fetch, publish and verify local `main` through `aeffcf574b3843f8b3c5b74213a830d30524ca97` before starting MYDASH-006.
+
+### 6 September 2026, 10:35 Australia/Perth — GITHUB_STATUS_PUBLICATION_COMPLETE
+
+- Travis explicitly approved pushing local `main` through `22f6a3c958b5ab4374261a3c8e4037d722a37ee9` to GitHub `origin/main`.
+- A fresh fetch confirmed no divergence. The three bounded MYDASH-005 audit/control commits were pushed without force, and local `HEAD` plus `origin/main` were confirmed at `22f6a3c958b5ab4374261a3c8e4037d722a37ee9`.
+- Unrelated untracked `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` remain preserved and excluded. No deployment, hosted Supabase or production mutation, private-data access, broker access, trading or automation-state change occurred.
+- MYDASH-005 remains `DONE / PASS_WITH_ADVICE`; MYDASH-006 remains `NEXT / PRODUCER`. Begin one bounded MYDASH-006 phase on the next controller cycle.
+
+### 6 September 2026, 10:36 Australia/Perth — GITHUB_STATUS_PUBLICATION_DEFERRED
+
+- The execution safety reviewer rejected committing and pushing the new publication-confirmation record because Travis's exact approval ended at `22f6a3c958b5ab4374261a3c8e4037d722a37ee9`. No workaround or indirect execution was attempted.
+- The approved MYDASH-005 audit/control commits remain safely published and verified through `22f6a3c958b5ab4374261a3c8e4037d722a37ee9`; only this delivery-control confirmation remains local.
+- Exact next action: obtain fresh explicit approval to publish the bounded confirmation record, verify the remote, then begin MYDASH-006 Producer work.
