@@ -8,15 +8,15 @@
 ## Current state
 
     project_status: IN_PROGRESS
-    active_gate: MYDASH-007
-    active_gate_status: OWNER_REVIEW
-    handoff_owner: OWNER
-    handoff_status: OWNER_REVIEW_C_DECISION_REQUIRED
-    owner_review: OWNER_REVIEW_C_PENDING
-    last_event: GITHUB_STATUS_PUBLICATION_DEFERRED_2026-09-06T19:17+08:00
+    active_gate: MYDASH-008
+    active_gate_status: IN_PROGRESS
+    handoff_owner: PRODUCER
+    handoff_status: LOCAL_COMPLETION_INVENTORY_VERIFIED
+    owner_review: OWNER_REVIEW_C_ACCEPTED
+    last_event: MYDASH-008_INITIAL_COMPLETION_PHASE_VERIFIED_2026-09-06T19:38+08:00
     consecutive_failure_count: 0
     consecutive_failure_reason: NONE
-    next_action: Owner Review C decides whether to accept the verified local contract with deferred real-pilot/runtime evidence or require that evidence before MYDASH-008.
+    next_action: Complete the remaining locally available accessibility, performance, telemetry and temporary-tooling inventory, then run whole-gate regression and prepare the independent audit handoff.
 
 ## Gate ledger
 
@@ -28,8 +28,8 @@
 | MYDASH-004 | DONE | NONE | Owner Review B accepted 5 September 2026; deferred database evidence retained |
 | MYDASH-005 | DONE | NONE | Independent re-audit PASS_WITH_ADVICE 6 September 2026 |
 | MYDASH-006 | DONE | NONE | Independent re-audit complete; PASS_WITH_ADVICE |
-| MYDASH-007 | DONE | OWNER | Independent audit PASS_WITH_ADVICE; Owner Review C decision required |
-| MYDASH-008 | PLANNED | NONE | Independent audit and final reconciliation |
+| MYDASH-007 | DONE | NONE | Independent audit PASS_WITH_ADVICE; Owner Review C accepted 6 September 2026 |
+| MYDASH-008 | IN_PROGRESS | PRODUCER | Independent audit and final reconciliation |
 
 ## Owner decisions
 
@@ -4133,3 +4133,16 @@ Not authorised by this decision:
 - Committed the bounded Owner Review C decision, MYDASH-008 promotion, forecast and audit reconciliation locally as `2b8fe5adda8c3a7917dfcf7c890a45ffec1e992a`; fresh repository state showed zero remote-only commits and `origin/main` at `6ca544612f3bac4e3a9057f90bbf81124cde6847`.
 - Execution safety review rejected exporting this exact project-plan, audit and journal payload to shared GitHub `origin/main` without fresh explicit owner approval for that payload and destination. No workaround, indirect publication or force-push was attempted.
 - MYDASH-008 remains `NEXT / PRODUCER`, but the controller must retry publication before material implementation. No migration, private-data access, hosted mutation, schedule, deployment, Vercel, provider, broker, order, trading or automation-setting change occurred.
+
+### 6 September 2026, 19:32 Australia/Perth — GITHUB_STATUS_PUBLICATION_COMPLETE
+
+- Fresh direct owner approval authorised the exact Owner Review C transition and delivery-control commits through `330ad4aeb80e412d9be1b76819ff09d6086e83ec` to GitHub `origin/main`.
+- Pushed without force, fetched again and confirmed local `HEAD` plus `origin/main` both resolve to that identity with zero divergence.
+- Publication changed delivery visibility only. No migration, private-data access, hosted mutation, schedule, deployment, Vercel, provider, broker, order or trading change occurred.
+
+### 6 September 2026, 19:38 Australia/Perth — MYDASH-008_INITIAL_COMPLETION_PHASE_VERIFIED
+
+- Role: `PRODUCER`; MYDASH-008 is now the sole active gate at `IN_PROGRESS`. The bounded initial inventory found sound accessibility/responsive/privacy foundations, absent tracked temporary helpers, a missing My Dashboard user-guide section and three stale gate-era UI labels.
+- Reconciled stale Today and Portfolio Health empty-state copy. Replaced the obsolete disabled recommendation action with navigation to the separately governed Decision Lab; it does not create or prefill a decision. Added the six-tab owner workflow, keyboard operation, fail-closed loading, provenance, incomplete-evidence, privacy and no-trading boundaries to the canonical guide.
+- Verification passed: focused UI 20/20, repository 160/160, TypeScript, palette and `git diff --check`. Localhost `/help` rendered the new section; a genuine 390 × 844 viewport had no page-level overflow; signed-out `/my-dashboard` redirected to `/login?next=/my-dashboard`; browser warning/error logs were empty.
+- Forecast is 3–6 remaining meaningful runs. Next: complete the locally available accessibility/performance/telemetry and temporary-tooling inventory, run whole-gate regression, then prepare independent audit. No migration, private row, hosted mutation, schedule, deployment, Vercel, provider, broker, order, trading or automation-setting change occurred.
