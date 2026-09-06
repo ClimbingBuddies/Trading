@@ -58,3 +58,29 @@ Publication retry at 09:32 Australia/Perth: a fresh fetch confirmed no remote di
 Publication retry at 09:42 Australia/Perth: a fresh fetch again confirmed no remote divergence and the same remote identity. The safety reviewer rejected publishing the six bounded local commits to the shared default branch pending explicit owner approval accepted for that exact action, and prohibited workaround execution. The candidate remains unaudited and unchanged.
 
 Publication completed at 09:47 Australia/Perth after Travis explicitly approved the exact GitHub action: a fresh fetch confirmed no divergence, the seven bounded commits were pushed without force, and `origin/main` was confirmed at `869dec0eda772299a7f2cfd5b80aab17e112d303`. The independent audit may now evaluate this exact published candidate.
+
+## Independent audit — REWORK_REQUIRED
+
+**Audited:** 6 September 2026, 10:05 Australia/Perth
+**Published candidate:** `869dec0eda772299a7f2cfd5b80aab17e112d303`
+
+The Auditor independently reproduced 126/126 repository tests, TypeScript and palette compliance. Static reconciliation of the concrete service-only loader with `personal-research-relevance-v1` found a substantive integration failure that the current tests do not cover.
+
+1. **P1 — Concrete persisted sources cannot qualify.** The SQL loader emits no `calendarAvailable` or `missedSessions` properties for Market AI or Technical evidence. The generator explicitly treats either missing property as `STALE_SOURCE:CALENDAR_UNAVAILABLE` and sets `qualifiesPositive` false. Passing the actual loader response into the generator therefore cannot meet the required qualifying dependency count.
+2. **P1 — Market AI uses the wrong cutoff clock.** The loader uses `gpt_market_assessments.created_at` as `source_cutoff` instead of joining and requiring `gpt_market_runs.analysis_cutoff_time`, the approved authoritative cutoff. Exact lineage and look-ahead protection are therefore not established for the persisted path.
+
+Complete correction set: use the authoritative Market AI analysis cutoff; derive and pass reproducible trading-session freshness inputs for Market AI and Technical sources at the requested generation cutoff; fail closed when calendar evidence is unavailable; and add an integration regression that feeds the concrete loader response into `buildRecommendationCandidate`, covering current eligible, calendar-unavailable, stale and future evidence. Existing isolated database and final browser limitations remain deferred and did not cause this result.
+
+    task_id: MYDASH-005
+    handoff_from: AUDITOR
+    handoff_to: PRODUCER
+    handoff_status: REWORK_REQUIRED
+    audit_record: documentation/my-dashboard-audits/MYDASH-005.md
+    implementation_commit_or_range_reviewed: 53fedde20ecb0ec5a1f1e757c0ab124535b0809c and 5069979cec1660822abd6005f06a7ad3b23077e3, published through 869dec0eda772299a7f2cfd5b80aab17e112d303
+    deployment_reviewed: none; migration remains unapplied and deployment/production changes were not authorised
+    schema_and_rls_checks: source-level immutable/RLS/grant boundaries retained; executable isolated database proof remains deferred
+    calculation_reproduction: loader-to-generator reconciliation fails because required session-freshness inputs are absent and Market AI uses row creation time instead of analysis cutoff
+    ui_and_accessibility_checks: existing source tests pass; no new browser replay because the audit failure is upstream of persisted recommendation availability
+    complete_correction_set: authoritative Market AI cutoff; reproducible calendar freshness fields for Market AI and Technical evidence; fail-closed unavailable/stale handling; concrete loader-to-generator integration regression
+    known_limitations: isolated database execution and final browser replay remain deferred evidence
+    exact_next_action: Producer implements the complete correction set, reruns full acceptance checks and returns the whole MYDASH-005 candidate for independent re-audit

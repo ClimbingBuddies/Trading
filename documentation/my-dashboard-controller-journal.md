@@ -11,12 +11,12 @@
     active_gate: MYDASH-005
     active_gate_status: IN_PROGRESS
     handoff_owner: PRODUCER
-    handoff_status: RECOMMENDATION_FINAL_VERIFICATION_NEXT
+    handoff_status: REWORK_REQUIRED
     owner_review: OWNER_REVIEW_B_ACCEPTED_2026-09-05
-    last_event: MYDASH-005_PERSISTED_SOURCE_SELECTION_COMPLETE
+    last_event: MYDASH-005_INDEPENDENT_AUDIT_REWORK_REQUIRED
     consecutive_failure_count: 0
     consecutive_failure_reason: NONE
-    next_action: Complete final Recommendations loading, empty, error, responsive and keyboard verification, then prepare the full Producer handoff for independent audit.
+    next_action: Correct the persisted-source cutoff and calendar-freshness bridge, add an end-to-end loader-to-generator regression, rerun acceptance checks and return MYDASH-005 for independent re-audit.
 
 ## Gate ledger
 
@@ -3712,3 +3712,13 @@ Not authorised by this decision:
 - A fresh fetch confirmed no divergence. The seven bounded commits from `5069979` through `869dec0` were pushed without force, and local `HEAD` plus `origin/main` were confirmed at `869dec0eda772299a7f2cfd5b80aab17e112d303`.
 - Unrelated untracked `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` were preserved and excluded. No Vercel deployment, hosted Supabase or production mutation, broker access or trading occurred.
 - MYDASH-005 remains `IN_REVIEW / AUDITOR`; publication is no longer a prerequisite blocker. Exact next action: independently audit the published Producer candidate.
+
+### 6 September 2026, 10:05 Australia/Perth — MYDASH-005_INDEPENDENT_AUDIT_REWORK_REQUIRED
+
+- Role performed: `AUDITOR` only against published candidate `869dec0eda772299a7f2cfd5b80aab17e112d303`; no implementation fix or successor promotion occurred.
+- Reproduced 126/126 repository tests, TypeScript and palette compliance. The passing suites do not exercise the concrete persisted loader output through the deterministic generator.
+- Priority 1 defect: `load_personal_recommendation_context_v1` does not emit `calendarAvailable` or `missedSessions` for Market AI or Technical evidence. `personal-research-relevance-v1` therefore assigns `STALE_SOURCE:CALENDAR_UNAVAILABLE` and `qualifiesPositive = false` to both families. The approved persisted path cannot satisfy the independent qualifying-evidence threshold and cannot generate a usable recommendation.
+- Priority 1 methodology defect: Market AI `source_cutoff` is taken from `gpt_market_assessments.created_at`, although the approved authoritative decision-time boundary is `gpt_market_runs.analysis_cutoff_time`. This weakens cutoff lineage and can admit evidence with the wrong information clock.
+- Complete correction set: join and require the authoritative Market AI analysis cutoff; derive explicit, reproducible trading-session freshness evidence for Market AI and Technical rows at the requested generation cutoff; pass those exact fields through the service-only loader; fail closed when the calendar cannot be established; and add one integration regression that feeds the concrete loader response into `buildRecommendationCandidate`, proving eligible current sources succeed while unavailable/stale/future evidence remains denied.
+- Existing isolated database/RLS/RPC execution and final browser replay limitations remain deferred evidence; neither caused this audit failure. No private row, database, hosted system, deployment, Vercel, broker, trading or automation state was touched.
+- Handoff: `AUDITOR -> PRODUCER / MYDASH-005 IN_PROGRESS / REWORK_REQUIRED`. Forecast is 2–3 meaningful runs for the correction and independent re-audit.
