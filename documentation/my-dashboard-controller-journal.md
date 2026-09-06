@@ -3961,3 +3961,19 @@ Not authorised by this decision:
 - Committed only the independent MYDASH-006 audit result, active Work gate transition, forecast and controller handoff as `9134ed839bab1679bd1f88c0dbd8ed4cd8b3e3c5`.
 - Fresh fetch showed zero divergence; pushed without force and confirmed local `HEAD` plus `origin/main` both resolve to that identity.
 - Publication changes delivery visibility only. No migration, private-data access, hosted environment, deployment, Vercel, broker, order, trading or automation-setting change occurred.
+
+### 6 September 2026, 14:31 Australia/Perth — BUILD_ATTEMPT_STARTED — MYDASH-007_RETURN_LEDGER_FOUNDATION
+
+- Role selected from durable starting state: `PRODUCER`; sole active gate `MYDASH-007 / NEXT`; handoff `PRODUCER / ENTRY_RESOLUTION_AND_IMMUTABLE_RETURN_SNAPSHOT_FOUNDATION`.
+- Cleared the publication prerequisite first. A fresh fetch found zero divergence and confirmed local `HEAD` plus `origin/main` at `c90d03b4bc392a8349e3d940d3a3975a628d0fcc`.
+- Starting SHA-256 identities: controller `e02b67fd46745ccab1e78f3b1fea76f7a3f7e4ae7a728d2b1571d6f200f44736`; plan `6cfaa0ae7e571f67507114903443fc76a22f6b4aba8cf61f42c48d5a480df5db`; approved contract `8f9e729905e87be12798b3f2b7e4bb7946d1368ac223504ace29948d83b218da`; decision migration `fcdf3ca244d8c89cb8534876417e543ea857d01a9da3efa2f1e70f9df79d4bf7`.
+- Bounded scope: add the unapplied immutable owner-scoped return-snapshot ledger and deterministic canonical Tiingo `1day` entry resolution from each decision's own clock, with idempotency, conflict denial, RLS/grant boundaries and executable static regressions. Benchmark/FX arithmetic, drawdown, checkpoint evaluation, scheduling and UI remain later MYDASH-007 phases.
+- No migration application, hosted/private-data access, deployment, Vercel, provider expansion, broker access, order, trading or automation-setting change is authorised.
+
+### 6 September 2026, 14:38 Australia/Perth — MYDASH-007_RETURN_LEDGER_FOUNDATION_VERIFIED
+
+- Role remained `PRODUCER`; MYDASH-007 moved from `NEXT` to `IN_PROGRESS`. No independent audit or successor promotion occurred.
+- Added the local unapplied `personal_return_snapshots` ledger with composite owner/decision integrity, immutable triggers, permanent-owner SELECT RLS, anonymous/browser-write denial, exact observation references, nullable outputs, quality states, source identity and calculation version.
+- Added a service-only deterministic entry resolver. It requires a non-future cutoff, the decision's own `NEXT_DAILY_CLOSE` clock and exactly one active Tiingo mapping, then selects the first distinct canonical `1day` session strictly after that clock and at or before the cutoff. Missing mapping or session evidence remains explicit and numeric output stays null.
+- Verification passed: focused return migration 7/7, repository 145/145, TypeScript, palette and `git diff --check`. The migration remains unapplied, so isolated database/RLS/function execution is deferred and not claimed; browser verification is not applicable to this schema-only phase.
+- No private row, hosted database, deployment, Vercel, provider expansion, broker, order, trading or automation-setting change occurred. Forecast is 7–11 MYDASH-007 runs and 11–18 total remaining runs. Exact next action: implement immutable idempotent checkpoint evaluation and exact source-hash conflict denial.

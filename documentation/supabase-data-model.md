@@ -87,6 +87,12 @@ Recommendation generation uses a private service-role-only source selector. It a
 
 The candidate enables owner-select RLS, rejects anonymous callers, withholds browser table writes, prevents update/delete through immutable triggers, constrains authenticated capture and event appends through security-definer RPCs, permits at most one EXIT/CANCEL terminal event and adds the same-owner decision foreign key for paper portfolio positions. AI capture is eligible only from run completion until the first later canonical Tiingo daily observation; missing/ambiguous mappings and invalid run clocks fail closed. A partial owner/source unique key makes direct and concurrent identical retries idempotent, while divergent immutable assumptions are rejected. The UI obtains eligible assessment IDs from a permanent-user RPC whose query mirrors the authoritative capture predicate. Strategy Laboratory records are not reused because their test-run semantics do not match the personal forward-decision ledger. The migration is local and unapplied; isolated database policy, ACL, cross-user and atomic execution remain required before the gate can pass.
 
+### Local unapplied MYDASH-007 return-evaluator candidate
+
+`20260906143500_my_dashboard_return_evaluator_v1.sql` proposes immutable owner-scoped `personal_return_snapshots` with the approved OPEN/5D/20D/60D/EXIT identities, exact market/FX/benchmark observation references, nullable calculation outputs, ordered quality states, source hash and `personal-forward-return-v1` version. A composite parent-owner foreign key anchors every snapshot to its private decision. Permanent authenticated owners receive SELECT only; anonymous and browser writes are denied; only the service role may write or invoke the internal resolver.
+
+The first bounded phase adds `resolve_personal_decision_entry_v1`, which requires a persisted non-future evaluation cutoff, the decision's own `NEXT_DAILY_CLOSE` contract and exactly one active Tiingo mapping. It selects the first distinct canonical `1day` session strictly after that decision's clock and at or before the cutoff. Ambiguous/missing mapping returns `MAPPING_REQUIRED`; absent eligible evidence returns `PENDING_ENTRY`; neither path fabricates a price. Checkpoint arithmetic, immutable writer/idempotency comparison, benchmark/FX, drawdown, scheduling and UI remain later MYDASH-007 phases. The migration is local and unapplied; isolated database/RLS execution is not claimed.
+
 ## Strategy laboratory
 
 | Tables | Purpose |
