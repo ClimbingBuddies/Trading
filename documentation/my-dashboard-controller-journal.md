@@ -3854,3 +3854,9 @@ Not authorised by this decision:
 - The UI exposes the fixed v1 notional, fee/slippage, benchmark and next-close assumptions, denies Technical/Opportunity/external-fact promotion, and adds no broker, account, order or execution field. No form was submitted during verification.
 - Verification passed: focused decision checks 9/9, repository 136/136, TypeScript, palette and `git diff --check`. Authenticated localhost desktop rendered the new controls and unapplied-schema state with no horizontal overflow, Next.js overlay or console warning/error. Fresh 390 × 844 execution was unavailable in the current browser-control surface and remains deferred without blocking other evidence.
 - No migration was applied and no database/private row, deployment, provider, Vercel, broker, trading or automation-setting change occurred. Forecast is 2–4 MYDASH-006 runs and 14–23 total remaining runs. Exact next action: publish this bounded phase, then complete whole-gate regression and independent audit handoff.
+
+### 6 September 2026, 12:49 Australia/Perth — GITHUB_STATUS_PUBLICATION_COMPLETE
+
+- Committed only the verified MYDASH-006 capture controls, regression and control evidence as `31616d681258f4b2597e0197cff93a782c66c88c`.
+- A fresh fetch showed no divergence; pushed without force and confirmed local `HEAD` plus `origin/main` both resolve to that identity.
+- Unrelated untracked `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` remain untouched. Publication changes delivery visibility only and grants no deployment, hosted-database, broker or trading authority.

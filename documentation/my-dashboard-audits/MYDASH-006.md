@@ -57,6 +57,7 @@ Both paths make the fixed v1 paper assumptions visible: base-currency notional 1
 - Localhost desktop: authenticated Decision Lab rendered the user-paper fields, explicit assumptions, eligible-source empty state and unapplied-schema error state; the document had no horizontal overflow, Next.js error overlay or console warning/error.
 - A fresh 390 × 844 viewport was unavailable in the current browser-control surface. The responsive CSS collapses both new grids/actions below 680 px, but this source inspection is not claimed as fresh narrow-screen execution evidence.
 - No form was submitted during browser verification. No database, hosted/private row, deployment, provider, broker or trading action occurred.
+- Phase-3 implementation/test/control commit `31616d681258f4b2597e0197cff93a782c66c88c` was pushed without force and confirmed as both local `HEAD` and `origin/main` before this publication record.
 
 ## Limitations and next phase
 
