@@ -47,6 +47,8 @@
     routes_and_viewports_verified: prior authenticated localhost 1280 px and 390 × 844 error state passed; loading/empty/error/focus/responsive contracts freshly source-tested; final browser replay unavailable and disclosed
     privacy_and_cross_user_evidence: browser reads are owner-scoped and select-only; writer is service-role-only; anonymous/cross-owner event paths denied; isolated database execution deferred
     documentation_impact: project plan, audit evidence, controller journal and automation memory reconciled
-    known_limitations: migration not applied; no isolated database execution; final-run browser tooling unavailable; no deployment or production verification authorised
+    known_limitations: migration not applied; no isolated database execution; final-run browser tooling unavailable; no deployment or production verification authorised; final commits remain local because the remote push was safety-review blocked
     acceptance_criteria_evidence: immutable snapshots, lineage/cutoffs, methodology separation, risk/limitations display, feedback boundaries and unsupported-path denial mapped above
-    exact_next_action: independently audit this exact published candidate; do not implement fixes in the audit run
+    exact_next_action: publish and verify this exact local candidate, then independently audit it; do not implement fixes in the audit run
+
+Publication correction: commits `5069979cec1660822abd6005f06a7ad3b23077e3`, `d7a4d7ab55a259d43ab627ed2c0cd5ca53b306c4` and `53630998e5df8437910526e57a6a35e94bf2d56a` are locally verified but not yet published. Retry the authorised `origin/main` push before auditing or starting new material work.

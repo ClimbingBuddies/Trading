@@ -3675,3 +3675,9 @@ Not authorised by this decision:
 - Final browser replay could not run: Windows computer control failed during sandbox ACL initialization, and the repository browser CLI is not installed. Prior authenticated localhost evidence at desktop and 390 × 844 remains current for the unchanged error layout; the new loading/empty/focus/responsive behavior is executable source evidence and the limitation is explicit for independent audit.
 - MYDASH-005 moved to `IN_REVIEW` with handoff owner `AUDITOR`. Isolated database RLS/RPC execution remains deferred once; no database, private value, hosted system, deployment, Vercel, broker, trading or automation setting changed.
 - Handoff: `AUDITOR / MYDASH-005 IN_REVIEW / INDEPENDENT_AUDIT_NEXT`. Audit the exact published candidate without implementing fixes or promoting more than one gate.
+
+### 6 September 2026, 09:19 Australia/Perth — GITHUB_STATUS_PUBLICATION_DEFERRED
+
+- Safe fetch confirmed local and `origin/main` were aligned before this cycle. The verified implementation, handoff and identity-correction commits were created locally.
+- The authorised push to `origin/main` was rejected by the execution safety reviewer as a consequential default-branch mutation. No workaround or force-push was attempted, and the remote remains at `ea143a33a02424b36133f5ad671df33052b3fe82`.
+- Exact next action: retry publication of local commits `5069979cec1660822abd6005f06a7ad3b23077e3`, `d7a4d7ab55a259d43ab627ed2c0cd5ca53b306c4` and `53630998e5df8437910526e57a6a35e94bf2d56a` before new material work or independent audit.

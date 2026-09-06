@@ -419,4 +419,4 @@ The project is complete only when:
     controller_journal_created: true
     production_changes_authorised: recurring bounded GitHub main publication is authorised for owner visibility; refresh-portfolio-health deployment and the supplied CommSec holdings import were separately approved and completed; no further deployment or production mutation without exact owner approval
     owner_approval_recorded: Owner Reviews A and B approved; MYDASH-001 through MYDASH-004 complete
-    next_action: Independently audit the published MYDASH-005 candidate and its complete Producer handoff. Reproduce denial, methodology, privacy and UI evidence without deploying or mutating production. Consecutive failure count remains zero.
+    next_action: Retry publication of the three verified local MYDASH-005 commits to origin/main, confirm the remote identity, then independently audit the complete Producer handoff. Reproduce denial, methodology, privacy and UI evidence without deploying or mutating production. Consecutive failure count remains zero.
