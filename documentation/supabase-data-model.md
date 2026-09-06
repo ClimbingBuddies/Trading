@@ -79,6 +79,8 @@ The model prevents atomic evidence and its derived consensus from being double-c
 
 My Dashboard preference/interest, recommendation, Watchlist and alert ownership references `auth.users.id`. Anonymous users and other authenticated users cannot access an owner's rows. Recommendation snapshots and sources are browser read-only; events are browser read-only except through `append_personal_recommendation_event_v1`, which derives the permanent owner, verifies parent ownership and accepts only watch, dismiss or feedback. Paper-decision capture remains unavailable until MYDASH-006. Clients cannot forge alert event history. Approved producers and cron trigger evaluation; deterministic event keys prevent duplicates.
 
+Recommendation generation uses a private service-role-only source selector. It accepts an explicit owner, instrument and cutoff; derives relevance from that owner's watchlists, active portfolios and explicit interests; and returns only completed, cutoff-bounded Market AI, Technical and Opportunity evidence with exact record, methodology and dependency identities. It is not a browser RPC and does not convert Opportunity evidence into a Buy label.
+
 ## Strategy laboratory
 
 | Tables | Purpose |

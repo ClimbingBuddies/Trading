@@ -163,15 +163,6 @@ begin
   if v_owner_id is null or v_is_anonymous then
     raise exception 'A permanent authenticated user is required.' using errcode = '42501';
   end if;
-  if exists (
-    select 1 from jsonb_array_elements(p_sources) s
-    where (s->>'source_cutoff')::timestamptz > (p_snapshot->>'source_cutoff')::timestamptz
-       or coalesce(s->>'dependency_key', '') = ''
-       or (s->>'qualifies_positive') is null
-  ) then
-    raise exception 'Source chronology and deterministic eligibility are required.' using errcode = '22023';
-  end if;
-
   if p_event_type not in ('watch', 'dismiss', 'feedback') then
     raise exception 'Unsupported recommendation event.' using errcode = '22023';
   end if;
@@ -208,6 +199,63 @@ comment on table public.personal_recommendation_sources is
 comment on table public.personal_recommendation_events is
   'Append-only owner feedback; events never rewrite their source recommendation snapshot.';
 
+create or replace function private.load_personal_recommendation_context_v1(
+  p_owner_user_id uuid, p_instrument_id uuid, p_cutoff timestamptz
+)
+returns jsonb language sql security definer set search_path = pg_catalog stable as $$
+  with relevance as (
+    select 'WATCHLIST:' || w.id::text reason from public.watchlists w
+    join public.watchlist_items wi on wi.watchlist_id = w.id
+    where w.owner_user_id = p_owner_user_id and wi.instrument_id = p_instrument_id
+    union
+    select 'PORTFOLIO:' || p.id::text from public.portfolios p
+    join public.portfolio_positions pp on pp.portfolio_id = p.id and pp.owner_user_id = p.owner_user_id
+    where p.owner_user_id = p_owner_user_id and p.status = 'active' and pp.instrument_id = p_instrument_id
+    union
+    select 'EXPLICIT_INTEREST:' || umi.id::text from public.user_market_interests umi
+    where umi.owner_user_id = p_owner_user_id and (umi.instrument_id = p_instrument_id or exists (
+      select 1 from public.opportunity_theme_instruments oti
+      where oti.theme_id = umi.theme_id and oti.instrument_id = p_instrument_id and oti.is_active))
+  ), latest_ai as (
+    select g.assessment_id::text record_key, g.created_at source_cutoff, g.methodology_version,
+      g.run_id::text dependency_key from public.gpt_market_assessments g
+    join public.gpt_market_runs r on r.run_id = g.run_id and r.status = 'succeeded'
+    where g.instrument_id = p_instrument_id and g.created_at <= p_cutoff
+      and g.technical_engine_input_used is false and nullif(btrim(g.methodology_version), '') is not null
+    order by g.assessment_date desc, g.created_at desc, g.assessment_id desc limit 1
+  ), latest_technical as (
+    select m.id::text record_key, m.calculated_at source_cutoff, m.methodology_version,
+      m.id::text dependency_key from public.market_scores m
+    where m.instrument_id = p_instrument_id and m.calculated_at <= p_cutoff
+      and m.score_status = 'complete' and nullif(btrim(m.methodology_version), '') is not null
+    order by m.score_date desc, m.calculated_at desc, m.id desc limit 1
+  ), latest_opportunity as (
+    select distinct on (oa.theme_id) oa.id::text record_key, oa.created_at source_cutoff,
+      oa.methodology_version, oa.id::text dependency_key
+    from public.opportunity_theme_instruments oti join public.opportunity_assessments oa on oa.theme_id = oti.theme_id
+    where oti.instrument_id = p_instrument_id and oti.is_active and oa.created_at <= p_cutoff
+      and oa.structural_signal_id is not null and oa.technology_inflection_signal_id is not null
+      and nullif(btrim(oa.methodology_version), '') is not null
+    order by oa.theme_id, oa.assessment_date desc, oa.created_at desc, oa.id desc
+  ), evidence as (
+    select 'MARKET_AI' family, 'gpt_market_assessments' source_table, record_key, source_cutoff,
+      methodology_version, 'Completed independent Market AI assessment.' relevance, dependency_key from latest_ai
+    union all select 'TECHNICAL', 'market_scores', record_key, source_cutoff, methodology_version,
+      'Completed independent Technical score.', dependency_key from latest_technical
+    union all select 'OPPORTUNITY', 'opportunity_assessments', record_key, source_cutoff, methodology_version,
+      'Completed independent Opportunity assessment; this does not imply Buy.', dependency_key from latest_opportunity
+  ) select jsonb_build_object(
+    'relevance', coalesce((select jsonb_agg(jsonb_build_object('owner_user_id', p_owner_user_id, 'reason', reason) order by reason) from relevance), '[]'::jsonb),
+    'evidence', coalesce((select jsonb_agg(jsonb_build_object(
+      'family', family, 'table', source_table, 'recordKey', record_key,
+      'cutoff', to_char(source_cutoff at time zone 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"'),
+      'methodologyVersion', methodology_version, 'relevance', relevance, 'status', 'COMPLETE',
+      'positive', true, 'dependencyIds', jsonb_build_array(dependency_key)) order by family, source_table, record_key)
+      from evidence), '[]'::jsonb));
+$$;
+revoke all on function private.load_personal_recommendation_context_v1(uuid, uuid, timestamptz) from public, anon, authenticated;
+grant execute on function private.load_personal_recommendation_context_v1(uuid, uuid, timestamptz) to service_role;
+
 create or replace function private.persist_personal_recommendation_v1(
   p_snapshot jsonb,
   p_sources jsonb
@@ -225,6 +273,13 @@ begin
   if jsonb_typeof(p_snapshot) <> 'object' or jsonb_typeof(p_sources) <> 'array'
      or jsonb_array_length(p_sources) = 0 then
     raise exception 'Canonical snapshot and non-empty sources are required.' using errcode = '22023';
+  end if;
+  if exists (
+    select 1 from jsonb_array_elements(p_sources) s
+    where (s->>'source_cutoff')::timestamptz > (p_snapshot->>'source_cutoff')::timestamptz
+       or coalesce(s->>'dependency_key', '') = '' or (s->>'qualifies_positive') is null
+  ) then
+    raise exception 'Source chronology and deterministic eligibility are required.' using errcode = '22023';
   end if;
 
   insert into public.personal_recommendation_snapshots (

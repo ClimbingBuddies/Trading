@@ -11,12 +11,12 @@
     active_gate: MYDASH-005
     active_gate_status: IN_PROGRESS
     handoff_owner: PRODUCER
-    handoff_status: RECOMMENDATION_TRUSTED_WRITER_NEXT
+    handoff_status: RECOMMENDATION_FINAL_VERIFICATION_NEXT
     owner_review: OWNER_REVIEW_B_ACCEPTED_2026-09-05
-    last_event: MYDASH-005_DETERMINISTIC_RECOMMENDATION_GENERATOR_COMPLETE
+    last_event: MYDASH-005_PERSISTED_SOURCE_SELECTION_COMPLETE
     consecutive_failure_count: 0
     consecutive_failure_reason: NONE
-    next_action: Integrate the proven deterministic methodology with an owner-filtered trusted source loader and atomic snapshot/source writer, then prove the complete writer boundary without hosted mutation.
+    next_action: Complete final Recommendations loading, empty, error, responsive and keyboard verification, then prepare the full Producer handoff for independent audit.
 
 ## Gate ledger
 
@@ -3644,3 +3644,13 @@ Not authorised by this decision:
 - Starting commit: `b5283332de2600e7d01baca8bab954a2c35d481c` on `main`, preserving all existing user and prior-gate working-tree changes.
 - Starting identities: controller `83aea28e`; plan `77a7cb04`; MYDASH-005 audit `ba44bfa7`; recommendation methodology/adapters `30aa28dd`; recommendation migration `67616658`. The append-only journal identity is excluded as self-referential.
 - Bounded scope: implement and source-test concrete service-only Supabase selection of owner watchlist, active portfolio and explicit-interest relevance plus completed, cutoff-bounded Market AI, Technical and Opportunity evidence. Repair any concrete recommendation-migration regression encountered in that path. Do not apply migrations, access hosted/private rows, deploy, publish, trade, link a broker or change the ACTIVE ten-minute automation.
+
+### 6 September 2026, 08:57 Australia/Perth — MYDASH-005_PERSISTED_SOURCE_SELECTION_COMPLETE
+
+- Role: `PRODUCER`; completed one meaningful persisted-source-selection phase. MYDASH-005 remains `IN_PROGRESS`; no audit or successor promotion occurred.
+- Added a private service-role-only Supabase query that derives personal relevance solely from the requested owner's watchlists, active portfolios and explicit instrument/theme interests. It selects only cutoff-bounded succeeded independent Market AI rows, complete Technical rows and structurally complete Opportunity rows; the Opportunity source remains explicitly non-Buy evidence. The JavaScript trusted store calls this boundary once and retains exact source record, methodology and dependency identities.
+- Repaired a concrete migration regression discovered during implementation: the browser event RPC incorrectly referenced trusted-writer parameters `p_sources` and `p_snapshot`. That chronology validation now runs only inside the private writer, while the event RPC remains limited to permanent-owner watch, dismiss and feedback appends.
+- Verification passed: focused Recommendations 22/22, full repository 125/125, TypeScript and `git diff --check` with existing line-ending notices only. No UI changed, so the existing authenticated desktop/narrow-screen unavailable-state proof was not repeated.
+- Effects are local migration, methodology adapter, regressions and control documentation only. No migration was applied and no hosted/private row, provider, deployment, publication, broker, trading or automation state was touched. The unavailable isolated database execution remains deferred once.
+- Current identities: migration `b44d4720`; recommendation methodology/adapters `9d61c26c`; generator regression `ad81459e`; migration regression `2a7b9ec0`.
+- Handoff: `PRODUCER / MYDASH-005 IN_PROGRESS / RECOMMENDATION_FINAL_VERIFICATION_NEXT`. Complete final Recommendations loading, empty, error, responsive and keyboard verification, then write the complete Producer handoff for independent audit.

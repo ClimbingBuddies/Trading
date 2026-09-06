@@ -4,6 +4,26 @@ import test from 'node:test'
 
 const migrationUrl = new URL('../supabase/migrations/20260906093000_my_dashboard_recommendations_v1.sql', import.meta.url)
 
+test('private source selection is owner-filtered, completed and cutoff-bounded', async () => {
+  const sql = await readFile(migrationUrl, 'utf8')
+  assert.match(sql, /private\.load_personal_recommendation_context_v1/)
+  assert.match(sql, /w\.owner_user_id = p_owner_user_id/)
+  assert.match(sql, /p\.owner_user_id = p_owner_user_id and p\.status = 'active'/)
+  assert.match(sql, /umi\.owner_user_id = p_owner_user_id/)
+  assert.match(sql, /r\.status = 'succeeded'/)
+  assert.match(sql, /g\.technical_engine_input_used is false/)
+  assert.match(sql, /m\.score_status = 'complete'/)
+  assert.match(sql, /oa\.structural_signal_id is not null and oa\.technology_inflection_signal_id is not null/)
+  assert.match(sql, /grant execute on function private\.load_personal_recommendation_context_v1[^;]+to service_role/)
+  assert.doesNotMatch(sql, /grant execute on function private\.load_personal_recommendation_context_v1[^;]+to authenticated/)
+})
+
+test('browser event RPC does not reference trusted writer parameters', async () => {
+  const sql = await readFile(migrationUrl, 'utf8')
+  const eventBody = sql.match(/create or replace function public\.append_personal_recommendation_event_v1[\s\S]+?\$\$;/)?.[0] ?? ''
+  assert.doesNotMatch(eventBody, /p_sources|p_snapshot/)
+})
+
 test('recommendation snapshots and sources preserve immutable identity and chronology', async () => {
   const sql = await readFile(migrationUrl, 'utf8')
   const snapshot = sql.match(/create table public\.personal_recommendation_snapshots \([\s\S]*?\n\);/)?.[0]

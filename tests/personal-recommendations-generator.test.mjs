@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { buildRecommendationCandidate, immutableRecommendationMatches, loadOwnerRecommendationContext, persistRecommendationCandidate, persistRecommendationWithRpc } from '../lib/personal-recommendations.mjs'
+import { buildRecommendationCandidate, createSupabaseRecommendationSourceStore, immutableRecommendationMatches, loadOwnerRecommendationContext, persistRecommendationCandidate, persistRecommendationWithRpc } from '../lib/personal-recommendations.mjs'
 
 const base = {
   ownerId: 'owner-a', instrumentId: 'instrument-a', generatedAt: '2026-09-06T00:00:00.000Z',
@@ -97,4 +97,21 @@ test('trusted RPC adapter sends canonical snapshot and sources separately', asyn
   assert.equal(request.args.p_snapshot.source_hash, candidate.source_hash)
   assert.equal(request.args.p_snapshot.sources, undefined)
   assert.deepEqual(request.args.p_sources, candidate.sources)
+})
+
+test('concrete Supabase source store calls the private owner/cutoff RPC once', async () => {
+  const calls = []
+  const store = createSupabaseRecommendationSourceStore({ schema: (name) => {
+    assert.equal(name, 'private')
+    return { rpc: async (rpcName, args) => {
+      calls.push({ rpcName, args })
+      return { data: { relevance: [{ owner_user_id: 'owner-a', reason: 'WATCHLIST:list-a' }], evidence: base.sources }, error: null }
+    } }
+  } })
+  assert.deepEqual(await loadOwnerRecommendationContext(store, 'owner-a', 'instrument-a', base.generatedAt), {
+    relevanceReasons: ['WATCHLIST:list-a'], sources: base.sources,
+  })
+  assert.deepEqual(calls, [{ rpcName: 'load_personal_recommendation_context_v1', args: {
+    p_owner_user_id: 'owner-a', p_instrument_id: 'instrument-a', p_cutoff: base.generatedAt,
+  } }])
 })
