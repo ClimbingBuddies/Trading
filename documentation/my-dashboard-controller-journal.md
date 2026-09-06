@@ -3868,3 +3868,9 @@ Not authorised by this decision:
 - Prior authenticated localhost desktop evidence remains applicable because no UI changed. Unapplied-schema success states, isolated database policy/ACL/RPC execution and fresh narrow-screen execution remain deferred evidence and do not block the independent source-level audit.
 - MYDASH-006 moved to `IN_REVIEW / AUDITOR`; forecast is 1–2 gate runs and 13–21 total remaining runs. No successor gate was promoted.
 - No migration, private-data access, hosted environment, deployment, Vercel, provider, broker, order, trading or automation-setting change occurred. Exact next action: publish this handoff, then independently audit the exact published Producer candidate without making fixes in the Auditor role.
+
+### 6 September 2026, 12:54 Australia/Perth — GITHUB_STATUS_PUBLICATION_DEFERRED
+
+- The verified MYDASH-006 audit-handoff documentation was committed locally as `120c80d68b18c5383240058d7b2a7a98c510568e`; the last confirmed remote identity remains `70aa701e79696875e20204d7415578bc3f9d5e44`.
+- The execution safety reviewer rejected publication because fresh trusted owner approval is required for this exact internal-documentation payload and the `origin/main` destination. No workaround, indirect execution or force-push was attempted.
+- MYDASH-006 remains `IN_REVIEW / AUDITOR` locally. Retry publication and verify the remote identity before beginning the independent audit.
