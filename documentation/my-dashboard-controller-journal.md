@@ -3903,3 +3903,9 @@ Not authorised by this decision:
 - A partial owner/source unique index is the concurrent database boundary. Identical retries resolve to the immutable row even after the capture window closes; divergent horizon, benchmark or simulation assumptions fail without update or duplication.
 - Verification passed: focused Decision Lab 11/11, full repository 138/138, TypeScript, palette and `git diff --check`. Authenticated localhost at 390 × 844 showed the new ineligible explanation, no horizontal overflow, no Next.js overlay and no browser warning/error. No form was submitted.
 - The migration remains unapplied, so isolated database/RLS/direct-concurrency execution is retained as deferred evidence. No private row, hosted database, deployment, Vercel, broker, order, trading or automation-state mutation occurred. Forecast is 1–2 MYDASH-006 runs and 13–21 total remaining runs; next is whole-gate Producer reconciliation and audit handoff.
+
+### 6 September 2026, 13:50 Australia/Perth — GITHUB_STATUS_PUBLICATION_COMPLETE
+
+- Committed only the verified MYDASH-006 forward-capture/idempotency correction, tests and canonical evidence as `08dbdb1b0c8e254420c1b5e46092eb575a004999`.
+- Fresh fetches showed zero divergence; pushed without force and confirmed local `main` plus `origin/main` both resolve to `08dbdb1b0c8e254420c1b5e46092eb575a004999`.
+- Unrelated untracked `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` remain untouched. Publication changes delivery visibility only and grants no deployment, hosted-database, broker or trading authority.

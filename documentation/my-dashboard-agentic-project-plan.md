@@ -239,7 +239,7 @@ The status, remaining scope and run forecast are kept together here so gate prog
 
 **Estimated remaining work:** MYDASH-006 retains **1–2 meaningful runs** for whole-gate Producer reconciliation and independent re-audit. MYDASH-006 through MYDASH-008 retain **13–21 meaningful runs** in aggregate and will be rebaselined when evidence changes.
 
-**Publication status:** `GITHUB_STATUS_PUBLICATION_PENDING`. Audit/control commits through `5601b4660906081a72c50ddfdf9e7bb05a31b3ed` are confirmed on `origin/main`; the verified correction phase is ready for bounded commit and publication. Unrelated untracked `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` remain excluded.
+**Publication status:** `GITHUB_STATUS_PUBLICATION_COMPLETE`. The verified correction phase is published and local `main` plus `origin/main` were confirmed at `08dbdb1b0c8e254420c1b5e46092eb575a004999`. Unrelated untracked `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` remain excluded.
 
 Gate-by-gate outstanding work and estimated runs are maintained in the **Work gates** table above. This section retains the cross-gate forecast assumptions, timing and publication status without duplicating the tracking rows.
 

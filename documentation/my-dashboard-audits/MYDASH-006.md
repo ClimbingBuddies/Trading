@@ -113,3 +113,5 @@ A partial unique index on owner, source type, source table and assessment identi
 Verification passed: focused Decision Lab **11/11**, full repository **138/138**, TypeScript, palette and `git diff --check`. Authenticated localhost at **390 × 844** rendered the database-derived ineligible state with no horizontal overflow, framework overlay or browser warning/error; no form was submitted. Because the candidate migration remains intentionally unapplied, isolated database execution of direct/concurrent retries and RLS remains deferred evidence rather than claimed execution.
 
 MYDASH-006 remains `IN_PROGRESS / PRODUCER` for one whole-gate reconciliation before independent re-audit.
+
+The bounded correction implementation, regression and handoff evidence were published as `08dbdb1b0c8e254420c1b5e46092eb575a004999`; a fresh fetch confirmed local `main` and `origin/main` equal at that identity.
