@@ -13,10 +13,10 @@
     handoff_owner: PRODUCER
     handoff_status: DECISION_LAB_COMPARISON_READY
     owner_review: OWNER_REVIEW_B_ACCEPTED_2026-09-05
-    last_event: MYDASH-007_OPERATIONAL_EVALUATOR_PATH_VERIFIED_2026-09-06T18:08+08:00
+    last_event: GITHUB_STATUS_PUBLICATION_DEFERRED_2026-09-06T18:13+08:00
     consecutive_failure_count: 0
     consecutive_failure_reason: NONE
-    next_action: Publish and verify the bounded operational evaluator change, then expose owner-scoped AI-versus-user Decision Lab comparisons.
+    next_action: Obtain fresh exact owner approval to push local main through cf10868 to origin/main, verify remote containment, then expose owner-scoped AI-versus-user Decision Lab comparisons.
 
 ## Gate ledger
 
@@ -4045,3 +4045,9 @@ Not authorised by this decision:
 - Each decision evaluates only OPEN, its configured horizon and a cutoff-eligible persisted EXIT. Per-checkpoint failure records bounded SQLSTATE/error evidence as `CALCULATION_ERROR` without fabricating a snapshot or aborting unrelated work. Browser roles receive no access, and no cron, HTTP, broker, order or portfolio-position path was installed.
 - Verification passed: focused return migration 21/21, repository 159/159, TypeScript, palette and `git diff --check`. The migration remains intentionally unapplied, so isolated database/function/concurrency execution is deferred and not claimed; browser verification is not applicable to this internal schema-only phase.
 - Forecast is 4–8 MYDASH-007 runs and 8–15 total remaining runs. Exact next action: expose owner-scoped AI-versus-user Decision Lab comparisons, then run whole-gate regression and independent audit. No private rows, hosted database mutation, deployment, Vercel, provider expansion, broker, order, trading or automation-setting change occurred.
+
+### 6 September 2026, 18:13 Australia/Perth — GITHUB_STATUS_PUBLICATION_DEFERRED
+
+- Committed only the verified MYDASH-007 operational evaluator path, static regressions and canonical evidence locally as `cf10868` after a fresh fetch confirmed zero divergence from `origin/main` at `1f2039aa30d77509e83c9f8a06dceae344ba5350`.
+- The execution safety reviewer rejected direct publication to shared default branch `origin/main` because fresh trusted approval for that exact remote mutation was unavailable. No workaround, indirect publication or force-push was attempted.
+- MYDASH-007 remains `IN_PROGRESS / PRODUCER`. Retry and verify publication through `cf10868` before beginning Decision Lab comparison work. No migration, private data, hosted mutation, deployment, Vercel, provider expansion, broker, order, trading or automation-setting change occurred.
