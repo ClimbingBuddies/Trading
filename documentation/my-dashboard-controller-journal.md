@@ -9,14 +9,14 @@
 
     project_status: IN_PROGRESS
     active_gate: MYDASH-007
-    active_gate_status: IN_PROGRESS
-    handoff_owner: PRODUCER
-    handoff_status: WHOLE_GATE_REGRESSION_READY
-    owner_review: OWNER_REVIEW_B_ACCEPTED_2026-09-05
-    last_event: GITHUB_STATUS_PUBLICATION_DEFERRED_2026-09-06T18:34+08:00
+    active_gate_status: OWNER_REVIEW
+    handoff_owner: OWNER
+    handoff_status: OWNER_REVIEW_C_DECISION_REQUIRED
+    owner_review: OWNER_REVIEW_C_PENDING
+    last_event: MYDASH-007_AUDIT_PASS_WITH_ADVICE_2026-09-06T19:13+08:00
     consecutive_failure_count: 0
     consecutive_failure_reason: NONE
-    next_action: Obtain fresh exact owner approval to push local main through 29bee68 to origin/main, verify remote containment, then complete whole-gate Producer regression and the independent audit handoff.
+    next_action: Owner Review C decides whether to accept the verified local contract with deferred real-pilot/runtime evidence or require that evidence before MYDASH-008.
 
 ## Gate ledger
 
@@ -27,8 +27,8 @@
 | MYDASH-003 | DONE | NONE | Independent local re-audit PASS 2 September 2026 |
 | MYDASH-004 | DONE | NONE | Owner Review B accepted 5 September 2026; deferred database evidence retained |
 | MYDASH-005 | DONE | NONE | Independent re-audit PASS_WITH_ADVICE 6 September 2026 |
-| MYDASH-006 | IN_REVIEW | AUDITOR | Independent audit |
-| MYDASH-007 | PLANNED | NONE | Independent audit, then Owner Review C |
+| MYDASH-006 | DONE | NONE | Independent re-audit complete; PASS_WITH_ADVICE |
+| MYDASH-007 | DONE | OWNER | Independent audit PASS_WITH_ADVICE; Owner Review C decision required |
 | MYDASH-008 | PLANNED | NONE | Independent audit and final reconciliation |
 
 ## Owner decisions
@@ -4100,3 +4100,12 @@ Not authorised by this decision:
 - Committed only the verified MYDASH-007 whole-gate Producer regression, gate transition, audit package and controller handoff as `329de804793e4d8a9c5007b31b41b7b61853007d`.
 - A fresh fetch showed zero remote-only commits; pushed without force, fetched again and confirmed local `HEAD` plus `origin/main` both resolve to that identity.
 - MYDASH-007 remains `IN_REVIEW / AUDITOR`. Publication changes delivery visibility only; no audit conclusion, migration, private-data access, hosted mutation, scheduling, deployment, Vercel, provider, broker, order, trading or automation-setting change occurred.
+
+### 6 September 2026, 19:13 Australia/Perth — MYDASH-007_AUDIT_PASS_WITH_ADVICE
+
+- Role selected from durable starting state: `AUDITOR`; sole active gate `MYDASH-007 / IN_REVIEW`; complete Producer handoff published through `329de804793e4d8a9c5007b31b41b7b61853007d`. No implementation was created or corrected in this run.
+- Independently reproduced the focused MYDASH-007 suite at 57/57 and repository tests at 160/160. TypeScript, palette, `git diff --check` and the Next.js 16.3.4 Webpack production build passed; the build used the documented WASM fallback after the installed Windows native SWC binding failed to load.
+- Primary migration, test and UI-boundary inspection confirmed exact forward-session cutoffs, separate AI and user clocks, unrounded BUY-only simulation, exact-time FX and optional benchmark evidence, deterministic bounded raw-close drawdown, immutable source identity, identical-retry idempotency, divergent-conflict denial, owner-scoped browser reads, service-only evaluation and no installed schedule, broker, order or trading path.
+- Audit outcome is `PASS_WITH_ADVICE`; no locally reproducible defect was found. Real pilot-return rows, result-bearing browser state, 390 x 844 execution, isolated two-user/anonymous RLS and function/concurrency execution, migration application and the proposed 07:00 schedule remain deferred, unclaimed and outside this run's authority.
+- MYDASH-007 is marked `DONE` and the project pauses at mandatory `OWNER_REVIEW_C`. Owner decision required: accept the verified local contract with deferred runtime/pilot evidence and authorise MYDASH-008, retain the pause until that evidence is available under separate exact authority, or request a bounded revision. Forecast is 5–10 meaningful runs including Owner Review C and MYDASH-008.
+- No private row, database migration, hosted mutation, deployment, Vercel, provider, broker, order, trading or automation-setting change occurred. Modified/untracked owner and generated files remain untouched.

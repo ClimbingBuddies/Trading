@@ -3,9 +3,9 @@
 ## Current status
 
 - Gate: `MYDASH-007`
-- Status: `IN_REVIEW`
-- Current owner: `AUDITOR`
-- Audit outcome: pending independent audit
+- Status: `DONE — OWNER REVIEW C`
+- Current owner: `OWNER`
+- Audit outcome: `PASS_WITH_ADVICE`
 - Deployment: none; the migration is intentionally unapplied
 
 ## Producer evidence — return-ledger and entry-resolution foundation
@@ -118,3 +118,13 @@ Verification on 6 September 2026:
 Handoff: an independent Auditor must reproduce the calculations/source-cutoff invariants from primary evidence, verify security and unsupported-path denial, assess whether the deferred evidence is acceptable for Owner Review C, and record an audit outcome. This Producer run makes no audit conclusion.
 
 The verified Producer regression and audit handoff are published as `329de804793e4d8a9c5007b31b41b7b61853007d` on `origin/main`.
+
+## Independent Auditor outcome — 6 September 2026
+
+Outcome: `PASS_WITH_ADVICE`.
+
+The Auditor independently reproduced the focused MYDASH-007 suite at 57/57 and the repository suite at 160/160. TypeScript, palette, `git diff --check` and the Next.js 16.3.4 Webpack production build passed. Primary inspection of the migration, tests and Decision Lab boundary confirmed exact forward-session cutoffs, separate AI and user clocks, unrounded BUY-only simulation, exact-time direct/inverse FX, exact-time optional benchmark evidence, deterministic bounded raw-close drawdown, immutable source hashes, identical-retry idempotency, divergent-conflict denial, owner-scoped browser reads, service-only evaluation and absence of cron, broker, order or trading paths.
+
+No locally reproducible defect was found. The advice is to retain the unapplied migration, real pilot-return rows, result-bearing browser state, 390 x 844 execution, isolated two-permanent-user/anonymous RLS and function/concurrency execution, and proposed 07:00 operational schedule as explicit deferred evidence. These items were not fabricated or treated as passed, and accepting this audit grants no authority to apply the migration, install the schedule, deploy, access private rows or enable trading.
+
+Owner Review C decision package: accept MYDASH-007 with the above deferred evidence and authorise progression to MYDASH-008, retain the pause until real pilot/runtime evidence is available under separate exact authority, or request a bounded revision. The verified package presently contains no real pilot-return result and makes no performance claim.
