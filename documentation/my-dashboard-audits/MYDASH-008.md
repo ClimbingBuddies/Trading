@@ -77,3 +77,40 @@ Complete the locally available accessibility/performance/telemetry and temporary
 ### Remaining work
 
 Run the final whole-gate Producer regression and reconcile the complete MYDASH-008 handoff for independent audit. Deployment, hosted migrations, installed scheduling, production private-row evidence and production runtime verification remain deferred pending separate exact owner authority.
+
+## Producer whole-gate regression and Auditor handoff
+
+The Producer reran the complete locally available My Dashboard contract surface without changing application implementation. The suite covers the accepted MYDASH-001–007 contracts plus MYDASH-008 lifecycle copy, canonical user guidance, accessibility, responsive containment, authenticated privacy, performance/query boundaries, browser telemetry/credential exclusions and absence of temporary gate tooling.
+
+Verification on 6 September 2026:
+
+- complete repository suite: **161/161 passed**;
+- TypeScript no-emit: **passed**;
+- palette compliance: **passed**;
+- Next.js 16.3.4 production build: **passed with Webpack**; the installed native Windows SWC binding is invalid, so the documented WASM-compatible Webpack path was used;
+- `git diff --check`: **passed**;
+- prior localhost evidence remains applicable because implementation did not change: signed-out redirect, authenticated fail-closed private states, `/help`, keyboard tabs and genuine 390 × 844 containment passed with no browser warnings/errors;
+- hosted migration execution, isolated two-permanent-user/anonymous database execution, production private-row evidence, installed scheduling, deployment and production runtime verification remain deferred pending separate exact authority and are not claimed.
+
+Mandatory Producer handoff:
+
+    task_id: MYDASH-008
+    handoff_from: PRODUCER
+    handoff_to: AUDITOR
+    handoff_status: READY_FOR_AUDIT
+    implementation_commit_or_range: f93e60e9e8ee4f75db3e1204b54d33b0655fcf84 and 1de415c8211b1ddc15a7c0a7e1f01b627cf02899
+    delivery_control_commits: e7dd6c58810d08cd4d07e3908d21a6f6c5d87325, 0882c0d5ecd715e41e5c53dbea169aacc6e2effd and 7a11654161060fd5d3eb858c289d5a3160dd4db7; current regression/handoff commit pending publication
+    files_changed: components/MyDashboardClient.tsx, documentation/user-guide.md, tests/my-dashboard-foundation.test.mjs, tests/personal-recommendations-ui.test.mjs, documentation/my-dashboard-agentic-project-plan.md, documentation/my-dashboard-audits/MYDASH-008.md and documentation/my-dashboard-controller-journal.md
+    migrations_and_schema_effects: none in MYDASH-008; MYDASH-002 through MYDASH-007 migrations remain unapplied/deferred
+    rls_and_permission_evidence: executable/static contracts preserve permanent-owner predicates, anonymous denial, browser least privilege and service-only derived writes; isolated hosted execution remains deferred
+    source_data_and_cutoffs: no private or hosted rows read; accepted immutable source/cutoff contracts are regression-covered without replay or fabricated evidence
+    calculation_or_methodology_version: my-dashboard-contract-v1; portfolio-health-v1; personal-research-relevance-v1; personal-decision-capture-v1; personal-forward-return-v1
+    tests_and_checks: repository 161/161, TypeScript no-emit, palette, Next.js 16.3.4 Webpack production build and git diff --check all passed
+    routes_and_viewports_verified: localhost /help and signed-out /my-dashboard; prior owner-authenticated route evidence; genuine 390 x 844 tab keyboard/containment evidence; no production route claim
+    privacy_and_cross_user_evidence: fail-closed owner data loading and static owner/anonymous boundaries passed; no private values retained; live two-user/anonymous database execution remains deferred
+    documentation_impact: canonical user guide and route/access contract reconciled; project plan, durable audit and append-only journal updated
+    known_limitations: no deployment or production verification, hosted migration application, installed evaluator schedule, real production private rows or isolated live RLS/function/concurrency execution; native Windows SWC binding invalid but Webpack/WASM build passes
+    acceptance_criteria_evidence: all locally available completion checks pass; deferred environment-dependent evidence is explicit and unclaimed; no broker, order or live-trading capability was added
+    exact_next_action: independently reproduce the locally available checks and primary contract review, assess the explicit deferred evidence, then either record PASS/PASS_WITH_ADVICE and perform final reconciliation or return one complete correction set
+
+This Producer run makes no audit or project-completion conclusion.

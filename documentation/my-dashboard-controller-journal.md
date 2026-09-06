@@ -9,14 +9,14 @@
 
     project_status: IN_PROGRESS
     active_gate: MYDASH-008
-    active_gate_status: IN_PROGRESS
-    handoff_owner: PRODUCER
-    handoff_status: LOCAL_COMPLETION_INVENTORY_VERIFIED
+    active_gate_status: IN_REVIEW
+    handoff_owner: AUDITOR
+    handoff_status: READY_FOR_AUDIT
     owner_review: OWNER_REVIEW_C_ACCEPTED
-    last_event: MYDASH-008_INITIAL_COMPLETION_PHASE_VERIFIED_2026-09-06T19:38+08:00
+    last_event: MYDASH-008_WHOLE_GATE_PRODUCER_REGRESSION_VERIFIED_2026-09-06T20:04+08:00
     consecutive_failure_count: 0
     consecutive_failure_reason: NONE
-    next_action: Complete the remaining locally available accessibility, performance, telemetry and temporary-tooling inventory, then run whole-gate regression and prepare the independent audit handoff.
+    next_action: Independently audit the unchanged MYDASH-008 candidate, reproduce every locally available completion check, and decide whether deferred deployment/hosted evidence permits a local-candidate completion outcome.
 
 ## Gate ledger
 
@@ -29,7 +29,7 @@
 | MYDASH-005 | DONE | NONE | Independent re-audit PASS_WITH_ADVICE 6 September 2026 |
 | MYDASH-006 | DONE | NONE | Independent re-audit complete; PASS_WITH_ADVICE |
 | MYDASH-007 | DONE | NONE | Independent audit PASS_WITH_ADVICE; Owner Review C accepted 6 September 2026 |
-| MYDASH-008 | IN_PROGRESS | PRODUCER | Independent audit and final reconciliation |
+| MYDASH-008 | IN_REVIEW | AUDITOR | Independent audit and final reconciliation |
 
 ## Owner decisions
 
@@ -4179,3 +4179,19 @@ Not authorised by this decision:
 - A fresh fetch confirmed zero starting divergence from `origin/main` at `0882c0d5ecd715e41e5c53dbea169aacc6e2effd`. Committed only the previously verified MYDASH-008 local completion-assurance regression and evidence as local commit `1de415c8211b1ddc15a7c0a7e1f01b627cf02899`; unrelated owner and generated files remain excluded.
 - Execution safety review rejected pushing that exact one-commit payload to the shared default branch `origin/main` because fresh direct owner approval tied to the payload and destination was not available to the reviewer. No workaround, indirect publication or force-push was attempted. Local `main` is one commit ahead of `origin/main`.
 - MYDASH-008 remains `IN_PROGRESS / PRODUCER`, forecast 2–5 meaningful runs. Retry and verify publication through `1de415c` before the final whole-gate Producer regression. No deployment, production verification, migration, private-data access, hosted mutation, schedule, Vercel, provider, broker, order, trading or automation-setting change occurred.
+
+### 6 September 2026, 20:02 Australia/Perth — BUILD_ATTEMPT_STARTED — MYDASH-008_WHOLE_GATE_PRODUCER_REGRESSION
+
+- Role selected from durable starting state: `PRODUCER`; sole active gate `MYDASH-008 / IN_PROGRESS`; handoff `PRODUCER / WHOLE_GATE_REGRESSION_AND_INDEPENDENT_AUDIT_HANDOFF`.
+- Publication prerequisite is clear: local `HEAD` and `origin/main` both resolve to `7a11654161060fd5d3eb858c289d5a3160dd4db7`, which contains the verified local completion-assurance implementation/evidence and its delivery-control record. The stale publication-status sentence in the plan is harmless metadata and will be reconciled with this handoff. Unrelated owner/generated `AGENTS.md`, `CLAUDE.md`, `next-env.d.ts` and `tsconfig.tsbuildinfo` remain preserved and excluded.
+- Starting SHA-256 identities: controller `e02b67fd46745ccab1e78f3b1fea76f7a3f7e4ae7a728d2b1571d6f200f44736`; plan `b3e0394b1137ea7f3c52c3c72221101c31f271b47e4664566675d8babe5da7f2`; approved contract `10c87bd9a5b743af6c57fb570b0fb0c22b14294fedc26ec7b3d9ce0c4a4aff65`; route `9478e00c49d17550389c8cace999716e52c03059b21ef3572da2e5f61910c815`.
+- Bounded scope: run the complete locally available MYDASH-008 regression across the accepted MYDASH-001–007 contracts, accessibility, responsive behaviour, privacy, performance boundaries, telemetry boundaries, documentation and temporary-tooling inventory; update the audit package and transition the unchanged candidate to independent Auditor review only if every available check passes. This Producer run will not make an audit conclusion.
+- No deployment, production verification, migration application, private-row access, hosted mutation, schedule installation, Vercel, provider, broker, order, trading or automation-setting change is authorised.
+
+### 6 September 2026, 20:04 Australia/Perth — MYDASH-008_WHOLE_GATE_PRODUCER_REGRESSION_VERIFIED
+
+- The unchanged candidate passed the complete repository suite at 161/161, TypeScript no-emit, palette compliance, `git diff --check` and the Next.js 16.3.4 Webpack production build. The build compiled, type-checked, generated all routes and prerendered `/my-dashboard`; the installed native Windows SWC binding remains invalid, so the documented WASM-compatible Webpack path was used.
+- Prior localhost evidence remains applicable because no application implementation changed: signed-out redirect, owner-authenticated private loading/error boundaries, Help content, six-tab keyboard operation and genuine 390 × 844 containment passed with no browser warnings/errors. No private value or screenshot was read or retained.
+- Existing static and executable coverage preserves every accepted MYDASH-001–007 contract, including permanent-owner isolation predicates, anonymous denial, source lineage/cutoffs, methodology separation, immutable snapshots, missing-evidence semantics, distinct AI/user clocks, no-look-ahead evaluation and absence of broker/order/live-trading paths. Hosted migration execution, two-user/anonymous database execution, production private rows, installed scheduling, deployment and production verification remain explicitly deferred and unclaimed.
+- MYDASH-008 transitioned to `IN_REVIEW / AUDITOR`. The complete Producer handoff is persisted in `documentation/my-dashboard-audits/MYDASH-008.md`; this Producer run makes no audit or completion conclusion. Forecast is 1–3 meaningful runs for independent audit and final reconciliation.
+- No deployment, production verification, migration application, private-row access, hosted mutation, schedule installation, Vercel, provider, broker, order, trading or automation-setting change occurred.
