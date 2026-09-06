@@ -3661,3 +3661,17 @@ Not authorised by this decision:
 - Reverified the bounded persisted-source-selection cycle: focused Recommendations 22/22 within repository 125/125, direct TypeScript compile, palette and diff checks passed.
 - Published bounded functional/control commit `53fedde20ecb0ec5a1f1e757c0ab124535b0809c` to `origin/main` and confirmed the remote ref matches. Unrelated untracked `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` were excluded.
 - This publication changes GitHub delivery visibility only. No migration, hosted/private data, provider, deployment, Vercel, broker, trading or automation state changed.
+
+### 6 September 2026, 09:10 Australia/Perth — BUILD_ATTEMPT_STARTED — MYDASH-005_FINAL_UI_ACCESSIBILITY
+
+- Role selected from persisted state: `PRODUCER`; sole active gate `MYDASH-005 / IN_PROGRESS`; handoff `PRODUCER / RECOMMENDATION_FINAL_VERIFICATION_NEXT`.
+- Bounded scope: finish accessible loading, empty and error-state semantics, retry focus visibility and executable responsive contracts; then produce the complete Auditor handoff. No database, hosted/private row, deployment, Vercel, broker or trading action is authorised.
+
+### 6 September 2026, 09:18 Australia/Perth — MYDASH-005_PRODUCER_HANDOFF_READY
+
+- Added explicit busy/status semantics to recommendation loading and empty states and extended the unavailable-state retry to a 44 px keyboard target with a visible focus ring. Added focused regression coverage for all three state contracts.
+- Bounded implementation commit: `5069979e1474cb3e3297cb3f5a16116822c34e5b`.
+- Fresh verification passed: focused Recommendations UI 5/5, complete repository 126/126, TypeScript, palette and `git diff --check` with existing line-ending notices only.
+- Final browser replay could not run: Windows computer control failed during sandbox ACL initialization, and the repository browser CLI is not installed. Prior authenticated localhost evidence at desktop and 390 × 844 remains current for the unchanged error layout; the new loading/empty/focus/responsive behavior is executable source evidence and the limitation is explicit for independent audit.
+- MYDASH-005 moved to `IN_REVIEW` with handoff owner `AUDITOR`. Isolated database RLS/RPC execution remains deferred once; no database, private value, hosted system, deployment, Vercel, broker, trading or automation setting changed.
+- Handoff: `AUDITOR / MYDASH-005 IN_REVIEW / INDEPENDENT_AUDIT_NEXT`. Audit the exact published candidate without implementing fixes or promoting more than one gate.

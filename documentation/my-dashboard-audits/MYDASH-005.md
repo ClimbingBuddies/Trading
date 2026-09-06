@@ -1,8 +1,8 @@
 # MYDASH-005 Audit Evidence
 
 **Gate:** Explainable Recommendations  
-**State:** PRODUCER IN PROGRESS  
-**Updated:** 6 September 2026, 09:04 Australia/Perth
+**State:** READY FOR INDEPENDENT AUDIT
+**Updated:** 6 September 2026, 09:18 Australia/Perth
 
 ## Current local candidate
 
@@ -28,8 +28,25 @@
 - Verification passed: focused 22/22, repository 125/125, TypeScript and `git diff --check` (existing line-ending notices only).
 - GitHub publication verified: functional/control commit `53fedde20ecb0ec5a1f1e757c0ab124535b0809c` is present on `origin/main`; unrelated untracked owner files and generated cache output were excluded.
 - Localhost at 1280 px and 390 × 844 selected the Recommendations tab without document overflow or captured browser warning/error logs. The authenticated environment correctly showed the isolated Recommendations error state because the new local migration has not been applied to any database. No private value was entered, mutated or retained as evidence.
+- The final accessibility increment marks loading as a busy live status, exposes the empty shortlist as status, and gives the unavailable-state retry a 44 px keyboard target with a visible focus ring. Focused source verification passed 5/5. A fresh browser replay was unavailable because Windows computer control failed sandbox initialization and the repository browser CLI is not installed; this did not erase the prior authenticated desktop/narrow error-state observation and is disclosed for the Auditor.
 
-## Outstanding before Producer handoff
+## Producer handoff
 
-- Execute database RLS/RPC/generator isolation tests only if an isolated local target becomes available; otherwise retain the unavailable environment proof once as deferred evidence.
-- Re-run complete desktop/narrow-screen/keyboard/loading/empty/error verification against the finished local candidate, then hand off to an independent Auditor.
+    task_id: MYDASH-005
+    handoff_from: PRODUCER
+    handoff_to: AUDITOR
+    handoff_status: READY_FOR_AUDIT
+    implementation_commit_or_range: 53fedde20ecb0ec5a1f1e757c0ab124535b0809c..5069979e1474cb3e3297cb3f5a16116822c34e5b
+    delivery_control_commits: ea143a33a02424b36133f5ad671df33052b3fe82 plus the commit containing this handoff, verified in automation memory after publication
+    files_changed: recommendation migration, deterministic generator/adapters, dashboard client/styles and focused regression suites
+    migrations_and_schema_effects: one unapplied immutable owner-scoped recommendation snapshot/source/event migration; private service-role source loader/writer; constrained authenticated event append
+    rls_and_permission_evidence: source-level role matrix, owner predicates, composite ownership, append-only triggers and unsupported RPC denials pass; isolated execution remains deferred
+    source_data_and_cutoffs: explicit owner relevance; completed cutoff-bounded Market AI, Technical and Opportunity sources; exact identities and chronology retained; no private rows inspected
+    calculation_or_methodology_version: personal-research-relevance-v1 with canonical SHA-256 separated-evidence identity
+    tests_and_checks: final focused 5/5; complete repository 126/126; TypeScript, palette and diff checks passed
+    routes_and_viewports_verified: prior authenticated localhost 1280 px and 390 × 844 error state passed; loading/empty/error/focus/responsive contracts freshly source-tested; final browser replay unavailable and disclosed
+    privacy_and_cross_user_evidence: browser reads are owner-scoped and select-only; writer is service-role-only; anonymous/cross-owner event paths denied; isolated database execution deferred
+    documentation_impact: project plan, audit evidence, controller journal and automation memory reconciled
+    known_limitations: migration not applied; no isolated database execution; final-run browser tooling unavailable; no deployment or production verification authorised
+    acceptance_criteria_evidence: immutable snapshots, lineage/cutoffs, methodology separation, risk/limitations display, feedback boundaries and unsupported-path denial mapped above
+    exact_next_action: independently audit this exact published candidate; do not implement fixes in the audit run
