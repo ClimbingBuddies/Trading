@@ -70,3 +70,36 @@ On 6 September 2026 at 12:52 Australia/Perth, the Producer re-ran the complete r
 No new implementation defect was found. No migration was applied, no private row or hosted environment was accessed, and no deployment, provider, broker, order or trading capability changed. Prior authenticated localhost desktop evidence remains applicable because the implementation did not change during this regression-only phase.
 
 Handoff: `PRODUCER -> AUDITOR / MYDASH-006 IN_REVIEW / READY_FOR_INDEPENDENT_AUDIT`. The Auditor must review the exact published candidate independently and must not implement fixes while acting in that role.
+
+## Independent audit — FAIL
+
+On 6 September 2026 at 13:06 Australia/Perth, the Auditor reviewed the published implementation range `e9a0f60666b7093536bfd6cbd45bade3c111a009..31616d681258f4b2597e0197cff93a782c66c88c` and delivery-control commits through `f0c399e1b15c1e95f8ef2b25d0a6d746a762bb32`. The audit independently reproduced 136/136 repository tests, TypeScript, palette compliance and `git diff --check`. No implementation was changed while acting as Auditor.
+
+The candidate fails the forward-evidence contract. `capture_personal_decision_v1` accepts any succeeded independent Market assessment whose `analysis_cutoff_time` is merely not in the future, then writes a newly captured AI decision with `decision_at` equal to that historical cutoff. A caller can therefore capture an old assessment after its outcome is known and create an apparent forward decision. The RPC also has no owner/source natural key or conflict handling, so direct or concurrent retries can create duplicate immutable decisions for the same owner and assessment. The UI's loaded-state disable is not an authorization or concurrency boundary.
+
+Complete correction set:
+
+1. Define and enforce one explicit forward AI-capture eligibility window from authoritative persisted assessment/run timestamps. Fail closed when the capture occurs outside that window; do not use client time or UI state as evidence. Preserve the original assessment cutoff as the AI evaluation clock only when capture is contemporaneously eligible.
+2. Add an owner/source natural key for AI decisions and make identical retries idempotent. A conflicting non-identical immutable payload must fail without rewriting history. Concurrency must resolve at the database boundary.
+3. Make the UI offer AI capture only for evidence meeting the same persisted eligibility contract, while retaining RPC revalidation as authoritative. Stale, missing, future, unsupported and already-captured evidence must remain unavailable.
+4. Add executable regressions for historical/backdated direct RPC denial, future/missing timestamps, identical and concurrent retry idempotency, divergent-conflict denial, and UI eligibility. Retain owner isolation, anonymous denial, distinct user-paper server clocks, immutable events and the no-trade boundary.
+
+Unavailable isolated database/RLS/RPC execution and fresh narrow-screen execution remain deferred evidence; they do not weaken this source-level failure.
+
+    task_id: MYDASH-006
+    handoff_from: AUDITOR
+    handoff_to: PRODUCER
+    handoff_status: REWORK_REQUIRED
+    audit_record: documentation/my-dashboard-audits/MYDASH-006.md
+    implementation_commit_or_range_reviewed: e9a0f60666b7093536bfd6cbd45bade3c111a009..31616d681258f4b2597e0197cff93a782c66c88c
+    deployment_reviewed: none; migration remains unapplied and no deployment was authorised
+    schema_and_rls_checks: static migration/RPC review; owner SELECT policies, anonymous denial, immutable triggers and browser table-write denial retained; isolated execution deferred
+    calculation_reproduction: not applicable until MYDASH-007; forward-clock provenance inspected directly
+    ui_checks: prior authenticated desktop/narrow evidence retained; source-level capture eligibility reviewed; no mutation submitted
+    security_findings: P0 historical AI capture can backdate a newly created decision; P1 owner/source retry is not idempotent
+    calculation_findings: AI evaluation clock is valid only if capture eligibility proves the decision existed before forward outcomes
+    ux_findings: loaded-state duplicate disable is not authoritative and stale historical evidence can remain actionable
+    required_corrections: enforce authoritative forward eligibility; database natural-key idempotency/conflict denial; mirror eligibility in UI; add direct/concurrent denial regressions
+    residual_risks: isolated database execution and fresh narrow-screen success evidence remain deferred
+    next_owner: PRODUCER
+    exact_next_action: implement the complete forward-capture/idempotency correction set and return MYDASH-006 for independent re-audit

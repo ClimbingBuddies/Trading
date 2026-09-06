@@ -3874,3 +3874,12 @@ Not authorised by this decision:
 - The verified MYDASH-006 audit-handoff documentation was committed locally as `120c80d68b18c5383240058d7b2a7a98c510568e`; the last confirmed remote identity remains `70aa701e79696875e20204d7415578bc3f9d5e44`.
 - The execution safety reviewer rejected publication because fresh trusted owner approval is required for this exact internal-documentation payload and the `origin/main` destination. No workaround, indirect execution or force-push was attempted.
 - MYDASH-006 remains `IN_REVIEW / AUDITOR` locally. Retry publication and verify the remote identity before beginning the independent audit.
+
+### 6 September 2026, 13:06 Australia/Perth — MYDASH-006_INDEPENDENT_AUDIT_FAIL
+
+- Travis explicitly approved publishing `120c80d` and `f0c399e` to GitHub `origin/main`. A fresh fetch showed zero divergence; the exact branch was pushed without force and local plus remote identities were confirmed at `f0c399e1b15c1e95f8ef2b25d0a6d746a762bb32` before audit work began.
+- Role performed: `AUDITOR` only against the published functional range `e9a0f60666b7093536bfd6cbd45bade3c111a009..31616d681258f4b2597e0197cff93a782c66c88c`; no implementation fix was made.
+- Independent verification reproduced 136/136 repository tests, TypeScript, palette compliance and `git diff --check`. Static ownership, anonymous-denial, immutable-trigger, browser read-only and no-trade boundaries otherwise remain intact.
+- Audit result: `FAIL`. The AI RPC accepts any non-future succeeded assessment and assigns its historical analysis cutoff as the newly captured decision time, permitting look-ahead/backdated forward history. It also lacks an owner/source natural key, so direct or concurrent retries can duplicate the same immutable AI decision.
+- Returned MYDASH-006 to `IN_PROGRESS / PRODUCER` with one complete correction set: authoritative contemporaneous capture eligibility, database-enforced owner/source idempotency and divergent-conflict denial, matching UI eligibility, and executable stale/future/missing/direct/concurrent retry regressions.
+- Unapplied-schema isolated database execution and fresh narrow-screen success evidence remain deferred. No database, private data, deployment, Vercel, provider, broker, order, trading or automation-state mutation occurred. Forecast is 2–3 MYDASH-006 runs and 14–22 total remaining runs.
