@@ -3840,3 +3840,9 @@ Not authorised by this decision:
 - Explicit loading, real empty and isolated error states keep private decision rows hidden until the full read succeeds. Pending entries do not invent an entry price or return, and the UI repeats the no-broker/no-order boundary.
 - Verification passed: focused Decision Lab 8/8, repository 135/135, TypeScript, palette and `git diff --check`. Localhost desktop and 390 × 844 preserved the selected tab and authenticated isolated unavailable state for the intentionally unapplied migration; browser console errors were empty.
 - MYDASH-006 remains `IN_PROGRESS / PRODUCER`; forecast is now 3–6 gate runs and 15–25 total. Capture controls, whole-gate verification and independent audit remain. No database, hosted/private row, deployment, provider, Vercel, broker, trading or automation-state change occurred.
+
+### 6 September 2026, 12:40 Australia/Perth — GITHUB_STATUS_PUBLICATION_COMPLETE
+
+- Committed only the verified MYDASH-006 Decision Lab read/lifecycle UI, regression and control evidence as `024bcfb0a8ee7c8b680b015a7f63fd41c47ff372`.
+- Fresh fetch showed no divergence; pushed without force and confirmed local `HEAD` plus `origin/main` both resolve to `024bcfb0a8ee7c8b680b015a7f63fd41c47ff372`.
+- Unrelated untracked `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` remain untouched. GitHub publication changes delivery visibility only and grants no deployment, hosted-database, broker or trading authority.

@@ -239,7 +239,7 @@ The status, remaining scope and run forecast are kept together here so gate prog
 
 **Estimated remaining work:** MYDASH-006 retains **3–6 meaningful runs**. MYDASH-006 through MYDASH-008 retain **15–25 meaningful runs** in aggregate and will be rebaselined when evidence changes.
 
-**Publication status:** `GITHUB_STATUS_PUBLICATION_COMPLETE` through `17cc5b7c977f7d4662b48f5032960efa26b36ea6`; local and `origin/main` matched before this phase. The phase-2 UI changes are verified locally and await the bounded cycle commit/push. Unrelated untracked `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` remain excluded.
+**Publication status:** `GITHUB_STATUS_PUBLICATION_COMPLETE` through `024bcfb0a8ee7c8b680b015a7f63fd41c47ff372`; local and `origin/main` identities match. Unrelated untracked `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` remain excluded.
 
 Gate-by-gate outstanding work and estimated runs are maintained in the **Work gates** table above. This section retains the cross-gate forecast assumptions, timing and publication status without duplicating the tracking rows.
 
@@ -419,4 +419,4 @@ The project is complete only when:
     controller_journal_created: true
     production_changes_authorised: recurring bounded GitHub main publication is authorised for owner visibility; refresh-portfolio-health deployment and the supplied CommSec holdings import were separately approved and completed; no further deployment or production mutation without exact owner approval
     owner_approval_recorded: Owner Reviews A and B approved; MYDASH-001 through MYDASH-005 complete
-    next_action: Publish the verified Decision Lab read/lifecycle UI phase, then add constrained user-paper and eligible AI-signal capture controls.
+    next_action: Add constrained user-paper and eligible AI-signal capture controls, preserving the two-clock and no-trade boundaries.

@@ -43,6 +43,7 @@ The dashboard performs separate owner-filtered reads of immutable decisions and 
 - TypeScript, palette and `git diff --check`: passed.
 - Localhost desktop and 390 × 844: the selected Decision Lab tab remains responsive and exposes the existing authenticated private-data unavailable state because the candidate migration is intentionally unapplied; no browser console error appeared.
 - No capture mutation was added in this phase. No database, hosted/private row, deployment, provider, broker or trading action occurred.
+- Phase-2 functional/control commit `024bcfb0a8ee7c8b680b015a7f63fd41c47ff372` was pushed without force and independently confirmed as both local `HEAD` and `origin/main`.
 
 ## Limitations and next phase
 
