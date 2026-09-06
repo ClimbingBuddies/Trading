@@ -4127,3 +4127,9 @@ Not authorised by this decision:
 - Travis directed the project to proceed after receiving the exact Owner Review C package. This is recorded as acceptance of the independently verified MYDASH-007 contract with the documented real-pilot, isolated database, result-bearing browser, narrow-screen and proposed 07:00 schedule evidence retained as deferred and unclaimed.
 - MYDASH-007 remains `DONE`; MYDASH-008 is promoted as the sole active gate at `NEXT / PRODUCER`. Forecast is 4–7 meaningful runs for bounded local completion work, independent audit and final reconciliation.
 - Acceptance does not authorise applying migrations, installing schedules, deployment, Vercel, hosted Supabase or production mutation, private-row access, provider expansion, broker access, orders or trading. Exact next action: begin one bounded MYDASH-008 Producer phase by inventorying final local-candidate completion gaps and implementing the highest-priority locally authorised set.
+
+### 6 September 2026, 19:28 Australia/Perth — GITHUB_STATUS_PUBLICATION_DEFERRED
+
+- Committed the bounded Owner Review C decision, MYDASH-008 promotion, forecast and audit reconciliation locally as `2b8fe5adda8c3a7917dfcf7c890a45ffec1e992a`; fresh repository state showed zero remote-only commits and `origin/main` at `6ca544612f3bac4e3a9057f90bbf81124cde6847`.
+- Execution safety review rejected exporting this exact project-plan, audit and journal payload to shared GitHub `origin/main` without fresh explicit owner approval for that payload and destination. No workaround, indirect publication or force-push was attempted.
+- MYDASH-008 remains `NEXT / PRODUCER`, but the controller must retry publication before material implementation. No migration, private-data access, hosted mutation, schedule, deployment, Vercel, provider, broker, order, trading or automation-setting change occurred.
