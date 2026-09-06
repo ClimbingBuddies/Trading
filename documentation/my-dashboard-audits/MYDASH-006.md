@@ -115,3 +115,9 @@ Verification passed: focused Decision Lab **11/11**, full repository **138/138**
 MYDASH-006 remains `IN_PROGRESS / PRODUCER` for one whole-gate reconciliation before independent re-audit.
 
 The bounded correction implementation, regression and handoff evidence were published as `08dbdb1b0c8e254420c1b5e46092eb575a004999`; a fresh fetch confirmed local `main` and `origin/main` equal at that identity.
+
+## Whole-gate Producer reconciliation and re-audit handoff
+
+Whole-gate verification reproduced focused Decision Lab **11/11**, repository **138/138**, TypeScript, palette and `git diff --check` passes against functional candidate `08dbdb1b0c8e254420c1b5e46092eb575a004999`. The prior authenticated 390 × 844 evidence remains applicable because no functional code changed afterward. Isolated database/RLS/direct-concurrency execution remains deferred while the migration is intentionally unapplied.
+
+MYDASH-006 is now `IN_REVIEW / AUDITOR`. The independent re-audit must reproduce forward eligibility, identical/concurrent retry idempotency, divergent-conflict denial, owner isolation, anonymous denial, distinct clocks, immutable events and the no-trade boundary against the exact published candidate.

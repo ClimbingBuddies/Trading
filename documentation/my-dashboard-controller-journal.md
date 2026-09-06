@@ -9,14 +9,14 @@
 
     project_status: IN_PROGRESS
     active_gate: MYDASH-006
-    active_gate_status: IN_PROGRESS
-    handoff_owner: PRODUCER
-    handoff_status: READY_FOR_BUILD
+    active_gate_status: IN_REVIEW
+    handoff_owner: AUDITOR
+    handoff_status: READY_FOR_INDEPENDENT_RE_AUDIT
     owner_review: OWNER_REVIEW_B_ACCEPTED_2026-09-05
-    last_event: GITHUB_STATUS_PUBLICATION_DEFERRED_2026-09-06T12:09+08:00
+    last_event: MYDASH-006_PRODUCER_CORRECTION_READY_FOR_RE_AUDIT_2026-09-06T13:52+08:00
     consecutive_failure_count: 0
     consecutive_failure_reason: NONE
-    next_action: Obtain fresh explicit approval to publish the verified capture foundation and delivery-control record to origin/main; verify the remote, then build the Decision Lab UI phase.
+    next_action: Auditor independently verifies published candidate 08dbdb1b0c8e254420c1b5e46092eb575a004999 and either passes MYDASH-006 or returns one complete correction set.
 
 ## Gate ledger
 
@@ -27,7 +27,7 @@
 | MYDASH-003 | DONE | NONE | Independent local re-audit PASS 2 September 2026 |
 | MYDASH-004 | DONE | NONE | Owner Review B accepted 5 September 2026; deferred database evidence retained |
 | MYDASH-005 | DONE | NONE | Independent re-audit PASS_WITH_ADVICE 6 September 2026 |
-| MYDASH-006 | IN_PROGRESS | PRODUCER | Independent audit |
+| MYDASH-006 | IN_REVIEW | AUDITOR | Independent audit |
 | MYDASH-007 | PLANNED | NONE | Independent audit, then Owner Review C |
 | MYDASH-008 | PLANNED | NONE | Independent audit and final reconciliation |
 
@@ -3909,3 +3909,30 @@ Not authorised by this decision:
 - Committed only the verified MYDASH-006 forward-capture/idempotency correction, tests and canonical evidence as `08dbdb1b0c8e254420c1b5e46092eb575a004999`.
 - Fresh fetches showed zero divergence; pushed without force and confirmed local `main` plus `origin/main` both resolve to `08dbdb1b0c8e254420c1b5e46092eb575a004999`.
 - Unrelated untracked `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` remain untouched. Publication changes delivery visibility only and grants no deployment, hosted-database, broker or trading authority.
+
+### 6 September 2026, 13:52 Australia/Perth — MYDASH-006_PRODUCER_CORRECTION_READY_FOR_RE_AUDIT
+
+- Role remained `PRODUCER`; the sole active gate moved from `IN_PROGRESS` to `IN_REVIEW` and was assigned to `AUDITOR`. No audit was performed and no successor gate was promoted.
+- Fresh `origin/main` reconciliation confirmed zero divergence and the bounded correction implementation at `08dbdb1b0c8e254420c1b5e46092eb575a004999`. Whole-gate verification reproduced focused Decision Lab 11/11, repository 138/138, TypeScript, palette and `git diff --check` passes.
+- The prior authenticated 390 × 844 evidence remains applicable because no functional change followed it. The migration remains intentionally unapplied; isolated database/RLS/direct-concurrency execution is deferred and not claimed. No private row, hosted database, deployment, Vercel, broker, order, trading or automation-state mutation occurred.
+- Forecast: one MYDASH-006 audit run and 13–20 total remaining runs. Unrelated untracked `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` remain untouched.
+
+    task_id: MYDASH-006
+    handoff_from: PRODUCER
+    handoff_to: AUDITOR
+    handoff_status: READY_FOR_INDEPENDENT_RE_AUDIT
+    audit_record: documentation/my-dashboard-audits/MYDASH-006.md
+    implementation_commit_or_range: e9a0f60666b7093536bfd6cbd45bade3c111a009..08dbdb1b0c8e254420c1b5e46092eb575a004999
+    functional_candidate_commit: 08dbdb1b0c8e254420c1b5e46092eb575a004999
+    delivery_control_commits: pending this handoff publication
+    deployment: none; migration remains unapplied and no deployment is authorised
+    schema_and_rls_checks: static migration/RPC contracts pass; owner SELECT, anonymous denial, immutable triggers, browser table-write denial, authoritative eligibility and unique retry boundary retained; isolated execution deferred
+    calculation_reproduction: not applicable until MYDASH-007; source cutoff and forward eligibility clocks are statically regression-tested
+    ui_checks: authenticated 390 x 844 eligibility-unavailable state passed without overflow, framework overlay or console warning/error; no form submitted
+    security_findings: prior historical-capture and duplicate-source findings corrected in the published candidate; independent re-audit required
+    calculation_findings: original assessment cutoff remains the AI clock only when capture occurs inside the authoritative forward window
+    ux_findings: UI consumes only database-reported eligible IDs and retains RPC authority
+    required_corrections: none from Producer; Auditor must independently reproduce all acceptance checks
+    residual_risks: isolated database concurrency/RLS/RPC execution remains deferred while the migration is unapplied
+    next_owner: AUDITOR
+    exact_next_action: independently audit the exact published candidate and either pass MYDASH-006 or return one complete correction set
