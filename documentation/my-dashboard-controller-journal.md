@@ -3977,3 +3977,9 @@ Not authorised by this decision:
 - Added a service-only deterministic entry resolver. It requires a non-future cutoff, the decision's own `NEXT_DAILY_CLOSE` clock and exactly one active Tiingo mapping, then selects the first distinct canonical `1day` session strictly after that clock and at or before the cutoff. Missing mapping or session evidence remains explicit and numeric output stays null.
 - Verification passed: focused return migration 7/7, repository 145/145, TypeScript, palette and `git diff --check`. The migration remains unapplied, so isolated database/RLS/function execution is deferred and not claimed; browser verification is not applicable to this schema-only phase.
 - No private row, hosted database, deployment, Vercel, provider expansion, broker, order, trading or automation-setting change occurred. Forecast is 7–11 MYDASH-007 runs and 11–18 total remaining runs. Exact next action: implement immutable idempotent checkpoint evaluation and exact source-hash conflict denial.
+
+### 6 September 2026, 14:43 Australia/Perth — GITHUB_STATUS_PUBLICATION_COMPLETE
+
+- Committed only the verified MYDASH-007 return-ledger foundation, static regressions and canonical evidence as `7953062704d2df34ac3fc274c98d7fe0f0626d70`.
+- Fresh fetches showed zero remote-only commits; pushed without force and confirmed local `HEAD` plus `origin/main` both resolve to that identity.
+- Publication changes delivery visibility only. The migration remains unapplied, and no private data, hosted database, deployment, Vercel, provider, broker, order, trading or automation-setting change occurred.
