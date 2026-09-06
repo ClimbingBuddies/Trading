@@ -3697,3 +3697,11 @@ Not authorised by this decision:
 - The execution safety reviewer rejected the exact `git push origin main` because publishing five commits to the shared default branch requires a new explicit owner approval for this exact action. It prohibited workaround or indirect execution, so none was attempted.
 - No implementation, test, audit, database, private-data, provider, deployment, Vercel, broker, trading or automation-state change occurred. MYDASH-005 remains `IN_REVIEW / AUDITOR`; the 1–2 run gate forecast remains unchanged.
 - Exact next action: Travis explicitly approves publishing the complete verified local `main` branch to `origin/main`; then confirm the remote identity and independently audit the Producer handoff.
+
+### 6 September 2026, 09:42 Australia/Perth — GITHUB_STATUS_PUBLICATION_DEFERRED
+
+- Role selected from persisted state: `AUDITOR`; sole active gate `MYDASH-005 / IN_REVIEW`. The mandatory publication retry was attempted before any independent audit work.
+- A fresh authorised fetch succeeded and confirmed `origin/main` remains `ea143a33a02424b36133f5ad671df33052b3fe82`, with no remote divergence; local `main` was six bounded commits ahead through `68ec01e87fec234aca696a6f0eab5f728d998259`. Unrelated untracked `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` remain untouched and excluded.
+- The execution safety reviewer again rejected the exact `git push origin main`, classifying six commits to the shared default branch as consequential and requiring explicit owner approval accepted for this exact action. It prohibited workaround or indirect execution, so none was attempted.
+- No implementation, test, audit, database, private-data, provider, deployment, Vercel, broker, trading or automation-state change occurred. MYDASH-005 remains `IN_REVIEW / AUDITOR`; the 1–2 run gate forecast remains unchanged.
+- Exact next action: Travis explicitly approves publishing the complete verified local `main` branch to `origin/main`; then confirm the remote identity and independently audit the Producer handoff.

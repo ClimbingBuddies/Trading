@@ -54,3 +54,5 @@
 Publication correction: commits `5069979cec1660822abd6005f06a7ad3b23077e3`, `d7a4d7ab55a259d43ab627ed2c0cd5ca53b306c4` and `53630998e5df8437910526e57a6a35e94bf2d56a` are locally verified but not yet published. Retry the authorised `origin/main` push before auditing or starting new material work.
 
 Publication retry at 09:32 Australia/Perth: a fresh fetch confirmed no remote divergence and `origin/main` still at `ea143a33a02424b36133f5ad671df33052b3fe82`. The safety reviewer rejected the exact default-branch push pending a new explicit owner approval and prohibited workaround execution. The candidate remains unaudited and unchanged.
+
+Publication retry at 09:42 Australia/Perth: a fresh fetch again confirmed no remote divergence and the same remote identity. The safety reviewer rejected publishing the six bounded local commits to the shared default branch pending explicit owner approval accepted for that exact action, and prohibited workaround execution. The candidate remains unaudited and unchanged.
