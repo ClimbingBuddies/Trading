@@ -4146,3 +4146,9 @@ Not authorised by this decision:
 - Reconciled stale Today and Portfolio Health empty-state copy. Replaced the obsolete disabled recommendation action with navigation to the separately governed Decision Lab; it does not create or prefill a decision. Added the six-tab owner workflow, keyboard operation, fail-closed loading, provenance, incomplete-evidence, privacy and no-trading boundaries to the canonical guide.
 - Verification passed: focused UI 20/20, repository 160/160, TypeScript, palette and `git diff --check`. Localhost `/help` rendered the new section; a genuine 390 × 844 viewport had no page-level overflow; signed-out `/my-dashboard` redirected to `/login?next=/my-dashboard`; browser warning/error logs were empty.
 - Forecast is 3–6 remaining meaningful runs. Next: complete the locally available accessibility/performance/telemetry and temporary-tooling inventory, run whole-gate regression, then prepare independent audit. No migration, private row, hosted mutation, schedule, deployment, Vercel, provider, broker, order, trading or automation-setting change occurred.
+
+### 6 September 2026, 19:41 Australia/Perth — GITHUB_STATUS_PUBLICATION_COMPLETE
+
+- Committed only the verified MYDASH-008 lifecycle/user-guide implementation and regressions as `f93e60e9e8ee4f75db3e1204b54d33b0655fcf84`, followed by the separate gate inventory, plan and journal evidence as `e7dd6c58810d08cd4d07e3908d21a6f6c5d87325`.
+- A fresh fetch showed zero remote-only commits; pushed without force, fetched again and confirmed local `HEAD` plus `origin/main` both resolve to `e7dd6c58810d08cd4d07e3908d21a6f6c5d87325`.
+- MYDASH-008 remains `IN_PROGRESS / PRODUCER`. Publication changes delivery visibility only; no deployment, production verification, migration, private-data access, hosted mutation, schedule, Vercel, provider, broker, order or trading change occurred.

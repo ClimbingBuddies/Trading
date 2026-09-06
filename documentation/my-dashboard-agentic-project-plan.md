@@ -239,7 +239,7 @@ The status, remaining scope and run forecast are kept together here so gate prog
 
 **Estimated remaining work:** MYDASH-008 retains **3–6 meaningful runs** for remaining local completion checks, whole-gate regression, independent audit and final reconciliation. Any deployment or production verification remains outside this forecast until separately authorised.
 
-**Publication status:** `GITHUB_STATUS_PUBLICATION_COMPLETE` through `330ad4aeb80e412d9be1b76819ff09d6086e83ec` on `origin/main`. The current MYDASH-008 completion phase is verified locally and awaits its bounded implementation/evidence commit and publication. Unrelated `next-env.d.ts`, `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` remain excluded.
+**Publication status:** `GITHUB_STATUS_PUBLICATION_COMPLETE`. The initial MYDASH-008 completion phase is published through evidence commit `e7dd6c58810d08cd4d07e3908d21a6f6c5d87325` on `origin/main`, including bounded implementation commit `f93e60e9e8ee4f75db3e1204b54d33b0655fcf84`. Unrelated `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` remain excluded.
 
 Gate-by-gate outstanding work and estimated runs are maintained in the **Work gates** table above. This section retains the cross-gate forecast assumptions, timing and publication status without duplicating the tracking rows.
 
