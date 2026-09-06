@@ -4216,3 +4216,9 @@ Not authorised by this decision:
 - Prior localhost accessibility, authenticated privacy, Help and genuine 390 × 844 evidence remains applicable because the candidate did not change. Hosted migration execution, isolated live RLS/function/concurrency execution, real private-row/result-bearing browser evidence, installed scheduling, deployment and production verification remain explicitly deferred and unclaimed.
 - Audit outcome: `PASS_WITH_ADVICE`. MYDASH-008 is `DONE`; MYDASH-001 through MYDASH-008 are independently passed; Owner Reviews A, B and C are accepted; durable status is `MY_DASHBOARD_PROJECT_COMPLETE`. No successor is promoted and no further controller work is authorised.
 - Advice: preserve the deferred-evidence register until separately authorised execution is completed. No migration, private-data access, hosted mutation, schedule, deployment, Vercel, provider, broker, order, trading or automation-setting change occurred.
+
+### 6 September 2026, 20:29 Australia/Perth — GITHUB_STATUS_PUBLICATION_COMPLETE
+
+- Committed only the verified independent MYDASH-008 audit outcome, final gate transition, forecast and project-completion reconciliation as `18748a4`.
+- A fresh fetch showed zero remote-only commits; pushed without force. A post-push fetch verified that GitHub `origin/main` contains `18748a4` with zero divergence before this delivery-control update.
+- Publication changes delivery visibility only. `MY_DASHBOARD_PROJECT_COMPLETE` remains the durable state; deferred hosted/database/production evidence remains unclaimed and no deployment, private-data access, hosted mutation, schedule, Vercel, provider, broker, order, trading or automation-setting change occurred.
