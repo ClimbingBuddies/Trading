@@ -239,7 +239,7 @@ The status, remaining scope and run forecast are kept together here so gate prog
 
 **Estimated remaining work:** MYDASH-007 retains **6–10 meaningful runs** and MYDASH-008 retains **4–7**, for **10–17 meaningful runs** in aggregate. The forecast will be rebaselined when implementation or pilot evidence changes.
 
-**Publication status:** `GITHUB_STATUS_PUBLICATION_COMPLETE`. The verified MYDASH-007 return-ledger foundation is confirmed on `origin/main` at functional commit `7953062704d2df34ac3fc274c98d7fe0f0626d70`. Unrelated untracked `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` remain excluded.
+**Publication status:** `GITHUB_STATUS_PUBLICATION_DEFERRED`. The verified MYDASH-007 checkpoint-evaluator phase is committed locally as `f7ac798`; the execution safety reviewer rejected publishing that exact commit directly to shared default branch `origin/main` without a fresh trusted user approval for the destination and payload. The last confirmed remote identity remains `895408fa8a49eee27ddc56d0052448f7e46aa611`. Unrelated untracked `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` remain excluded.
 
 Gate-by-gate outstanding work and estimated runs are maintained in the **Work gates** table above. This section retains the cross-gate forecast assumptions, timing and publication status without duplicating the tracking rows.
 

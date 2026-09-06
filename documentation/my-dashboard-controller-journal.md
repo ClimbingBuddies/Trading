@@ -3999,3 +3999,9 @@ Not authorised by this decision:
 - SHA-256 source identity binds the decision source hash, checkpoint, cutoff, chosen observation IDs and quality result. INSERT-on-conflict returns identical immutable retries; divergent evidence raises `CALCULATION_ERROR` without update or duplication.
 - Verification passed: focused return migration 12/12, repository 150/150, TypeScript, palette and `git diff --check`. The migration remains intentionally unapplied, so isolated database/RLS/function/concurrency execution is deferred and not claimed; browser verification is not applicable to this schema-only phase.
 - Forecast is 6–10 MYDASH-007 runs and 10–17 total remaining runs. Exact next action: implement exact timestamp-aligned FX and benchmark resolution plus deterministic drawdown. No private row, hosted database, deployment, Vercel, provider expansion, broker, order, trading or automation-setting change occurred.
+
+### 6 September 2026, 14:52 Australia/Perth — GITHUB_STATUS_PUBLICATION_DEFERRED
+
+- Committed only the verified MYDASH-007 checkpoint evaluator, static regressions and canonical evidence locally as `f7ac798` after a fresh fetch confirmed zero divergence from `origin/main` at `895408fa8a49eee27ddc56d0052448f7e46aa611`.
+- The execution safety reviewer rejected publishing `f7ac798` directly to shared default branch `origin/main` because it requires fresh trusted user approval for that exact destination and payload. No workaround, indirect execution or force-push was attempted.
+- MYDASH-007 remains `IN_PROGRESS / PRODUCER`. Retry and verify publication before beginning exact FX, benchmark and drawdown work. No migration, private data, hosted database, deployment, Vercel, provider, broker, order, trading or automation-setting change occurred.
