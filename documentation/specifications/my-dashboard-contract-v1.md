@@ -411,10 +411,11 @@ Proposed v1 operations:
 
 1. existing market-history daily-close enqueue remains at 06:30 AWST;
 2. a deterministic return-evaluation enqueue may run at 07:00 AWST after MYDASH-007 approval;
-3. an idempotent worker resolves pending entries/checkpoints and writes return snapshots;
-4. portfolio health refresh follows successful price/FX evaluation or an owner position change;
-5. failures persist retry count, exact error and data-quality state;
-6. no job invokes a broker, places an order or changes a portfolio position.
+3. the local MYDASH-007 candidate defines a service-only batch worker at one explicit, non-future cutoff. Its run identity includes cutoff, trigger, calculation version and optional target decision; transaction advisory locking plus identical-success replay prevents concurrent duplicate runs;
+4. each eligible decision evaluates OPEN, only its configured 5D/20D/60D horizon, and EXIT only when a persisted EXIT event exists by the cutoff. Immutable snapshots remain the calculation evidence while internal run/result rows record attempts, counts, per-checkpoint quality and bounded errors;
+5. portfolio health refresh follows successful price/FX evaluation or an owner position change;
+6. failures persist retry count, bounded exact error and `CALCULATION_ERROR` without fabricating a snapshot or aborting unrelated checkpoints;
+7. no job invokes a broker, places an order or changes a portfolio position.
 
 The 07:00 proposal is not deployed by this gate and remains subject to owner and independent audit.
 

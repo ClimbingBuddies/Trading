@@ -579,9 +579,191 @@ revoke all on function private.evaluate_personal_return_checkpoint_v1(uuid, text
 grant execute on function private.evaluate_personal_return_checkpoint_v1(uuid, text, timestamptz)
   to service_role;
 
+create table private.personal_return_evaluator_runs (
+  id uuid primary key default gen_random_uuid(),
+  evaluation_cutoff timestamptz not null,
+  trigger_reason text not null,
+  target_decision_id uuid references public.personal_decisions(id) on delete restrict,
+  calculation_version text not null default 'personal-forward-return-v1',
+  status text not null default 'running',
+  attempt_count integer not null default 1,
+  started_at timestamptz not null default clock_timestamp(),
+  completed_at timestamptz,
+  decisions_considered integer not null default 0,
+  checkpoints_succeeded integer not null default 0,
+  checkpoints_failed integer not null default 0,
+  error_message text,
+  constraint personal_return_evaluator_runs_trigger_check
+    check (trigger_reason in ('scheduled', 'manual', 'retry')),
+  constraint personal_return_evaluator_runs_status_check
+    check (status in ('running', 'succeeded', 'failed')),
+  constraint personal_return_evaluator_runs_attempt_check check (attempt_count >= 1),
+  constraint personal_return_evaluator_runs_counts_check check (
+    decisions_considered >= 0 and checkpoints_succeeded >= 0 and checkpoints_failed >= 0
+  ),
+  constraint personal_return_evaluator_runs_completion_check check (
+    (status = 'running' and completed_at is null) or
+    (status in ('succeeded', 'failed') and completed_at is not null)
+  )
+);
+
+create unique index personal_return_evaluator_runs_identity_uidx
+  on private.personal_return_evaluator_runs (
+    evaluation_cutoff, trigger_reason, calculation_version, target_decision_id
+  ) nulls not distinct;
+
+create table private.personal_return_evaluator_results (
+  run_id uuid not null references private.personal_return_evaluator_runs(id) on delete cascade,
+  decision_id uuid not null references public.personal_decisions(id) on delete restrict,
+  checkpoint_code text not null,
+  snapshot_id uuid references public.personal_return_snapshots(id) on delete restrict,
+  status text not null,
+  quality_status text,
+  error_message text,
+  completed_at timestamptz not null default clock_timestamp(),
+  primary key (run_id, decision_id, checkpoint_code),
+  constraint personal_return_evaluator_results_checkpoint_check
+    check (checkpoint_code in ('OPEN', '5D', '20D', '60D', 'EXIT')),
+  constraint personal_return_evaluator_results_status_check
+    check (status in ('succeeded', 'failed')),
+  constraint personal_return_evaluator_results_outcome_check check (
+    (status = 'succeeded' and snapshot_id is not null and quality_status is not null and error_message is null) or
+    (status = 'failed' and snapshot_id is null and quality_status = 'CALCULATION_ERROR' and error_message is not null)
+  )
+);
+
+revoke all on table private.personal_return_evaluator_runs from public, anon, authenticated;
+revoke all on table private.personal_return_evaluator_results from public, anon, authenticated;
+grant select, insert, update on table private.personal_return_evaluator_runs to service_role;
+grant select, insert, update on table private.personal_return_evaluator_results to service_role;
+
+create or replace function private.run_personal_return_evaluator_v1(
+  p_trigger_reason text,
+  p_evaluation_cutoff timestamptz,
+  p_decision_id uuid default null
+)
+returns private.personal_return_evaluator_runs
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  v_run private.personal_return_evaluator_runs;
+  v_decision record;
+  v_checkpoint text;
+  v_snapshot public.personal_return_snapshots;
+  v_error text;
+  v_decisions integer := 0;
+  v_succeeded integer := 0;
+  v_failed integer := 0;
+begin
+  if p_trigger_reason not in ('scheduled', 'manual', 'retry') then
+    raise exception 'Unsupported evaluator trigger';
+  end if;
+  if p_evaluation_cutoff is null or p_evaluation_cutoff > statement_timestamp() then
+    raise exception 'Evaluation cutoff must be present and non-future';
+  end if;
+
+  perform pg_catalog.pg_advisory_xact_lock(pg_catalog.hashtextextended(
+    p_evaluation_cutoff::text || '|' || p_trigger_reason || '|' ||
+    coalesce(p_decision_id::text, 'ALL') || '|personal-forward-return-v1', 0
+  ));
+
+  select r.* into v_run
+  from private.personal_return_evaluator_runs r
+  where r.evaluation_cutoff = p_evaluation_cutoff
+    and r.trigger_reason = p_trigger_reason
+    and r.calculation_version = 'personal-forward-return-v1'
+    and r.target_decision_id is not distinct from p_decision_id
+  for update;
+
+  if found and v_run.status = 'succeeded' then
+    return v_run;
+  elsif found then
+    update private.personal_return_evaluator_runs
+    set status = 'running', attempt_count = attempt_count + 1,
+        started_at = clock_timestamp(), completed_at = null,
+        decisions_considered = 0, checkpoints_succeeded = 0,
+        checkpoints_failed = 0, error_message = null
+    where id = v_run.id
+    returning * into v_run;
+    delete from private.personal_return_evaluator_results rr where rr.run_id = v_run.id;
+  else
+    insert into private.personal_return_evaluator_runs (evaluation_cutoff, trigger_reason, target_decision_id)
+    values (p_evaluation_cutoff, p_trigger_reason, p_decision_id)
+    returning * into v_run;
+  end if;
+
+  for v_decision in
+    select d.id, d.horizon_sessions,
+      exists (
+        select 1 from public.personal_decision_events e
+        where e.owner_user_id = d.owner_user_id
+          and e.decision_id = d.id
+          and e.event_type = 'EXIT'
+          and e.event_at <= p_evaluation_cutoff
+      ) as has_exit
+    from public.personal_decisions d
+    where d.decision_at <= p_evaluation_cutoff
+      and (p_decision_id is null or d.id = p_decision_id)
+    order by d.id
+  loop
+    v_decisions := v_decisions + 1;
+    foreach v_checkpoint in array array[
+      'OPEN',
+      v_decision.horizon_sessions::text || 'D',
+      case when v_decision.has_exit then 'EXIT' else null end
+    ]
+    loop
+      continue when v_checkpoint is null;
+      begin
+        v_snapshot := private.evaluate_personal_return_checkpoint_v1(
+          v_decision.id, v_checkpoint, p_evaluation_cutoff
+        );
+        insert into private.personal_return_evaluator_results (
+          run_id, decision_id, checkpoint_code, snapshot_id, status, quality_status
+        ) values (
+          v_run.id, v_decision.id, v_checkpoint, v_snapshot.id, 'succeeded', v_snapshot.quality_status
+        );
+        v_succeeded := v_succeeded + 1;
+      exception when others then
+        v_error := left(sqlstate || ': ' || sqlerrm, 1000);
+        insert into private.personal_return_evaluator_results (
+          run_id, decision_id, checkpoint_code, status, quality_status, error_message
+        ) values (
+          v_run.id, v_decision.id, v_checkpoint, 'failed', 'CALCULATION_ERROR', v_error
+        );
+        v_failed := v_failed + 1;
+      end;
+    end loop;
+  end loop;
+
+  update private.personal_return_evaluator_runs
+  set status = case when v_failed = 0 then 'succeeded' else 'failed' end,
+      completed_at = clock_timestamp(), decisions_considered = v_decisions,
+      checkpoints_succeeded = v_succeeded, checkpoints_failed = v_failed,
+      error_message = case when v_failed = 0 then null else v_failed::text || ' checkpoint evaluation(s) failed' end
+  where id = v_run.id
+  returning * into v_run;
+
+  return v_run;
+end;
+$$;
+
+revoke all on function private.run_personal_return_evaluator_v1(text, timestamptz, uuid)
+  from public, anon, authenticated;
+grant execute on function private.run_personal_return_evaluator_v1(text, timestamptz, uuid)
+  to service_role;
+
 comment on table public.personal_return_snapshots is
   'Immutable owner-scoped deterministic forward-return evidence. Browser read only; no broker or execution authority.';
 comment on function public.resolve_personal_decision_entry_v1(uuid, timestamptz) is
   'Internal deterministic NEXT_DAILY_CLOSE resolver bounded by the decision clock and evaluation cutoff.';
 comment on function private.evaluate_personal_return_checkpoint_v1(uuid, text, timestamptz) is
   'Internal INSERT-only deterministic checkpoint evaluator. Identical retries return immutable evidence; divergent retries fail.';
+comment on table private.personal_return_evaluator_runs is
+  'Internal non-browser evaluator telemetry. Scheduling is intentionally not installed by MYDASH-007.';
+comment on table private.personal_return_evaluator_results is
+  'Internal per-checkpoint evaluator outcomes with bounded failure evidence and immutable snapshot references.';
+comment on function private.run_personal_return_evaluator_v1(text, timestamptz, uuid) is
+  'Service-only deterministic batch evaluator at one explicit non-future cutoff. No broker, order or scheduler authority.';

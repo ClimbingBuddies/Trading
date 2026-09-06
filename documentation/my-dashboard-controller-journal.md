@@ -8,15 +8,15 @@
 ## Current state
 
     project_status: IN_PROGRESS
-    active_gate: MYDASH-006
-    active_gate_status: IN_REVIEW
-    handoff_owner: AUDITOR
-    handoff_status: READY_FOR_INDEPENDENT_RE_AUDIT
+    active_gate: MYDASH-007
+    active_gate_status: IN_PROGRESS
+    handoff_owner: PRODUCER
+    handoff_status: DECISION_LAB_COMPARISON_READY
     owner_review: OWNER_REVIEW_B_ACCEPTED_2026-09-05
-    last_event: GITHUB_STATUS_PUBLICATION_DEFERRED_2026-09-06T13:56+08:00
+    last_event: MYDASH-007_OPERATIONAL_EVALUATOR_PATH_VERIFIED_2026-09-06T18:08+08:00
     consecutive_failure_count: 0
     consecutive_failure_reason: NONE
-    next_action: Obtain fresh exact owner approval to push local handoff through c1bc3af to origin/main, verify remote containment, then Auditor independently verifies candidate 08dbdb1b0c8e254420c1b5e46092eb575a004999.
+    next_action: Publish and verify the bounded operational evaluator change, then expose owner-scoped AI-versus-user Decision Lab comparisons.
 
 ## Gate ledger
 
@@ -4029,3 +4029,19 @@ Not authorised by this decision:
 - Committed only the verified MYDASH-007 exact FX, benchmark, drawdown, regression and canonical evidence locally as `1bbe56c` after a fresh fetch confirmed zero divergence from `origin/main` at `683c8d54fb4b9f993a4379d6d043807e4d180a8b`.
 - The execution safety reviewer rejected publishing that exact payload to `github.com/ClimbingBuddies/Trading` because destination ownership and authorization were not established by trusted user content. No workaround, indirect execution or force-push was attempted.
 - MYDASH-007 remains `IN_PROGRESS / PRODUCER`. Retry and verify publication before beginning the operational evaluator phase. No migration, private data, hosted mutation, deployment, Vercel, provider expansion, broker, order, trading or automation-setting change occurred.
+
+### 6 September 2026, 18:02 Australia/Perth — BUILD_ATTEMPT_STARTED — MYDASH-007_OPERATIONAL_EVALUATOR_PATH
+
+- Role selected from durable starting state: `PRODUCER`; sole active gate `MYDASH-007 / IN_PROGRESS`; handoff `PRODUCER / NON_DEPLOYED_OPERATIONAL_EVALUATOR_PATH`.
+- The publication prerequisite cleared externally: local `HEAD` and `origin/main` both resolve to `1f2039aa30d77509e83c9f8a06dceae344ba5350`. Unrelated untracked `AGENTS.md`, `CLAUDE.md` and `tsconfig.tsbuildinfo` remain preserved and excluded.
+- Starting SHA-256 identities: controller `e02b67fd46745ccab1e78f3b1fea76f7a3f7e4ae7a728d2b1571d6f200f44736`; plan `ed1c87b7f45de437e5ab867ffec303008a1f7a09f568080749e7a013b3a24acc`; approved contract `8f9e729905e87be12798b3f2b7e4bb7946d1368ac223504ace29948d83b218da`; return migration `7c0ac0bfedb7f691861664e6f6f86e0392151c09edcc338e582cfa5b84527847`.
+- Bounded scope: add an internal, service-only, idempotent evaluator-run ledger and deterministic batch function that evaluates eligible immutable decisions at one explicit cutoff, records per-checkpoint outcomes and failure telemetry, and exposes no browser, broker, order, scheduling or deployment path. The approved 07:00 schedule remains a proposal and will not be installed.
+- No migration application, private-row access, hosted mutation, deployment, Vercel, provider expansion, broker, order, trading or automation-setting change is authorised.
+
+### 6 September 2026, 18:08 Australia/Perth — MYDASH-007_OPERATIONAL_EVALUATOR_PATH_VERIFIED
+
+- Role remained `PRODUCER`; MYDASH-007 remains `IN_PROGRESS`. No independent audit, successor promotion or owner review occurred.
+- Added internal evaluator run/result ledgers and a service-only batch runner at one explicit non-future cutoff. Run identity binds cutoff, trigger, version and optional decision; transaction advisory locking serializes identical calls, completed replay is idempotent, and failed retries increment attempt telemetry.
+- Each decision evaluates only OPEN, its configured horizon and a cutoff-eligible persisted EXIT. Per-checkpoint failure records bounded SQLSTATE/error evidence as `CALCULATION_ERROR` without fabricating a snapshot or aborting unrelated work. Browser roles receive no access, and no cron, HTTP, broker, order or portfolio-position path was installed.
+- Verification passed: focused return migration 21/21, repository 159/159, TypeScript, palette and `git diff --check`. The migration remains intentionally unapplied, so isolated database/function/concurrency execution is deferred and not claimed; browser verification is not applicable to this internal schema-only phase.
+- Forecast is 4–8 MYDASH-007 runs and 8–15 total remaining runs. Exact next action: expose owner-scoped AI-versus-user Decision Lab comparisons, then run whole-gate regression and independent audit. No private rows, hosted database mutation, deployment, Vercel, provider expansion, broker, order, trading or automation-setting change occurred.

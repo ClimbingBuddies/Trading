@@ -54,12 +54,13 @@ test('future and pre-decision cutoffs fail without fabricating an entry', () => 
 })
 
 test('ledger keeps missing evidence null and preserves source identities', () => {
+  const ledger = sql.match(/create table public\.personal_return_snapshots \([\s\S]+?\n\);/)?.[0] ?? ''
   assert.match(sql, /entry_observation_id bigint references public\.market_observations\(id\)/)
   assert.match(sql, /exit_observation_id bigint references public\.market_observations\(id\)/)
   assert.match(sql, /source_identity_hash text not null/)
   assert.match(sql, /source_identity_hash ~ '\^\[0-9a-f\]\{64\}\$'/)
   assert.match(sql, /calculation_version = 'personal-forward-return-v1'/)
-  assert.doesNotMatch(sql, /default 0[^-9]|coalesce\([^\n]*(price_return|benchmark_return|base_currency_return)/i)
+  assert.doesNotMatch(ledger, /default 0[^-9]|coalesce\([^\n]*(price_return|benchmark_return|base_currency_return)/i)
 })
 
 test('return foundation contains no broker or order capability', () => {
@@ -165,4 +166,49 @@ test('checkpoint writes are service-only, immutable and idempotent with conflict
   assert.match(evaluator, /CALCULATION_ERROR: immutable checkpoint source conflict/)
   assert.match(sql, /revoke all on function private\.evaluate_personal_return_checkpoint_v1\(uuid, text, timestamptz\)[\s\S]*from public, anon, authenticated/)
   assert.match(sql, /grant execute on function private\.evaluate_personal_return_checkpoint_v1\(uuid, text, timestamptz\)[\s\S]*to service_role/)
+})
+
+test('operational evaluator keeps run and per-checkpoint telemetry internal', () => {
+  assert.match(sql, /create table private\.personal_return_evaluator_runs/)
+  assert.match(sql, /create table private\.personal_return_evaluator_results/)
+  assert.match(sql, /revoke all on table private\.personal_return_evaluator_runs from public, anon, authenticated/)
+  assert.match(sql, /revoke all on table private\.personal_return_evaluator_results from public, anon, authenticated/)
+  assert.match(sql, /grant select, insert, update on table private\.personal_return_evaluator_runs to service_role/)
+  assert.doesNotMatch(sql, /grant .*personal_return_evaluator_(runs|results).*authenticated/i)
+})
+
+test('batch evaluation is cutoff-bound, targeted when requested and retryable', () => {
+  const runner = sql.match(/create or replace function private\.run_personal_return_evaluator_v1[\s\S]+?\$\$;/)?.[0] ?? ''
+  assert.match(runner, /p_evaluation_cutoff > statement_timestamp\(\)/)
+  assert.match(runner, /d\.decision_at <= p_evaluation_cutoff/)
+  assert.match(runner, /p_decision_id is null or d\.id = p_decision_id/)
+  assert.match(runner, /attempt_count = attempt_count \+ 1/)
+  assert.match(runner, /v_run\.status = 'succeeded'[\s\S]*return v_run/)
+  assert.match(runner, /pg_advisory_xact_lock\(pg_catalog\.hashtextextended\(/)
+  assert.match(sql, /target_decision_id\s*\n\s*\) nulls not distinct/)
+})
+
+test('batch evaluation selects only OPEN, configured horizon and eligible EXIT', () => {
+  const runner = sql.match(/create or replace function private\.run_personal_return_evaluator_v1[\s\S]+?\$\$;/)?.[0] ?? ''
+  assert.match(runner, /'OPEN',[\s\S]*v_decision\.horizon_sessions::text \|\| 'D'/)
+  assert.match(runner, /e\.event_type = 'EXIT'/)
+  assert.match(runner, /e\.event_at <= p_evaluation_cutoff/)
+  assert.match(runner, /case when v_decision\.has_exit then 'EXIT' else null end/)
+  assert.doesNotMatch(runner, /'5D',\s*'20D',\s*'60D'/)
+})
+
+test('batch failures are isolated and persisted without fabricating snapshots', () => {
+  const runner = sql.match(/create or replace function private\.run_personal_return_evaluator_v1[\s\S]+?\$\$;/)?.[0] ?? ''
+  assert.match(runner, /exception when others/)
+  assert.match(runner, /left\(sqlstate \|\| ': ' \|\| sqlerrm, 1000\)/)
+  assert.match(runner, /'failed', 'CALCULATION_ERROR', v_error/)
+  assert.match(runner, /checkpoints_failed = v_failed/)
+  assert.match(runner, /case when v_failed = 0 then 'succeeded' else 'failed' end/)
+})
+
+test('operational path remains service-only and installs no schedule or trading path', () => {
+  assert.match(sql, /revoke all on function private\.run_personal_return_evaluator_v1\(text, timestamptz, uuid\)[\s\S]*from public, anon, authenticated/)
+  assert.match(sql, /grant execute on function private\.run_personal_return_evaluator_v1\(text, timestamptz, uuid\)[\s\S]*to service_role/)
+  const operational = sql.match(/create table private\.personal_return_evaluator_runs[\s\S]+?grant execute on function private\.run_personal_return_evaluator_v1\(text, timestamptz, uuid\)[\s\S]+?to service_role;/)?.[0] ?? ''
+  assert.doesNotMatch(operational, /cron\.schedule|pg_net|http_post|broker|place_order|order_id/i)
 })

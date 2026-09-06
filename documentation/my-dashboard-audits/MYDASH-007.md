@@ -26,7 +26,7 @@ Verification on 6 September 2026:
 
 ## Remaining gate scope
 
-Define but do not deploy the scheduled operational path; expose honest Decision Lab comparisons; complete whole-gate regression and independent audit; then route real pilot evidence to Owner Review C.
+Expose honest Decision Lab comparisons; complete whole-gate regression and independent audit; then route real pilot evidence to Owner Review C. The 07:00 operational schedule remains uninstalled pending approval.
 
 ## Producer evidence — immutable checkpoint evaluation
 
@@ -43,6 +43,22 @@ Verification on 6 September 2026:
 - `git diff --check`: passed;
 - isolated database/function/concurrency execution: deferred because the migration is unapplied;
 - browser verification: not applicable to this schema-only phase.
+
+## Producer evidence — non-deployed operational evaluator path
+
+The fourth phase adds internal run and per-checkpoint result ledgers plus a service-only batch evaluator. Every invocation uses an explicit non-future cutoff; identity includes cutoff, trigger, calculation version and optional target decision. A transaction advisory lock serializes identical concurrent invocations, completed runs replay idempotently, and failed retries increment their attempt count.
+
+Each eligible decision evaluates OPEN, only its configured 5D/20D/60D horizon, and EXIT only when a persisted owner-matched EXIT event exists by the cutoff. Per-checkpoint exceptions persist bounded SQLSTATE/error evidence as `CALCULATION_ERROR` without creating a snapshot or aborting unrelated work. Both telemetry tables and the runner deny browser roles and grant only the service role. No cron, HTTP, provider, broker, order or position-changing path is installed.
+
+Verification on 6 September 2026:
+
+- focused migration contract: 21/21 passed;
+- repository tests: 159/159 passed;
+- TypeScript: passed;
+- palette: passed;
+- `git diff --check`: passed;
+- isolated database/function/concurrency execution: deferred because the migration is unapplied;
+- browser verification: not applicable to this internal schema-only phase.
 
 ## Producer evidence — exact FX, benchmark and drawdown
 
