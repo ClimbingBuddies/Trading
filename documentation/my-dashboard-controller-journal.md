@@ -4242,3 +4242,10 @@ Not authorised by this decision:
 - Production `/help` and signed-out `/my-dashboard` returned HTTP 200. The Help page contains the completed My Dashboard guide and `Open Decision Lab` copy. A recent error-level Vercel log scan returned no logs.
 - Removed the validated temporary deployment worktree and its short-lived Vercel environment file after verification. Hosted migrations, isolated live RLS/function/concurrency checks, authenticated private-row and narrow-screen production evidence, installed scheduling, broker access, orders and live trading remain unclaimed and require separate exact authority.
 - GitHub publication of the controller metadata remains deferred as previously recorded; this Vercel authorization did not broaden into a GitHub export or any database/production-data mutation.
+
+### 6 September 2026, 21:25 Australia/Perth — GITHUB_STATUS_PUBLICATION_DEFERRED
+
+- Reconciled the stale scheduler wording against durable state: `MY_DASHBOARD_PROJECT_COMPLETE` remains authoritative, all eight gates are `DONE`, Owner Reviews A/B/C are accepted and the final audit remains `PASS_WITH_ADVICE`; no material gate work is authorised.
+- Local `main` is three bounded documentation-only commits ahead of last verified GitHub `origin/main` at `45400e2`: completion metadata `691bd8a`, its delivery-control record `6790ac8`, and production-deployment record `d1668cb`. `git diff --check` passed and unrelated owner/generated files remain excluded.
+- The execution safety reviewer rejected fetching/pushing/verifying this exact payload on shared `origin/main` without fresh direct owner approval tied to the destination and payload. No workaround, indirect publication or force-push was attempted. Retry publication before any future work.
+- No application, test, migration, private-data, hosted database, deployment, schedule, Vercel, provider, broker, order, trading or automation-setting change occurred. Automation remains ACTIVE at the unchanged ten-minute cadence.
