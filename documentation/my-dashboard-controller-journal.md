@@ -3889,3 +3889,17 @@ Not authorised by this decision:
 - The independent-audit handback is committed locally as `97a3c890ca4013c5eb3aae8557697a168d086c45`, one commit ahead of the last confirmed `origin/main` identity `f0c399e1b15c1e95f8ef2b25d0a6d746a762bb32`.
 - The execution safety reviewer rejected the exact fetch/push/verification request because this shared-default-branch publication requires fresh trusted owner approval. No workaround, indirect execution or force-push was attempted.
 - Per the controller publication prerequisite, no MYDASH-006 correction work began. The gate remains `IN_PROGRESS / PRODUCER`; retry publication and verify the remote identity before implementing the forward-capture and idempotency correction set.
+### 6 September 2026, 13:43 Australia/Perth — BUILD_ATTEMPT_STARTED — MYDASH-006_FORWARD_CAPTURE_IDEMPOTENCY_CORRECTION
+
+- Role selected from starting state: `PRODUCER`; sole active gate `MYDASH-006 / IN_PROGRESS`; handoff `AUDITOR -> PRODUCER / REWORK_REQUIRED`.
+- Cleared the mandatory publication prerequisite first: fetched `origin/main`, confirmed zero remote-only commits, pushed bounded audit/control commits `97a3c89` and `5601b46` without force, and proceeded from starting commit `5601b4660906081a72c50ddfdf9e7bb05a31b3ed`.
+- Starting SHA-256 identities: controller `e02b67fd46745ccab1e78f3b1fea76f7a3f7e4ae7a728d2b1571d6f200f44736`; plan `bb9e2db7e63d748556e39d89c5571d2f00f45170887b18687b1161942265b7d0`; decision migration `b121cb1595eb781bb2a1de6b8517c953e9cbb86b414575573795c4db5eb74b87`; dashboard client `37235d855f4ac30eb0e1cc99230e52f43d9e3f713bb4b5899af130a58b95839e`.
+- Bounded scope: enforce forward AI eligibility through authoritative persisted assessment/run/market-session evidence; add database owner/source idempotency with divergent conflict denial; expose the same eligibility boundary to the UI; and add stale, future, missing, direct and retry/concurrency regressions. Do not apply migrations, access private rows, deploy, connect a broker or trade.
+
+### 6 September 2026, 13:47 Australia/Perth — MYDASH-006_FORWARD_CAPTURE_IDEMPOTENCY_CORRECTION_VERIFIED
+
+- Role remained `PRODUCER`; MYDASH-006 remains `IN_PROGRESS` and no independent audit or successor promotion occurred.
+- AI capture now uses the persisted forward boundary from succeeded-run completion until the first later canonical Tiingo `1day` observation. Missing/ambiguous mapping and invalid run clocks fail closed. The UI reads assessment IDs from a permanent-user RPC with the same predicate while capture remains authoritative.
+- A partial owner/source unique index is the concurrent database boundary. Identical retries resolve to the immutable row even after the capture window closes; divergent horizon, benchmark or simulation assumptions fail without update or duplication.
+- Verification passed: focused Decision Lab 11/11, full repository 138/138, TypeScript, palette and `git diff --check`. Authenticated localhost at 390 × 844 showed the new ineligible explanation, no horizontal overflow, no Next.js overlay and no browser warning/error. No form was submitted.
+- The migration remains unapplied, so isolated database/RLS/direct-concurrency execution is retained as deferred evidence. No private row, hosted database, deployment, Vercel, broker, order, trading or automation-state mutation occurred. Forecast is 1–2 MYDASH-006 runs and 13–21 total remaining runs; next is whole-gate Producer reconciliation and audit handoff.

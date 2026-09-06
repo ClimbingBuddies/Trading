@@ -150,7 +150,8 @@ Rules:
 
 | Interface | Security / grants contract |
 |---|---|
-| public.capture_personal_decision_v1(...) | SECURITY DEFINER is justified solely to derive owner_user_id and decision_at from auth.uid()/clock_timestamp() while withholding table INSERT. SET search_path to pg_catalog,public; reject null/anonymous auth; never accept owner_user_id or client decision time; validate instrument, source and optional benchmark; REVOKE ALL FROM PUBLIC, anon; GRANT EXECUTE TO authenticated only. |
+| public.capture_personal_decision_v1(...) | SECURITY DEFINER is justified solely to derive owner_user_id and trusted clocks while withholding table INSERT. SET search_path to pg_catalog,public; reject null/anonymous auth; never accept owner_user_id or client decision time; validate instrument, source and optional benchmark. AI capture is allowed only after its succeeded run completes and before the first later canonical Tiingo `1day` observation is persisted; identical owner/source retries return the immutable row, while divergent assumptions fail. REVOKE ALL FROM PUBLIC, anon; GRANT EXECUTE TO authenticated only. |
+| public.list_eligible_personal_ai_decision_sources_v1() | Authenticated, permanent-owner RPC exposing only assessment IDs that satisfy the same persisted forward-capture boundary and have not already been captured by that owner. It is advisory for presentation; capture revalidates authoritatively. |
 | public.append_personal_decision_event_v1(...) | Same permanent-user and parent-owner checks; server event time only; REVOKE ALL FROM PUBLIC, anon; GRANT EXECUTE TO authenticated only. |
 | public.append_personal_recommendation_event_v1(...) | Same permanent-user and parent-owner checks; append only; REVOKE ALL FROM PUBLIC, anon; GRANT EXECUTE TO authenticated only. |
 | private.generate_personal_recommendations_v1(...) | Internal SECURITY DEFINER; service_role/postgres EXECUTE only; no browser grant; fixed safe search_path; inserts immutable snapshots/sources. |
@@ -271,6 +272,8 @@ Every contributing value and threshold remains visible. These are transparent co
 - decision time: `gpt_market_runs.analysis_cutoff_time`;
 - no fallback to a later timestamp when the authoritative cutoff is absent;
 - source snapshot stores assessment ID, run ID, cutoff, rating/score/confidence, methodology/model and a canonical hash.
+- capture eligibility begins only when the succeeded run has a non-future completion timestamp consistent with its cutoff and ends when the first canonical Tiingo `1day` observation strictly after that cutoff exists. Missing or ambiguous canonical-provider mapping, missing/future run timestamps, and any later daily observation fail closed. This prevents creating a historical decision after forward evidence is knowable without inventing an elapsed-time window.
+- `(owner_user_id, source_type, source_table, source_record_key)` is unique for AI signals. Concurrent identical retries resolve to the same immutable decision; a retry with different horizon, benchmark or simulation assumptions fails rather than rewriting or duplicating history.
 
 ### User paper decision
 

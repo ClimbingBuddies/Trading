@@ -286,6 +286,7 @@ export default function MyDashboardClient() {
   const [recommendationError, setRecommendationError] = useState('')
   const [recommendationBusyId, setRecommendationBusyId] = useState<string | null>(null)
   const [decisions, setDecisions] = useState<PersonalDecision[]>([])
+  const [eligibleAiDecisionSourceIds, setEligibleAiDecisionSourceIds] = useState<Set<string>>(new Set())
   const [decisionState, setDecisionState] = useState<DecisionState>('idle')
   const [decisionError, setDecisionError] = useState('')
   const [decisionBusyKey, setDecisionBusyKey] = useState<string | null>(null)
@@ -332,6 +333,7 @@ export default function MyDashboardClient() {
     setRecommendationError('')
     setRecommendationBusyId(null)
     setDecisions([])
+    setEligibleAiDecisionSourceIds(new Set())
     setDecisionState('idle')
     setDecisionError('')
     setDecisionBusyKey(null)
@@ -541,14 +543,22 @@ export default function MyDashboardClient() {
       setDecisionState('loading')
       setDecisionError('')
       try {
-        const decisionResult = await supabase
-          .from('personal_decisions')
-          .select('id,instrument_id,source_type,source_action,action,horizon_sessions,decision_at,source_table,source_record_key,source_hash,source_cutoff,entry_rule,benchmark_mode,notional_amount,base_currency,instrument_currency,calculation_version')
-          .eq('owner_user_id', ownerId)
-          .order('decision_at', { ascending: false })
-          .limit(200)
+        const [decisionResult, eligibilityResult] = await Promise.all([
+          supabase
+            .from('personal_decisions')
+            .select('id,instrument_id,source_type,source_action,action,horizon_sessions,decision_at,source_table,source_record_key,source_hash,source_cutoff,entry_rule,benchmark_mode,notional_amount,base_currency,instrument_currency,calculation_version')
+            .eq('owner_user_id', ownerId)
+            .order('decision_at', { ascending: false })
+            .limit(200),
+          supabase.rpc('list_eligible_personal_ai_decision_sources_v1'),
+        ])
         if (!isCurrentLoad()) return
         if (decisionResult.error) throw decisionResult.error
+        if (eligibilityResult.error) throw eligibilityResult.error
+        const eligibilityRows = eligibilityResult.data ?? []
+        if (!Array.isArray(eligibilityRows) || !eligibilityRows.every((row) => row && typeof row.assessment_id === 'string')) {
+          throw new Error('AI decision eligibility failed response validation.')
+        }
         const decisionRows = decisionResult.data ?? []
         if (!decisionRows.every(validPersonalDecision)) throw new Error('A persisted decision failed response validation.')
         const decisionIds = decisionRows.map((decision) => decision.id)
@@ -562,10 +572,12 @@ export default function MyDashboardClient() {
           throw new Error('Persisted decision event history failed response validation.')
         }
         setDecisions(decisionRows.map((decision) => ({ ...decision, events: eventRows.filter((event) => event.decision_id === decision.id) })) as PersonalDecision[])
+        setEligibleAiDecisionSourceIds(new Set(eligibilityRows.map((row) => row.assessment_id as string)))
         setDecisionState('ready')
       } catch (decisionLoadError) {
         if (!isCurrentLoad()) return
         setDecisions([])
+        setEligibleAiDecisionSourceIds(new Set())
         setDecisionState('error')
         setDecisionError(decisionLoadError instanceof Error ? decisionLoadError.message : 'Decision Lab could not be loaded.')
       }
@@ -1243,14 +1255,14 @@ export default function MyDashboardClient() {
             <article className={styles.panel}>
               <div className={styles.panelHeading}><div><span className={styles.eyebrow}>ELIGIBLE AI SIGNALS</span><h2>Preserve an independent assessment</h2></div><span>Original cutoff</span></div>
               <p>Only persisted Market AI lineage is offered. The database revalidates the succeeded independent assessment and derives its action, instrument, source snapshot and analysis cutoff.</p>
-              {recommendations.filter((recommendation) => recommendation.sources.some((source) => source.source_family === 'MARKET_AI')).length ? (
-                <ul className={styles.decisionSourceList}>{recommendations.filter((recommendation) => recommendation.sources.some((source) => source.source_family === 'MARKET_AI')).map((recommendation) => {
+              {recommendations.filter((recommendation) => recommendation.sources.some((source) => source.source_family === 'MARKET_AI' && eligibleAiDecisionSourceIds.has(source.source_record_key))).length ? (
+                <ul className={styles.decisionSourceList}>{recommendations.filter((recommendation) => recommendation.sources.some((source) => source.source_family === 'MARKET_AI' && eligibleAiDecisionSourceIds.has(source.source_record_key))).map((recommendation) => {
                   const instrument = instruments.find((item) => item.id === recommendation.instrument_id)
                   const source = recommendation.sources.find((item) => item.source_family === 'MARKET_AI')!
                   const busyKey = `ai:${source.source_record_key}`
                   return <li key={recommendation.id}><div><strong>{instrument?.symbol ?? 'Unresolved instrument'} · {recommendation.category.replaceAll('_', ' ')}</strong><span>Assessment cutoff {new Date(source.source_cutoff).toLocaleString()} · {source.methodology_version}</span></div><button type="button" disabled={decisionBusyKey !== null || decisions.some((decision) => decision.source_type === 'AI_SIGNAL' && decision.source_record_key === source.source_record_key)} onClick={() => void captureDecision({ sourceType: 'AI_SIGNAL', assessmentId: source.source_record_key, busyKey })}>{decisionBusyKey === busyKey ? 'Capturing…' : decisions.some((decision) => decision.source_type === 'AI_SIGNAL' && decision.source_record_key === source.source_record_key) ? 'Already captured' : 'Capture AI signal'}</button></li>
                 })}</ul>
-              ) : <div className={styles.empty}><strong>No eligible persisted Market AI source is available.</strong><p>Technical, Opportunity and external-fact evidence cannot be promoted into an AI decision.</p></div>}
+              ) : <div className={styles.empty}><strong>No contemporaneously eligible Market AI source is available.</strong><p>The database offers a source only after its run completes and before the first later canonical daily observation. Historical, future, missing-calendar and already-captured evidence remains unavailable. Technical, Opportunity and external-fact evidence cannot be promoted into an AI decision.</p></div>}
             </article>
             <article className={styles.panel}>
               <div className={styles.panelHeading}><div><span className={styles.eyebrow}>FORWARD PAPER EVIDENCE</span><h2>Immutable personal decisions</h2></div><span>{decisionState === 'ready' ? `${decisions.length} stored` : 'Owner only'}</span></div>

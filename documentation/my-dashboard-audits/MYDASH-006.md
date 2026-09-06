@@ -103,3 +103,13 @@ Unavailable isolated database/RLS/RPC execution and fresh narrow-screen executio
     residual_risks: isolated database execution and fresh narrow-screen success evidence remain deferred
     next_owner: PRODUCER
     exact_next_action: implement the complete forward-capture/idempotency correction set and return MYDASH-006 for independent re-audit
+
+## Producer correction — forward eligibility and source idempotency
+
+On 6 September 2026, the Producer completed the audit correction as one bounded phase. AI capture now opens only after a succeeded run has a persisted non-future completion consistent with its analysis cutoff and closes when the first later canonical Tiingo `1day` observation exists. Missing or ambiguous provider mappings and missing/future run clocks fail closed. The same predicate powers a permanent-user eligibility-list RPC; the capture RPC independently revalidates it.
+
+A partial unique index on owner, source type, source table and assessment identity is the concurrency boundary. Identical retries return the already stored immutable decision, including after the forward window closes; different horizon, benchmark or simulation assumptions raise a conflict without update or duplication. User-paper capture, owner isolation, immutable events and the no-trade boundary are unchanged.
+
+Verification passed: focused Decision Lab **11/11**, full repository **138/138**, TypeScript, palette and `git diff --check`. Authenticated localhost at **390 × 844** rendered the database-derived ineligible state with no horizontal overflow, framework overlay or browser warning/error; no form was submitted. Because the candidate migration remains intentionally unapplied, isolated database execution of direct/concurrent retries and RLS remains deferred evidence rather than claimed execution.
+
+MYDASH-006 remains `IN_PROGRESS / PRODUCER` for one whole-gate reconciliation before independent re-audit.

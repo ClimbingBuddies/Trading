@@ -34,6 +34,32 @@ test('AI and user-paper capture keep distinct trusted clocks and snapshots', () 
   assert.doesNotMatch(capture, /p_(owner|decision_at|source_cutoff|source_snapshot)/)
 })
 
+test('AI capture is forward-only and fails closed outside the persisted market-session window', () => {
+  const capture = sql.match(/create or replace function public\.capture_personal_decision_v1[\s\S]+?\$\$;/)?.[0] ?? ''
+  const eligibility = sql.match(/create or replace function public\.list_eligible_personal_ai_decision_sources_v1[\s\S]+?\$\$;/)?.[0] ?? ''
+  for (const contract of [capture, eligibility]) {
+    assert.match(contract, /r\.completed_at is not null/)
+    assert.match(contract, /r\.analysis_cutoff_time is not null/)
+    assert.match(contract, /r\.analysis_cutoff_time <= r\.completed_at/)
+    assert.match(contract, /dp\.provider_code = 'tiingo'/)
+    assert.match(contract, /mo\.interval_code = '1day'/)
+    assert.match(contract, /mo\.observed_at > r\.analysis_cutoff_time/)
+  }
+  assert.match(capture, /capture_eligibility', 'BEFORE_FIRST_CANONICAL_DAILY_OBSERVATION_V1'/)
+  assert.match(sql, /revoke all on function public\.list_eligible_personal_ai_decision_sources_v1\(\) from public, anon/)
+  assert.match(sql, /grant execute on function public\.list_eligible_personal_ai_decision_sources_v1\(\) to authenticated/)
+})
+
+test('AI source retries are database-idempotent and divergent assumptions fail', () => {
+  const capture = sql.match(/create or replace function public\.capture_personal_decision_v1[\s\S]+?\$\$;/)?.[0] ?? ''
+  assert.match(sql, /create unique index personal_decisions_ai_source_key[\s\S]*where source_type = 'AI_SIGNAL'/)
+  assert.match(capture, /on conflict \(owner_user_id, source_type, source_table, source_record_key\)[\s\S]*where source_type = 'AI_SIGNAL' do nothing/)
+  assert.match(capture, /select \* into v_result from public\.personal_decisions d/)
+  assert.match(capture, /exists \(select 1 from public\.personal_decisions d[\s\S]*or \([\s\S]*not exists \(/)
+  assert.match(capture, /AI decision source already captured with different immutable assumptions/)
+  assert.doesNotMatch(capture, /update public\.personal_decisions/)
+})
+
 test('capture preserves the approved no-trade simulation boundary', () => {
   const decisionsTable = sql.match(/create table public\.personal_decisions \([\s\S]+?\n\);/)?.[0] ?? ''
   assert.match(sql, /entry_rule text not null default 'NEXT_DAILY_CLOSE'/)

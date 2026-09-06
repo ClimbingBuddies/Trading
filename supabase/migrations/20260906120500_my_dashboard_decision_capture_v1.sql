@@ -56,6 +56,9 @@ create index personal_decisions_owner_decision_idx
   on public.personal_decisions (owner_user_id, decision_at desc);
 create index personal_decisions_instrument_idx
   on public.personal_decisions (instrument_id, decision_at desc);
+create unique index personal_decisions_ai_source_key
+  on public.personal_decisions (owner_user_id, source_type, source_table, source_record_key)
+  where source_type = 'AI_SIGNAL';
 
 create table public.personal_decision_events (
   id uuid primary key default gen_random_uuid(),
@@ -122,6 +125,41 @@ grant select on table public.personal_decision_events to authenticated;
 grant all on table public.personal_decisions to service_role;
 grant all on table public.personal_decision_events to service_role;
 
+create or replace function public.list_eligible_personal_ai_decision_sources_v1()
+returns table (assessment_id uuid)
+language sql
+security definer
+set search_path = pg_catalog
+stable
+as $$
+  select a.assessment_id
+  from public.gpt_market_assessments a
+  join public.gpt_market_runs r on r.run_id = a.run_id
+  where auth.uid() is not null
+    and coalesce(((auth.jwt()->>'is_anonymous')::boolean), false) = false
+    and r.status = 'succeeded'
+    and r.completed_at is not null and r.completed_at <= statement_timestamp()
+    and r.analysis_cutoff_time is not null and r.analysis_cutoff_time <= r.completed_at
+    and a.technical_engine_input_used is false
+    and (select count(*) from public.data_providers dp
+      join public.provider_instruments pi on pi.provider_id = dp.id
+      where dp.provider_code = 'tiingo' and dp.is_active and pi.is_active
+        and pi.instrument_id = a.instrument_id) = 1
+    and not exists (
+      select 1 from public.market_observations mo
+      join public.data_providers dp on dp.id = mo.provider_id
+      join public.provider_instruments pi on pi.provider_id = dp.id and pi.instrument_id = a.instrument_id
+      where dp.provider_code = 'tiingo' and dp.is_active and pi.is_active
+        and mo.instrument_id = a.instrument_id and mo.interval_code = '1day'
+        and mo.observed_at > r.analysis_cutoff_time and mo.observed_at <= statement_timestamp()
+    )
+    and not exists (
+      select 1 from public.personal_decisions d
+      where d.owner_user_id = auth.uid() and d.source_type = 'AI_SIGNAL'
+        and d.source_table = 'gpt_market_assessments' and d.source_record_key = a.assessment_id::text
+    );
+$$;
+
 create or replace function public.capture_personal_decision_v1(
   p_source_type text,
   p_instrument_id uuid,
@@ -156,6 +194,7 @@ declare
   v_source_snapshot jsonb;
   v_source_cutoff timestamptz;
   v_decision_at timestamptz;
+  v_source_hash text;
   v_result public.personal_decisions;
 begin
   if v_owner is null or v_anonymous then raise exception 'Permanent authentication required'; end if;
@@ -181,15 +220,37 @@ begin
         'summary', a.summary, 'bull_case', a.bull_case, 'bear_case', a.bear_case,
         'key_catalysts', a.key_catalysts, 'key_risks', a.key_risks,
         'model_version', a.model_version, 'methodology_version', a.methodology_version,
-        'analysis_cutoff_time', r.analysis_cutoff_time
+        'analysis_cutoff_time', r.analysis_cutoff_time, 'run_completed_at', r.completed_at,
+        'capture_eligibility', 'BEFORE_FIRST_CANONICAL_DAILY_OBSERVATION_V1'
       )
     into v_instrument_id, v_instrument_currency, v_source_action, v_source_cutoff, v_source_snapshot
     from public.gpt_market_assessments a
     join public.gpt_market_runs r on r.run_id = a.run_id
     join public.instruments i on i.id = a.instrument_id
     where a.assessment_id = p_ai_assessment_id and r.status = 'succeeded'
-      and r.analysis_cutoff_time is not null and r.analysis_cutoff_time <= v_now
-      and a.technical_engine_input_used is false;
+      and r.analysis_cutoff_time is not null
+      and a.technical_engine_input_used is false
+      and (
+        exists (select 1 from public.personal_decisions d
+          where d.owner_user_id = v_owner and d.source_type = 'AI_SIGNAL'
+            and d.source_table = 'gpt_market_assessments' and d.source_record_key = a.assessment_id::text)
+        or (
+          r.completed_at is not null and r.completed_at <= v_now
+          and r.analysis_cutoff_time <= r.completed_at
+          and (select count(*) from public.data_providers dp
+            join public.provider_instruments pi on pi.provider_id = dp.id
+            where dp.provider_code = 'tiingo' and dp.is_active and pi.is_active
+              and pi.instrument_id = a.instrument_id) = 1
+          and not exists (
+            select 1 from public.market_observations mo
+            join public.data_providers dp on dp.id = mo.provider_id
+            join public.provider_instruments pi on pi.provider_id = dp.id and pi.instrument_id = a.instrument_id
+            where dp.provider_code = 'tiingo' and dp.is_active and pi.is_active
+              and mo.instrument_id = a.instrument_id and mo.interval_code = '1day'
+              and mo.observed_at > r.analysis_cutoff_time and mo.observed_at <= v_now
+          )
+        )
+      );
     if v_source_snapshot is null then raise exception 'Eligible independent AI assessment not found'; end if;
     v_action := case lower(v_source_action)
       when 'strong buy' then 'BUY' when 'buy' then 'BUY' when 'hold' then 'HOLD'
@@ -222,6 +283,8 @@ begin
     select 1 from public.instruments i where i.id = p_benchmark_instrument_id and i.is_active
   ) then raise exception 'Active benchmark instrument not found'; end if;
 
+  v_source_hash := encode(extensions.digest(convert_to(v_source_snapshot::text, 'UTF8'), 'sha256'), 'hex');
+
   insert into public.personal_decisions (
     owner_user_id, instrument_id, source_type, source_action, action, horizon_sessions,
     decision_at, source_table, source_record_key, source_snapshot, source_hash, source_cutoff,
@@ -230,10 +293,29 @@ begin
   ) values (
     v_owner, v_instrument_id, p_source_type, v_source_action, v_action, p_horizon_sessions,
     v_decision_at, v_source_table, v_source_record_key, v_source_snapshot,
-    encode(extensions.digest(convert_to(v_source_snapshot::text, 'UTF8'), 'sha256'), 'hex'), v_source_cutoff,
+    v_source_hash, v_source_cutoff,
     p_benchmark_mode, p_benchmark_instrument_id, p_notional_amount, p_entry_fee_bps, p_exit_fee_bps,
     p_entry_slippage_bps, p_exit_slippage_bps, upper(p_base_currency), upper(v_instrument_currency), 'personal-forward-return-v1'
-  ) returning * into v_result;
+  )
+  on conflict (owner_user_id, source_type, source_table, source_record_key)
+    where source_type = 'AI_SIGNAL' do nothing
+  returning * into v_result;
+
+  if v_result.id is null and p_source_type = 'AI_SIGNAL' then
+    select * into v_result from public.personal_decisions d
+    where d.owner_user_id = v_owner and d.source_type = 'AI_SIGNAL'
+      and d.source_table = v_source_table and d.source_record_key = v_source_record_key;
+    if v_result.source_hash <> v_source_hash or v_result.instrument_id <> v_instrument_id
+      or v_result.action <> v_action or v_result.horizon_sessions <> p_horizon_sessions
+      or v_result.benchmark_mode <> p_benchmark_mode
+      or v_result.benchmark_instrument_id is distinct from p_benchmark_instrument_id
+      or v_result.notional_amount <> p_notional_amount or v_result.entry_fee_bps <> p_entry_fee_bps
+      or v_result.exit_fee_bps <> p_exit_fee_bps or v_result.entry_slippage_bps <> p_entry_slippage_bps
+      or v_result.exit_slippage_bps <> p_exit_slippage_bps or btrim(v_result.base_currency) <> upper(p_base_currency)
+      or v_result.calculation_version <> 'personal-forward-return-v1' then
+      raise exception 'AI decision source already captured with different immutable assumptions';
+    end if;
+  end if;
   return v_result;
 end;
 $$;
@@ -270,6 +352,8 @@ $$;
 
 revoke all on function public.capture_personal_decision_v1(text, uuid, uuid, text, smallint, text, uuid, numeric, numeric, numeric, numeric, numeric, text, text) from public, anon;
 grant execute on function public.capture_personal_decision_v1(text, uuid, uuid, text, smallint, text, uuid, numeric, numeric, numeric, numeric, numeric, text, text) to authenticated;
+revoke all on function public.list_eligible_personal_ai_decision_sources_v1() from public, anon;
+grant execute on function public.list_eligible_personal_ai_decision_sources_v1() to authenticated;
 revoke all on function public.append_personal_decision_event_v1(uuid, text, jsonb) from public, anon;
 grant execute on function public.append_personal_decision_event_v1(uuid, text, jsonb) to authenticated;
 revoke all on function public.reject_personal_decision_mutation_v1() from public, anon, authenticated;
