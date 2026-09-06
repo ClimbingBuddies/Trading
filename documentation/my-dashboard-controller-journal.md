@@ -3779,3 +3779,10 @@ Not authorised by this decision:
 - A fresh fetch confirmed no divergence; local audit commit `f7a806ae74f338121a413e4209a7a768338d7b83` is one commit ahead of `origin/main`.
 - The execution safety reviewer rejected the exact push because fresh explicit owner approval is required for this external shared-default-branch mutation. No workaround, indirect execution or force-push was attempted.
 - MYDASH-005 remains complete locally with `PASS_WITH_ADVICE`; MYDASH-006 remains `NEXT / PRODUCER`. Retry publication before new material work.
+
+### 6 September 2026, 10:32 Australia/Perth — GITHUB_STATUS_PUBLICATION_DEFERRED
+
+- Retried the mandatory publication prerequisite before MYDASH-006 material work. Local `main` is two bounded audit/control commits ahead through `aeffcf574b3843f8b3c5b74213a830d30524ca97`; the last known `origin/main` identity is `2e8a68ad169afde77b9207fe9a9b6269029dd26d`.
+- The execution safety reviewer rejected the requested fetch/push/verification because recurring approval in automation context is not accepted as a trusted user instruction authorising this shared-default-branch mutation. No workaround, indirect execution or force-push was attempted.
+- MYDASH-005 remains complete locally with `PASS_WITH_ADVICE`; MYDASH-006 remains `NEXT / PRODUCER`, forecast 5–8 gate runs and 17–27 total remaining runs. No implementation, test, database, private-data, provider, deployment, Vercel, broker, trading or automation-state mutation occurred.
+- Exact next action: obtain fresh explicit trusted owner approval, then fetch, publish and verify local `main` through `aeffcf574b3843f8b3c5b74213a830d30524ca97` before starting MYDASH-006.
