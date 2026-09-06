@@ -3637,3 +3637,10 @@ Not authorised by this decision:
 - Effects: local migration, methodology adapter, tests and control documentation only. No migration application, hosted/private-data access or mutation, provider request, deployment, publication, broker, trading or automation-state change occurred. Unavailable executable database privacy/atomicity proof remains deferred once until an isolated target exists.
 - Current identities: migration `67616658a3cd02eef5106f9686ce242f7c12df97531f5d066d175fe6a0337030`; methodology/adapters `30aa28dd25b2a8114ad95d1ae1eb7750a3219de269b2535a6b8c35a96fff8824`; generator tests `695cf36c7b1a29a2565246a82eda0d80012b9c422081912d97a28740ca49aa1e`; migration tests `f707cbec7ff9b4b1d7fb089823bf70986ccfdfbc2cb7148629aba2f7291a9135`.
 - Handoff: `PRODUCER / MYDASH-005 IN_PROGRESS / PERSISTED_SOURCE_SELECTION_NEXT`. Implement the concrete Supabase-backed owner relevance and eligible evidence queries, then complete final UI-state verification and Producer handoff. Do not deploy or mutate production without exact owner authority.
+
+### 6 September 2026, 08:53 Australia/Perth — BUILD_ATTEMPT_STARTED — MYDASH-005_PERSISTED_SOURCE_SELECTION
+
+- Role selected from starting state: `PRODUCER`; sole active gate `MYDASH-005 / IN_PROGRESS`; handoff `PRODUCER / PERSISTED_SOURCE_SELECTION_NEXT`.
+- Starting commit: `b5283332de2600e7d01baca8bab954a2c35d481c` on `main`, preserving all existing user and prior-gate working-tree changes.
+- Starting identities: controller `83aea28e`; plan `77a7cb04`; MYDASH-005 audit `ba44bfa7`; recommendation methodology/adapters `30aa28dd`; recommendation migration `67616658`. The append-only journal identity is excluded as self-referential.
+- Bounded scope: implement and source-test concrete service-only Supabase selection of owner watchlist, active portfolio and explicit-interest relevance plus completed, cutoff-bounded Market AI, Technical and Opportunity evidence. Repair any concrete recommendation-migration regression encountered in that path. Do not apply migrations, access hosted/private rows, deploy, publish, trade, link a broker or change the ACTIVE ten-minute automation.
