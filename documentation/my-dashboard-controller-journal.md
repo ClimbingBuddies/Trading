@@ -3681,3 +3681,11 @@ Not authorised by this decision:
 - Safe fetch confirmed local and `origin/main` were aligned before this cycle. The verified implementation, handoff and identity-correction commits were created locally.
 - The authorised push to `origin/main` was rejected by the execution safety reviewer as a consequential default-branch mutation. No workaround or force-push was attempted, and the remote remains at `ea143a33a02424b36133f5ad671df33052b3fe82`.
 - Exact next action: retry publication of local commits `5069979cec1660822abd6005f06a7ad3b23077e3`, `d7a4d7ab55a259d43ab627ed2c0cd5ca53b306c4` and `53630998e5df8437910526e57a6a35e94bf2d56a` before new material work or independent audit.
+
+### 6 September 2026, 09:23 Australia/Perth — GITHUB_STATUS_PUBLICATION_DEFERRED
+
+- Role selected from starting state: `AUDITOR`; sole active gate `MYDASH-005 / IN_REVIEW`. The required publication retry was handled before any audit work.
+- A fresh authorised fetch succeeded and confirmed `origin/main` at `ea143a33a02424b36133f5ad671df33052b3fe82`; local `main` is four commits ahead through `d2cc351`, with unrelated untracked `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` preserved and excluded.
+- The execution safety reviewer again rejected `git push origin main` because it classified the default-branch update as a consequential remote mutation and stated that trusted user content did not provide acceptable destination authority. The reviewer prohibited workaround or indirect execution, so none was attempted.
+- No implementation, test, audit, database, private-data, provider, deployment, Vercel, broker, trading or automation-state change occurred. MYDASH-005 remains `IN_REVIEW / AUDITOR`; the 1–2 run gate forecast remains unchanged.
+- Exact next action: obtain exact owner approval accepted by the execution safety reviewer to publish the complete verified local branch, including this delivery-control record, confirm the remote identity, and only then independently audit the complete Producer handoff.
