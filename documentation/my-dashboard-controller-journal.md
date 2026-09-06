@@ -4173,3 +4173,9 @@ Not authorised by this decision:
 - Fresh fetch succeeded and confirmed zero divergence: local `main` and `origin/main` both remain at `0882c0d5ecd715e41e5c53dbea169aacc6e2effd` before this bounded local test/evidence payload.
 - Execution safety review rejected creating the commit directly on shared `main`, stating that fresh direct owner approval is required despite the controller's recorded standing recurring publication authorization. No workaround, indirect commit/push or force operation was attempted.
 - Retry publication before beginning the final whole-gate Producer regression. The verified local changes remain unstaged alongside untouched unrelated owner/generated files; no deployment, production verification, migration, private-data access, hosted mutation, schedule, Vercel, broker, order or trading action occurred.
+
+### 6 September 2026, 19:53 Australia/Perth — GITHUB_STATUS_PUBLICATION_DEFERRED
+
+- A fresh fetch confirmed zero starting divergence from `origin/main` at `0882c0d5ecd715e41e5c53dbea169aacc6e2effd`. Committed only the previously verified MYDASH-008 local completion-assurance regression and evidence as local commit `1de415c8211b1ddc15a7c0a7e1f01b627cf02899`; unrelated owner and generated files remain excluded.
+- Execution safety review rejected pushing that exact one-commit payload to the shared default branch `origin/main` because fresh direct owner approval tied to the payload and destination was not available to the reviewer. No workaround, indirect publication or force-push was attempted. Local `main` is one commit ahead of `origin/main`.
+- MYDASH-008 remains `IN_PROGRESS / PRODUCER`, forecast 2–5 meaningful runs. Retry and verify publication through `1de415c` before the final whole-gate Producer regression. No deployment, production verification, migration, private-data access, hosted mutation, schedule, Vercel, provider, broker, order, trading or automation-setting change occurred.
