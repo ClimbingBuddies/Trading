@@ -239,7 +239,7 @@ The status, remaining scope and run forecast are kept together here so gate prog
 
 **Estimated remaining work:** MYDASH-008 retains **1–3 meaningful runs** for independent audit and final completion reconciliation. Any deployment or production verification remains outside this forecast until separately authorised.
 
-**Publication status:** `GITHUB_STATUS_PUBLICATION_COMPLETE` through `7a11654161060fd5d3eb858c289d5a3160dd4db7`; fresh local identity comparison at the start of this cycle showed zero divergence between `main` and `origin/main`. The current Producer regression/handoff remains to be committed and published after verification. Unrelated `AGENTS.md`, `CLAUDE.md`, generated `next-env.d.ts` metadata and `tsconfig.tsbuildinfo` remain excluded.
+**Publication status:** `GITHUB_STATUS_PUBLICATION_DEFERRED`. The verified whole-gate Producer regression and independent-audit handoff are committed locally as `fdefaae`; a fresh fetch confirmed zero remote-only commits and `origin/main` at `7a11654161060fd5d3eb858c289d5a3160dd4db7`. Execution safety review rejected publishing this exact commit to the shared default branch without fresh direct owner approval for that payload and destination. Retry publication before the independent audit. Unrelated `AGENTS.md`, `CLAUDE.md`, generated `next-env.d.ts` metadata and `tsconfig.tsbuildinfo` remain excluded.
 
 Gate-by-gate outstanding work and estimated runs are maintained in the **Work gates** table above. This section retains the cross-gate forecast assumptions, timing and publication status without duplicating the tracking rows.
 

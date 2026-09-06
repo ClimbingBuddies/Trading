@@ -114,3 +114,7 @@ Mandatory Producer handoff:
     exact_next_action: independently reproduce the locally available checks and primary contract review, assess the explicit deferred evidence, then either record PASS/PASS_WITH_ADVICE and perform final reconciliation or return one complete correction set
 
 This Producer run makes no audit or project-completion conclusion.
+
+## Publication status — 6 September 2026, 20:07 Australia/Perth
+
+`GITHUB_STATUS_PUBLICATION_DEFERRED`: the verified whole-gate Producer regression and mandatory Auditor handoff are local commit `fdefaae`. A fresh fetch confirmed zero remote-only commits and `origin/main` at `7a11654161060fd5d3eb858c289d5a3160dd4db7`. Execution safety review rejected pushing this exact commit to shared `origin/main` without fresh direct owner approval for that payload and destination. No workaround, indirect publication or force-push was attempted. Publication must be retried and remotely verified before the independent audit begins.
