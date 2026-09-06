@@ -235,11 +235,11 @@ The status, remaining scope and run forecast are kept together here so gate prog
 
 **Forecast updated:** 6 September 2026, 18:36 Australia/Perth
 
-**Current position:** MYDASH-006 remains complete after independent `PASS_WITH_ADVICE`. MYDASH-007 is the sole active Producer gate. Its cutoff-bound evaluator evidence is now available in Decision Lab through owner-filtered, parent-bound reads. AI-signal and user-paper cohorts remain separate; only the latest persisted configured-horizon or EXIT BUY result contributes to each cohort mean, while pending, missing and observational outcomes are excluded rather than treated as zero. Focused UI 5/5 and repository 160/160 tests, TypeScript, palette and diff checks pass. The schema remains intentionally unapplied, so authenticated success-state browser evidence and isolated database execution remain deferred.
+**Current position:** MYDASH-006 remains complete after independent `PASS_WITH_ADVICE`. MYDASH-007 is the sole active Producer gate. Its cutoff-bound evaluator evidence is now available in Decision Lab through owner-filtered, parent-bound reads. AI-signal and user-paper cohorts remain separate; only the latest persisted configured-horizon or EXIT BUY result contributes to each cohort mean, while pending, missing and observational outcomes are excluded rather than treated as zero. Focused UI 5/5 and repository 160/160 tests, TypeScript, palette and diff checks pass. Localhost verified the signed-in owner-only Decision Lab, distinct clocks, no-trade disclosure and fail-closed error state. The schema remains intentionally unapplied, so result-bearing success-state browser evidence, narrow-screen execution and isolated database execution remain deferred.
 
 **Estimated remaining work:** MYDASH-007 retains **3–6 meaningful runs** and MYDASH-008 retains **4–7**, for **7–13 meaningful runs** in aggregate. The forecast will be rebaselined when implementation or pilot evidence changes.
 
-**Publication status:** `GITHUB_STATUS_PUBLICATION_PENDING` for this verified comparison phase. The prior operational-evaluator checkpoint is confirmed on `origin/main` through `58193a7fdce94f0a690a91ea53b7ca48c0d24c9b`. Unrelated untracked `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` remain excluded.
+**Publication status:** `GITHUB_STATUS_PUBLICATION_DEFERRED`. The verified comparison phase is committed locally as `29bee68b14f5ae0d81bdacc246f20c0e10d81df6`, one commit ahead of confirmed `origin/main` at `58193a7fdce94f0a690a91ea53b7ca48c0d24c9b`. The execution safety reviewer rejected publishing this exact payload to the shared default branch without a fresh trusted owner instruction naming it. No workaround or force-push was attempted. Unrelated untracked `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` remain excluded.
 
 Gate-by-gate outstanding work and estimated runs are maintained in the **Work gates** table above. This section retains the cross-gate forecast assumptions, timing and publication status without duplicating the tracking rows.
 
@@ -419,4 +419,4 @@ The project is complete only when:
     controller_journal_created: true
     production_changes_authorised: recurring bounded GitHub main publication is authorised for owner visibility; refresh-portfolio-health deployment and the supplied CommSec holdings import were separately approved and completed; no further deployment or production mutation without exact owner approval
     owner_approval_recorded: Owner Reviews A and B approved; MYDASH-001 through MYDASH-006 complete
-    next_action: Define the bounded non-deployed operational evaluator path, then expose honest owner-scoped AI-versus-user Decision Lab comparisons.
+    next_action: Publish the verified Decision Lab comparison phase, then run whole-gate Producer regression and prepare the independent audit handoff.

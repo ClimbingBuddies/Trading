@@ -13,10 +13,10 @@
     handoff_owner: PRODUCER
     handoff_status: WHOLE_GATE_REGRESSION_READY
     owner_review: OWNER_REVIEW_B_ACCEPTED_2026-09-05
-    last_event: MYDASH-007_DECISION_LAB_COMPARISONS_VERIFIED_2026-09-06T18:36+08:00
+    last_event: GITHUB_STATUS_PUBLICATION_DEFERRED_2026-09-06T18:34+08:00
     consecutive_failure_count: 0
     consecutive_failure_reason: NONE
-    next_action: Publish the verified Decision Lab comparison phase, then complete whole-gate Producer regression and the independent audit handoff.
+    next_action: Obtain fresh exact owner approval to push local main through 29bee68 to origin/main, verify remote containment, then complete whole-gate Producer regression and the independent audit handoff.
 
 ## Gate ledger
 
@@ -4064,5 +4064,11 @@ Not authorised by this decision:
 - Role remained `PRODUCER`; MYDASH-007 remains `IN_PROGRESS`. No independent audit, successor promotion or owner review occurred.
 - Decision Lab now reads immutable return snapshots with the permanent-owner predicate and current decision IDs, validates parent identity, cutoffs, nullable numerics, quality, methodology and source hash, and hides all decision/result output if that joined private read fails.
 - Per-decision cards expose ordered checkpoint cutoff, quality state, source identity and nullable outcomes. AI-signal and user-paper cohorts remain separate and unranked; at most the latest configured-horizon or EXIT BUY result contributes to a mean, while OPEN, observational, pending and missing outcomes remain excluded rather than zero.
-- Verification passed: focused Decision Lab 5/5, repository 160/160, TypeScript, palette and `git diff --check`. Next.js 16.3.4 started locally on port 3001. Windows computer-use initialization failed at its deny-read sandbox boundary and agent-browser produced no inspectable session output, so authenticated visual success evidence remains deferred; no private row or screenshot was accessed.
+- Verification passed: focused Decision Lab 5/5, repository 160/160, TypeScript, palette and `git diff --check`. Next.js 16.3.4 started locally on port 3001; the signed-in owner-only Decision Lab, distinct clocks, no-trade disclosure and fail-closed error state rendered successfully. The unapplied return migration prevents result-bearing success-state evidence, and narrow-screen execution remains deferred because the in-app browser exposes no viewport override; no private result row or screenshot was accessed.
 - Forecast is 3–6 MYDASH-007 runs and 7–13 total. Exact next action: publish this bounded phase, then run whole-gate Producer regression and prepare the independent audit handoff. The migration and proposed 07:00 schedule remain unapplied; no hosted database, private data, deployment, Vercel, provider, broker, order, trading or automation-state mutation occurred.
+
+### 6 September 2026, 18:34 Australia/Perth — GITHUB_STATUS_PUBLICATION_DEFERRED
+
+- The verified Decision Lab comparison phase is committed locally as `29bee68b14f5ae0d81bdacc246f20c0e10d81df6`, one commit ahead of confirmed `origin/main` at `58193a7fdce94f0a690a91ea53b7ca48c0d24c9b`.
+- The execution safety reviewer rejected publishing that exact payload to shared default branch `origin/main` because this run lacks a fresh trusted owner instruction naming the destination and commit. No workaround, indirect publication or force-push was attempted.
+- MYDASH-007 remains `IN_PROGRESS / PRODUCER`. Retry and verify publication before whole-gate regression. No database, private data, deployment, Vercel, provider, broker, order, trading or automation-state mutation occurred.

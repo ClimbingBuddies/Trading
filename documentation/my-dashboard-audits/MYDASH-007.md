@@ -42,8 +42,11 @@ Verification on 6 September 2026:
 - palette: passed;
 - `git diff --check`: passed;
 - localhost server: Next.js 16.3.4 started on port 3001;
-- visual/browser execution: deferred because both available browser-control paths failed to initialize in the current sandbox; no authenticated/private row or screenshot was accessed;
+- localhost browser execution: signed-in owner-only Decision Lab, distinct decision clocks, no-trade disclosure and fail-closed error state verified; the unapplied return migration prevents result-bearing success-state evidence;
+- narrow-screen browser execution: deferred because the available in-app browser exposes no viewport override; no private result row or screenshot was accessed;
 - isolated database/RLS/function execution: deferred because the migration is unapplied.
+
+Publication of this verified phase is deferred: local commit `29bee68b14f5ae0d81bdacc246f20c0e10d81df6` is one commit ahead of confirmed `origin/main` at `58193a7fdce94f0a690a91ea53b7ca48c0d24c9b`; the execution safety reviewer requires a fresh trusted owner instruction for this exact shared-default-branch mutation.
 
 ## Producer evidence — immutable checkpoint evaluation
 
