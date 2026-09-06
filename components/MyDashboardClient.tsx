@@ -1135,7 +1135,7 @@ export default function MyDashboardClient() {
 
               <article className={styles.panel}>
                 <div className={styles.panelHeading}><div><span className={styles.eyebrow}>TODAY</span><h2>Items needing attention</h2></div><span>{loading ? 'Refreshing…' : `${attentionItems.length} open`}</span></div>
-                {attentionItems.length ? <ul className={styles.attentionList}>{attentionItems.map((item) => <li key={item.title}><div><strong>{item.title}</strong><p>{item.detail}</p></div><Link href={item.href}>{item.action}</Link></li>)}</ul> : <div className={styles.empty}><strong>Your personal foundation is ready.</strong><p>No setup gaps are currently detected. Later gates will add relevant Opportunities, portfolio health, recommendations and forward decision results.</p></div>}
+                {attentionItems.length ? <ul className={styles.attentionList}>{attentionItems.map((item) => <li key={item.title}><div><strong>{item.title}</strong><p>{item.detail}</p></div><Link href={item.href}>{item.action}</Link></li>)}</ul> : <div className={styles.empty}><strong>Your private research workspace is ready.</strong><p>No setup gaps are currently detected. Use the tabs above to review relevant Opportunities, portfolio health, recommendations and forward decision evidence.</p></div>}
               </article>
 
               <article className={styles.panel} id="preferences">
@@ -1180,7 +1180,7 @@ export default function MyDashboardClient() {
                     })}
                   </section>
                   <dl className={styles.provenance}><div><dt>Snapshot methodology</dt><dd>{recommendation.methodology_version}</dd></div><div><dt>Model</dt><dd>{recommendation.model_identity ?? 'No AI model asserted'}</dd></div><div><dt>Source identity</dt><dd>{recommendation.source_hash.slice(0, 12)}…</dd></div></dl>
-                  <div className={styles.recommendationActions}><Link href={instrument ? `/markets/${encodeURIComponent(instrument.symbol)}` : '/markets'}>Open research</Link><button type="button" onClick={() => void appendRecommendationEvent(recommendation.id, 'watch')} disabled={recommendationBusyId === recommendation.id}>Watch</button><button type="button" onClick={() => void appendRecommendationEvent(recommendation.id, 'feedback')} disabled={recommendationBusyId === recommendation.id}>Relevant</button><button type="button" className={styles.secondaryButton} onClick={() => void appendRecommendationEvent(recommendation.id, 'dismiss')} disabled={recommendationBusyId === recommendation.id}>Dismiss</button><button type="button" disabled title="Paper decisions are added in the separately audited Decision Lab gate">Paper decision — later gate</button></div>
+                  <div className={styles.recommendationActions}><Link href={instrument ? `/markets/${encodeURIComponent(instrument.symbol)}` : '/markets'}>Open research</Link><button type="button" onClick={() => void appendRecommendationEvent(recommendation.id, 'watch')} disabled={recommendationBusyId === recommendation.id}>Watch</button><button type="button" onClick={() => void appendRecommendationEvent(recommendation.id, 'feedback')} disabled={recommendationBusyId === recommendation.id}>Relevant</button><button type="button" className={styles.secondaryButton} onClick={() => void appendRecommendationEvent(recommendation.id, 'dismiss')} disabled={recommendationBusyId === recommendation.id}>Dismiss</button><button type="button" className={styles.secondaryButton} onClick={() => selectTab('decision-lab')} title="Open the separately governed Decision Lab">Open Decision Lab</button></div>
                   {recommendation.latestEvent ? <p className={styles.disclosure}>Latest separate event: {recommendation.latestEvent}. The snapshot and its source assessments remain unchanged.</p> : null}
                 </article>
               )
@@ -1229,7 +1229,7 @@ export default function MyDashboardClient() {
                   ))}
                 </ul>
               ) : (
-                <div className={styles.empty}><strong>No portfolio has been added.</strong><p>This is a real empty state from your private Supabase rows. Position entry and calculated health measures will be added in the next MYDASH-004 slices; missing holdings or values are never fabricated.</p></div>
+                <div className={styles.empty}><strong>No portfolio has been added.</strong><p>This is a real empty state from your private Supabase rows. Create a portfolio and add positions explicitly; missing holdings or values are never fabricated.</p></div>
               )}
               <p className={styles.disclosure}>Portfolio Health is for private research and paper tracking only. It cannot place trades or connect to a broker.</p>
             </article>

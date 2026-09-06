@@ -28,6 +28,8 @@ test('MYDASH-002 shell exposes six accessible tabs and honest private states', a
   assert.match(component, /ArrowLeft/)
   assert.match(component, /Anonymous sessions cannot open My Dashboard/)
   assert.match(component, /No placeholder recommendations, holdings or returns are fabricated/)
+  assert.match(component, /Your private research workspace is ready/)
+  assert.doesNotMatch(component, /Later gates will add|next MYDASH-004 slices/)
   assert.doesNotMatch(component, /service_role|SUPABASE_SERVICE/i)
 })
 

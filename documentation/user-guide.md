@@ -32,6 +32,7 @@ Most research dashboards are public and read-only. Personal monitoring and strat
 | Assessment detail | `/assessments/[symbol]` | Public read-only | Inspect scores, confidence, disagreement, lineage, catalysts, risks and evidence |
 | Opportunities | `/opportunities` | Public read-only | Browse long-term themes and current Opportunity scores |
 | Opportunity detail | `/opportunities/[theme]` | Public read-only | Review Structural, Technology and Opportunity Convergence evidence |
+| My Dashboard | `/my-dashboard` | Signed-in permanent owner | Use the six-tab private research workspace without exposing one owner's rows to another user |
 | Watchlists | `/watchlists` | Signed-in owner | Maintain private instrument lists |
 | Alerts | `/alerts` | Signed-in owner | Maintain private alert definitions and inspect event history |
 | Strategies | `/strategies` | Signed-in owner | Review private strategy definitions, tests and decision outcomes |
@@ -50,6 +51,22 @@ Use this order to understand the platform without mixing short- and long-term si
 5. Open **Opportunities** to research long-term themes separately.
 6. Sign in only when you need private Watchlists, Alerts or Strategy evidence.
 7. Treat every score as research evidence that still requires your own judgement.
+
+## Use My Dashboard as a private research workspace
+
+**Primary route:** `/my-dashboard`
+**Access:** signed-in permanent owner only
+
+My Dashboard brings owner-scoped research into six keyboard-accessible tabs. Use the left and right arrow keys to move between tabs, or Home and End to jump to the first and last tab. A complete private-data load must succeed before personal counts or records appear; if one required owner-scoped read fails, use the displayed retry action instead of treating missing values as zero.
+
+1. **Today** shows persisted setup and attention items. Set a three-letter base currency, default 5-, 20- or 60-session research horizon and optional presentation-only risk style.
+2. **Recommendations** shows immutable research-relevance snapshots with reasons, principal risks, evidence limitations, source cutoffs, methodology and separated evidence families. Watch, Relevant and Dismiss append separate feedback events; they do not rewrite the recommendation or its sources. **Open Decision Lab** changes tabs only and does not create a decision.
+3. **Watchlists** reads your private lists and instrument memberships. Manage list membership through the linked Watchlists workspace.
+4. **Opportunities** shows only independently mapped themes relevant to your stored interests or watched instruments. An Opportunity score never becomes a Buy instruction.
+5. **Portfolio Health** supports explicit manual or paper portfolios, manual positions, optional CSV preview/confirmation and persisted health snapshots. Missing price, currency, issuer, mapping or cost evidence remains incomplete. Refresh runs through the trusted calculation boundary; the browser does not calculate or invent health values.
+6. **Decision Lab** keeps AI-signal and user-paper clocks separate. It captures only eligible forward evidence, shows immutable source identity and evaluator cutoffs, and excludes unresolved or observational outcomes from return means rather than substituting zero.
+
+This workspace cannot connect a broker, place an order or perform live trading. Recommendations and Decision Lab are simulated research tools, not personalised financial advice. Sign out when finished on a shared device; the page clears private state at authentication boundaries and anonymous sessions are rejected.
 
 ## 1. Check platform and data health
 
