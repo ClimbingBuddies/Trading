@@ -9,14 +9,14 @@
 
     project_status: IN_PROGRESS
     active_gate: MYDASH-005
-    active_gate_status: IN_PROGRESS
-    handoff_owner: PRODUCER
-    handoff_status: REWORK_REQUIRED
+    active_gate_status: IN_REVIEW
+    handoff_owner: AUDITOR
+    handoff_status: READY_FOR_RE_AUDIT
     owner_review: OWNER_REVIEW_B_ACCEPTED_2026-09-05
-    last_event: MYDASH-005_INDEPENDENT_AUDIT_REWORK_REQUIRED
+    last_event: MYDASH-005_PRODUCER_CORRECTION_READY_FOR_RE_AUDIT
     consecutive_failure_count: 0
     consecutive_failure_reason: NONE
-    next_action: Retry publication of local audit handback commit 6fc142a458903b2e74868ec8e0e6ba8dd4450dda; after confirmation, correct the persisted-source cutoff/calendar-freshness bridge and return MYDASH-005 for independent re-audit.
+    next_action: Publish and verify Producer correction 934c9dc23e50d49adab1fb04e147c1952f451099 plus this bounded handoff, then independently re-audit MYDASH-005 without implementing fixes.
 
 ## Gate ledger
 
@@ -26,7 +26,7 @@
 | MYDASH-002 | DONE | NONE | Independent audit complete; PASS_WITH_ADVICE with authenticated/mobile advisory checks |
 | MYDASH-003 | DONE | NONE | Independent local re-audit PASS 2 September 2026 |
 | MYDASH-004 | DONE | NONE | Owner Review B accepted 5 September 2026; deferred database evidence retained |
-| MYDASH-005 | IN_PROGRESS | PRODUCER | Independent audit |
+| MYDASH-005 | IN_REVIEW | AUDITOR | Independent audit |
 | MYDASH-006 | PLANNED | NONE | Independent audit |
 | MYDASH-007 | PLANNED | NONE | Independent audit, then Owner Review C |
 | MYDASH-008 | PLANNED | NONE | Independent audit and final reconciliation |
@@ -3736,3 +3736,25 @@ Not authorised by this decision:
 - The execution safety reviewer rejected the exact `git push origin main` because a fresh explicit owner approval supplied as a trusted user instruction is required for this shared-default-branch mutation. No workaround, indirect execution or force-push was attempted.
 - Per the controller publication contract, the persisted-source correction did not begin. No implementation, test, database, private-data, provider, deployment, Vercel, broker, trading or automation-state change occurred. MYDASH-005 remains `IN_PROGRESS / PRODUCER`, forecast 2–3 meaningful runs.
 - Exact next action: Travis explicitly approves pushing local `main` through `393149abb50d34b7ace238be511444a2ce5ebfbf` to GitHub `origin/main`; after remote verification, implement the complete loader cutoff/calendar-freshness correction set.
+
+### 6 September 2026, 10:08 Australia/Perth — GITHUB_STATUS_PUBLICATION_COMPLETE
+
+- Travis explicitly approved pushing the complete local `main` branch through `70e740f` to GitHub `origin/main`.
+- A fresh fetch confirmed no divergence. The three bounded audit-control commits were pushed without force, and local `HEAD` plus `origin/main` were confirmed at `70e740fd25c7750f8baaeefaafa0ea090bbfcd11`.
+- Unrelated untracked `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` remain preserved and excluded. No Vercel deployment, hosted Supabase or production mutation, broker access or trading occurred.
+
+### 6 September 2026, 10:09 Australia/Perth — BUILD_ATTEMPT_STARTED — MYDASH-005_SOURCE_FRESHNESS_BRIDGE_CORRECTION
+
+- Role selected from starting state: `PRODUCER`; sole active gate `MYDASH-005 / IN_PROGRESS`; handoff `AUDITOR -> PRODUCER / REWORK_REQUIRED`.
+- Starting commit: `70e740fd25c7750f8baaeefaafa0ea090bbfcd11` on `main`, aligned with `origin/main`. Untracked owner files and generated cache output remain excluded.
+- Starting SHA-256 identities: controller `e02b67fd46745ccab1e78f3b1fea76f7a3f7e4ae7a728d2b1571d6f200f44736`; plan `f1ab07cda2d989424872b19eac680bb894b85d63b05e06c2c6f1487a94b0692a`; approved contract `ebb9e314133dd707b58bf8118634a0928a85f5a66a21924a1bde72efa6b97f09`; recommendation migration `b44d47206fecb0fe6e72551de08bbf23f572c0fcbe05f4f0d76920769fcd9ef0`; generator `9d61c26cd71455797ce260a80b8752b386c5b71ced3728ceef99ef69be1bf9e5`; generator test `ad81459e44feff2f7af9652ba9af2f138ab57a510a76ede6b270a5404f6a5efc`; migration test `2a7b9ec0064c3f4d1a383435f79ef4e4ddc33d03375dcd4f177a73b0d41449be`.
+- Bounded scope: correct the service-only persisted-source bridge to require `gpt_market_runs.analysis_cutoff_time`, derive exact canonical Tiingo daily-session freshness evidence for Market AI and Technical rows, fail closed when the provider mapping/session anchor is unavailable, and add a concrete loader-to-generator regression covering eligible, unavailable, stale and future evidence. Update only affected canonical data/methodology documentation and gate handoff evidence; do not apply migrations, inspect private rows, deploy, access brokers or trade.
+
+### 6 September 2026, 10:11 Australia/Perth — MYDASH-005_SOURCE_FRESHNESS_BRIDGE_CORRECTION_COMPLETE
+
+- Role performed: `PRODUCER`; completed the Auditor's entire correction set in functional commit `934c9dc23e50d49adab1fb04e147c1952f451099`. MYDASH-005 moved to `IN_REVIEW / AUDITOR`; no audit or successor promotion occurred.
+- The service-only loader now requires the succeeded Market run's authoritative `analysis_cutoff_time`, resolves exactly one active Tiingo mapping, anchors each Market AI/Technical source to the latest canonical `1day` observation at or before its cutoff, and counts distinct later session keys through generation. Missing/ambiguous mapping or anchor evidence fails closed with unavailable freshness.
+- Added a concrete loader-to-generator regression proving eligible current evidence succeeds while unavailable, stale and future inputs remain denied. Focused recommendations passed 19/19; all repository tests passed 127/127; TypeScript, palette and diff checks passed.
+- No UI code changed, so prior authenticated desktop/narrow-screen evidence remains applicable and browser replay was not repeated. The unapplied migration's isolated database/RLS/RPC execution remains deferred evidence.
+- No hosted/private data, provider, migration application, deployment, Vercel, broker, trading or automation-state change occurred. Untracked owner files and generated cache output remain excluded.
+- Handoff: `PRODUCER -> AUDITOR / MYDASH-005 IN_REVIEW / READY_FOR_RE_AUDIT`. Exact next action: publish and verify the functional correction plus this control handoff, then independently re-audit the complete candidate.
