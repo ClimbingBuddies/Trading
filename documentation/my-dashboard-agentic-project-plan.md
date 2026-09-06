@@ -239,7 +239,7 @@ The status, remaining scope and run forecast are kept together here so gate prog
 
 **Estimated remaining work:** MYDASH-007 retains **8–12 meaningful runs** and MYDASH-008 retains **4–7**, for **12–19 meaningful runs** in aggregate. The forecast will be rebaselined when implementation or pilot evidence changes.
 
-**Publication status:** `GITHUB_STATUS_PUBLICATION_IN_PROGRESS`. The functional correction and re-audit handoff are confirmed on `origin/main` through `89ce8e507b49b8cec220293f7a83d41026a4f588`; publish and remotely verify this independent pass record before beginning MYDASH-007. Unrelated untracked `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` remain excluded.
+**Publication status:** `GITHUB_STATUS_PUBLICATION_COMPLETE`. The MYDASH-006 functional correction, re-audit handoff and independent `PASS_WITH_ADVICE` record are confirmed on `origin/main` through `9134ed839bab1679bd1f88c0dbd8ed4cd8b3e3c5`. Unrelated untracked `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` remain excluded.
 
 Gate-by-gate outstanding work and estimated runs are maintained in the **Work gates** table above. This section retains the cross-gate forecast assumptions, timing and publication status without duplicating the tracking rows.
 
@@ -419,4 +419,4 @@ The project is complete only when:
     controller_journal_created: true
     production_changes_authorised: recurring bounded GitHub main publication is authorised for owner visibility; refresh-portfolio-health deployment and the supplied CommSec holdings import were separately approved and completed; no further deployment or production mutation without exact owner approval
     owner_approval_recorded: Owner Reviews A and B approved; MYDASH-001 through MYDASH-006 complete
-    next_action: Publish and verify the MYDASH-006 independent pass record, then begin the bounded MYDASH-007 deterministic entry-resolution and immutable return-snapshot foundation as Producer.
+    next_action: Begin the bounded MYDASH-007 deterministic entry-resolution and immutable return-snapshot foundation as Producer.

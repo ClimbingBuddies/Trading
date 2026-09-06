@@ -3955,3 +3955,9 @@ Not authorised by this decision:
 - Confirmed the partial owner/source unique index is the concurrent database boundary: identical retries resolve to the immutable row, including after the capture window closes, while divergent assumptions fail. Owner isolation, anonymous denial, immutable events, distinct clocks, browser table-write denial and no-trade boundaries remain intact.
 - Audit result: `PASS_WITH_ADVICE`. The unapplied migration leaves isolated database/RLS/direct-concurrency execution as deferred evidence; this is not claimed and does not grant production authority. MYDASH-006 moved to `DONE`; only MYDASH-007 was promoted to `NEXT / PRODUCER`.
 - Forecast is 8–12 MYDASH-007 runs and 12–19 total remaining runs. Exact next action: publish and verify this pass record, then begin the bounded deterministic entry-resolution and immutable return-snapshot foundation.
+
+### 6 September 2026, 14:16 Australia/Perth — GITHUB_STATUS_PUBLICATION_COMPLETE
+
+- Committed only the independent MYDASH-006 audit result, active Work gate transition, forecast and controller handoff as `9134ed839bab1679bd1f88c0dbd8ed4cd8b3e3c5`.
+- Fresh fetch showed zero divergence; pushed without force and confirmed local `HEAD` plus `origin/main` both resolve to that identity.
+- Publication changes delivery visibility only. No migration, private-data access, hosted environment, deployment, Vercel, broker, order, trading or automation-setting change occurred.
