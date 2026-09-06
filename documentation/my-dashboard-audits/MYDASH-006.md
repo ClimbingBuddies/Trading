@@ -4,7 +4,7 @@
 
 **Role:** Producer
 
-**Record status:** IN_PROGRESS — PHASES 1–2 LOCALLY VERIFIED
+**Record status:** IN_PROGRESS — PHASES 1–3 LOCALLY VERIFIED
 
 **Date:** 6 September 2026
 
@@ -45,6 +45,19 @@ The dashboard performs separate owner-filtered reads of immutable decisions and 
 - No capture mutation was added in this phase. No database, hosted/private row, deployment, provider, broker or trading action occurred.
 - Phase-2 functional/control commit `024bcfb0a8ee7c8b680b015a7f63fd41c47ff372` was pushed without force and independently confirmed as both local `HEAD` and `origin/main`.
 
+## Phase 3 — constrained capture controls
+
+Decision Lab now exposes two deliberately separate capture paths. The user-paper form sends only an active instrument, approved action, approved horizon and bounded optional note; the audited RPC derives owner identity, source snapshot and one trusted server clock. The AI path is offered only from persisted recommendation lineage whose source family is `MARKET_AI`; the RPC receives only that assessment identity and revalidates its succeeded independent run before deriving action, instrument, snapshot and original analysis cutoff.
+
+Both paths make the fixed v1 paper assumptions visible: base-currency notional 1,000, zero fees/slippage, no benchmark and `NEXT_DAILY_CLOSE`. Browser table inserts remain absent. Technical, Opportunity and external-fact evidence cannot be promoted into an AI decision, and no broker, account, order or execution control was added.
+
+- Focused decision migration/UI checks: **9/9 passed**.
+- Repository tests: **136/136 passed**.
+- TypeScript, palette and `git diff --check`: passed.
+- Localhost desktop: authenticated Decision Lab rendered the user-paper fields, explicit assumptions, eligible-source empty state and unapplied-schema error state; the document had no horizontal overflow, Next.js error overlay or console warning/error.
+- A fresh 390 × 844 viewport was unavailable in the current browser-control surface. The responsive CSS collapses both new grids/actions below 680 px, but this source inspection is not claimed as fresh narrow-screen execution evidence.
+- No form was submitted during browser verification. No database, hosted/private row, deployment, provider, broker or trading action occurred.
+
 ## Limitations and next phase
 
-MYDASH-007 remains responsible for deterministic entry resolution and return snapshots. MYDASH-006 still needs user-paper and eligible AI-signal capture controls, whole-gate regression, available localhost states after schema application and independent audit handoff. Isolated database policy/ACL/RPC execution remains deferred while the migration is unapplied. This is not an Auditor decision and does not promote the gate.
+MYDASH-007 remains responsible for deterministic entry resolution and return snapshots. MYDASH-006 still needs whole-gate regression and independent audit handoff. Available localhost success states plus isolated database policy/ACL/RPC execution remain deferred while the migration is unapplied; fresh narrow-screen execution also remains deferred. This is not an Auditor decision and does not promote the gate.

@@ -288,6 +288,11 @@ export default function MyDashboardClient() {
   const [decisions, setDecisions] = useState<PersonalDecision[]>([])
   const [decisionState, setDecisionState] = useState<DecisionState>('idle')
   const [decisionError, setDecisionError] = useState('')
+  const [decisionBusyKey, setDecisionBusyKey] = useState<string | null>(null)
+  const [decisionInstrumentId, setDecisionInstrumentId] = useState('')
+  const [decisionAction, setDecisionAction] = useState<PersonalDecision['action']>('WATCH')
+  const [decisionHorizon, setDecisionHorizon] = useState<5 | 20 | 60>(DEFAULT_HORIZON)
+  const [decisionNote, setDecisionNote] = useState('')
   const [baseCurrency, setBaseCurrency] = useState(DEFAULT_BASE_CURRENCY)
   const [horizon, setHorizon] = useState<5 | 20 | 60>(DEFAULT_HORIZON)
   const [risk, setRisk] = useState<Preferences['risk_preference']>(DEFAULT_RISK)
@@ -329,6 +334,11 @@ export default function MyDashboardClient() {
     setDecisions([])
     setDecisionState('idle')
     setDecisionError('')
+    setDecisionBusyKey(null)
+    setDecisionInstrumentId('')
+    setDecisionAction('WATCH')
+    setDecisionHorizon(DEFAULT_HORIZON)
+    setDecisionNote('')
     setBaseCurrency(DEFAULT_BASE_CURRENCY)
     setHorizon(DEFAULT_HORIZON)
     setRisk(DEFAULT_RISK)
@@ -738,6 +748,56 @@ export default function MyDashboardClient() {
     } finally {
       setRecommendationBusyId(null)
     }
+  }
+
+  async function captureDecision(input: { sourceType: 'AI_SIGNAL'; assessmentId: string; busyKey: string } | { sourceType: 'USER_PAPER'; instrumentId: string; action: PersonalDecision['action']; note: string; busyKey: string }) {
+    const owner = permanentUser(user)
+    if (!owner) return
+    const ownerId = owner.id
+    setDecisionBusyKey(input.busyKey)
+    setDecisionError('')
+    setStatus('')
+    try {
+      const { error: captureError } = await getBrowserSupabase().rpc('capture_personal_decision_v1', {
+        p_source_type: input.sourceType,
+        p_instrument_id: input.sourceType === 'USER_PAPER' ? input.instrumentId : null,
+        p_ai_assessment_id: input.sourceType === 'AI_SIGNAL' ? input.assessmentId : null,
+        p_action: input.sourceType === 'USER_PAPER' ? input.action : null,
+        p_horizon_sessions: decisionHorizon,
+        p_benchmark_mode: 'NONE',
+        p_benchmark_instrument_id: null,
+        p_notional_amount: 1000,
+        p_entry_fee_bps: 0,
+        p_exit_fee_bps: 0,
+        p_entry_slippage_bps: 0,
+        p_exit_slippage_bps: 0,
+        p_base_currency: baseCurrency,
+        p_note: input.sourceType === 'USER_PAPER' && input.note ? input.note : null,
+      })
+      if (captureError) throw captureError
+      if (activeOwnerRef.current !== ownerId) return
+      setDecisionNote('')
+      setStatus(input.sourceType === 'AI_SIGNAL' ? 'AI signal captured with its original analysis cutoff.' : 'Paper decision captured with the trusted server clock.')
+      await loadPrivateData(ownerId)
+    } catch (captureError) {
+      if (activeOwnerRef.current === ownerId) setDecisionError(captureError instanceof Error ? captureError.message : 'The immutable decision could not be captured.')
+    } finally {
+      if (activeOwnerRef.current === ownerId) setDecisionBusyKey(null)
+    }
+  }
+
+  async function captureUserPaperDecision(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const note = decisionNote.trim()
+    if (!instruments.some((instrument) => instrument.id === decisionInstrumentId)) {
+      setDecisionError('Choose an active listed instrument.')
+      return
+    }
+    if (note.length > 500) {
+      setDecisionError('Keep the optional decision note to 500 characters or fewer.')
+      return
+    }
+    await captureDecision({ sourceType: 'USER_PAPER', instrumentId: decisionInstrumentId, action: decisionAction, note, busyKey: 'user-paper' })
   }
 
   async function createPortfolio(event: FormEvent<HTMLFormElement>) {
@@ -1169,6 +1229,29 @@ export default function MyDashboardClient() {
           </div>
         ) : selectedTab === 'decision-lab' ? (
           <div className={styles.todayGrid} aria-busy={decisionState === 'loading'}>
+            <article className={styles.panel}>
+              <div className={styles.panelHeading}><div><span className={styles.eyebrow}>USER PAPER CAPTURE</span><h2>Record a forward decision</h2></div><span>Server clock</span></div>
+              <form className={styles.decisionCaptureForm} onSubmit={captureUserPaperDecision}>
+                <label>Instrument<select value={decisionInstrumentId} onChange={(event) => setDecisionInstrumentId(event.target.value)} required><option value="">Choose instrument</option>{instruments.map((instrument) => <option key={instrument.id} value={instrument.id}>{instrument.symbol} — {instrument.instrument_name}</option>)}</select></label>
+                <label>Action<select value={decisionAction} onChange={(event) => setDecisionAction(event.target.value as PersonalDecision['action'])}>{(['BUY', 'WATCH', 'HOLD', 'PASS', 'AVOID'] as const).map((action) => <option key={action}>{action}</option>)}</select></label>
+                <label>Horizon<select value={decisionHorizon} onChange={(event) => setDecisionHorizon(Number(event.target.value) as 5 | 20 | 60)}><option value={5}>5 sessions</option><option value={20}>20 sessions</option><option value={60}>60 sessions</option></select></label>
+                <label className={styles.decisionNote}>Decision note <span className={styles.optional}>(optional)</span><textarea value={decisionNote} onChange={(event) => setDecisionNote(event.target.value)} maxLength={500} rows={3} /></label>
+                <button type="submit" disabled={decisionBusyKey !== null}>{decisionBusyKey === 'user-paper' ? 'Capturing…' : 'Capture paper decision'}</button>
+              </form>
+              <p className={styles.disclosure}>The database sets the decision time. V1 records a {baseCurrency} 1,000 paper notional with zero fee and slippage assumptions, no benchmark, and the next eligible daily close rule. It does not place an order.</p>
+            </article>
+            <article className={styles.panel}>
+              <div className={styles.panelHeading}><div><span className={styles.eyebrow}>ELIGIBLE AI SIGNALS</span><h2>Preserve an independent assessment</h2></div><span>Original cutoff</span></div>
+              <p>Only persisted Market AI lineage is offered. The database revalidates the succeeded independent assessment and derives its action, instrument, source snapshot and analysis cutoff.</p>
+              {recommendations.filter((recommendation) => recommendation.sources.some((source) => source.source_family === 'MARKET_AI')).length ? (
+                <ul className={styles.decisionSourceList}>{recommendations.filter((recommendation) => recommendation.sources.some((source) => source.source_family === 'MARKET_AI')).map((recommendation) => {
+                  const instrument = instruments.find((item) => item.id === recommendation.instrument_id)
+                  const source = recommendation.sources.find((item) => item.source_family === 'MARKET_AI')!
+                  const busyKey = `ai:${source.source_record_key}`
+                  return <li key={recommendation.id}><div><strong>{instrument?.symbol ?? 'Unresolved instrument'} · {recommendation.category.replaceAll('_', ' ')}</strong><span>Assessment cutoff {new Date(source.source_cutoff).toLocaleString()} · {source.methodology_version}</span></div><button type="button" disabled={decisionBusyKey !== null || decisions.some((decision) => decision.source_type === 'AI_SIGNAL' && decision.source_record_key === source.source_record_key)} onClick={() => void captureDecision({ sourceType: 'AI_SIGNAL', assessmentId: source.source_record_key, busyKey })}>{decisionBusyKey === busyKey ? 'Capturing…' : decisions.some((decision) => decision.source_type === 'AI_SIGNAL' && decision.source_record_key === source.source_record_key) ? 'Already captured' : 'Capture AI signal'}</button></li>
+                })}</ul>
+              ) : <div className={styles.empty}><strong>No eligible persisted Market AI source is available.</strong><p>Technical, Opportunity and external-fact evidence cannot be promoted into an AI decision.</p></div>}
+            </article>
             <article className={styles.panel}>
               <div className={styles.panelHeading}><div><span className={styles.eyebrow}>FORWARD PAPER EVIDENCE</span><h2>Immutable personal decisions</h2></div><span>{decisionState === 'ready' ? `${decisions.length} stored` : 'Owner only'}</span></div>
               <p>AI-signal decisions keep the original assessment cutoff. User-paper decisions keep the later user clock. They are never combined into one entry timestamp.</p>

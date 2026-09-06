@@ -3846,3 +3846,11 @@ Not authorised by this decision:
 - Committed only the verified MYDASH-006 Decision Lab read/lifecycle UI, regression and control evidence as `024bcfb0a8ee7c8b680b015a7f63fd41c47ff372`.
 - Fresh fetch showed no divergence; pushed without force and confirmed local `HEAD` plus `origin/main` both resolve to `024bcfb0a8ee7c8b680b015a7f63fd41c47ff372`.
 - Unrelated untracked `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` remain untouched. GitHub publication changes delivery visibility only and grants no deployment, hosted-database, broker or trading authority.
+
+### 6 September 2026, 12:46 Australia/Perth — MYDASH-006_CONSTRAINED_CAPTURE_CONTROLS_VERIFIED
+
+- Role remained `PRODUCER`; MYDASH-006 remains `IN_PROGRESS` and was not audited or promoted. Added separate capture controls for server-clocked user-paper decisions and persisted Market-AI assessment signals.
+- The client sends only the audited RPC contract. User-paper capture accepts an active instrument, approved action/horizon and bounded optional note; AI capture is offered only from `MARKET_AI` recommendation lineage and sends the assessment identity for database revalidation. Owner, clocks, source snapshot and derived AI action are never supplied by the browser.
+- The UI exposes the fixed v1 notional, fee/slippage, benchmark and next-close assumptions, denies Technical/Opportunity/external-fact promotion, and adds no broker, account, order or execution field. No form was submitted during verification.
+- Verification passed: focused decision checks 9/9, repository 136/136, TypeScript, palette and `git diff --check`. Authenticated localhost desktop rendered the new controls and unapplied-schema state with no horizontal overflow, Next.js overlay or console warning/error. Fresh 390 × 844 execution was unavailable in the current browser-control surface and remains deferred without blocking other evidence.
+- No migration was applied and no database/private row, deployment, provider, Vercel, broker, trading or automation-setting change occurred. Forecast is 2–4 MYDASH-006 runs and 14–23 total remaining runs. Exact next action: publish this bounded phase, then complete whole-gate regression and independent audit handoff.
