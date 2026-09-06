@@ -123,3 +123,13 @@ Whole-gate verification reproduced focused Decision Lab **11/11**, repository **
 MYDASH-006 is now `IN_REVIEW / AUDITOR`. The independent re-audit must reproduce forward eligibility, identical/concurrent retry idempotency, divergent-conflict denial, owner isolation, anonymous denial, distinct clocks, immutable events and the no-trade boundary against the exact published candidate.
 
 The re-audit handoff is committed locally as `c1bc3af`. Publication of this internal plan/audit/journal payload was rejected by the execution safety review without fresh exact owner approval; audit work must wait until the handoff is published and remotely verified.
+
+## Independent re-audit — PASS_WITH_ADVICE
+
+On 6 September 2026 at 14:13 Australia/Perth, the Auditor first fetched and published the bounded re-audit handoff, then confirmed local `main` and `origin/main` at `89ce8e507b49b8cec220293f7a83d41026a4f588`. The audit reviewed functional candidate `08dbdb1b0c8e254420c1b5e46092eb575a004999` without changing implementation.
+
+The prior failure is closed. AI capture is available only after a succeeded run's valid persisted completion and before the first later canonical Tiingo `1day` observation; missing or ambiguous provider mapping and invalid clocks fail closed. A partial owner/source unique index is the database concurrency boundary. Identical retries return the immutable decision even after eligibility closes, while any divergent horizon, benchmark or simulation assumptions raise without rewriting or duplicating history. The UI consumes only the advisory eligible-ID RPC and the capture RPC independently revalidates authority.
+
+Independent verification passed: focused Decision Lab **11/11**, repository **138/138**, TypeScript, palette compliance and `git diff --check`. Owner-select RLS, anonymous denial, immutable decision/event triggers, browser table-write denial, distinct user-paper server clocks, same-owner linkage and the no-broker/no-order boundary remain intact.
+
+Result: `PASS_WITH_ADVICE`. The migration remains intentionally unapplied, so isolated database execution of RLS, direct RPC denial and concurrent retry behavior remains deferred evidence and is not claimed. This advice does not reopen MYDASH-006 and grants no hosted-database, deployment, broker or trading authority. MYDASH-006 is `DONE`; MYDASH-007 is promoted to `NEXT / PRODUCER`.

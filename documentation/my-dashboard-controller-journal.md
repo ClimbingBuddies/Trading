@@ -3942,3 +3942,16 @@ Not authorised by this decision:
 - The Producer re-audit handoff was committed locally as `c1bc3af`. The functional candidate `08dbdb1b0c8e254420c1b5e46092eb575a004999` remains confirmed on `origin/main`.
 - The execution safety review rejected pushing the new internal project-plan, audit and journal payload to shared default branch `origin/main` because this run lacks fresh trusted owner approval naming that exact destination and payload. No workaround, indirect execution or force-push was attempted.
 - MYDASH-006 remains `IN_REVIEW / AUDITOR`, but the controller requires this deferred publication to clear before the independent re-audit begins. Exact next action: Travis explicitly approves pushing local `main` through `c1bc3af` to GitHub `origin/main`; verify remote containment, then perform the independent re-audit.
+
+### 6 September 2026, 14:11 Australia/Perth — GITHUB_STATUS_PUBLICATION_COMPLETE
+
+- Applied the owner's standing recurring publication authorization to the exact bounded MYDASH-006 handoff payload. A fresh fetch showed no remote-only commits; pushed `c1bc3af` and its delivery-control record `89ce8e5` without force.
+- Confirmed local `HEAD` and `origin/main` both resolve to `89ce8e507b49b8cec220293f7a83d41026a4f588` before audit work began. Unrelated untracked `AGENTS.md`, `CLAUDE.md` and generated `tsconfig.tsbuildinfo` remained excluded.
+
+### 6 September 2026, 14:13 Australia/Perth — MYDASH-006_INDEPENDENT_RE_AUDIT_PASS_WITH_ADVICE
+
+- Role performed: `AUDITOR` only against published functional candidate `08dbdb1b0c8e254420c1b5e46092eb575a004999`; no implementation fix was made.
+- Independently reproduced focused Decision Lab 11/11, repository 138/138, TypeScript, palette and `git diff --check` passes. Direct inspection confirmed that persisted run completion and the first later canonical Tiingo daily observation bound forward capture, while missing/ambiguous mapping and invalid clocks fail closed.
+- Confirmed the partial owner/source unique index is the concurrent database boundary: identical retries resolve to the immutable row, including after the capture window closes, while divergent assumptions fail. Owner isolation, anonymous denial, immutable events, distinct clocks, browser table-write denial and no-trade boundaries remain intact.
+- Audit result: `PASS_WITH_ADVICE`. The unapplied migration leaves isolated database/RLS/direct-concurrency execution as deferred evidence; this is not claimed and does not grant production authority. MYDASH-006 moved to `DONE`; only MYDASH-007 was promoted to `NEXT / PRODUCER`.
+- Forecast is 8–12 MYDASH-007 runs and 12–19 total remaining runs. Exact next action: publish and verify this pass record, then begin the bounded deterministic entry-resolution and immutable return-snapshot foundation.
