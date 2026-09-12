@@ -1,5 +1,11 @@
 # Supabase Data Model
 
+## Personal prediction ledger (12 September 2026 change)
+
+`scripts/prediction-ledger-v1.sql` is the additive migration source for the new prediction workflow. It is independent of the older, undeployed personal-decision tables. `personal_prediction_tracking` records an authenticated owner's enrolment time. `personal_prediction_plans` preserves every supported watched-equity/ETF AI call, its original source snapshot and publication time, and separate 5/20-session timing rules. `personal_prediction_results` stores append-only evaluation states and frozen entry/exit evidence. All three tables have owner-only SELECT policies; browser writes are restricted to the no-argument enrolment RPC. Plan, result and enrolment updates/deletes are rejected by triggers.
+
+Publication starts with assessments created after enrolment and watchlist addition; it never backfills historical calls. A private publisher and evaluator run every 15 minutes for explicitly enrolled owners. The first methodology is `ai-rating-fixed-horizon-v1`: AI supplies the rating and reasoning, while timing is a disclosed fixed rule, not a model forecast. QQQ is the named USD comparison where available, not a universal market benchmark. Missing or inconsistent session/price evidence withholds returns. See the prediction workflow section of the operational runbook.
+
 **Project:** `glvbqcplgjdfgjyknzsa`  
 **Last reconciled against production:** 25 August 2026
 
@@ -135,3 +141,4 @@ The first real strategy, backtest and evaluation are persisted. Its review outco
 - Calculation and methodology contracts: [specifications](specifications/)
 - Operational implementations: [pipelines](pipelines/)
 - Independent verification: [project audits](project-audits/)
+

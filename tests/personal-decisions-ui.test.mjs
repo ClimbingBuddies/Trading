@@ -1,63 +1,19 @@
 import assert from 'node:assert/strict'
 import { readFile } from 'node:fs/promises'
 import test from 'node:test'
-
-const componentUrl = new URL('../components/MyDashboardClient.tsx', import.meta.url)
-
-test('Decision Lab reads decisions and events through separate owner-scoped queries', async () => {
-  const component = await readFile(componentUrl, 'utf8')
-  assert.match(component, /\.from\('personal_decisions'\)/)
-  assert.match(component, /\.from\('personal_decision_events'\)/)
-  assert.match(component, /\.eq\('owner_user_id', ownerId\)/g)
-  assert.match(component, /A persisted decision failed response validation/)
-  assert.match(component, /Persisted decision event history failed response validation/)
+const ui = await readFile(new URL('../components/PredictionWorkspace.tsx', import.meta.url), 'utf8')
+test('Decision Lab uses the same published prediction ledger and owner-scoped outcomes', () => {
+  assert.match(ui, /from\('personal_prediction_plans'\)/)
+  assert.match(ui, /from\('personal_prediction_results'\)/)
+  assert.match(ui, /eq\('owner_user_id', ownerId\)/)
+  assert.match(ui, /offset \+= 500/)
+  assert.doesNotMatch(ui, /capture_personal_decision|Capture AI signal/)
+})
+test('Decision Lab withholds unfinished returns and retains source clocks', () => {
+  assert.match(ui, /result\?\.status === 'COMPLETE'/)
+  assert.match(ui, /p\.published_at/)
+  assert.match(ui, /p\.source_cutoff/)
+  assert.match(ui, /Observation only/)
+  assert.match(ui, /No orders are placed/)
 })
 
-test('Decision Lab preserves distinct clocks and honest lifecycle states', async () => {
-  const component = await readFile(componentUrl, 'utf8')
-  assert.match(component, /AI-signal decisions keep the original assessment cutoff/)
-  assert.match(component, /The AI cutoff controls this clock/)
-  assert.match(component, /The server capture clock controls this record/)
-  assert.match(component, /'COMPLETED' : hasPaperPosition \? 'OPEN' : 'PENDING ENTRY'/)
-  assert.match(component, /Entry price and returns remain unavailable until forward evidence exists/)
-})
-
-test('Decision Lab exposes isolated loading, empty and error states without trading claims', async () => {
-  const component = await readFile(componentUrl, 'utf8')
-  assert.match(component, /Decision Lab unavailable/)
-  assert.match(component, /Loading private decisions…/)
-  assert.match(component, /No forward decisions have been captured/)
-  assert.match(component, /cannot place orders, connect a broker or present an unresolved return as zero/)
-  assert.doesNotMatch(component, /\.from\('personal_decisions'\)\.(insert|update|delete)/)
-})
-
-test('Decision Lab reads immutable owner returns and keeps AI and user comparisons separate', async () => {
-  const component = await readFile(componentUrl, 'utf8')
-  assert.match(component, /\.from\('personal_return_snapshots'\)/)
-  assert.match(component, /\.eq\('owner_user_id', ownerId\)\.in\('decision_id', decisionIds\)/)
-  assert.match(component, /Persisted return evidence failed response validation/)
-  assert.match(component, /\['AI_SIGNAL', 'USER_PAPER'\]/)
-  assert.match(component, /Cohorts remain separate and are not ranked/)
-  assert.match(component, /unresolved and observational actions are excluded, not counted as zero/)
-  assert.match(component, /No evaluator snapshot exists yet\. Entry price and returns remain unavailable until forward evidence exists; missing evidence is never shown as zero/)
-  assert.doesNotMatch(component, /setReturnSnapshots\([^)]*\.concat/i)
-})
-
-test('Decision Lab captures only constrained user-paper and persisted independent AI inputs', async () => {
-  const component = await readFile(componentUrl, 'utf8')
-  assert.match(component, /\.rpc\('capture_personal_decision_v1'/)
-  assert.match(component, /p_source_type: input\.sourceType/)
-  assert.match(component, /p_instrument_id: input\.sourceType === 'USER_PAPER'/)
-  assert.match(component, /p_ai_assessment_id: input\.sourceType === 'AI_SIGNAL'/)
-  assert.match(component, /p_benchmark_mode: 'NONE'/)
-  assert.match(component, /p_notional_amount: 1000/)
-  assert.match(component, /p_entry_fee_bps: 0/)
-  assert.match(component, /p_entry_slippage_bps: 0/)
-  assert.match(component, /source\.source_family === 'MARKET_AI'/)
-  assert.match(component, /\.rpc\('list_eligible_personal_ai_decision_sources_v1'\)/)
-  assert.match(component, /eligibleAiDecisionSourceIds\.has\(source\.source_record_key\)/)
-  assert.match(component, /before the first later canonical daily observation/)
-  assert.match(component, /The database sets the decision time/)
-  assert.match(component, /Technical, Opportunity and external-fact evidence cannot be promoted into an AI decision/)
-  assert.doesNotMatch(component, /broker(_| )?(id|token|account|connect)/i)
-})

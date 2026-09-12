@@ -60,11 +60,11 @@ Use this order to understand the platform without mixing short- and long-term si
 My Dashboard brings owner-scoped research into six keyboard-accessible tabs. Use the left and right arrow keys to move between tabs, or Home and End to jump to the first and last tab. A complete private-data load must succeed before personal counts or records appear; if one required owner-scoped read fails, use the displayed retry action instead of treating missing values as zero.
 
 1. **Today** shows persisted setup and attention items. Set a three-letter base currency, default 5-, 20- or 60-session research horizon and optional presentation-only risk style.
-2. **Recommendations** shows immutable research-relevance snapshots with reasons, principal risks, evidence limitations, source cutoffs, methodology and separated evidence families. Watch, Relevant and Dismiss append separate feedback events; they do not rewrite the recommendation or its sources. **Open Decision Lab** changes tabs only and does not create a decision.
+2. **Recommendations** is your default view. Start with your personal watchlist and enable **Start tracking my AI picks** once. Fresh scheduled AI assessments then appear automatically in a table with the publication timestamp, buy rule, sell rule and reasoning. Switch between Weekly (5 sessions) and Monthly (20 sessions). The initial timing is a fixed holding-period test of the AI rating, not an AI forecast of the ideal dates. **Open Decision Lab** using the track-record link to review outcomes.
 3. **Watchlists** reads your private lists and instrument memberships. Manage list membership through the linked Watchlists workspace.
 4. **Opportunities** shows only independently mapped themes relevant to your stored interests or watched instruments. An Opportunity score never becomes a Buy instruction.
 5. **Portfolio Health** supports explicit manual or paper portfolios, manual positions, optional CSV preview/confirmation and persisted health snapshots. Missing price, currency, issuer, mapping or cost evidence remains incomplete. Refresh runs through the trusted calculation boundary; the browser does not calculate or invent health values.
-6. **Decision Lab** keeps AI-signal and user-paper clocks separate. It captures only eligible forward evidence, shows immutable source identity and evaluator cutoffs, and excludes unresolved or observational outcomes from return means rather than substituting zero.
+6. **Decision Lab** automatically tracks every published prediction. You do not need to capture a call manually. It shows recorded entry and exit, return after modelled costs, the named benchmark return and a weekly/monthly scorecard. Losing and non-buy calls remain visible. Missing prices are shown as incomplete, never zero. Published plans cannot be edited, deleted or backdated; later assessments create new records. Tracking runs every 15 minutes while the page is closed. A completed result measures a single pick, not a funded portfolio.
 
 This workspace cannot connect a broker, place an order or perform live trading. Recommendations and Decision Lab are simulated research tools, not personalised financial advice. Sign out when finished on a shared device; the page clears private state at authentication boundaries and anonymous sessions are rejected.
 
@@ -392,3 +392,4 @@ Verified signed-out states:
 - `/strategies` — “Sign in to view strategy evidence”.
 
 The signed-out forms verify only the access boundary. UGUIDE-003 owner-state screenshots remain `AUTH_REQUIRED`; its task instructions are source-, contract- and RLS-verified and do not claim that an authenticated UI session was observed.
+

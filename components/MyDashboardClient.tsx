@@ -7,6 +7,7 @@ import type { User } from '@supabase/supabase-js'
 import { getBrowserSupabase } from '@/lib/supabase-browser'
 import { parseHoldingsCsv, type HoldingsCsvValue } from '@/lib/portfolio-holdings-csv.mjs'
 import styles from './MyDashboardClient.module.css'
+import PredictionWorkspace from './PredictionWorkspace'
 
 const tabs = [
   { key: 'today', label: 'Today' },
@@ -175,7 +176,7 @@ function permanentUser(user: User | null | undefined) {
 }
 
 function validTab(value: string | null): TabKey {
-  return tabs.some((tab) => tab.key === value) ? (value as TabKey) : 'today'
+  return tabs.some((tab) => tab.key === value) ? (value as TabKey) : 'recommendations'
 }
 
 function validPortfolioHealthSnapshot(value: unknown): value is PortfolioHealthSnapshot {
@@ -1095,7 +1096,7 @@ export default function MyDashboardClient() {
   return (
     <div className={styles.dashboard}>
       <header className={styles.header}>
-        <div><span className={styles.eyebrow}>PERSONAL MARKET WORKSPACE</span><h1>My Dashboard</h1><p className={styles.lede}>Your private research overview. Stored data, source evidence and later inference stay distinct.</p></div>
+        <div><span className={styles.eyebrow}>PERSONAL MARKET WORKSPACE</span><h1>My Dashboard</h1><p className={styles.lede}>Your shares, your research, and an honest record of every AI prediction.</p></div>
         <div className={styles.accountActions}>
           <span>Signed in as <strong>{user.email ?? 'authenticated user'}</strong></span>
           <button className={styles.secondaryButton} onClick={signOut}>Sign out</button>
@@ -1112,7 +1113,9 @@ export default function MyDashboardClient() {
       {status && <div className={styles.status} role="status">{status}</div>}
 
       <section id={`my-dashboard-panel-${selectedTab}`} role="tabpanel" aria-labelledby={`my-dashboard-tab-${selectedTab}`} tabIndex={0}>
-        {privateDataState === 'error' ? (
+        {selectedTab === 'recommendations' || selectedTab === 'decision-lab' ? (
+          <PredictionWorkspace key={user.id} ownerId={user.id} mode={selectedTab} />
+        ) : privateDataState === 'error' ? (
           <article className={styles.stateCard} aria-live="assertive">
             <span className={styles.eyebrow}>PRIVATE DATA UNAVAILABLE</span>
             <h2>My Dashboard could not be loaded</h2>
@@ -1149,43 +1152,6 @@ export default function MyDashboardClient() {
                 <p className={styles.disclosure}>These settings organise research presentation only. They are not a suitability assessment or permission to trade.</p>
               </article>
             </div>
-        ) : selectedTab === 'recommendations' ? (
-          <div className={styles.todayGrid} aria-busy={recommendationState === 'loading'}>
-            <article className={styles.panel}>
-              <div className={styles.panelHeading}><div><span className={styles.eyebrow}>PERSONAL RESEARCH</span><h2>Explainable recommendations</h2></div><span>{recommendationState === 'ready' ? `${recommendations.filter((item) => item.latestEvent !== 'dismiss').length} current` : 'Loading'}</span></div>
-              <p className={styles.disclosure}>These are immutable research-relevance snapshots, not financial advice or Buy/Sell instructions. Opportunity evidence can explain relevance but never creates a short-term action label by itself.</p>
-            </article>
-            {recommendationState === 'error' ? (
-              <article className={styles.stateCard} role="alert"><span className={styles.eyebrow}>RECOMMENDATIONS UNAVAILABLE</span><h2>Private recommendations could not be loaded</h2><p>{recommendationError}</p><button type="button" onClick={() => loadPrivateData(user.id)}>Try again</button></article>
-            ) : recommendationState !== 'ready' ? (
-              <article className={styles.stateCard} role="status" aria-busy="true"><span className={styles.eyebrow}>PRIVATE RESEARCH</span><h2>Loading recommendation snapshots…</h2><p>Cards remain hidden until their snapshot, provenance and feedback history load together.</p></article>
-            ) : recommendations.filter((item) => item.latestEvent !== 'dismiss').length === 0 ? (
-              <article className={styles.stateCard} role="status"><span className={styles.eyebrow}>NO CURRENT SHORTLIST</span><h2>No supported recommendation is available</h2><p>No recommendation is invented from Opportunity alone, momentum, one indicator, stale evidence or an unsupported model opinion.</p></article>
-            ) : recommendations.filter((item) => item.latestEvent !== 'dismiss').map((recommendation) => {
-              const instrument = instruments.find((item) => item.id === recommendation.instrument_id)
-              const confidence = recommendation.confidence === null ? null : Number(recommendation.confidence)
-              return (
-                <article className={styles.recommendationCard} key={recommendation.id}>
-                  <div className={styles.panelHeading}><div><span className={styles.eyebrow}>{recommendation.category.replaceAll('_', ' ')}</span><h2>{instrument?.symbol ?? 'Instrument unavailable'} · {recommendation.intended_horizon_sessions} sessions</h2></div><span>{recommendation.quality_status.replaceAll('_', ' ')}</span></div>
-                  <p className={styles.recommendationThesis}>{recommendation.thesis}</p>
-                  <div className={styles.recommendationFacts}><div><span>Confidence</span><strong>{confidence === null ? 'Not provided' : `${Math.round(confidence * 100)}%`}</strong></div><div><span>Evidence cutoff</span><strong>{new Date(recommendation.source_cutoff).toLocaleString()}</strong></div><div><span>Valid until</span><strong>{recommendation.valid_until ? new Date(recommendation.valid_until).toLocaleString() : 'No expiry asserted'}</strong></div></div>
-                  <section className={styles.riskBox} aria-label="Principal risks"><strong>Principal risks</strong><p>{recommendation.principal_risks}</p></section>
-                  <section><strong>Why this is relevant</strong><ul className={styles.reasonList}>{recommendation.relevance_reasons.map((reason) => <li key={reason}>{reason}</li>)}</ul></section>
-                  {recommendation.quality_reasons.length ? <section className={styles.incomplete}><strong>Evidence limitations</strong><ul>{recommendation.quality_reasons.map((reason) => <li key={reason}>{reason.replaceAll('_', ' ')}</li>)}</ul></section> : null}
-                  <section className={styles.sourceGroups} aria-label="Separated recommendation evidence">
-                    {(['MARKET_AI', 'TECHNICAL', 'OPPORTUNITY', 'EXTERNAL_FACT'] as const).map((family) => {
-                      const familySources = recommendation.sources.filter((source) => source.source_family === family)
-                      if (!familySources.length) return null
-                      return <div key={family}><strong>{family.replaceAll('_', ' ')}</strong>{familySources.map((source) => <p key={`${source.source_table}:${source.source_record_key}`}>{source.relevance}<small>Cutoff {new Date(source.source_cutoff).toLocaleString()} · {source.methodology_version}</small></p>)}</div>
-                    })}
-                  </section>
-                  <dl className={styles.provenance}><div><dt>Snapshot methodology</dt><dd>{recommendation.methodology_version}</dd></div><div><dt>Model</dt><dd>{recommendation.model_identity ?? 'No AI model asserted'}</dd></div><div><dt>Source identity</dt><dd>{recommendation.source_hash.slice(0, 12)}…</dd></div></dl>
-                  <div className={styles.recommendationActions}><Link href={instrument ? `/markets/${encodeURIComponent(instrument.symbol)}` : '/markets'}>Open research</Link><button type="button" onClick={() => void appendRecommendationEvent(recommendation.id, 'watch')} disabled={recommendationBusyId === recommendation.id}>Watch</button><button type="button" onClick={() => void appendRecommendationEvent(recommendation.id, 'feedback')} disabled={recommendationBusyId === recommendation.id}>Relevant</button><button type="button" className={styles.secondaryButton} onClick={() => void appendRecommendationEvent(recommendation.id, 'dismiss')} disabled={recommendationBusyId === recommendation.id}>Dismiss</button><button type="button" className={styles.secondaryButton} onClick={() => selectTab('decision-lab')} title="Open the separately governed Decision Lab">Open Decision Lab</button></div>
-                  {recommendation.latestEvent ? <p className={styles.disclosure}>Latest separate event: {recommendation.latestEvent}. The snapshot and its source assessments remain unchanged.</p> : null}
-                </article>
-              )
-            })}
-          </div>
         ) : selectedTab === 'portfolio-health' ? (
           <div className={styles.todayGrid} aria-busy={loading}>
             <article className={styles.panel} aria-busy={healthState === 'loading'}>
@@ -1304,67 +1270,6 @@ export default function MyDashboardClient() {
               )}
             </article>
           </div>
-        ) : selectedTab === 'decision-lab' ? (
-          <div className={styles.todayGrid} aria-busy={decisionState === 'loading'}>
-            <article className={styles.panel}>
-              <div className={styles.panelHeading}><div><span className={styles.eyebrow}>USER PAPER CAPTURE</span><h2>Record a forward decision</h2></div><span>Server clock</span></div>
-              <form className={styles.decisionCaptureForm} onSubmit={captureUserPaperDecision}>
-                <label>Instrument<select value={decisionInstrumentId} onChange={(event) => setDecisionInstrumentId(event.target.value)} required><option value="">Choose instrument</option>{instruments.map((instrument) => <option key={instrument.id} value={instrument.id}>{instrument.symbol} — {instrument.instrument_name}</option>)}</select></label>
-                <label>Action<select value={decisionAction} onChange={(event) => setDecisionAction(event.target.value as PersonalDecision['action'])}>{(['BUY', 'WATCH', 'HOLD', 'PASS', 'AVOID'] as const).map((action) => <option key={action}>{action}</option>)}</select></label>
-                <label>Horizon<select value={decisionHorizon} onChange={(event) => setDecisionHorizon(Number(event.target.value) as 5 | 20 | 60)}><option value={5}>5 sessions</option><option value={20}>20 sessions</option><option value={60}>60 sessions</option></select></label>
-                <label className={styles.decisionNote}>Decision note <span className={styles.optional}>(optional)</span><textarea value={decisionNote} onChange={(event) => setDecisionNote(event.target.value)} maxLength={500} rows={3} /></label>
-                <button type="submit" disabled={decisionBusyKey !== null}>{decisionBusyKey === 'user-paper' ? 'Capturing…' : 'Capture paper decision'}</button>
-              </form>
-              <p className={styles.disclosure}>The database sets the decision time. V1 records a {baseCurrency} 1,000 paper notional with zero fee and slippage assumptions, no benchmark, and the next eligible daily close rule. It does not place an order.</p>
-            </article>
-            <article className={styles.panel}>
-              <div className={styles.panelHeading}><div><span className={styles.eyebrow}>ELIGIBLE AI SIGNALS</span><h2>Preserve an independent assessment</h2></div><span>Original cutoff</span></div>
-              <p>Only persisted Market AI lineage is offered. The database revalidates the succeeded independent assessment and derives its action, instrument, source snapshot and analysis cutoff.</p>
-              {recommendations.filter((recommendation) => recommendation.sources.some((source) => source.source_family === 'MARKET_AI' && eligibleAiDecisionSourceIds.has(source.source_record_key))).length ? (
-                <ul className={styles.decisionSourceList}>{recommendations.filter((recommendation) => recommendation.sources.some((source) => source.source_family === 'MARKET_AI' && eligibleAiDecisionSourceIds.has(source.source_record_key))).map((recommendation) => {
-                  const instrument = instruments.find((item) => item.id === recommendation.instrument_id)
-                  const source = recommendation.sources.find((item) => item.source_family === 'MARKET_AI')!
-                  const busyKey = `ai:${source.source_record_key}`
-                  return <li key={recommendation.id}><div><strong>{instrument?.symbol ?? 'Unresolved instrument'} · {recommendation.category.replaceAll('_', ' ')}</strong><span>Assessment cutoff {new Date(source.source_cutoff).toLocaleString()} · {source.methodology_version}</span></div><button type="button" disabled={decisionBusyKey !== null || decisions.some((decision) => decision.source_type === 'AI_SIGNAL' && decision.source_record_key === source.source_record_key)} onClick={() => void captureDecision({ sourceType: 'AI_SIGNAL', assessmentId: source.source_record_key, busyKey })}>{decisionBusyKey === busyKey ? 'Capturing…' : decisions.some((decision) => decision.source_type === 'AI_SIGNAL' && decision.source_record_key === source.source_record_key) ? 'Already captured' : 'Capture AI signal'}</button></li>
-                })}</ul>
-              ) : <div className={styles.empty}><strong>No contemporaneously eligible Market AI source is available.</strong><p>The database offers a source only after its run completes and before the first later canonical daily observation. Historical, future, missing-calendar and already-captured evidence remains unavailable. Technical, Opportunity and external-fact evidence cannot be promoted into an AI decision.</p></div>}
-            </article>
-            <article className={styles.panel}>
-              <div className={styles.panelHeading}><div><span className={styles.eyebrow}>FORWARD PAPER EVIDENCE</span><h2>Immutable personal decisions</h2></div><span>{decisionState === 'ready' ? `${decisions.length} stored` : 'Owner only'}</span></div>
-              <p>AI-signal decisions keep the original assessment cutoff. User-paper decisions keep the later user clock. They are never combined into one entry timestamp.</p>
-              {decisionState === 'error' ? (
-                <div className={styles.error} role="alert"><strong>Decision Lab unavailable</strong><span>{decisionError}</span><button type="button" onClick={() => void loadPrivateData(user.id)}>Reload private data</button></div>
-              ) : decisionState === 'loading' || decisionState === 'idle' ? (
-                <div className={styles.empty} role="status"><strong>Loading private decisions…</strong><p>No decision or result is shown until the complete owner-scoped read succeeds.</p></div>
-              ) : decisions.length === 0 ? (
-                <div className={styles.empty} role="status"><strong>No forward decisions have been captured.</strong><p>This is the current owner's real private empty state. Historical decisions and returns are not reconstructed.</p></div>
-              ) : (
-                <>
-                <div className={styles.recommendationFacts} aria-label="Separate decision evidence cohorts">
-                  {decisionCohorts.map((cohort) => <div key={cohort.sourceType}><span>{cohort.sourceType === 'AI_SIGNAL' ? 'AI-signal cohort' : 'User-paper cohort'}</span><strong>{cohort.evidenced}/{cohort.decisions} with forward evidence</strong><small>{cohort.completedBuyReturns.length ? `${formatReturn(cohort.completedBuyReturns.reduce((total, value) => total + value, 0) / cohort.completedBuyReturns.length)} mean completed BUY simulation · ${cohort.completedBuyReturns.length} outcome${cohort.completedBuyReturns.length === 1 ? '' : 's'}` : 'No completed BUY simulation available'}</small></div>)}
-                </div>
-                <p className={styles.disclosure}>Cohorts remain separate and are not ranked. Means use only the latest persisted configured-horizon or EXIT snapshot per BUY decision; unresolved and observational actions are excluded, not counted as zero.</p>
-                <ul className={styles.decisionList}>
-                  {decisions.map((decision) => {
-                    const instrument = instruments.find((item) => item.id === decision.instrument_id)
-                    const terminal = decision.events.find((event) => event.event_type === 'EXIT' || event.event_type === 'CANCEL')
-                    const hasPaperPosition = positions.some((position) => position.source_decision_id === decision.id)
-                    const lifecycle = terminal ? 'COMPLETED' : hasPaperPosition ? 'OPEN' : 'PENDING ENTRY'
-                    const snapshots = returnSnapshots.filter((snapshot) => snapshot.decision_id === decision.id)
-                    return <li key={decision.id}>
-                      <div className={styles.panelHeading}><div><span className={styles.eyebrow}>{decision.source_type.replaceAll('_', ' ')}</span><h3>{instrument?.symbol ?? 'Unresolved instrument'} · {decision.action}</h3></div><span>{lifecycle}</span></div>
-                      <div className={styles.recommendationFacts}><div><span>Decision clock</span><strong>{new Date(decision.decision_at).toLocaleString()}</strong></div><div><span>Source cutoff</span><strong>{new Date(decision.source_cutoff).toLocaleString()}</strong></div><div><span>Horizon</span><strong>{decision.horizon_sessions} sessions</strong></div></div>
-                      <dl className={styles.provenance}><div><dt>Entry rule</dt><dd>{decision.entry_rule.replaceAll('_', ' ')}</dd></div><div><dt>Calculation</dt><dd>{decision.calculation_version}</dd></div><div><dt>Source identity</dt><dd>{decision.source_hash.slice(0, 12)}…</dd></div></dl>
-                      {snapshots.length ? <ul className={styles.decisionSourceList}>{snapshots.map((snapshot) => <li key={snapshot.id}><div><strong>{snapshot.checkpoint_code} · {snapshot.quality_status.replaceAll('_', ' ')}</strong><span>Cutoff {new Date(snapshot.evaluation_cutoff).toLocaleString()} · evidence {snapshot.source_identity_hash.slice(0, 12)}…</span><small>{snapshot.net_simulated_return === null ? `Net simulation unavailable${snapshot.quality_reasons.length ? ` — ${snapshot.quality_reasons.join(', ')}` : ''}` : `Net simulated return ${formatReturn(snapshot.net_simulated_return)} · base return ${formatReturn(snapshot.base_currency_return)} · drawdown ${formatReturn(snapshot.maximum_drawdown)}`}</small></div></li>)}</ul> : <p className={styles.disclosure}>No evaluator snapshot exists yet. Entry price and returns remain unavailable until forward evidence exists; missing evidence is never shown as zero.</p>}
-                      <p className={styles.disclosure}>{decision.source_type === 'AI_SIGNAL' ? `Assessment action: ${decision.source_action}. The AI cutoff controls this clock.` : `User action snapshot: ${decision.source_action}. The server capture clock controls this record.`} {terminal ? `Latest terminal event: ${terminal.event_type} at ${new Date(terminal.event_at).toLocaleString()}.` : 'This decision remains forward-looking from its own immutable clock.'}</p>
-                    </li>
-                  })}
-                </ul>
-                </>
-              )}
-              <p className={styles.disclosure}>Decision Lab is simulated research only. It cannot place orders, connect a broker or present an unresolved return as zero.</p>
-            </article>
-          </div>
         ) : (
           <article className={styles.panel}>
             <span className={styles.eyebrow}>FOUNDATION READY</span>
@@ -1377,3 +1282,4 @@ export default function MyDashboardClient() {
     </div>
   )
 }
+

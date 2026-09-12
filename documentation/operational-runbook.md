@@ -1,5 +1,17 @@
 # Discover Boulders Markets — Operational Runbook
 
+## Personal prediction workflow
+
+The additive migration source is `scripts/prediction-ledger-v1.sql`, applied under the migration name `personal_prediction_ledger_v1`. The standard CLI could not initialise its local cache in the restricted desktop environment, so this change uses the Supabase migration connector. Do not apply the SQL twice.
+
+The `personal-prediction-ledger-v1` cron job runs every 15 minutes. Its private publisher records fresh independent AI ratings for equity/ETF instruments in explicitly enrolled owners' watchlists. Its evaluator then appends results. The browser enrolment RPC derives the owner from the existing authenticated session and accepts no arbitrary owner ID. Enrolment is explicit; other accounts are not enabled by deployment.
+
+Records are write-once. Retries use `(owner, assessment, horizon)` for plans and `(prediction, status)` for evaluation states. Never repair an outcome by changing its publication clock, frozen entry or original price. New AI assessments produce new plans. There is no historical backfill. New observations may resolve a prior incomplete state, but a recorded completed result is not recalculated.
+
+For empty predictions, check enrolment, watchlist addition dates, new assessment creation/completion after enrolment, a source cutoff within 24 hours and the cron job run log. For incomplete results, check Tiingo mapping, daily-price freshness, duplicates, session gaps and adjusted/raw price consistency. Entry evidence must have been loaded before the seven-day entry deadline. The daily date is a session label, so entry is the first complete date strictly after the UTC publication date. Exit is 5/20 subsequent observed sessions; missing benchmark sessions must not extend it silently. A missing price is not a zero return or proof that a trade did not enter.
+
+Cost assumptions are 10 basis points per side. Returns are in the instrument currency; QQQ comparisons require matching dates/currency and valid evidence. This is individual-pick measurement, not a capital-constrained portfolio, optimal AI timing forecast, or proof of outperforming a broad-market index. The UI explains these limits under its methodology disclosure.
+
 **Applies to:** production Trading platform  
 **Repository:** `ClimbingBuddies/Trading`  
 **Supabase project:** `glvbqcplgjdfgjyknzsa`  
@@ -333,3 +345,4 @@ If a required evidence layer is unavailable, report that explicitly rather than 
 - `documentation/pipelines/market-convergence-pipeline.md`
 - `documentation/security-and-operational-notes.md`
 - `documentation/project-plan.md`
+
