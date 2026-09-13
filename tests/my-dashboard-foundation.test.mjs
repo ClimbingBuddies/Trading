@@ -20,9 +20,9 @@ test('MYDASH-002 migration enforces permanent-user ownership on both personal ta
   assert.doesNotMatch(sql, /grant all on table public\.user_market_(preferences|interests) to authenticated/i)
 })
 
-test('MYDASH-002 shell exposes six accessible tabs and honest private states', async () => {
+test('MYDASH-002 shell exposes combined watchlist and accessible private tabs', async () => {
   const component = await readFile(componentPath, 'utf8')
-  for (const key of ['today', 'recommendations', 'watchlists', 'opportunities', 'portfolio-health', 'decision-lab']) {
+  for (const key of ['today', 'recommendations', 'opportunities', 'portfolio-health', 'decision-lab']) {
     assert.match(component, new RegExp(`key: '${key}'`))
   }
   assert.match(component, /role="tablist"/)

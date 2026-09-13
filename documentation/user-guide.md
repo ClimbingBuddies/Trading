@@ -32,7 +32,7 @@ Most research dashboards are public and read-only. Personal monitoring and strat
 | Assessment detail | `/assessments/[symbol]` | Public read-only | Inspect scores, confidence, disagreement, lineage, catalysts, risks and evidence |
 | Opportunities | `/opportunities` | Public read-only | Browse long-term themes and current Opportunity scores |
 | Opportunity detail | `/opportunities/[theme]` | Public read-only | Review Structural, Technology and Opportunity Convergence evidence |
-| My Dashboard | `/my-dashboard` | Signed-in permanent owner | Use the six-tab private research workspace without exposing one owner's rows to another user |
+| My Dashboard | `/my-dashboard` | Signed-in permanent owner | Use the combined watchlist and private research workspace without exposing one owner's rows to another user |
 | Watchlists | `/watchlists` | Signed-in owner | Maintain private instrument lists |
 | Alerts | `/alerts` | Signed-in owner | Maintain private alert definitions and inspect event history |
 | Strategies | `/strategies` | Signed-in owner | Review private strategy definitions, tests and decision outcomes |
@@ -57,14 +57,14 @@ Use this order to understand the platform without mixing short- and long-term si
 **Primary route:** `/my-dashboard`
 **Access:** signed-in permanent owner only
 
-My Dashboard brings owner-scoped research into six keyboard-accessible tabs. Use the left and right arrow keys to move between tabs, or Home and End to jump to the first and last tab. A complete private-data load must succeed before personal counts or records appear; if one required owner-scoped read fails, use the displayed retry action instead of treating missing values as zero.
+My Dashboard brings owner-scoped research into five keyboard-accessible tabs. Use the left and right arrow keys to move between tabs, or Home and End to jump to the first and last tab. A complete private-data load must succeed before personal counts or records appear; if one required owner-scoped read fails, use the displayed retry action instead of treating missing values as zero.
 
 1. **Today** shows persisted setup and attention items. Set a three-letter base currency, default 5-, 20- or 60-session research horizon and optional presentation-only risk style.
-2. **Recommendations** is your default view. Start with your personal watchlist and enable **Start tracking my AI picks** once. Fresh scheduled AI assessments then appear automatically in a table with the publication timestamp, buy rule, sell rule and reasoning. Switch between Weekly (5 sessions) and Monthly (20 sessions). The initial timing is a fixed holding-period test of the AI rating, not an AI forecast of the ideal dates. **Open Decision Lab** using the track-record link to review outcomes.
-3. **Watchlists** reads your private lists and instrument memberships. Manage list membership through the linked Watchlists workspace.
-4. **Opportunities** shows only independently mapped themes relevant to your stored interests or watched instruments. An Opportunity score never becomes a Buy instruction.
-5. **Portfolio Health** supports explicit manual or paper portfolios, manual positions, optional CSV preview/confirmation and persisted health snapshots. Missing price, currency, issuer, mapping or cost evidence remains incomplete. Refresh runs through the trusted calculation boundary; the browser does not calculate or invent health values.
-6. **Decision Lab** automatically tracks every published prediction. You do not need to capture a call manually. It shows recorded entry and exit, return after modelled costs, the named benchmark return and a weekly/monthly scorecard. Losing and non-buy calls remain visible. Missing prices are shown as incomplete, never zero. Published plans cannot be edited, deleted or backdated; later assessments create new records. Tracking runs every 15 minutes while the page is closed. A completed result measures a single pick, not a funded portfolio.
+2. **Watchlist & recommendations** is your default view, also available at `/watchlists`. Choose your list, add shares by ticker or company, and see the latest saved scheduled AI assessment alongside its matching published plan. Filter **All watched shares** or **AI buy candidates**, and switch Weekly (5 sessions) / Monthly (20 sessions). Research older than 72 hours is labelled; missing assessments and plans are never fabricated. Timing remains a fixed holding-period test, not an AI forecast. Use **Enable tracking** if tracking is off, and open **Decision Lab** to review outcomes.
+
+3. **Opportunities** shows only independently mapped themes relevant to your stored interests or watched instruments. An Opportunity score never becomes a Buy instruction.
+4. **Portfolio Health** supports explicit manual or paper portfolios, manual positions, optional CSV preview/confirmation and persisted health snapshots. Missing price, currency, issuer, mapping or cost evidence remains incomplete. Refresh runs through the trusted calculation boundary; the browser does not calculate or invent health values.
+5. **Decision Lab** automatically tracks every published prediction. You do not need to capture a call manually. It shows recorded entry and exit, return after modelled costs, the named benchmark return and a weekly/monthly scorecard. Losing and non-buy calls remain visible. Missing prices are shown as incomplete, never zero. Published plans cannot be edited, deleted or backdated; later assessments create new records. Tracking runs every 15 minutes while the page is closed. A completed result measures a single pick, not a funded portfolio.
 
 This workspace cannot connect a broker, place an order or perform live trading. Recommendations and Decision Lab are simulated research tools, not personalised financial advice. Sign out when finished on a shared device; the page clears private state at authentication boundaries and anonymous sessions are rejected.
 
@@ -186,26 +186,20 @@ A high Opportunity score means the theme deserves long-term research attention. 
 
 Watchlists are private Supabase Auth workspaces protected by owner-scoped row-level security. The public Markets, Assessments and Opportunities dashboards remain available without signing in.
 
-### Sign in safely
+### Open your watchlist
 
-1. Open **Watchlists**, enter the email address for your permanent account and choose **Send secure sign-in link**.
-2. Open the link only from the inbox for that account. Do not share the link, a session, or account credentials.
-3. Return to `/watchlists`. A signed-in workspace shows your own lists and a **Sign out** control. An anonymous session is not accepted as an owner.
-
-Watchlist names, descriptions, private notes, order and instrument membership belong to the signed-in owner. V1 has no shared, team or public watchlists, and another account cannot read or change them.
+Use your existing signed-in account. If signed out, choose **Sign in** to open the login page. Your lists, descriptions, private notes and membership remain owner-only.
 
 ### Create and maintain a list
 
-1. Under **Create a watchlist**, enter a required name and an optional description, then choose **Create watchlist**. Your first list becomes the default automatically.
-2. Choose a list under **Your lists**. Use **List details** and **Save details** to rename it or change the description.
-3. For a non-default list, choose **Make default** when you want it selected first.
-4. Under **Add an instrument**, choose an active tracked instrument and select **Add**. An instrument can appear only once in the same list.
-5. Add or revise **Private notes**; leaving the field saves a changed note. Use the up/down controls to change display order or **Remove** to remove only that instrument.
-6. Choose **Delete list** only when the confirmation is intentional: the list and all of its items are removed.
+1. Use the list dropdown to switch watchlists.
+2. Click **Create watchlist** at the top. Enter a name in the popup, optionally expand **Add description**, then choose **Create**. Your first list becomes the default.
+3. Click **Add share**, search by ticker or company, and click **Add** beside a result. Existing members are excluded from the search results.
+4. Use **Watchlist settings** (the ellipsis beside the dropdown) to rename, describe, set the default or delete a list.
+5. Use a share's ellipsis to open private notes, explicitly **Save notes**, or remove the share. Removing a share or list requires a confirmation in the app.
+6. Use **View details** to read the saved AI rating, reasoning, risks, assessment date and matching weekly/monthly plan.
 
-An empty list or an account with no lists is a valid state. A Watchlist organises monitoring; its membership or notes do not create an alert, place a trade, or express a platform recommendation.
-
-> **AUTH_REQUIRED — owner screenshot:** On 26 August 2026 the current production browser had no already-authorised permanent-owner session. The signed-out `/watchlists` boundary was verified, but `watchlists-owner-desktop.png` was not captured. The owner workflow above was verified against current application source, the implemented access contract and read-only production RLS evidence; no private row or identity was exposed.
+The main page contains only the list, actions and recommendation table; forms stay in popups. An empty list is valid. A missing AI assessment is shown as **Not assessed yet**. A research view does not create a performance record: **No published plan** remains visible until a matching forward plan exists. Published plans stay unchanged in Decision Lab even after a share or list is removed.
 
 ## 6. Configure Alerts and review event history
 

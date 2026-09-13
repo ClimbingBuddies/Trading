@@ -1,535 +1,262 @@
 'use client'
 
-import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState, type FormEvent } from 'react'
+import Link from 'next/link'
 import type { User } from '@supabase/supabase-js'
 import { getBrowserSupabase } from '@/lib/supabase-browser'
+import { matchingPlan, olderAssessment, ratingAction } from '@/lib/watchlist-recommendations.mjs'
+import WatchlistDialog from './WatchlistDialog'
 import styles from './WatchlistsClient.module.css'
 
-type Watchlist = {
-  id: string
-  owner_user_id: string
-  name: string
-  description: string | null
-  is_default: boolean
-  created_at: string
-  updated_at: string
-}
+type Watchlist = { id: string; name: string; description: string | null; is_default: boolean }
+type Item = { watchlist_id: string; instrument_id: string; sort_order: number; notes: string | null; added_at: string }
+type Instrument = { id: string; symbol: string; instrument_name: string; asset_type: string | null; is_active: boolean }
+type Assessment = { assessment_id: string; instrument_id: string; rating: string; assessment_date: string; created_at: string; summary: string | null; key_risks: string | null; model_version: string | null }
+type Plan = { id: string; instrument_id: string; assessment_id: string; horizon_sessions: number; published_at: string; entry_deadline: string; action: string; thesis: string; risks: string; source_cutoff: string }
+type Modal = 'create' | 'add' | 'edit' | 'details' | 'notes' | 'remove' | 'delete' | null
+const date = (value: string) => new Date(value.length === 10 ? value + 'T12:00:00' : value).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' })
+const timestamp = (value: string) => new Date(value).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })
+const actionLabel = { BUY: 'Buy candidate', HOLD: 'Wait', AVOID: 'Avoid for now', UNKNOWN: 'Not rated' }
 
-type WatchlistItem = {
-  watchlist_id: string
-  instrument_id: string
-  sort_order: number
-  notes: string | null
-  added_at: string
-}
-
-type Instrument = {
-  id: string
-  symbol: string
-  instrument_name: string
-  asset_type: string | null
-  exchange_code: string | null
-}
-
-function permanentUser(user: User | null | undefined) {
-  return user && user.is_anonymous !== true ? user : null
-}
-
-export default function WatchlistsClient() {
-  const [authReady, setAuthReady] = useState(false)
+export default function WatchlistsClient({ ownerId, embedded = false }: { ownerId?: string; embedded?: boolean }) {
   const [user, setUser] = useState<User | null>(null)
-  const [email, setEmail] = useState('')
-  const [watchlists, setWatchlists] = useState<Watchlist[]>([])
-  const [items, setItems] = useState<WatchlistItem[]>([])
+  const [ready, setReady] = useState(!!ownerId)
+  const [authError, setAuthError] = useState('')
+  useEffect(() => {
+    if (ownerId) return
+    const client = getBrowserSupabase()
+    let active = true, receivedEvent = false
+    const { data: listener } = client.auth.onAuthStateChange((_event, session) => {
+      receivedEvent = true
+      if (!active) return
+      setUser(session?.user && !session.user.is_anonymous ? session.user : null)
+      setReady(true)
+    })
+    void client.auth.getSession().then(({ data, error }) => {
+      if (!active || receivedEvent) return
+      setUser(data.session?.user && !data.session.user.is_anonymous ? data.session.user : null)
+      if (error) setAuthError('Your session could not be loaded. Please sign in again.')
+      setReady(true)
+    })
+    return () => { active = false; listener.subscription.unsubscribe() }
+  }, [ownerId])
+  const id = ownerId ?? user?.id
+  if (!ready) return <p role="status">Loading your watchlist…</p>
+  if (!id) return <section className={styles.empty}><h1>My watchlist</h1><p>{authError || 'Sign in to see your saved shares and AI recommendations.'}</p><Link href="/login">Sign in →</Link></section>
+  return <WatchlistWorkspace key={id} ownerId={id} embedded={embedded} />
+}
+
+function WatchlistWorkspace({ ownerId, embedded }: { ownerId: string; embedded: boolean }) {
+  const [lists, setLists] = useState<Watchlist[]>([])
+  const [items, setItems] = useState<Item[]>([])
   const [instruments, setInstruments] = useState<Instrument[]>([])
-  const [activeListId, setActiveListId] = useState<string | null>(null)
-  const [newListName, setNewListName] = useState('')
-  const [newListDescription, setNewListDescription] = useState('')
-  const [selectedInstrumentId, setSelectedInstrumentId] = useState('')
-  const [editName, setEditName] = useState('')
-  const [editDescription, setEditDescription] = useState('')
-  const [busy, setBusy] = useState(false)
-  const [status, setStatus] = useState('')
+  const [assessments, setAssessments] = useState<Assessment[]>([])
+  const [plans, setPlans] = useState<Plan[]>([])
+  const [tracking, setTracking] = useState<boolean | null>(null)
+  const [listId, setListId] = useState('')
+  const [horizon, setHorizon] = useState(5)
+  const [onlyBuy, setOnlyBuy] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [researchLoading, setResearchLoading] = useState(true)
+  const [loadError, setLoadError] = useState('')
+  const [researchError, setResearchError] = useState('')
   const [error, setError] = useState('')
-
-  const loadData = useCallback(async (userId: string, preferredListId?: string | null) => {
-    const supabase = getBrowserSupabase()
-    const { data: listRows, error: listError } = await supabase
-      .from('watchlists')
-      .select('id,owner_user_id,name,description,is_default,created_at,updated_at')
-      .eq('owner_user_id', userId)
-      .order('is_default', { ascending: false })
-      .order('created_at', { ascending: true })
-
-    if (listError) throw listError
-
-    const lists = (listRows ?? []) as Watchlist[]
-    const listIds = lists.map((list) => list.id)
-
-    const instrumentRequest = supabase
-      .from('instruments')
-      .select('id,symbol,instrument_name,asset_type,exchange_code')
-      .eq('is_active', true)
-      .order('symbol', { ascending: true })
-
-    const itemRequest = listIds.length
-      ? supabase
-          .from('watchlist_items')
-          .select('watchlist_id,instrument_id,sort_order,notes,added_at')
-          .in('watchlist_id', listIds)
-          .order('sort_order', { ascending: true })
-          .order('added_at', { ascending: true })
-      : Promise.resolve({ data: [], error: null })
-
-    const [{ data: instrumentRows, error: instrumentError }, itemResult] = await Promise.all([
-      instrumentRequest,
-      itemRequest,
-    ])
-
-    if (instrumentError) throw instrumentError
-    if (itemResult.error) throw itemResult.error
-
-    setWatchlists(lists)
-    setItems((itemResult.data ?? []) as WatchlistItem[])
-    setInstruments((instrumentRows ?? []) as Instrument[])
-
-    const selected =
-      (preferredListId && lists.some((list) => list.id === preferredListId) && preferredListId) ||
-      lists.find((list) => list.is_default)?.id ||
-      lists[0]?.id ||
-      null
-    setActiveListId(selected)
-  }, [])
+  const [status, setStatus] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [revision, setRevision] = useState(0)
+  const [modal, setModal] = useState<Modal>(null)
+  const [selectedId, setSelectedId] = useState('')
+  const [name, setName] = useState('')
+  const [description, setDescription] = useState('')
+  const [search, setSearch] = useState('')
+  const [notes, setNotes] = useState('')
 
   useEffect(() => {
-    const supabase = getBrowserSupabase()
-    let mounted = true
-
-    supabase.auth.getSession().then(({ data, error: sessionError }) => {
-      if (!mounted) return
-      if (sessionError) setError(sessionError.message)
-      const current = permanentUser(data.session?.user)
-      setUser(current)
-      setAuthReady(true)
-      if (data.session?.user?.is_anonymous) {
-        setError('Anonymous sessions cannot use private watchlists. Sign in with a permanent email account.')
+    const controller = new AbortController()
+    const signal = controller.signal, client = getBrowserSupabase()
+    setLoading(true); setLoadError('')
+    async function load() {
+      const listRows: Watchlist[] = [], instrumentRows: Instrument[] = [], itemRows: Item[] = []
+      await Promise.all([
+        (async () => { for (let offset = 0; ; offset += 500) {
+          const r = await client.from('watchlists').select('id,name,description,is_default').eq('owner_user_id', ownerId).order('created_at').order('id').range(offset, offset + 499).abortSignal(signal)
+          if (r.error) throw r.error
+          listRows.push(...r.data)
+          if (r.data.length < 500) break
+        } })(),
+        (async () => { for (let offset = 0; ; offset += 500) {
+          const r = await client.from('instruments').select('id,symbol,instrument_name,asset_type,is_active').order('symbol').order('id').range(offset, offset + 499).abortSignal(signal)
+          if (r.error) throw r.error
+          instrumentRows.push(...r.data)
+          if (r.data.length < 500) break
+        } })(),
+      ])
+      for (let batch = 0; batch < listRows.length; batch += 100) {
+        for (let offset = 0; ; offset += 500) {
+          const r = await client.from('watchlist_items').select('watchlist_id,instrument_id,sort_order,notes,added_at').in('watchlist_id', listRows.slice(batch, batch + 100).map(l => l.id)).order('watchlist_id').order('sort_order').order('instrument_id').range(offset, offset + 499).abortSignal(signal)
+          if (r.error) throw r.error
+          itemRows.push(...r.data)
+          if (r.data.length < 500) break
+        }
       }
-      if (current) {
-        loadData(current.id).catch((loadError) => setError(loadError.message))
-      }
-    })
+      if (signal.aborted) return
+      setLists(listRows); setItems(itemRows); setInstruments(instrumentRows)
+      setListId(current => listRows.some(l => l.id === current) ? current : (listRows.find(l => l.is_default)?.id ?? listRows[0]?.id ?? ''))
+      setLoading(false)
+    }
+    void load().catch(() => { if (!signal.aborted) { setLoadError('Your watchlist could not be loaded.'); setLoading(false) } })
+    return () => controller.abort()
+  }, [ownerId, revision])
 
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (!mounted) return
-      const current = permanentUser(session?.user)
-      setUser(current)
-      setAuthReady(true)
-      if (current) {
-        setError('')
-        loadData(current.id).catch((loadError) => setError(loadError.message))
+  const activeList = lists.find(l => l.id === listId)
+  const activeItems = useMemo(() => items.filter(i => i.watchlist_id === listId).sort((a, b) => a.sort_order - b.sort_order || a.added_at.localeCompare(b.added_at)), [items, listId])
+  const instrumentMap = useMemo(() => new Map(instruments.map(i => [i.id, i])), [instruments])
+  const assessmentMap = useMemo(() => new Map(assessments.map(a => [a.instrument_id, a])), [assessments])
+  const researchIds = useMemo(() => [...new Set(activeItems.map(i => i.instrument_id))].sort(), [activeItems])
+
+  useEffect(() => {
+    const controller = new AbortController()
+    const signal = controller.signal, client = getBrowserSupabase()
+    setResearchLoading(true); setResearchError(''); setAssessments([]); setPlans([]); setTracking(null)
+    async function loadResearch() {
+      const results: Assessment[] = [], published: Plan[] = []
+      const readAssessments = async () => {
+        for (let batch = 0; batch < researchIds.length; batch += 8) {
+          const rows = await Promise.all(researchIds.slice(batch, batch + 8).map(async id => {
+            const r = await client.from('gpt_market_assessments').select('assessment_id,instrument_id,rating,assessment_date,created_at,summary,key_risks,model_version,gpt_market_runs!inner(analysis_mode,status)')
+              .eq('instrument_id', id).eq('technical_engine_input_used', false).eq('gpt_market_runs.analysis_mode', 'scheduled').in('gpt_market_runs.status', ['succeeded', 'partial'])
+              .order('created_at', { ascending: false }).order('assessment_id').limit(1).abortSignal(signal).maybeSingle()
+            if (r.error) throw r.error
+            return r.data
+          }))
+          for (const row of rows) if (row) results.push(row)
+        }
+      }
+      const readPlans = async () => {
+        for (let batch = 0; batch < researchIds.length; batch += 100) {
+          for (let offset = 0; ; offset += 500) {
+            const r = await client.from('personal_prediction_plans').select('id,instrument_id,assessment_id,horizon_sessions,published_at,entry_deadline,action,thesis,risks,source_cutoff').eq('owner_user_id', ownerId).in('instrument_id', researchIds.slice(batch, batch + 100)).order('published_at', { ascending: false }).order('id').range(offset, offset + 499).abortSignal(signal)
+            if (r.error) throw r.error
+            published.push(...r.data)
+            if (r.data.length < 500) break
+          }
+        }
+      }
+      const [research, planData, settings] = await Promise.allSettled([
+        readAssessments(), readPlans(),
+        client.from('personal_prediction_tracking').select('owner_user_id').eq('owner_user_id', ownerId).abortSignal(signal).maybeSingle(),
+      ])
+      if (signal.aborted) return
+      if (research.status === 'fulfilled') setAssessments(results)
+      if (planData.status === 'fulfilled') setPlans(published)
+      if (settings.status === 'fulfilled' && !settings.value.error) setTracking(!!settings.value.data)
+      if (research.status === 'rejected' || planData.status === 'rejected' || settings.status === 'rejected' || (settings.status === 'fulfilled' && settings.value.error)) setResearchError('Some AI research or tracking data could not be loaded. Your saved shares are still available.')
+      setResearchLoading(false)
+    }
+    void loadResearch().catch(() => { if (!signal.aborted) { setResearchError('AI research could not be loaded.'); setResearchLoading(false) } })
+    return () => controller.abort()
+  }, [ownerId, researchIds, revision])
+
+  const rows = activeItems.filter(i => !onlyBuy || ratingAction(assessmentMap.get(i.instrument_id)?.rating) === 'BUY')
+  const selectedItem = activeItems.find(i => i.instrument_id === selectedId)
+  const selectedInstrument = instrumentMap.get(selectedId)
+  const selectedAssessment = assessmentMap.get(selectedId)
+  const selectedPlan = matchingPlan(plans, selectedId, selectedAssessment?.assessment_id, horizon)
+  const available = instruments.filter(i => i.is_active && !activeItems.some(item => item.instrument_id === i.id) && (i.symbol + ' ' + i.instrument_name).toLowerCase().includes(search.trim().toLowerCase()))
+  const close = useCallback(() => { setModal(null); setError('') }, [])
+  function open(next: Modal, item?: Item) {
+    setError(''); setStatus(''); setSelectedId(item?.instrument_id ?? '')
+    setName(next === 'edit' ? activeList?.name ?? '' : '')
+    setDescription(next === 'edit' ? activeList?.description ?? '' : '')
+    setNotes(item?.notes ?? ''); setSearch(''); setModal(next)
+  }
+  async function mutate(action: () => Promise<void>, message: string) {
+    if (busy) return
+    setBusy(true); setError(''); setStatus('')
+    try { await action(); setModal(null); setStatus(message); setRevision(n => n + 1) }
+    catch (cause) { setError(cause instanceof Error ? cause.message : 'Could not save the change. Please try again.') }
+    finally { setBusy(false) }
+  }
+  async function saveList(event: FormEvent) {
+    event.preventDefault()
+    if (!name.trim()) return
+    await mutate(async () => {
+      const client = getBrowserSupabase()
+      if (modal === 'create') {
+        const r = await client.from('watchlists').insert({ owner_user_id: ownerId, name: name.trim(), description: description.trim() || null, is_default: !lists.some(l => l.is_default) }).select('id').single()
+        if (r.error) throw r.error
+        setListId(r.data.id)
       } else {
-        setWatchlists([])
-        setItems([])
-        setActiveListId(null)
+        const r = await client.from('watchlists').update({ name: name.trim(), description: description.trim() || null }).eq('id', listId).eq('owner_user_id', ownerId).select('id').single()
+        if (r.error) throw r.error
       }
-    })
-
-    return () => {
-      mounted = false
-      listener.subscription.unsubscribe()
-    }
-  }, [loadData])
-
-  const activeList = useMemo(
-    () => watchlists.find((list) => list.id === activeListId) ?? null,
-    [watchlists, activeListId],
-  )
-
-  const activeItems = useMemo(
-    () => items
-      .filter((item) => item.watchlist_id === activeListId)
-      .sort((left, right) => left.sort_order - right.sort_order || left.added_at.localeCompare(right.added_at)),
-    [items, activeListId],
-  )
-
-  const instrumentMap = useMemo(
-    () => new Map(instruments.map((instrument) => [instrument.id, instrument])),
-    [instruments],
-  )
-
-  const availableInstruments = useMemo(() => {
-    const existing = new Set(activeItems.map((item) => item.instrument_id))
-    return instruments.filter((instrument) => !existing.has(instrument.id))
-  }, [activeItems, instruments])
-
-  useEffect(() => {
-    setEditName(activeList?.name ?? '')
-    setEditDescription(activeList?.description ?? '')
-    setSelectedInstrumentId('')
-  }, [activeList])
-
-  async function runAction(action: () => Promise<void>, successMessage?: string) {
-    setBusy(true)
-    setError('')
-    setStatus('')
-    try {
-      await action()
-      if (successMessage) setStatus(successMessage)
-    } catch (actionError) {
-      setError(actionError instanceof Error ? actionError.message : 'Watchlist action failed.')
-    } finally {
-      setBusy(false)
-    }
+    }, 'Watchlist saved.')
   }
-
-  async function signIn(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    const trimmed = email.trim()
-    if (!trimmed) return
-
-    await runAction(async () => {
-      const supabase = getBrowserSupabase()
-      const { error: authError } = await supabase.auth.signInWithOtp({
-        email: trimmed,
-        options: {
-          emailRedirectTo: `${window.location.origin}/watchlists`,
-          shouldCreateUser: true,
-        },
-      })
-      if (authError) throw authError
-      setStatus('Check your email for the secure sign-in link. The public dashboard remains available while signed out.')
-    })
+  async function add(id: string) {
+    if (!activeList) return
+    await mutate(async () => {
+      const r = await getBrowserSupabase().from('watchlist_items').insert({ watchlist_id: activeList.id, instrument_id: id, sort_order: Math.max(0, ...activeItems.map(i => i.sort_order)) + 1 })
+      if (r.error) throw r.error
+    }, (instrumentMap.get(id)?.symbol ?? 'Share') + ' added.')
   }
-
-  async function signOut() {
-    await runAction(async () => {
-      const { error: authError } = await getBrowserSupabase().auth.signOut()
-      if (authError) throw authError
-      setStatus('Signed out.')
-    })
-  }
-
-  async function createWatchlist(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    if (!user || !newListName.trim()) return
-
-    await runAction(async () => {
-      const supabase = getBrowserSupabase()
-      const { data, error: insertError } = await supabase
-        .from('watchlists')
-        .insert({
-          owner_user_id: user.id,
-          name: newListName.trim(),
-          description: newListDescription.trim() || null,
-          is_default: !watchlists.some((list) => list.is_default),
-        })
-        .select('id')
-        .single()
-      if (insertError) throw insertError
-      setNewListName('')
-      setNewListDescription('')
-      await loadData(user.id, data.id)
-    }, 'Watchlist created.')
-  }
-
-  async function saveWatchlist() {
-    if (!user || !activeList || !editName.trim()) return
-    await runAction(async () => {
-      const { error: updateError } = await getBrowserSupabase()
-        .from('watchlists')
-        .update({ name: editName.trim(), description: editDescription.trim() || null })
-        .eq('id', activeList.id)
-        .eq('owner_user_id', user.id)
-      if (updateError) throw updateError
-      await loadData(user.id, activeList.id)
-    }, 'Watchlist details saved.')
-  }
-
-  async function setDefault() {
-    if (!user || !activeList) return
-    await runAction(async () => {
-      const { error: rpcError } = await getBrowserSupabase().rpc('set_watchlist_default', {
-        p_watchlist_id: activeList.id,
-      })
-      if (rpcError) throw rpcError
-      await loadData(user.id, activeList.id)
-    }, 'Default watchlist updated.')
-  }
-
-  async function deleteWatchlist() {
-    if (!user || !activeList) return
-    if (!window.confirm(`Delete “${activeList.name}” and all of its items?`)) return
-
-    await runAction(async () => {
-      const { error: deleteError } = await getBrowserSupabase()
-        .from('watchlists')
-        .delete()
-        .eq('id', activeList.id)
-        .eq('owner_user_id', user.id)
-      if (deleteError) throw deleteError
-      await loadData(user.id)
-    }, 'Watchlist deleted.')
-  }
-
-  async function addInstrument() {
-    if (!user || !activeList || !selectedInstrumentId) return
-    const nextOrder = activeItems.reduce((max, item) => Math.max(max, item.sort_order), 0) + 1
-
-    await runAction(async () => {
-      const { error: insertError } = await getBrowserSupabase()
-        .from('watchlist_items')
-        .insert({
-          watchlist_id: activeList.id,
-          instrument_id: selectedInstrumentId,
-          sort_order: nextOrder,
-        })
-      if (insertError) throw insertError
-      setSelectedInstrumentId('')
-      await loadData(user.id, activeList.id)
-    }, 'Instrument added.')
-  }
-
-  async function saveNotes(item: WatchlistItem, notes: string) {
-    if (!user || !activeList) return
-    await runAction(async () => {
-      const { error: updateError } = await getBrowserSupabase()
-        .from('watchlist_items')
-        .update({ notes: notes.trim() || null })
-        .eq('watchlist_id', activeList.id)
-        .eq('instrument_id', item.instrument_id)
-      if (updateError) throw updateError
-      await loadData(user.id, activeList.id)
+  async function saveNotes() {
+    if (!selectedItem) return
+    await mutate(async () => {
+      const r = await getBrowserSupabase().from('watchlist_items').update({ notes: notes.trim() || null }).eq('watchlist_id', listId).eq('instrument_id', selectedId).select('instrument_id').single()
+      if (r.error) throw r.error
     }, 'Notes saved.')
   }
-
-  async function moveItem(item: WatchlistItem, direction: -1 | 1) {
-    if (!user || !activeList) return
-    const index = activeItems.findIndex((candidate) => candidate.instrument_id === item.instrument_id)
-    const target = activeItems[index + direction]
-    if (!target) return
-
-    await runAction(async () => {
-      const supabase = getBrowserSupabase()
-      const first = await supabase
-        .from('watchlist_items')
-        .update({ sort_order: target.sort_order })
-        .eq('watchlist_id', activeList.id)
-        .eq('instrument_id', item.instrument_id)
-      if (first.error) throw first.error
-
-      const second = await supabase
-        .from('watchlist_items')
-        .update({ sort_order: item.sort_order })
-        .eq('watchlist_id', activeList.id)
-        .eq('instrument_id', target.instrument_id)
-      if (second.error) throw second.error
-
-      await loadData(user.id, activeList.id)
-    })
+  async function remove() {
+    await mutate(async () => {
+      const client = getBrowserSupabase()
+      const r = modal === 'delete'
+        ? await client.from('watchlists').delete().eq('id', listId).eq('owner_user_id', ownerId).select('id').single()
+        : await client.from('watchlist_items').delete().eq('watchlist_id', listId).eq('instrument_id', selectedId).select('instrument_id').single()
+      if (r.error) throw r.error
+    }, modal === 'delete' ? 'Watchlist deleted.' : 'Share removed.')
+  }
+  async function makeDefault() {
+    await mutate(async () => {
+      const r = await getBrowserSupabase().rpc('set_watchlist_default', { p_watchlist_id: listId })
+      if (r.error) throw r.error
+    }, 'Default watchlist updated.')
+  }
+  async function startTracking() {
+    await mutate(async () => {
+      const r = await getBrowserSupabase().rpc('start_personal_prediction_tracking_v1')
+      if (r.error) throw r.error
+    }, 'Tracking enabled for future assessments.')
   }
 
-  async function removeItem(item: WatchlistItem) {
-    if (!user || !activeList) return
-    await runAction(async () => {
-      const { error: deleteError } = await getBrowserSupabase()
-        .from('watchlist_items')
-        .delete()
-        .eq('watchlist_id', activeList.id)
-        .eq('instrument_id', item.instrument_id)
-      if (deleteError) throw deleteError
-      await loadData(user.id, activeList.id)
-    }, 'Instrument removed.')
-  }
-
-  if (!authReady) {
-    return <div className={styles.authCard}>Checking secure watchlist session…</div>
-  }
-
-  if (!user) {
-    return (
-      <div className={styles.shell}>
-        <header className={styles.hero}>
-          <div>
-            <h1>Watchlists</h1>
-            <p>Private instrument lists backed by Supabase Auth and row-level security.</p>
-          </div>
-        </header>
-        {error ? <p className={styles.error}>{error}</p> : null}
-        {status ? <p className={styles.status}>{status}</p> : null}
-        <section className={styles.authCard}>
-          <h2>Sign in to use watchlists</h2>
-          <p>
-            The Markets, Assessments and Opportunities dashboards stay public. Watchlists are private and require a permanent email account.
-          </p>
-          <form className={styles.formGrid} onSubmit={signIn}>
-            <label className={styles.field}>
-              Email address
-              <input
-                className={styles.input}
-                type="email"
-                autoComplete="email"
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-                placeholder="you@example.com"
-                required
-              />
-            </label>
-            <button className={styles.primaryButton} type="submit" disabled={busy}>Send secure sign-in link</button>
-          </form>
-        </section>
-      </div>
-    )
-  }
-
-  return (
-    <div className={styles.shell}>
-      <header className={styles.hero}>
-        <div>
-          <h1>Watchlists</h1>
-          <p>Maintain private instrument lists. Database RLS remains authoritative for every read and write.</p>
-        </div>
-        <div className={styles.signedIn}>
-          <span>{user.email ?? 'Authenticated user'}</span>
-          <button className={styles.secondaryButton} type="button" onClick={signOut} disabled={busy}>Sign out</button>
-        </div>
-      </header>
-
-      {error ? <p className={styles.error}>{error}</p> : null}
-      {status ? <p className={styles.status}>{status}</p> : null}
-
-      <form className={styles.panel} onSubmit={createWatchlist}>
-        <div className={styles.panelHeader}>
-          <div>
-            <h2>Create a watchlist</h2>
-            <p>New lists are owned by your authenticated user ID. The first list becomes your default automatically.</p>
-          </div>
-        </div>
-        <div className={styles.formGrid}>
-          <label className={styles.field}>
-            Name
-            <input className={styles.input} value={newListName} onChange={(event) => setNewListName(event.target.value)} required />
-          </label>
-          <label className={styles.field}>
-            Description
-            <input className={styles.input} value={newListDescription} onChange={(event) => setNewListDescription(event.target.value)} />
-          </label>
-          <div className={styles.buttonRow}>
-            <button className={styles.primaryButton} type="submit" disabled={busy || !newListName.trim()}>Create watchlist</button>
-          </div>
-        </div>
-      </form>
-
-      <div className={styles.workspace}>
-        <aside className={styles.listRail} aria-label="Your watchlists">
-          <div className={styles.listRailHeader}>
-            <h2>Your lists</h2>
-            <span className={styles.muted}>{watchlists.length}</span>
-          </div>
-          {watchlists.length ? watchlists.map((list) => (
-            <button
-              key={list.id}
-              type="button"
-              className={`${styles.listButton} ${list.id === activeListId ? styles.listButtonActive : ''}`}
-              onClick={() => setActiveListId(list.id)}
-            >
-              <strong>{list.name}</strong>
-              <span>{items.filter((item) => item.watchlist_id === list.id).length} instruments</span>
-              {list.is_default ? <span className={styles.badge}>Default</span> : null}
-            </button>
-          )) : <div className={styles.empty}>Create your first watchlist to begin.</div>}
-        </aside>
-
-        {activeList ? (
-          <section className={styles.panel}>
-            <div className={styles.panelHeader}>
-              <div>
-                <h2>{activeList.name}</h2>
-                <p>{activeList.is_default ? 'Default watchlist' : 'Private watchlist'}</p>
-              </div>
-              <div className={styles.toolbar}>
-                {!activeList.is_default ? (
-                  <button className={styles.secondaryButton} type="button" onClick={setDefault} disabled={busy}>Make default</button>
-                ) : null}
-                <button className={styles.dangerButton} type="button" onClick={deleteWatchlist} disabled={busy}>Delete list</button>
-              </div>
-            </div>
-
-            <div className={styles.section}>
-              <h3>List details</h3>
-              <label className={styles.field}>
-                Name
-                <input className={styles.input} value={editName} onChange={(event) => setEditName(event.target.value)} />
-              </label>
-              <label className={styles.field}>
-                Description
-                <input className={styles.input} value={editDescription} onChange={(event) => setEditDescription(event.target.value)} />
-              </label>
-              <div className={styles.buttonRow}>
-                <button className={styles.secondaryButton} type="button" onClick={saveWatchlist} disabled={busy || !editName.trim()}>Save details</button>
-              </div>
-            </div>
-
-            <div className={styles.section}>
-              <h3>Add an instrument</h3>
-              <div className={styles.addRow}>
-                <label className={styles.field}>
-                  Available tracked instrument
-                  <select className={styles.select} value={selectedInstrumentId} onChange={(event) => setSelectedInstrumentId(event.target.value)}>
-                    <option value="">Select an instrument…</option>
-                    {availableInstruments.map((instrument) => (
-                      <option key={instrument.id} value={instrument.id}>
-                        {instrument.symbol} — {instrument.instrument_name}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <button className={styles.primaryButton} type="button" onClick={addInstrument} disabled={busy || !selectedInstrumentId}>Add</button>
-              </div>
-              {!availableInstruments.length && instruments.length ? <p className={styles.helper}>All active tracked instruments are already in this list.</p> : null}
-            </div>
-
-            <div className={styles.section}>
-              <h3>Instruments</h3>
-              {activeItems.length ? (
-                <div className={styles.itemList}>
-                  {activeItems.map((item, index) => {
-                    const instrument = instrumentMap.get(item.instrument_id)
-                    return (
-                      <article className={styles.itemCard} key={`${item.watchlist_id}-${item.instrument_id}`}>
-                        <div className={styles.instrument}>
-                          <strong>{instrument?.symbol ?? item.instrument_id}</strong>
-                          <span>{instrument?.instrument_name ?? 'Tracked instrument'}</span>
-                        </div>
-                        <span className={styles.muted}>{instrument?.asset_type ?? 'instrument'}{instrument?.exchange_code ? ` · ${instrument.exchange_code}` : ''}</span>
-                        <label className={styles.field}>
-                          Private notes
-                          <textarea
-                            className={styles.textarea}
-                            defaultValue={item.notes ?? ''}
-                            onBlur={(event) => {
-                              if ((item.notes ?? '') !== event.target.value.trim()) saveNotes(item, event.target.value)
-                            }}
-                            disabled={busy}
-                          />
-                        </label>
-                        <div className={styles.itemActions}>
-                          <button className={styles.iconButton} type="button" onClick={() => moveItem(item, -1)} disabled={busy || index === 0} aria-label={`Move ${instrument?.symbol ?? 'instrument'} up`}>↑</button>
-                          <button className={styles.iconButton} type="button" onClick={() => moveItem(item, 1)} disabled={busy || index === activeItems.length - 1} aria-label={`Move ${instrument?.symbol ?? 'instrument'} down`}>↓</button>
-                          <button className={styles.dangerButton} type="button" onClick={() => removeItem(item)} disabled={busy}>Remove</button>
-                        </div>
-                      </article>
-                    )
-                  })}
-                </div>
-              ) : <div className={styles.empty}>No instruments yet. Add one from the tracked universe above.</div>}
-            </div>
-          </section>
-        ) : (
-          <section className={styles.panel}>
-            <div className={styles.empty}>Create or choose a watchlist to maintain its instruments.</div>
-          </section>
-        )}
-      </div>
-    </div>
-  )
+  const Heading = embedded ? 'h2' : 'h1'
+  return <div className={styles.shell}>
+    <header className={styles.hero}><Heading>My watchlist &amp; recommendations</Heading><div className={styles.actions}><button disabled={loading || busy} onClick={() => open('create')}>＋ Create watchlist</button><button className={styles.primary} disabled={!activeList || loading || busy} onClick={() => open('add')}>＋ Add share</button></div></header>
+    {loadError && <div role="alert" className={styles.error}>{loadError}<button onClick={() => setRevision(n => n + 1)}>Retry</button></div>}
+    {!modal && error && <p role="alert" className={styles.error}>{error}</p>}
+    {status && <p role="status" className={styles.status}>{status}</p>}
+    <div className={styles.toolbar}><div className={styles.actions}><select aria-label="Choose watchlist" value={listId} disabled={loading || busy || !lists.length} onChange={e => { setListId(e.target.value); setOnlyBuy(false); setStatus('') }}><option value="" disabled>Choose a watchlist</option>{lists.map(l => <option key={l.id} value={l.id}>{l.name}{l.is_default ? ' · Default' : ''}</option>)}</select>{activeList && <><span className={styles.muted}>{activeItems.length} shares</span><button aria-label="Watchlist settings" disabled={busy || loading} onClick={() => open('edit')}>⋯</button></>}</div><Link href="/my-dashboard?tab=decision-lab">View performance in Decision Lab →</Link></div>
+    <div className={styles.filters}><div className={styles.segment} role="group" aria-label="Filter watched shares"><button aria-pressed={!onlyBuy} onClick={() => setOnlyBuy(false)}>All watched shares</button><button aria-pressed={onlyBuy} onClick={() => setOnlyBuy(true)}>AI buy candidates</button></div><div className={styles.segment} role="group" aria-label="Plan horizon"><button aria-pressed={horizon === 5} onClick={() => setHorizon(5)}>Weekly</button><button aria-pressed={horizon === 20} onClick={() => setHorizon(20)}>Monthly</button></div><span className={styles.muted}>Fixed timing rules · {horizon} market sessions</span></div>
+    {researchError && <div role="alert" className={styles.error}>{researchError}<button onClick={() => setRevision(n => n + 1)}>Retry</button></div>}
+    {loading ? <p role="status">Loading your watchlist…</p> : !loadError && <>
+      {!activeList ? <section className={styles.empty}><h3>Create your first watchlist</h3><p>Use Create watchlist above, then add the shares you want to follow.</p></section> : !activeItems.length ? <section className={styles.empty}><h3>Your watchlist is empty</h3><p>Use Add share to search by ticker or company.</p></section> : <div className={styles.tableWrap} role="region" aria-label="Watchlist and AI recommendations" tabIndex={0}><table><caption className={styles.srOnly}>{activeList.name}: {horizon === 5 ? 'weekly' : 'monthly'} recommendations</caption><thead><tr><th scope="col">Share</th><th scope="col">AI view</th><th scope="col">Buy plan</th><th scope="col">Sell plan</th><th scope="col">Details</th><th scope="col"><span className={styles.srOnly}>Actions</span></th></tr></thead><tbody>{rows.map(item => {
+        const instrument = instrumentMap.get(item.instrument_id)
+        const assessment = assessmentMap.get(item.instrument_id)
+        const action = ratingAction(assessment?.rating)
+        const plan = matchingPlan(plans, item.instrument_id, assessment?.assessment_id, horizon)
+        const expired = !!plan && Date.parse(plan.entry_deadline) < Date.now()
+        return <tr key={item.instrument_id}><th scope="row"><Link href={'/markets/' + encodeURIComponent(instrument?.symbol ?? '')}>{instrument?.symbol ?? 'Unavailable share'}</Link><small>{instrument?.instrument_name ?? item.instrument_id}{instrument && !instrument.is_active ? ' · Inactive' : ''}</small></th><td>{researchLoading ? <span>Loading…</span> : assessment ? <><span className={[styles.badge, action === 'BUY' ? styles.buy : action === 'HOLD' ? styles.wait : styles.neutral].join(' ')}>{actionLabel[action]}</span><small>Assessed {date(assessment.assessment_date)}{olderAssessment(assessment.created_at) ? ' · Older assessment' : ''}</small></> : <span className={styles.muted}>{researchError ? 'Unavailable' : 'Not assessed yet'}</span>}</td><td>{researchLoading ? '—' : plan ? plan.action === 'BUY' ? <>{expired ? 'Entry window ended' : 'Next full-session close'}<small>{expired ? 'Ended' : 'After publication · expires'} {date(plan.entry_deadline)}</small></> : 'No entry planned' : <>No published plan{assessment && <small>Assessment only</small>}</>}</td><td>{plan?.action === 'BUY' ? <>Close {horizon} sessions after entry<small>Fixed holding rule</small></> : '—'}</td><td><button className={styles.textButton} aria-label={'View details for ' + (instrument?.symbol ?? 'share')} onClick={() => open('details', item)}>View details ↗</button></td><td><button aria-label={'Options for ' + (instrument?.symbol ?? 'share')} disabled={busy} onClick={() => open('notes', item)}>⋯</button></td></tr>
+      })}{rows.length === 0 && <tr><td colSpan={6}>{researchLoading ? 'Loading AI views…' : 'No AI buy candidates in this watchlist.'}</td></tr>}</tbody></table></div>}
+      <footer className={styles.footer}><span>{tracking === true ? 'Tracking on · Published plans stay in Decision Lab.' : tracking === false ? 'Tracking is off.' : researchError ? 'Tracking status unavailable.' : 'Checking tracking status…'}</span>{tracking === false && <button disabled={busy} onClick={startTracking}>Enable tracking</button>}</footer>
+    </>}
+    <details className={styles.method}><summary>How recommendations work</summary><p>AI views come from the latest saved scheduled assessment for each share. The assessment date is shown; views older than 72 hours are labelled. “Wait” means the source rating is Hold. These research views are the same for both horizons.</p><p>Weekly and monthly select separate published plans with fixed 5- or 20-session holding rules, not AI forecasts of the best entry or exit. A plan appears only when it matches the displayed assessment. The entry uses the first full-session daily close after publication, within seven days. No orders are placed. Full timing rules and outcomes are in Decision Lab.</p><p>Research can predate tracking. It is never backdated into your performance record. Removing a share or list does not remove published plans.</p></details>
+    {modal && <WatchlistDialog title={modal === 'create' ? 'Create watchlist' : modal === 'add' ? 'Add share' : modal === 'edit' ? 'Watchlist settings' : modal === 'details' ? (selectedInstrument?.symbol ?? 'Share') + ' · AI view & plan' : modal === 'notes' ? (selectedInstrument?.symbol ?? 'Share') + ' · Options' : modal === 'delete' ? 'Delete watchlist?' : 'Remove share?'} onClose={close} busy={busy}>
+      {error && <p role="alert" className={styles.error}>{error}</p>}
+      {(modal === 'create' || modal === 'edit') && <form onSubmit={saveList} className={styles.form}><label>Name<input autoFocus value={name} onChange={e => setName(e.target.value)} required maxLength={120} disabled={busy} /></label><details><summary>{description ? 'Description' : 'Add description'}</summary><label>Description (optional)<textarea value={description} onChange={e => setDescription(e.target.value)} maxLength={2000} disabled={busy} /></label></details><div className={styles.actions}><button type="button" disabled={busy} onClick={close}>Cancel</button><button className={styles.primary} disabled={busy || !name.trim()}>{busy ? 'Saving…' : modal === 'create' ? 'Create' : 'Save'}</button></div>{modal === 'edit' && <div className={styles.settings}>{!activeList?.is_default && <button type="button" disabled={busy} onClick={makeDefault}>Make default</button>}<button className={styles.danger} type="button" disabled={busy} onClick={() => setModal('delete')}>Delete watchlist</button></div>}</form>}
+      {modal === 'add' && <div className={styles.form}><label>Search ticker or company<input autoFocus type="search" value={search} onChange={e => setSearch(e.target.value)} placeholder="e.g. NVDA or NVIDIA" disabled={busy} /></label><ul className={styles.searchResults}>{available.slice(0, 30).map(i => <li key={i.id}><div><strong>{i.symbol}</strong><small>{i.instrument_name}</small></div><button aria-label={'Add ' + i.symbol} disabled={busy} onClick={() => add(i.id)}>＋ Add</button></li>)}</ul>{!available.length && <p>No matching shares available to add.</p>}{available.length > 30 && <p className={styles.muted}>Type a ticker or company to narrow the results.</p>}</div>}
+      {modal === 'notes' && <div className={styles.form}><label>Private notes<textarea autoFocus value={notes} onChange={e => setNotes(e.target.value)} disabled={busy} /></label><div className={styles.actions}><button disabled={busy} onClick={close}>Cancel</button><button className={styles.primary} disabled={busy} onClick={saveNotes}>Save notes</button></div><button className={styles.danger} disabled={busy} onClick={() => setModal('remove')}>Remove from watchlist</button></div>}
+      {(modal === 'remove' || modal === 'delete') && <div className={styles.form}><p>{modal === 'delete' ? 'Delete “' + activeList?.name + '” and its saved shares?' : 'Remove ' + selectedInstrument?.symbol + ' from this watchlist?'} Published predictions will remain in Decision Lab.</p><div className={styles.actions}><button autoFocus disabled={busy} onClick={close}>Cancel</button><button className={styles.danger} disabled={busy} onClick={remove}>{busy ? 'Removing…' : modal === 'delete' ? 'Delete watchlist' : 'Remove share'}</button></div></div>}
+      {modal === 'details' && <div className={styles.detailBody}>{selectedAssessment ? <><p><strong>{selectedAssessment.rating}</strong> · Assessed {date(selectedAssessment.assessment_date)}{olderAssessment(selectedAssessment.created_at) ? ' · Older assessment' : ''}</p><h3>Why this share</h3><p>{selectedAssessment.summary || 'No summary supplied.'}</p><h3>Risks</h3><p>{selectedAssessment.key_risks || 'No separate risks supplied.'}</p><small>Model: {selectedAssessment.model_version ?? 'Not supplied'}</small></> : <p>No saved AI assessment is available for this share.</p>}<h3>{horizon === 5 ? 'Weekly' : 'Monthly'} plan</h3>{selectedPlan ? <><p>{selectedPlan.action === 'BUY' ? 'Fixed rule: next full-session close after publication, then exit after ' + horizon + ' market sessions from entry.' : 'No new entry planned.'}</p><p>Published {timestamp(selectedPlan.published_at)}<br/>Entry deadline {timestamp(selectedPlan.entry_deadline)}</p><small>Record: {selectedPlan.id}</small></> : <p>No published plan matches this assessment. Existing research has not been backdated into tracking.</p>}<Link href="/my-dashboard?tab=decision-lab">Open Decision Lab →</Link></div>}
+    </WatchlistDialog>}
+  </div>
 }
+

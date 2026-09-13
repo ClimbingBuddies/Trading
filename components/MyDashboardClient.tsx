@@ -8,11 +8,11 @@ import { getBrowserSupabase } from '@/lib/supabase-browser'
 import { parseHoldingsCsv, type HoldingsCsvValue } from '@/lib/portfolio-holdings-csv.mjs'
 import styles from './MyDashboardClient.module.css'
 import PredictionWorkspace from './PredictionWorkspace'
+import WatchlistsClient from './WatchlistsClient'
 
 const tabs = [
   { key: 'today', label: 'Today' },
-  { key: 'recommendations', label: 'Recommendations' },
-  { key: 'watchlists', label: 'Watchlists' },
+  { key: 'recommendations', label: 'Watchlist & recommendations' },
   { key: 'opportunities', label: 'Opportunities' },
   { key: 'portfolio-health', label: 'Portfolio Health' },
   { key: 'decision-lab', label: 'Decision Lab' },
@@ -176,6 +176,7 @@ function permanentUser(user: User | null | undefined) {
 }
 
 function validTab(value: string | null): TabKey {
+  if (value === 'watchlists') return 'recommendations'
   return tabs.some((tab) => tab.key === value) ? (value as TabKey) : 'recommendations'
 }
 
@@ -1113,8 +1114,10 @@ export default function MyDashboardClient() {
       {status && <div className={styles.status} role="status">{status}</div>}
 
       <section id={`my-dashboard-panel-${selectedTab}`} role="tabpanel" aria-labelledby={`my-dashboard-tab-${selectedTab}`} tabIndex={0}>
-        {selectedTab === 'recommendations' || selectedTab === 'decision-lab' ? (
-          <PredictionWorkspace key={user.id} ownerId={user.id} mode={selectedTab} />
+        {selectedTab === 'recommendations' ? (
+          <WatchlistsClient key={user.id} ownerId={user.id} embedded />
+        ) : selectedTab === 'decision-lab' ? (
+          <PredictionWorkspace key={user.id} ownerId={user.id} mode="decision-lab" />
         ) : privateDataState === 'error' ? (
           <article className={styles.stateCard} aria-live="assertive">
             <span className={styles.eyebrow}>PRIVATE DATA UNAVAILABLE</span>
@@ -1282,3 +1285,4 @@ export default function MyDashboardClient() {
     </div>
   )
 }
+
