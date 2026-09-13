@@ -1096,7 +1096,7 @@ export default function MyDashboardClient() {
   return (
     <div className={styles.dashboard}>
       <header className={styles.header}>
-        <div><span className={styles.eyebrow}>PERSONAL MARKET WORKSPACE</span><h1>My Dashboard</h1><p className={styles.lede}>Your shares, your research, and an honest record of every AI prediction.</p></div>
+        <div><h1>My Dashboard</h1></div>
         <div className={styles.accountActions}>
           <span>Signed in as <strong>{user.email ?? 'authenticated user'}</strong></span>
           <button className={styles.secondaryButton} onClick={signOut}>Sign out</button>
@@ -1282,4 +1282,3 @@ export default function MyDashboardClient() {
     </div>
   )
 }
-
