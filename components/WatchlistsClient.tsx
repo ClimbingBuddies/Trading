@@ -123,8 +123,10 @@ function WatchlistWorkspace({ ownerId, embedded }: { ownerId: string; embedded: 
       const readAssessments = async () => {
         for (let batch = 0; batch < researchIds.length; batch += 8) {
           const rows = await Promise.all(researchIds.slice(batch, batch + 8).map(async id => {
-            const r = await client.from('gpt_market_assessments').select('assessment_id,instrument_id,rating,assessment_date,created_at,summary,key_risks,model_version,gpt_market_runs!inner(analysis_mode,status)')
-              .eq('instrument_id', id).eq('technical_engine_input_used', false).eq('gpt_market_runs.analysis_mode', 'scheduled').in('gpt_market_runs.status', ['succeeded', 'partial'])
+            // Existing RLS exposes only completed scheduled succeeded/partial runs.
+            // analysis_mode is intentionally not selectable by browser clients.
+            const r = await client.from('gpt_market_assessments').select('assessment_id,instrument_id,rating,assessment_date,created_at,summary,key_risks,model_version')
+              .eq('instrument_id', id).eq('technical_engine_input_used', false)
               .order('created_at', { ascending: false }).order('assessment_id').limit(1).abortSignal(signal).maybeSingle()
             if (r.error) throw r.error
             return r.data

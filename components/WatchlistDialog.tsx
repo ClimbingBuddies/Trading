@@ -9,6 +9,7 @@ export default function WatchlistDialog({ title, children, onClose, busy = false
     const previous = document.activeElement as HTMLElement | null
     const dialog = ref.current
     dialog?.showModal()
+    dialog?.querySelector<HTMLInputElement | HTMLTextAreaElement>('input, textarea')?.focus()
     return () => { dialog?.close(); previous?.focus() }
   }, [])
   return <dialog ref={ref} className={styles.dialog} aria-labelledby="watchlist-dialog-title" onCancel={event => { event.preventDefault(); if (!busy) onClose() }}>
