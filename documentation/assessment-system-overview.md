@@ -519,3 +519,7 @@ These documents preserve the independence boundaries defined here.
 ## AI-selected recommendation timing — 13 September 2026
 
 Personal AI timing consumes completed independent Market Assessment and cutoff-bound raw daily prices. It does not alter source ratings or read Technical Engine, Convergence or Opportunity conclusions. Weekly/monthly plan decisions may differ from the source rating and remain separately attributable. See automation/daily-personal-recommendations.md.
+
+## Decision history and outcome tracking — v3
+
+Decision Journal v3 turns fresh independent research into current calls with linked dated updates. No predetermined sell timing for new records: only a later Sell event closes the paper position. Model statements, personal notes and measured outcomes remain distinct.

@@ -58,3 +58,7 @@ The frontend is a presentation and owner-workspace layer over Supabase. It does 
 ## AI-selected recommendation timing — 13 September 2026
 
 My Dashboard Recommendations and /watchlists display matching assessment/horizon AI session timing from personal_prediction_plans. Decision Lab displays the same locked timing alongside evaluations; its layout redesign is deferred. Legacy fixed records retain distinct labels.
+
+## Decision history and outcome tracking — v3
+
+Decision Lab now uses a compact call/update/result table and a share-click detail drawer. It reads all owner pages of plans, events, outcomes and legacy results. Personal decision notes append through the constrained RPC. Recommendations reads the owner-secured event view and preserves exact assessment matching.

@@ -65,3 +65,7 @@ The platform stores strategy evidence and review decisions but does not authoris
 ## AI-selected recommendation timing — 13 September 2026
 
 AI timing publication is private, SECURITY DEFINER with a fixed pg_catalog search_path, limited to internal execution. Browser users retain only owner-scoped reads and the existing enrollment RPC. Source hashes are recomputed at publication, publication timestamps are server-owned, and table triggers reject plan/result update/delete. Never expose controller or provider credentials in the frontend.
+
+## Decision history and outcome tracking — v3
+
+Decision v3 tables enable RLS and permit permanent owners SELECT only. Triggers reject UPDATE/DELETE. Internal publication/evaluation functions have fixed search paths and no client grants. The note RPC validates auth.uid, anonymous status, parent ownership, bounded text and request idempotency. Personal notes cannot drive AI trade results. The recommendation view uses security_invoker=true.

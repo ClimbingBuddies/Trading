@@ -100,3 +100,7 @@ Audit records and completed plan entries are retained as durable evidence. They 
 ## AI-selected recommendation timing — 13 September 2026
 
 Personal recommendations timing: [Daily Personal Recommendations](../automation/daily-personal-recommendations.md), [controller handoff](recommendations-controller-handoff.md), and [migration source](../scripts/ai-timing-v2.sql).
+
+## Decision history and outcome tracking — v3
+
+Decision journal implementation: [migration source](../scripts/decision-journal-v3.sql), [controller specification](../automation/daily-personal-recommendations.md), [focused database tests](../scripts/test-decision-journal.mjs).

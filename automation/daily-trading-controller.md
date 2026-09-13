@@ -1,6 +1,6 @@
 # Daily Trading Controller
 
-**Specification version:** 1.2  
+**Specification version:** 1.3  
 **Last updated:** 13 September 2026  
 **System:** Discover Boulders Markets / Trading  
 **Supabase project:** `glvbqcplgjdfgjyknzsa`
@@ -115,9 +115,9 @@ For external Opportunity exposures, preserve the approved history-only boundary:
 
 ## Personal Recommendations stage (after C)
 
-After the applicable Market Assessment is terminal, retrieve automation/daily-personal-recommendations.md fresh and inspect private.ai_timing_candidates_v2().
+After the applicable Market Assessment is terminal, retrieve automation/daily-personal-recommendations.md fresh and inspect private.decision_candidates_v3().
 This is an analytical stage: execute it in the next eligible invocation, preserving the one-analytical-stage limit. Prioritize unfinished eligible recommendations over non-analytical history cleanup once Market Assessment is terminal.
-Generate and persist both weekly and monthly model-selected timing for every eligible enrolled owner's watched share. Blocked input rows retain their exact coverage/freshness reason and may be retried after valid recovery. Never substitute fixed timing or claim blocked forecasts were published.
+Generate a current call for every eligible enrolled owner's watched share or open journal. Preserve its original call and append dated updates; weekly/monthly are performance checkpoints, never forced sell dates. Blocked input rows retain their exact coverage/freshness reason and may be retried after valid recovery. Never substitute fixed timing or claim blocked forecasts were published.
 This stage consumes completed independent Market Assessment output; it does not change Opportunity, External Opinion or Market Assessment methodology.
 The existing 04:30–09:30 Perth cadence is unchanged. Recommendations normally run at 07:30 during US daylight saving, or 08:30 during standard time, after Market Assessment. Already-published owner/assessment/horizon rows are idempotently skipped.
 

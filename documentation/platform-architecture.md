@@ -83,3 +83,7 @@ Opportunity Assessment does not consume short-term Market ratings, Technical sco
 ## AI-selected recommendation timing — 13 September 2026
 
 The Daily Trading Controller now runs the Personal Recommendations stage after Market Assessment. The model chooses session entry/holding values; PostgreSQL validates and freezes evidence and computes future outcomes. Generation and evaluation are separate: the existing 15-minute database ledger evaluates only, while automatic fixed-rule publication is disabled. See automation/daily-personal-recommendations.md.
+
+## Decision history and outcome tracking — v3
+
+New recommendations are permanent decision journals: original root, linked AI updates and separately labelled personal notes, then append-only observations. The controller uses publish_decision_v3; the 15-minute job evaluates v3 alongside unchanged legacy records. Session forecasts v2 are retired for new publication, not deleted.

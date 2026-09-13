@@ -1,3 +1,20 @@
+# Current implementation — Decision Journal v3
+
+Updated 13 September 2026. Decision Lab is implemented. This section supersedes the historical v2 handoff below. The canonical controller instructions are `automation/daily-personal-recommendations.md`; the existing Daily Trading Controller includes that stage. Apply `scripts/decision-journal-v3.sql` for the database contract.
+
+Original calls are immutable. AI updates and owner notes append with server timestamps; personal notes do not change AI performance. BUY enters at a subsequent eligible session close. A later AI SELL initiates exit at a subsequent eligible close. Weekly and monthly checkpoints measure progress and never force a sale. Missing or corrected evidence is recorded explicitly and cannot rewrite an earlier outcome.
+
+Decision Lab displays the compact journal table, status filters, selectable checkpoints and a share detail drawer containing the original call, dated updates, permanent personal-note form, paper position and expandable evidence. Recommendations reads the latest AI events through the owner-filtered v3 view.
+
+Validation: 165 repository tests passed; TypeScript, production build and palette checks passed. The isolated PGlite suite covers immutable publication/outcomes, owner and anonymous permissions, note retry integrity, entry/exit timing, UTC session dates, checkpoint behavior, missing/corrected data, idempotency and separation of personal notes from AI performance. The populated UI was checked with isolated example records, with no production test decisions inserted.
+
+Live database migrations `decision_journal_v3` and `decision_note_idempotency_guard_v3` applied successfully. The existing 15-minute evaluation job is active and runs both legacy and v3 evaluators. Live inventory at verification: zero plans, events and outcomes; all six queued shares blocked by fresh-assessment/eligibility requirements. The interface must show this honestly until upstream data is refreshed. The external ChatGPT Daily Trading Controller schedule was not independently observable; its existing schedule is preserved in GitHub instructions, not replaced by a duplicate automation.
+
+Security review: authenticated execution of `append_personal_decision_note_v3` is intentional. The SECURITY DEFINER function checks permanent authenticated identity, parent ownership, allowed fields and idempotent request content; direct event writes and anonymous execution remain denied. This explains the database linter's authenticated-function notice.
+
+---
+
+## Historical v2 handoff (superseded)
 > Update, 13 September 2026: AI-selected session timing is now implemented by scripts/ai-timing-v2.sql and automation/daily-personal-recommendations.md. The Daily Trading Controller integrates this production stage. The historical handoff below describes the previous baseline; the new stage specification governs v2. The completed dashboard build controller remains closed.
 
 # Recommendations controller handoff

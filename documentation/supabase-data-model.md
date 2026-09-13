@@ -145,3 +145,7 @@ The first real strategy, backtest and evaluation are persisted. Its review outco
 ## AI-selected recommendation timing — 13 September 2026
 
 AI session timing v2 extends personal_prediction_plans with entry_delay_sessions, holding_sessions, timing_reason and input_hash. Private ai_timing_candidates_v2, ai_timing_input_v2 and publish_ai_timing_v2 provide cutoff-bound evidence and idempotent model publication. No new browser write privileges; service-role direct plan/result writes are revoked. Owner SELECT and immutability remain. scripts/ai-timing-v2.sql is the additive migration source.
+
+## Decision history and outcome tracking — v3
+
+Decision Journal v3 adds immutable owner-only personal_decision_events (AI and USER actors) and personal_decision_outcomes (entry, exit, provisional marks, checkpoints and data gaps). Roots reuse personal_prediction_plans with decision-journal-v3 methodology and SIGNAL_NEXT_CLOSE / AI_SELL_SIGNAL rules. The security-invoker personal_recommendation_views_v3 exposes latest matching events without rewriting roots. The owner-scoped append_personal_decision_note_v3 RPC is the only new browser write path. Source: scripts/decision-journal-v3.sql.
