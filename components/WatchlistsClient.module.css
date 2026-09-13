@@ -12,3 +12,5 @@
 
 /* Compact desktop controls retain a 44px pointer target. */
 .shell button,.shell select{font-size:13px;padding:8px 10px}.toolbar>a{font-size:13px}.tableWrap thead th{padding-top:10px;padding-bottom:10px;font-size:11px}.tableWrap .textButton{font-size:13px}.shell .filters .segment button{font-size:13px}.shell .hero .actions>button{font-size:13px}.tableWrap tbody tr:last-child td,.tableWrap tbody tr:last-child th{border-bottom:0}
+
+.toolbar>.actions:last-child{margin-left:auto}.filters>a{margin-left:auto;font-size:13px;white-space:nowrap}@media(max-width:760px){.toolbar>.actions{width:auto}.toolbar>.actions:first-child{flex:1;min-width:0}.filters>a{margin-left:0}}
