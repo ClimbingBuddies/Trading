@@ -12,7 +12,7 @@ import WatchlistsClient from './WatchlistsClient'
 
 const tabs = [
   { key: 'today', label: 'Today' },
-  { key: 'recommendations', label: 'Watchlist & recommendations' },
+  { key: 'recommendations', label: 'Recommendations' },
   { key: 'opportunities', label: 'Opportunities' },
   { key: 'portfolio-health', label: 'Portfolio Health' },
   { key: 'decision-lab', label: 'Decision Lab' },

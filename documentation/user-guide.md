@@ -60,7 +60,7 @@ Use this order to understand the platform without mixing short- and long-term si
 My Dashboard brings owner-scoped research into five keyboard-accessible tabs. Use the left and right arrow keys to move between tabs, or Home and End to jump to the first and last tab. A complete private-data load must succeed before personal counts or records appear; if one required owner-scoped read fails, use the displayed retry action instead of treating missing values as zero.
 
 1. **Today** shows persisted setup and attention items. Set a three-letter base currency, default 5-, 20- or 60-session research horizon and optional presentation-only risk style.
-2. **Watchlist & recommendations** is your default view, also available at `/watchlists`. Choose your list, add shares by ticker or company, and see the latest saved scheduled AI assessment alongside its matching published plan. Filter **All watched shares** or **AI buy candidates**, and switch Weekly (5 sessions) / Monthly (20 sessions). Research older than 72 hours is labelled; missing assessments and plans are never fabricated. Timing remains a fixed holding-period test, not an AI forecast. Use **Enable tracking** if tracking is off, and open **Decision Lab** to review outcomes.
+2. **Recommendations** is your default view, also available at `/watchlists`. Choose your list, add shares by ticker or company, and see the latest saved scheduled AI assessment alongside its matching published plan. Filter **All watched shares** or **AI buy candidates**, and switch Weekly (5 sessions) / Monthly (20 sessions). Research older than 72 hours is labelled; missing assessments and plans are never fabricated. Timing remains a fixed holding-period test, not an AI forecast. Use **Enable tracking** if tracking is off, and open **Decision Lab** to review outcomes.
 
 3. **Opportunities** shows only independently mapped themes relevant to your stored interests or watched instruments. An Opportunity score never becomes a Buy instruction.
 4. **Portfolio Health** supports explicit manual or paper portfolios, manual positions, optional CSV preview/confirmation and persisted health snapshots. Missing price, currency, issuer, mapping or cost evidence remains incomplete. Refresh runs through the trusted calculation boundary; the browser does not calculate or invent health values.
@@ -386,4 +386,3 @@ Verified signed-out states:
 - `/strategies` — “Sign in to view strategy evidence”.
 
 The signed-out forms verify only the access boundary. UGUIDE-003 owner-state screenshots remain `AUTH_REQUIRED`; its task instructions are source-, contract- and RLS-verified and do not claim that an authenticated UI session was observed.
-
