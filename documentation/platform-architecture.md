@@ -79,3 +79,7 @@ Opportunity Assessment does not consume short-term Market ratings, Technical sco
 ## Deployment
 
 `main` in `ClimbingBuddies/Trading` deploys to the single Vercel project `boulders-market`. The canonical public URL is https://discoverbouldersmarkets.vercel.app. Production-dependent claims require deployment and browser evidence, not only a successful source commit.
+
+## AI-selected recommendation timing — 13 September 2026
+
+The Daily Trading Controller now runs the Personal Recommendations stage after Market Assessment. The model chooses session entry/holding values; PostgreSQL validates and freezes evidence and computes future outcomes. Generation and evaluation are separate: the existing 15-minute database ledger evaluates only, while automatic fixed-rule publication is disabled. See automation/daily-personal-recommendations.md.

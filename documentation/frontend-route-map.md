@@ -55,3 +55,6 @@ The frontend is a presentation and owner-workspace layer over Supabase. It does 
 - Browser code uses `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` only.
 - Service-role, provider and orchestration secrets must never appear in browser code.
 
+## AI-selected recommendation timing — 13 September 2026
+
+My Dashboard Recommendations and /watchlists display matching assessment/horizon AI session timing from personal_prediction_plans. Decision Lab displays the same locked timing alongside evaluations; its layout redesign is deferred. Legacy fixed records retain distinct labels.

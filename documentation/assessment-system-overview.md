@@ -515,3 +515,7 @@ Detailed lifecycle and execution contracts are maintained in:
 - `automation/daily-opportunity-assessment.md`
 
 These documents preserve the independence boundaries defined here.
+
+## AI-selected recommendation timing — 13 September 2026
+
+Personal AI timing consumes completed independent Market Assessment and cutoff-bound raw daily prices. It does not alter source ratings or read Technical Engine, Convergence or Opportunity conclusions. Weekly/monthly plan decisions may differ from the source rating and remain separately attributable. See automation/daily-personal-recommendations.md.

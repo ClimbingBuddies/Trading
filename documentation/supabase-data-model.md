@@ -142,3 +142,6 @@ The first real strategy, backtest and evaluation are persisted. Its review outco
 - Operational implementations: [pipelines](pipelines/)
 - Independent verification: [project audits](project-audits/)
 
+## AI-selected recommendation timing — 13 September 2026
+
+AI session timing v2 extends personal_prediction_plans with entry_delay_sessions, holding_sessions, timing_reason and input_hash. Private ai_timing_candidates_v2, ai_timing_input_v2 and publish_ai_timing_v2 provide cutoff-bound evidence and idempotent model publication. No new browser write privileges; service-role direct plan/result writes are revoked. Owner SELECT and immutability remain. scripts/ai-timing-v2.sql is the additive migration source.

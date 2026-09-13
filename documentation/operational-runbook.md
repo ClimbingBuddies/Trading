@@ -346,3 +346,6 @@ If a required evidence layer is unavailable, report that explicitly rather than 
 - `documentation/security-and-operational-notes.md`
 - `documentation/project-plan.md`
 
+## AI-selected recommendation timing — 13 September 2026
+
+For AI timing, inspect private.ai_timing_candidates_v2() for exact eligibility gaps. Stale research or daily prices, missing mappings or matching-currency QQQ coverage block publication. Follow automation/daily-personal-recommendations.md for bounded recovery; never backdate refreshed evidence into an earlier assessment. The existing personal-prediction-ledger-v1 cron remains every 15 minutes, with its old publisher returning zero and its evaluator honoring locked v2 timing. Daily controller cadence is unchanged; no separate schedule was created or verified from this repository change.

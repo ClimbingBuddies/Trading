@@ -26,3 +26,11 @@ test('Outdated or invalid research is distinguished from recent research', () =>
   assert.equal(olderAssessment(undefined, now), true)
 })
 
+test('AI timing renders the published choices and keeps legacy timing distinct', async () => {
+  const { timingText } = await import('../lib/watchlist-recommendations.mjs')
+  const plan = { action: 'BUY', entry_rule: 'AI_SESSION_OFFSET', entry_delay_sessions: 3, holding_sessions: 2, horizon_sessions: 5 }
+  assert.deepEqual(timingText(plan), { buy: 'Session 3 close after publication', sell: 'Close 2 sessions after entry' })
+  assert.equal(timingText({ ...plan, action: 'HOLD' }).buy, 'No entry planned')
+  assert.equal(timingText({ ...plan, entry_rule: 'NEXT_COMPLETE_DAILY_CLOSE', holding_sessions: null }).sell, 'Close 5 sessions after entry')
+  assert.equal(timingText({ ...plan, holding_sessions: null }).sell, 'Timing unavailable')
+})

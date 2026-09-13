@@ -1,7 +1,7 @@
 # Daily Trading Controller
 
-**Specification version:** 1.1  
-**Last updated:** 01 September 2026  
+**Specification version:** 1.2  
+**Last updated:** 13 September 2026  
 **System:** Discover Boulders Markets / Trading  
 **Supabase project:** `glvbqcplgjdfgjyknzsa`
 
@@ -18,6 +18,7 @@ The downstream analytical specifications remain authoritative for methodology:
 3. `automation/daily-market-assessment.md`
 4. `documentation/pipelines/opportunity-exposure-history-cleanup.md`
 5. `documentation/pipelines/historical-market-data-backfill.md` when a provider seed is required
+6. `automation/daily-personal-recommendations.md`
 
 Do not duplicate or paraphrase those methodologies here. Retrieve the applicable file fresh immediately before executing its stage.
 
@@ -112,6 +113,14 @@ For external Opportunity exposures, preserve the approved history-only boundary:
 - do not set them permanently active;
 - ambiguous or unsupported provider identities become `mapping_required`, never guesses.
 
+## Personal Recommendations stage (after C)
+
+After the applicable Market Assessment is terminal, retrieve automation/daily-personal-recommendations.md fresh and inspect private.ai_timing_candidates_v2().
+This is an analytical stage: execute it in the next eligible invocation, preserving the one-analytical-stage limit. Prioritize unfinished eligible recommendations over non-analytical history cleanup once Market Assessment is terminal.
+Generate and persist both weekly and monthly model-selected timing for every eligible enrolled owner's watched share. Blocked input rows retain their exact coverage/freshness reason and may be retried after valid recovery. Never substitute fixed timing or claim blocked forecasts were published.
+This stage consumes completed independent Market Assessment output; it does not change Opportunity, External Opinion or Market Assessment methodology.
+The existing 04:30–09:30 Perth cadence is unchanged. Recommendations normally run at 07:30 during US daylight saving, or 08:30 during standard time, after Market Assessment. Already-published owner/assessment/horizon rows are idempotently skipped.
+
 ## Per-invocation behaviour
 
 On every controller invocation:
@@ -119,7 +128,7 @@ On every controller invocation:
 1. retrieve this file fresh;
 2. verify Trading Supabase access;
 3. calculate current Perth and New York timezone-aware date/time;
-4. inspect persisted states for Opportunity, External Opinion, Market Assessment and Opportunity-history cleanup;
+4. inspect persisted states for Opportunity, External Opinion, Market Assessment, Personal Recommendations and Opportunity-history cleanup;
 5. determine the earliest eligible unfinished stage;
 6. execute **at most one analytical stage** in that invocation;
 7. after a Market Assessment execution completes, history cleanup may also be started in the same invocation if every prerequisite is now terminal and doing so is safe;
@@ -185,6 +194,7 @@ The final morning state should summarise:
 - Opportunity status;
 - External Opinion status;
 - Market Assessment status;
+- Personal Recommendations published/blocked counts and concrete missing-data reasons;
 - Opportunity Exposure History Cleanup status;
 - any recovery/resume performed;
 - newly queued or completed history symbols;

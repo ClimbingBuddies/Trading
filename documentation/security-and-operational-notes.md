@@ -61,3 +61,7 @@ OPS-007 resolved the orphan queue backlog and stale test-run lifecycle non-destr
 ## Trading safety boundary
 
 The platform stores strategy evidence and review decisions but does not authorise live trading. The first persisted strategy remains `VALIDATE_ROBUSTNESS / continue_testing` with live execution disabled.
+
+## AI-selected recommendation timing — 13 September 2026
+
+AI timing publication is private, SECURITY DEFINER with a fixed pg_catalog search_path, limited to internal execution. Browser users retain only owner-scoped reads and the existing enrollment RPC. Source hashes are recomputed at publication, publication timestamps are server-owned, and table triggers reject plan/result update/delete. Never expose controller or provider credentials in the frontend.

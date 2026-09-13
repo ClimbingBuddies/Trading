@@ -1,3 +1,5 @@
+> Update, 13 September 2026: AI-selected session timing is now implemented by scripts/ai-timing-v2.sql and automation/daily-personal-recommendations.md. The Daily Trading Controller integrates this production stage. The historical handoff below describes the previous baseline; the new stage specification governs v2. The completed dashboard build controller remains closed.
+
 # Recommendations controller handoff
 
 Prepared 13 September 2026. This is a proposed next-work handoff, not an instruction to restart the completed dashboard controller or change its accepted gates.
@@ -51,3 +53,14 @@ UI and fixed-rule tracking foundation: implemented.
 AI-selected buy/sell timing: not implemented.
 Fresh source coverage and current live job/data health: require a fresh controller audit.
 New controller schedule/activation: not performed by this handoff.
+
+## AI timing v2 validation — 13 September 2026
+- Additive production migration ai_selected_prediction_timing_v2 applied successfully.
+- Focused PGlite migration/publication/evaluation tests pass: evidence-hash validation, bounded timing, idempotency, owner/anonymous isolation, immutability, variable entry and exit, missing-session refusal, stale input and modelled returns.
+- Existing ledger tests and all 160 repository tests pass. Production build and palette checks pass.
+- Production owner SELECT remains enabled; anonymous/authenticated publication and authenticated INSERT remain disabled; service-role direct ledger INSERT disabled.
+- Existing 15-minute ledger cron is active. Empty production evaluator completes successfully. No test predictions were written to production.
+- Live coverage audit: all 12 owner/share/horizon candidates currently blocked by missing or stale published assessments. US daily history last observed 3 September; WA1/1AI daily history absent. No unsupported live forecasts published.
+- Security advisors identify unrelated existing notices (including public pg_net, existing market helper functions and the intentional enrollment RPC); none names a newly added timing function. See https://supabase.com/docs/guides/database/database-linter for advisor explanations.
+- React review: existing aborted owner-scoped parallel reads and pagination preserved, pure display helper shared by both surfaces, no new browser credentials or model calls.
+- Daily Trading Controller GitHub sequencing updated; scheduled ChatGPT task-card status is not observable through the available tools and was not changed.

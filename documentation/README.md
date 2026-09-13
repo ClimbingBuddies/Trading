@@ -96,3 +96,7 @@ The first strategy review outcome is `VALIDATE_ROBUSTNESS / continue_testing`. L
 - [In-app User Guide controller journal](in-app-user-guide-controller-journal.md)
 
 Audit records and completed plan entries are retained as durable evidence. They are not current-work instructions.
+
+## AI-selected recommendation timing — 13 September 2026
+
+Personal recommendations timing: [Daily Personal Recommendations](../automation/daily-personal-recommendations.md), [controller handoff](recommendations-controller-handoff.md), and [migration source](../scripts/ai-timing-v2.sql).
