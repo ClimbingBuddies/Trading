@@ -232,7 +232,7 @@ function WatchlistWorkspace({ ownerId, embedded }: { ownerId: string; embedded: 
 
   const Heading = embedded ? 'h2' : 'h1'
   return <div className={[styles.shell, !embedded ? styles.standalone : ''].join(' ')}>
-    <header className={styles.hero}><Heading>My watchlist &amp; recommendations</Heading><div className={styles.actions}><button disabled={loading || busy} onClick={() => open('create')}>＋ Create watchlist</button><button className={styles.primary} disabled={!activeList || loading || busy} onClick={() => open('add')}>＋ Add share</button></div></header>
+    <header className={styles.hero}><Heading className={embedded ? styles.srOnly : undefined}>My watchlist &amp; recommendations</Heading><div className={styles.actions}><button disabled={loading || busy} onClick={() => open('create')}>＋ Create watchlist</button><button className={styles.primary} disabled={!activeList || loading || busy} onClick={() => open('add')}>＋ Add share</button></div></header>
     {loadError && <div role="alert" className={styles.error}>{loadError}<button onClick={() => setRevision(n => n + 1)}>Retry</button></div>}
     {!modal && error && <p role="alert" className={styles.error}>{error}</p>}
     {status && <p role="status" className={styles.status}>{status}</p>}
@@ -261,4 +261,3 @@ function WatchlistWorkspace({ ownerId, embedded }: { ownerId: string; embedded: 
     </WatchlistDialog>}
   </div>
 }
-

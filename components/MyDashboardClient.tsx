@@ -1097,7 +1097,7 @@ export default function MyDashboardClient() {
   return (
     <div className={styles.dashboard}>
       <header className={styles.header}>
-        <div><h1>My Dashboard</h1></div>
+        <h1 className={styles.srOnly}>My Dashboard</h1>
         <div className={styles.accountActions}>
           <span>Signed in as <strong>{user.email ?? 'authenticated user'}</strong></span>
           <button className={styles.secondaryButton} onClick={signOut}>Sign out</button>
@@ -1285,4 +1285,3 @@ export default function MyDashboardClient() {
     </div>
   )
 }
-
