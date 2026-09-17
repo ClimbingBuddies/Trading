@@ -1,7 +1,7 @@
 # Daily Trading Controller
 
-**Specification version:** 1.3  
-**Last updated:** 13 September 2026  
+**Specification version:** 1.4
+**Last updated:** 17 September 2026
 **System:** Discover Boulders Markets / Trading  
 **Supabase project:** `glvbqcplgjdfgjyknzsa`
 
@@ -53,6 +53,16 @@ Before executing a downstream stage, retrieve that stage's specification fresh. 
 
 ## Stage eligibility
 
+### Readiness and completion contract
+
+Retrieve `automation/daily-reviewer-playbook.md` and `scripts/daily-reviewer-preflight.sql` fresh alongside this specification. Run the read-only preflight before creating a new Market Assessment run. Save its per-instrument findings with the invocation report; a successful history job does not prove research or Decision Lab completion.
+
+Before freezing a research cutoff, verify the required raw prices have arrived for the target completed sessions. Queue missing price history first, using the existing idempotent history queue, and wait for a later invocation to recheck. Data maintenance is not an analytical stage. Permanent identity/provider limitations must be explicitly accounted for as blocked instruments; they must not silently disappear or indefinitely prevent supported instruments from progressing under a truthful partial run.
+
+Preserve the existing subsystem date/lifecycle rules. Record exchange session dates separately from wall-clock execution. Do not reinterpret a later New York date as permission to create a duplicate historical run. Recovery that cannot fit the existing lifecycle remains explicitly blocked until the next legitimate run. Never move a frozen cutoff or backdate decisions to admit later-loaded prices.
+
+Before reporting completion, run all eight evidence checks in the playbook. Store PASS, FAIL or UNVERIFIED with evidence for each. A terminal partial assessment permits downstream processing of eligible instruments but does not mean the daily pipeline is complete.
+
 ### A. Daily Opportunity Assessment
 
 Due once per current Australia/Perth date, beginning at or after the first 04:30 Perth controller invocation.
@@ -84,6 +94,7 @@ Due only when:
 
 - the applicable America/New_York date is a scheduled production weekday;
 - current New York time is at or after **18:15**; and
+- required price ingestion has passed the readiness contract above, with unsupported instruments explicitly accounted for; and
 - External Opinion for that New York date is terminal.
 
 At the first controller invocation meeting those conditions, inspect persisted Market Assessment state according to `automation/daily-market-assessment.md`.
@@ -119,7 +130,7 @@ After the applicable Market Assessment is terminal, retrieve automation/daily-pe
 This is an analytical stage: execute it in the next eligible invocation, preserving the one-analytical-stage limit. Prioritize unfinished eligible recommendations over non-analytical history cleanup once Market Assessment is terminal.
 Generate a current call for every eligible enrolled owner's watched share or open journal. Preserve its original call and append dated updates; weekly/monthly are performance checkpoints, never forced sell dates. Blocked input rows retain their exact coverage/freshness reason and may be retried after valid recovery. Never substitute fixed timing or claim blocked forecasts were published.
 This stage consumes completed independent Market Assessment output; it does not change Opportunity, External Opinion or Market Assessment methodology.
-The existing 04:30–09:30 Perth cadence is unchanged. Recommendations normally run at 07:30 during US daylight saving, or 08:30 during standard time, after Market Assessment. Already-published owner/assessment/horizon rows are idempotently skipped.
+The existing 04:30–09:30 Perth cadence is unchanged. Readiness determines actual stage timing; do not promise a fixed recommendation hour. Already-published owner/assessment AI events are idempotently skipped under Decision Journal v3.
 
 ## Per-invocation behaviour
 
@@ -201,10 +212,11 @@ The final morning state should summarise:
 - unresolved mapping/validation items;
 - minimum Owner action actually required.
 
-If everything completed normally, say that the Daily Trading pipeline completed normally.
+Only say that the Daily Trading pipeline completed normally when every required completion check passed. Otherwise report partial, blocked or failed, with the affected ticker, exact reason, evidence and next recovery action. Do not count UNVERIFIED checks as passed.
 
 ## Operating principle
 
 The Daily Trading Controller is one scheduled orchestrator, not a fourth analytical opinion.
 
 Its job is to execute the right independent subsystem at the right time, using durable state to avoid duplicates, then leave the morning Trading data reconciled and observable.
+
