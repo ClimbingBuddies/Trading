@@ -54,4 +54,3 @@ begin
  raise notice 'PASS: SQL reference open/checkpoints, buy-hold-sell/costs, terminal replay, wait, pending, no calendar, missing entry, withdrawal, pinned revision, corporate action, open replay';
 end $$;
 rollback;
-

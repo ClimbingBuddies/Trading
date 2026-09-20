@@ -126,4 +126,3 @@ begin
 end $$;
 revoke all on function private.shared_reference_add_v1(jsonb,jsonb,text),private.shared_reference_pair_v1(jsonb,jsonb),private.shared_paper_reference_v1(jsonb) from public,anon,authenticated,service_role;
 commit;
-

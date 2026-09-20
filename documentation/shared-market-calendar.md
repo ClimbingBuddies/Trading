@@ -31,4 +31,3 @@ No ASX calendar is promoted here: historical phase applicability, early-day auct
 ## Verification
 
 Run Node --test tests/shared-market-calendar.test.mjs. Fourteen checks cover full explicit coverage, missing dates, tampering, expired trust, DST in both hemispheres, holiday/early-close handling, provider mapping, daily timestamp attribution, missing adjusted prices, duplicates and availability times. Passing these does not prove live provider semantics or live SQL integration.
-
