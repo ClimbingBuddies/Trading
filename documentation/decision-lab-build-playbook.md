@@ -72,10 +72,10 @@ Estimates are focused engineering effort, not a promised wall-clock duration. Th
 | --- | --- | --- | --- |
 | M0 — baseline and schema review | Reconcile deployed schema with source and preserve dirty worktree; check new schema supports cycles, unchanged reviews and evidence lineage | Foundation installed; initial privacy/immutability tests passed | 1–2 hours |
 | M1 — data readiness | Verified US/ASX mappings and benchmark instruments; session-aware freshness; repeatable recovery and explicit blockers | Not implemented for shared calls | 3–5 hours |
-| M2 — shared publication | Deduplicated universe, exact input hashes, validated publication, append-only reviews, database overlap protection | Tables exist; publisher and shared queue absent | 4–6 hours |
-| M3 — paper evaluation | Entries, exits, marks and 5/20-session checkpoints reproduce from pinned evidence and costs | Local engine has 18 passing self-run tests; independent review and database integration outstanding | 4–6 hours |
+| M2 — shared publication | Deduplicated universe, exact input hashes, validated publication, append-only reviews, database overlap protection | Publisher and shared candidate function installed; full successful publication acceptance pending | 4–6 hours |
+| M3 — paper evaluation | Entries, exits, marks and 5/20-session checkpoints reproduce from pinned evidence and costs | Local engine independently tested (28 tests); adapter and database integration in progress | 4–6 hours |
 | M4 — controller integration | After-close routing for US and ASX, readiness before cutoff, retries, durable per-ticker completion, unchanged-review handling | Older controller active; redesign draft only | 3–5 hours |
-| M5 — approved interface | Shared table, watched filter, detail drawer, private notes, blockers, evidence and legacy access | Existing interface is owner-specific | 3–5 hours |
+| M5 — approved interface | Shared table, watched filter, detail drawer, private notes, blockers, evidence and legacy access | Shared UI built locally; real legacy drawer browser-checked; genuine shared record acceptance pending | 3–5 hours |
 | M6 — release verification | Privacy, concurrency, paper arithmetic, browser checks, migration/deployment recovery and first live pipeline run | Outstanding | 3–5 hours |
 | **Total** | **Implementation and verification** | **Estimate, not completed work** | **21–34 hours** |
 
