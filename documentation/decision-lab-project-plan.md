@@ -9,9 +9,9 @@ Updated 20 September 2026. Authoritative build status; development controller ow
 | ENG1 | Independent review of local mechanics | Existing engine | accepted | Independent tester: 21 repository + 7 adversarial tests passed. Reviewer verified chronology/calendar fixes at SHA256 F41783DD0C84F4240F704EE1F681E5627572149221A27CF949CB49017BF6FCA2. Local mechanics only; not DB integration. |
 | ENG2 | Trusted publisher and persistence adapter | C1, ENG1 fixes | in_progress | Private hash-bound publisher/candidate functions installed; privilege/registry/missing-assessment checks pass. Review-version invalidation installed and rollback-tested. JS adapter independently accepted locally: 29 adapter tests plus 28 engine tests pass. Outcome writes gated until trusted calendar and atomic DB read/commit transports pass. |
 | D1 | Approved dashboard table and drawer | C1 | awaiting_review | Shared UI built and signed-in empty state verified on localhost:3001. TypeScript/palette checks pass. Read API rollback tests pass; populated drawer and two-user browser acceptance remain. |
-| DATA1 | Data/session/benchmark readiness | C1 | queued | Supported US/ASX inputs validated; unsupported shares explicitly blocked; no guessed benchmark/currency. |
+| DATA1 | Data/session/benchmark readiness | C1 | in_progress | Nasdaq 2026 calendar and five Tiingo conventions installed and tested. ASX and cross-venue benchmarks remain blocked; provider evidence mismatches withheld. |
 | I1 | Dashboard + mechanics integration | ENG2, DATA1, D1 | in_progress | Authenticated read projections installed and tested; live page reconciles zero calls and seven pending shares. No genuine shared call or persisted outcome yet. |
-| S1 | Scheduled trading integration | I1 | queued | Existing controller/evaluator updated without duplicate ownership; run/spec IDs and recovery behavior verified. |
+| S1 | Scheduled trading integration | I1 | in_progress | Private audited runner installed and rollback-tested. Local controller v1.5 release candidate saved; actual schedule has NOT adopted it. |
 | A1 | Stage 1 acceptance | S1, independent test/review | queued | All required acceptance checks evidenced, at least one genuine shared call displayed, every watched share accounted for. |
 | O1 | One-week observation | A1 | queued | Start/end dates recorded only after acceptance; no forced trades or invented results. |
 
@@ -36,3 +36,11 @@ C1/ENG1 accepted. D1 UI and authenticated read projections now integrated locall
 20 September execution resumed: bounded ENG2 implementation and independent review/testing dispatched. This is active task execution, not an autonomous background schedule. Database review-version race fixed with migration shared_review_evaluation_version; rollback checks passed. Live read-only audit found no calendar/session tables in public/private; trusted calendar import remains a prerequisite.
 
 Controller acceptance: local adapter checkpoint accepted at BD71025C7F47AAD315FFCDF0E61754137E9D3688E5777180F586229A316E5042; ENG2 overall remains in_progress. Next implement verified calendar storage/import and trusted database snapshot/atomic commit, then integration tests before removing gate.
+
+## 20 September 2026 - guarded persistence checkpoint
+
+ENG2 remains in_progress: database snapshot, independent SQL calculator, validator, atomic writer and audited runner are installed. Independent testing and review accepted the bounded persistence checkpoint; 94 local tests, 13 Node/Postgres parity cases and rollback SQL integration checks passed. Release remains disabled. See evidence log for exact scope.
+
+DATA1 is partial: verified published Nasdaq calendar (review expires 21 September 2026 14:28:15 UTC) and five Tiingo input conventions installed. No publisher configurations or genuine shared calls. Missing source evidence is withheld. ASX and cross-venue support remain blocked.
+
+Next: fresh published research and verified per-instrument publisher/benchmark configuration, independent release acceptance, adoption of the shared controller specification by the existing schedule, then one genuine scheduled run and populated browser verification. A1 remains queued; O1 has not started. No schedule or heartbeat changed.

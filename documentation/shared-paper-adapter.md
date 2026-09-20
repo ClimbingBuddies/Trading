@@ -72,8 +72,7 @@ without entry, fills inconsistent with Buy/Sell events, preentry/postexit marks,
 incorrect checkpoint session indices and records appended after terminal outcomes.
 The trusted DB writer must independently enforce these same lifecycle invariants.
 
-No live DB read/commit implementation, trusted calendar importer, enrollment or
-schedule wiring is included. The SQL outcome gate stays closed. Engine arithmetic
+A guarded DB snapshot/commit implementation and trusted Nasdaq calendar importer are now installed; see shared-paper-db.md and decision-lab-evidence-log.md. Enrollment and actual schedule adoption remain unfinished. The SQL outcome release gate stays closed. Engine arithmetic
 uses IEEE doubles; input decimals above 15 significant digits fail closed. Persisted
 return validation requires documented DB tolerance/rounding, not an arbitrary JSON
 write. The engine's REDUCE behavior remains unchanged (no partial fills).

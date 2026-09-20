@@ -1,7 +1,7 @@
 # Daily Trading Controller
 
-**Specification version:** 1.1  
-**Last updated:** 01 September 2026  
+**Specification version:** 1.5 (shared Decision Lab release candidate)
+**Last updated:** 20 September 2026
 **System:** Discover Boulders Markets / Trading  
 **Supabase project:** `glvbqcplgjdfgjyknzsa`
 
@@ -18,6 +18,7 @@ The downstream analytical specifications remain authoritative for methodology:
 3. `automation/daily-market-assessment.md`
 4. `documentation/pipelines/opportunity-exposure-history-cleanup.md`
 5. `documentation/pipelines/historical-market-data-backfill.md` when a provider seed is required
+6. `automation/daily-shared-decision-lab.md`
 
 Do not duplicate or paraphrase those methodologies here. Retrieve the applicable file fresh immediately before executing its stage.
 
@@ -52,6 +53,16 @@ Before executing a downstream stage, retrieve that stage's specification fresh. 
 
 ## Stage eligibility
 
+### Readiness and completion contract
+
+Retrieve `automation/daily-reviewer-playbook.md` and `scripts/daily-reviewer-preflight.sql` fresh alongside this specification. Run the read-only preflight before creating a new Market Assessment run. Save its per-instrument findings with the invocation report; a successful history job does not prove research or Decision Lab completion.
+
+Before freezing a research cutoff, verify the required raw prices have arrived for the target completed sessions. Queue missing price history first, using the existing idempotent history queue, and wait for a later invocation to recheck. Data maintenance is not an analytical stage. Permanent identity/provider limitations must be explicitly accounted for as blocked instruments; they must not silently disappear or indefinitely prevent supported instruments from progressing under a truthful partial run.
+
+Preserve the existing subsystem date/lifecycle rules. Record exchange session dates separately from wall-clock execution. Do not reinterpret a later New York date as permission to create a duplicate historical run. Recovery that cannot fit the existing lifecycle remains explicitly blocked until the next legitimate run. Never move a frozen cutoff or backdate decisions to admit later-loaded prices.
+
+Before reporting completion, run all eight evidence checks in the playbook. Store PASS, FAIL or UNVERIFIED with evidence for each. A terminal partial assessment permits downstream processing of eligible instruments but does not mean the daily pipeline is complete.
+
 ### A. Daily Opportunity Assessment
 
 Due once per current Australia/Perth date, beginning at or after the first 04:30 Perth controller invocation.
@@ -83,6 +94,7 @@ Due only when:
 
 - the applicable America/New_York date is a scheduled production weekday;
 - current New York time is at or after **18:15**; and
+- required price ingestion has passed the readiness contract above, with unsupported instruments explicitly accounted for; and
 - External Opinion for that New York date is terminal.
 
 At the first controller invocation meeting those conditions, inspect persisted Market Assessment state according to `automation/daily-market-assessment.md`.
@@ -112,6 +124,16 @@ For external Opportunity exposures, preserve the approved history-only boundary:
 - do not set them permanently active;
 - ambiguous or unsupported provider identities become `mapping_required`, never guesses.
 
+## Shared Decision Lab stage (after C)
+
+The owner-specific Personal Recommendations stage is superseded. Preserve existing personal records, but do not publish new owner-specific recommendations from this controller.
+
+Retrieve `automation/daily-shared-decision-lab.md` fresh and follow its release/readiness gates. This stage researches the distinct union of watched instruments plus open shared calls once per instrument; personal notes must never enter shared research or performance. Supported instruments proceed individually; explicitly report unsupported inputs.
+
+Publication is an analytical stage subject to the existing one-stage-per-invocation limit. Deterministic evaluation is separate: run the private shared evaluator in a SERIALIZABLE transaction only after its release gate is accepted. Existing original calls remain locked; append dated reviews. A WAIT is a valid call, not an instruction to force a position. Weekly/monthly checkpoints never force a sale.
+
+This specification is a release candidate until the shared stage acceptance and deployed source revision are recorded. If the release gate is disabled, report `SHARED_EVALUATOR_ADAPTER_NOT_VERIFIED`; continue the independent upstream stages and do not fall back to personal recommendations or bypass the gate. The existing 04:30-09:30 Perth cadence and analytical independence are unchanged.
+
 ## Per-invocation behaviour
 
 On every controller invocation:
@@ -119,7 +141,7 @@ On every controller invocation:
 1. retrieve this file fresh;
 2. verify Trading Supabase access;
 3. calculate current Perth and New York timezone-aware date/time;
-4. inspect persisted states for Opportunity, External Opinion, Market Assessment and Opportunity-history cleanup;
+4. inspect persisted states for Opportunity, External Opinion, Market Assessment, shared Decision Lab and Opportunity-history cleanup;
 5. determine the earliest eligible unfinished stage;
 6. execute **at most one analytical stage** in that invocation;
 7. after a Market Assessment execution completes, history cleanup may also be started in the same invocation if every prerequisite is now terminal and doing so is safe;
@@ -185,13 +207,14 @@ The final morning state should summarise:
 - Opportunity status;
 - External Opinion status;
 - Market Assessment status;
+- Shared Decision Lab published/reviewed/evaluated/blocked counts and concrete missing-data reasons;
 - Opportunity Exposure History Cleanup status;
 - any recovery/resume performed;
 - newly queued or completed history symbols;
 - unresolved mapping/validation items;
 - minimum Owner action actually required.
 
-If everything completed normally, say that the Daily Trading pipeline completed normally.
+Only say that the Daily Trading pipeline completed normally when every required completion check passed. Otherwise report partial, blocked or failed, with the affected ticker, exact reason, evidence and next recovery action. Do not count UNVERIFIED checks as passed.
 
 ## Operating principle
 
