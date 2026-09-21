@@ -7,11 +7,13 @@ import type { User } from '@supabase/supabase-js'
 import { getBrowserSupabase } from '@/lib/supabase-browser'
 import { parseHoldingsCsv, type HoldingsCsvValue } from '@/lib/portfolio-holdings-csv.mjs'
 import styles from './MyDashboardClient.module.css'
+import PredictionWorkspace from './PredictionWorkspace'
+import SharedDecisionWorkspace from './SharedDecisionWorkspace'
+import WatchlistsClient from './WatchlistsClient'
 
 const tabs = [
   { key: 'today', label: 'Today' },
   { key: 'recommendations', label: 'Recommendations' },
-  { key: 'watchlists', label: 'Watchlists' },
   { key: 'opportunities', label: 'Opportunities' },
   { key: 'portfolio-health', label: 'Portfolio Health' },
   { key: 'decision-lab', label: 'Decision Lab' },
@@ -69,6 +71,7 @@ type PortfolioHealthSnapshot = {
 }
 type PortfolioHealthState = 'idle' | 'loading' | 'ready' | 'error'
 type PortfolioHealthErrorAction = 'load' | 'refresh'
+type PortfolioAction = 'create' | 'position' | 'import' | 'manage' | 'methodology' | null
 type RecommendationSource = {
   recommendation_id: string
   source_family: 'MARKET_AI' | 'TECHNICAL' | 'OPPORTUNITY' | 'EXTERNAL_FACT'
@@ -175,7 +178,8 @@ function permanentUser(user: User | null | undefined) {
 }
 
 function validTab(value: string | null): TabKey {
-  return tabs.some((tab) => tab.key === value) ? (value as TabKey) : 'today'
+  if (value === 'watchlists') return 'recommendations'
+  return tabs.some((tab) => tab.key === value) ? (value as TabKey) : 'recommendations'
 }
 
 function validPortfolioHealthSnapshot(value: unknown): value is PortfolioHealthSnapshot {
@@ -319,6 +323,8 @@ export default function MyDashboardClient() {
   const [healthState, setHealthState] = useState<PortfolioHealthState>('idle')
   const [healthError, setHealthError] = useState('')
   const [healthErrorAction, setHealthErrorAction] = useState<PortfolioHealthErrorAction>('load')
+  const [portfolioAction, setPortfolioAction] = useState<PortfolioAction>(null)
+  const [portfolioSearch, setPortfolioSearch] = useState('')
   const [recommendations, setRecommendations] = useState<RecommendationSnapshot[]>([])
   const [recommendationState, setRecommendationState] = useState<RecommendationState>('idle')
   const [recommendationError, setRecommendationError] = useState('')
@@ -367,6 +373,8 @@ export default function MyDashboardClient() {
     setHealthState('idle')
     setHealthError('')
     setHealthErrorAction('load')
+    setPortfolioAction(null)
+    setPortfolioSearch('')
     setRecommendations([])
     setRecommendationState('idle')
     setRecommendationError('')
@@ -1091,15 +1099,21 @@ export default function MyDashboardClient() {
     ? null
     : Number(selectedHealthSnapshot.total_value)
   const completeness = selectedHealthSnapshot ? Number(selectedHealthSnapshot.completeness_pct) : null
+  const selectedPortfolioPositions = positions.filter((position) => position.portfolio_id === healthPortfolioId)
+  const missingThemeCount = selectedHealthSnapshot?.completeness_reasons.filter((reason) => reason.startsWith('MISSING_THEME_MAPPING_EVIDENCE')).length ?? 0
+  const pricingGapCodes = ['MISSING_PRICE', 'MISSING_FX', 'MISSING_INSTRUMENT_CURRENCY', 'MISSING_FRESHNESS']
+  const pricingGapCount = selectedHealthSnapshot?.completeness_reasons.filter((reason) => pricingGapCodes.some((code) => reason.startsWith(code))).length ?? 0
+  const researchCoveredCount = Math.max(0, selectedPortfolioPositions.length - missingThemeCount)
+  const visiblePortfolioPositions = selectedPortfolioPositions.filter((position) => {
+    const instrument = instruments.find((item) => item.id === position.instrument_id)
+    const search = portfolioSearch.trim().toLowerCase()
+    return !search || instrument?.symbol.toLowerCase().includes(search) || instrument?.instrument_name.toLowerCase().includes(search)
+  })
 
   return (
     <div className={styles.dashboard}>
       <header className={styles.header}>
-        <div><span className={styles.eyebrow}>PERSONAL MARKET WORKSPACE</span><h1>My Dashboard</h1><p className={styles.lede}>Your private research overview. Stored data, source evidence and later inference stay distinct.</p></div>
-        <div className={styles.accountActions}>
-          <span>Signed in as <strong>{user.email ?? 'authenticated user'}</strong></span>
-          <button className={styles.secondaryButton} onClick={signOut}>Sign out</button>
-        </div>
+        <h1 className={styles.srOnly}>My Dashboard</h1>
       </header>
 
       <div className={styles.tabScroller}>
@@ -1112,7 +1126,11 @@ export default function MyDashboardClient() {
       {status && <div className={styles.status} role="status">{status}</div>}
 
       <section id={`my-dashboard-panel-${selectedTab}`} role="tabpanel" aria-labelledby={`my-dashboard-tab-${selectedTab}`} tabIndex={0}>
-        {privateDataState === 'error' ? (
+        {selectedTab === 'recommendations' ? (
+          <WatchlistsClient key={user.id} ownerId={user.id} embedded />
+        ) : selectedTab === 'decision-lab' ? (
+          <><SharedDecisionWorkspace key={user.id} /><details><summary>Legacy personal Decision Lab</summary><PredictionWorkspace key={user.id} ownerId={user.id} mode="decision-lab" /></details></>
+        ) : privateDataState === 'error' ? (
           <article className={styles.stateCard} aria-live="assertive">
             <span className={styles.eyebrow}>PRIVATE DATA UNAVAILABLE</span>
             <h2>My Dashboard could not be loaded</h2>
@@ -1149,47 +1167,65 @@ export default function MyDashboardClient() {
                 <p className={styles.disclosure}>These settings organise research presentation only. They are not a suitability assessment or permission to trade.</p>
               </article>
             </div>
-        ) : selectedTab === 'recommendations' ? (
-          <div className={styles.todayGrid} aria-busy={recommendationState === 'loading'}>
-            <article className={styles.panel}>
-              <div className={styles.panelHeading}><div><span className={styles.eyebrow}>PERSONAL RESEARCH</span><h2>Explainable recommendations</h2></div><span>{recommendationState === 'ready' ? `${recommendations.filter((item) => item.latestEvent !== 'dismiss').length} current` : 'Loading'}</span></div>
-              <p className={styles.disclosure}>These are immutable research-relevance snapshots, not financial advice or Buy/Sell instructions. Opportunity evidence can explain relevance but never creates a short-term action label by itself.</p>
-            </article>
-            {recommendationState === 'error' ? (
-              <article className={styles.stateCard} role="alert"><span className={styles.eyebrow}>RECOMMENDATIONS UNAVAILABLE</span><h2>Private recommendations could not be loaded</h2><p>{recommendationError}</p><button type="button" onClick={() => loadPrivateData(user.id)}>Try again</button></article>
-            ) : recommendationState !== 'ready' ? (
-              <article className={styles.stateCard} role="status" aria-busy="true"><span className={styles.eyebrow}>PRIVATE RESEARCH</span><h2>Loading recommendation snapshots…</h2><p>Cards remain hidden until their snapshot, provenance and feedback history load together.</p></article>
-            ) : recommendations.filter((item) => item.latestEvent !== 'dismiss').length === 0 ? (
-              <article className={styles.stateCard} role="status"><span className={styles.eyebrow}>NO CURRENT SHORTLIST</span><h2>No supported recommendation is available</h2><p>No recommendation is invented from Opportunity alone, momentum, one indicator, stale evidence or an unsupported model opinion.</p></article>
-            ) : recommendations.filter((item) => item.latestEvent !== 'dismiss').map((recommendation) => {
-              const instrument = instruments.find((item) => item.id === recommendation.instrument_id)
-              const confidence = recommendation.confidence === null ? null : Number(recommendation.confidence)
-              return (
-                <article className={styles.recommendationCard} key={recommendation.id}>
-                  <div className={styles.panelHeading}><div><span className={styles.eyebrow}>{recommendation.category.replaceAll('_', ' ')}</span><h2>{instrument?.symbol ?? 'Instrument unavailable'} · {recommendation.intended_horizon_sessions} sessions</h2></div><span>{recommendation.quality_status.replaceAll('_', ' ')}</span></div>
-                  <p className={styles.recommendationThesis}>{recommendation.thesis}</p>
-                  <div className={styles.recommendationFacts}><div><span>Confidence</span><strong>{confidence === null ? 'Not provided' : `${Math.round(confidence * 100)}%`}</strong></div><div><span>Evidence cutoff</span><strong>{new Date(recommendation.source_cutoff).toLocaleString()}</strong></div><div><span>Valid until</span><strong>{recommendation.valid_until ? new Date(recommendation.valid_until).toLocaleString() : 'No expiry asserted'}</strong></div></div>
-                  <section className={styles.riskBox} aria-label="Principal risks"><strong>Principal risks</strong><p>{recommendation.principal_risks}</p></section>
-                  <section><strong>Why this is relevant</strong><ul className={styles.reasonList}>{recommendation.relevance_reasons.map((reason) => <li key={reason}>{reason}</li>)}</ul></section>
-                  {recommendation.quality_reasons.length ? <section className={styles.incomplete}><strong>Evidence limitations</strong><ul>{recommendation.quality_reasons.map((reason) => <li key={reason}>{reason.replaceAll('_', ' ')}</li>)}</ul></section> : null}
-                  <section className={styles.sourceGroups} aria-label="Separated recommendation evidence">
-                    {(['MARKET_AI', 'TECHNICAL', 'OPPORTUNITY', 'EXTERNAL_FACT'] as const).map((family) => {
-                      const familySources = recommendation.sources.filter((source) => source.source_family === family)
-                      if (!familySources.length) return null
-                      return <div key={family}><strong>{family.replaceAll('_', ' ')}</strong>{familySources.map((source) => <p key={`${source.source_table}:${source.source_record_key}`}>{source.relevance}<small>Cutoff {new Date(source.source_cutoff).toLocaleString()} · {source.methodology_version}</small></p>)}</div>
-                    })}
-                  </section>
-                  <dl className={styles.provenance}><div><dt>Snapshot methodology</dt><dd>{recommendation.methodology_version}</dd></div><div><dt>Model</dt><dd>{recommendation.model_identity ?? 'No AI model asserted'}</dd></div><div><dt>Source identity</dt><dd>{recommendation.source_hash.slice(0, 12)}…</dd></div></dl>
-                  <div className={styles.recommendationActions}><Link href={instrument ? `/markets/${encodeURIComponent(instrument.symbol)}` : '/markets'}>Open research</Link><button type="button" onClick={() => void appendRecommendationEvent(recommendation.id, 'watch')} disabled={recommendationBusyId === recommendation.id}>Watch</button><button type="button" onClick={() => void appendRecommendationEvent(recommendation.id, 'feedback')} disabled={recommendationBusyId === recommendation.id}>Relevant</button><button type="button" className={styles.secondaryButton} onClick={() => void appendRecommendationEvent(recommendation.id, 'dismiss')} disabled={recommendationBusyId === recommendation.id}>Dismiss</button><button type="button" className={styles.secondaryButton} onClick={() => selectTab('decision-lab')} title="Open the separately governed Decision Lab">Open Decision Lab</button></div>
-                  {recommendation.latestEvent ? <p className={styles.disclosure}>Latest separate event: {recommendation.latestEvent}. The snapshot and its source assessments remain unchanged.</p> : null}
-                </article>
-              )
-            })}
-          </div>
         ) : selectedTab === 'portfolio-health' ? (
-          <div className={styles.todayGrid} aria-busy={loading}>
-            <article className={styles.panel} aria-busy={healthState === 'loading'}>
-              <div className={styles.panelHeading}><div><span className={styles.eyebrow}>CALCULATED HEALTH</span><h2>Persisted portfolio snapshot</h2></div><span>{healthState === 'loading' ? 'Refreshing…' : selectedHealthSnapshot?.summary_status.replaceAll('_', ' ') ?? 'No snapshot'}</span></div>
+          <div className={styles.portfolioWorkspace} aria-busy={loading}>
+            <section className={styles.portfolioOverview} aria-label="Portfolio health overview">
+              <div className={styles.portfolioToolbar}>
+                <div>
+                  <h2>Portfolio Health</h2>
+                </div>
+                <div className={styles.portfolioToolbarActions}>
+                  <label><span className={styles.srOnly}>Portfolio</span><select value={healthPortfolioId} onChange={(event) => { setHealthPortfolioId(event.target.value); setHealthError('') }}>{portfolios.filter((portfolio) => portfolio.status === 'active').map((portfolio) => <option key={portfolio.id} value={portfolio.id}>{portfolio.name}</option>)}</select></label>
+                  <button type="button" className={styles.secondaryButton} onClick={refreshPortfolioHealth} disabled={healthState === 'loading' || !healthPortfolioId}>{healthState === 'loading' ? 'Refreshing…' : 'Refresh'}</button>
+                  <details className={styles.portfolioActionsMenu}>
+                    <summary>Actions <span aria-hidden="true">⌄</span></summary>
+                    <div role="menu" aria-label="Portfolio actions">
+                      <button role="menuitem" type="button" onClick={(event) => { setPortfolioAction('position'); event.currentTarget.closest('details')?.removeAttribute('open') }}>Add holding</button>
+                      <button role="menuitem" type="button" onClick={(event) => { setPortfolioAction('import'); event.currentTarget.closest('details')?.removeAttribute('open') }}>Import CSV</button>
+                      <button role="menuitem" type="button" onClick={(event) => { setPortfolioAction('create'); event.currentTarget.closest('details')?.removeAttribute('open') }}>Create portfolio</button>
+                      <button role="menuitem" type="button" onClick={(event) => { setPortfolioAction('manage'); event.currentTarget.closest('details')?.removeAttribute('open') }}>Manage portfolios</button>
+                      <button role="menuitem" type="button" onClick={(event) => { setPortfolioAction('methodology'); event.currentTarget.closest('details')?.removeAttribute('open') }}>Data &amp; methodology</button>
+                    </div>
+                  </details>
+                </div>
+              </div>
+
+              {healthState === 'error' ? (
+                <div className={styles.error} role="alert"><strong>Portfolio health unavailable</strong><span>{healthError}</span><button type="button" onClick={() => healthErrorAction === 'load' ? loadPrivateData(user.id) : refreshPortfolioHealth()} disabled={healthErrorAction === 'refresh' && !healthPortfolioId}>{healthErrorAction === 'load' ? 'Reload private data' : 'Try refresh again'}</button></div>
+              ) : (
+                <>
+                  <div className={styles.portfolioMetricGrid}>
+                    <div className={styles.portfolioValueMetric}><span>Total portfolio value</span><strong>{totalValue !== null && Number.isFinite(totalValue) && selectedHealthSnapshot ? new Intl.NumberFormat(undefined, { style: 'currency', currency: selectedHealthSnapshot.base_currency }).format(totalValue) : 'Incomplete'}</strong></div>
+                    <div><strong>{selectedPortfolioPositions.length}</strong><span>holdings</span></div>
+                    <div><strong>{pricingGapCount === 0 ? 'Complete' : `${pricingGapCount} gaps`}</strong><span>Pricing evidence</span></div>
+                    <div><strong>{researchCoveredCount} of {selectedPortfolioPositions.length}</strong><span>Research coverage</span></div>
+                  </div>
+                  {missingThemeCount > 0 ? <button type="button" className={styles.coverageNotice} onClick={() => setPortfolioAction('methodology')}><span><strong>{missingThemeCount} holdings</strong> not linked to an Opportunity theme</span><span>View details →</span></button> : null}
+                </>
+              )}
+
+              <div className={styles.holdingsHeader}>
+                <div><h3>Holdings</h3><span>{visiblePortfolioPositions.length} shown</span></div>
+                <label className={styles.holdingsSearch}><span className={styles.srOnly}>Search holdings</span><input type="search" value={portfolioSearch} onChange={(event) => setPortfolioSearch(event.target.value)} placeholder="Search holdings" /></label>
+              </div>
+              {visiblePortfolioPositions.length ? (
+                <div className={styles.holdingsTableWrap}>
+                  <table className={styles.holdingsTable}>
+                    <thead><tr><th>Share</th><th>Quantity</th><th>Saved cost basis</th><th>Research status</th></tr></thead>
+                    <tbody>{visiblePortfolioPositions.map((position) => {
+                      const instrument = instruments.find((item) => item.id === position.instrument_id)
+                      const lacksTheme = selectedHealthSnapshot?.completeness_reasons.some((reason) => reason === `MISSING_THEME_MAPPING_EVIDENCE:${position.id}`) ?? false
+                      return <tr key={position.id}><td><strong>{instrument?.symbol ?? 'Unresolved'}</strong><span>{instrument?.instrument_name ?? 'Instrument details unavailable'}</span></td><td>{position.quantity}</td><td>{position.average_cost_per_unit === null ? <span className={styles.mutedValue}>Incomplete</span> : `${position.cost_currency} ${position.average_cost_per_unit}`}</td><td><span className={lacksTheme ? styles.statusMuted : styles.statusCovered}>{lacksTheme ? 'Not linked' : 'Covered'}</span></td></tr>
+                    })}</tbody>
+                  </table>
+                </div>
+              ) : <div className={styles.empty}><strong>No matching holdings.</strong><p>Try a different search or add a holding from the Actions menu.</p></div>}
+            </section>
+
+            {portfolioAction ? <div className={styles.actionPanelHeader}><strong>{portfolioAction === 'position' ? 'Add holding' : portfolioAction === 'import' ? 'Import CSV' : portfolioAction === 'create' ? 'Create portfolio' : portfolioAction === 'manage' ? 'Manage portfolios' : 'Data & methodology'}</strong><button type="button" onClick={() => setPortfolioAction(null)} aria-label="Close portfolio action">Close</button></div> : null}
+
+            <article className={`${styles.panel} ${portfolioAction === 'methodology' ? '' : styles.hiddenPanel}`} aria-busy={healthState === 'loading'}>
+              <div className={styles.panelHeading}><div><span className={styles.eyebrow}>DATA &amp; METHODOLOGY</span><h2>Source evidence</h2></div><span>{healthState === 'loading' ? 'Refreshing…' : selectedHealthSnapshot?.summary_status.replaceAll('_', ' ') ?? 'No snapshot'}</span></div>
               {portfolios.filter((portfolio) => portfolio.status === 'active').length === 0 ? (
                 <div className={styles.empty}><strong>No calculated health is available.</strong><p>Create an active private portfolio first. No values or conclusions are fabricated.</p></div>
               ) : (
@@ -1217,7 +1253,7 @@ export default function MyDashboardClient() {
               )}
               <p className={styles.disclosure}>Calculated measures come only from a persisted trusted result with source provenance. Missing issuer, calendar, price, currency or cost evidence remains explicitly incomplete.</p>
             </article>
-            <article className={styles.panel}>
+            <article className={`${styles.panel} ${portfolioAction === 'manage' ? '' : styles.hiddenPanel}`}>
               <div className={styles.panelHeading}><div><span className={styles.eyebrow}>PORTFOLIO HEALTH</span><h2>Your private portfolios</h2></div><span>{portfolios.length} stored</span></div>
               {portfolios.length ? (
                 <ul className={styles.portfolioList}>
@@ -1233,7 +1269,7 @@ export default function MyDashboardClient() {
               )}
               <p className={styles.disclosure}>Portfolio Health is for private research and paper tracking only. It cannot place trades or connect to a broker.</p>
             </article>
-            <article className={styles.panel}>
+            <article className={`${styles.panel} ${portfolioAction === 'create' ? '' : styles.hiddenPanel}`}>
               <div className={styles.panelHeading}><div><span className={styles.eyebrow}>ADD PORTFOLIO</span><h2>Create a private portfolio</h2></div><span>Owner only</span></div>
               <form className={styles.portfolioForm} onSubmit={createPortfolio}>
                 <label>Portfolio name<input value={portfolioName} onChange={(event) => setPortfolioName(event.target.value)} maxLength={120} placeholder="Long-term research" required /></label>
@@ -1243,7 +1279,7 @@ export default function MyDashboardClient() {
               </form>
               <p className={styles.disclosure}>Creating a portfolio stores only its private header. It does not add holdings, calculate performance or place a trade.</p>
             </article>
-            <article className={styles.panel}>
+            <article className={`${styles.panel} ${portfolioAction === 'position' ? '' : styles.hiddenPanel}`}>
               <div className={styles.panelHeading}><div><span className={styles.eyebrow}>ADD POSITION</span><h2>Enter a manual holding</h2></div><span>Private input</span></div>
               {portfolios.length === 0 ? (
                 <div className={styles.empty}><strong>Create a portfolio first.</strong><p>A position must belong to one of your private portfolios.</p></div>
@@ -1261,7 +1297,7 @@ export default function MyDashboardClient() {
               )}
               <p className={styles.disclosure}>A blank cost basis remains explicitly incomplete. Saving a position never places an order or contacts a broker.</p>
             </article>
-            <article className={styles.panel}>
+            <article className={`${styles.panel} ${portfolioAction === 'import' ? '' : styles.hiddenPanel}`}>
               <div className={styles.panelHeading}><div><span className={styles.eyebrow}>IMPORT HOLDINGS</span><h2>Preview a private CSV</h2></div><span>Optional</span></div>
               {portfolios.some((portfolio) => portfolio.status === 'active' && portfolio.portfolio_kind === 'manual') ? (
                 <div className={styles.csvImport}>
@@ -1284,7 +1320,7 @@ export default function MyDashboardClient() {
               ) : <div className={styles.empty}><strong>Create an active manual portfolio first.</strong><p>CSV imports cannot target paper or archived portfolios.</p></div>}
               <p className={styles.disclosure}>Use only the canonical columns: symbol, exchange_code, quantity, average_cost_per_unit, cost_currency, acquired_at and notes. Broker/account fields are rejected. Previewing never writes; confirmation is atomic and never places a trade.</p>
             </article>
-            <article className={styles.panel}>
+            <article className={`${styles.panel} ${styles.hiddenPanel}`}>
               <div className={styles.panelHeading}><div><span className={styles.eyebrow}>POSITIONS</span><h2>Stored holdings</h2></div><span>{positions.length} stored</span></div>
               {positions.length ? (
                 <ul className={styles.positionList}>
@@ -1302,67 +1338,6 @@ export default function MyDashboardClient() {
               ) : (
                 <div className={styles.empty}><strong>No positions have been saved.</strong><p>This is the current owner's real private empty state. Holdings and cost values are never inferred.</p></div>
               )}
-            </article>
-          </div>
-        ) : selectedTab === 'decision-lab' ? (
-          <div className={styles.todayGrid} aria-busy={decisionState === 'loading'}>
-            <article className={styles.panel}>
-              <div className={styles.panelHeading}><div><span className={styles.eyebrow}>USER PAPER CAPTURE</span><h2>Record a forward decision</h2></div><span>Server clock</span></div>
-              <form className={styles.decisionCaptureForm} onSubmit={captureUserPaperDecision}>
-                <label>Instrument<select value={decisionInstrumentId} onChange={(event) => setDecisionInstrumentId(event.target.value)} required><option value="">Choose instrument</option>{instruments.map((instrument) => <option key={instrument.id} value={instrument.id}>{instrument.symbol} — {instrument.instrument_name}</option>)}</select></label>
-                <label>Action<select value={decisionAction} onChange={(event) => setDecisionAction(event.target.value as PersonalDecision['action'])}>{(['BUY', 'WATCH', 'HOLD', 'PASS', 'AVOID'] as const).map((action) => <option key={action}>{action}</option>)}</select></label>
-                <label>Horizon<select value={decisionHorizon} onChange={(event) => setDecisionHorizon(Number(event.target.value) as 5 | 20 | 60)}><option value={5}>5 sessions</option><option value={20}>20 sessions</option><option value={60}>60 sessions</option></select></label>
-                <label className={styles.decisionNote}>Decision note <span className={styles.optional}>(optional)</span><textarea value={decisionNote} onChange={(event) => setDecisionNote(event.target.value)} maxLength={500} rows={3} /></label>
-                <button type="submit" disabled={decisionBusyKey !== null}>{decisionBusyKey === 'user-paper' ? 'Capturing…' : 'Capture paper decision'}</button>
-              </form>
-              <p className={styles.disclosure}>The database sets the decision time. V1 records a {baseCurrency} 1,000 paper notional with zero fee and slippage assumptions, no benchmark, and the next eligible daily close rule. It does not place an order.</p>
-            </article>
-            <article className={styles.panel}>
-              <div className={styles.panelHeading}><div><span className={styles.eyebrow}>ELIGIBLE AI SIGNALS</span><h2>Preserve an independent assessment</h2></div><span>Original cutoff</span></div>
-              <p>Only persisted Market AI lineage is offered. The database revalidates the succeeded independent assessment and derives its action, instrument, source snapshot and analysis cutoff.</p>
-              {recommendations.filter((recommendation) => recommendation.sources.some((source) => source.source_family === 'MARKET_AI' && eligibleAiDecisionSourceIds.has(source.source_record_key))).length ? (
-                <ul className={styles.decisionSourceList}>{recommendations.filter((recommendation) => recommendation.sources.some((source) => source.source_family === 'MARKET_AI' && eligibleAiDecisionSourceIds.has(source.source_record_key))).map((recommendation) => {
-                  const instrument = instruments.find((item) => item.id === recommendation.instrument_id)
-                  const source = recommendation.sources.find((item) => item.source_family === 'MARKET_AI')!
-                  const busyKey = `ai:${source.source_record_key}`
-                  return <li key={recommendation.id}><div><strong>{instrument?.symbol ?? 'Unresolved instrument'} · {recommendation.category.replaceAll('_', ' ')}</strong><span>Assessment cutoff {new Date(source.source_cutoff).toLocaleString()} · {source.methodology_version}</span></div><button type="button" disabled={decisionBusyKey !== null || decisions.some((decision) => decision.source_type === 'AI_SIGNAL' && decision.source_record_key === source.source_record_key)} onClick={() => void captureDecision({ sourceType: 'AI_SIGNAL', assessmentId: source.source_record_key, busyKey })}>{decisionBusyKey === busyKey ? 'Capturing…' : decisions.some((decision) => decision.source_type === 'AI_SIGNAL' && decision.source_record_key === source.source_record_key) ? 'Already captured' : 'Capture AI signal'}</button></li>
-                })}</ul>
-              ) : <div className={styles.empty}><strong>No contemporaneously eligible Market AI source is available.</strong><p>The database offers a source only after its run completes and before the first later canonical daily observation. Historical, future, missing-calendar and already-captured evidence remains unavailable. Technical, Opportunity and external-fact evidence cannot be promoted into an AI decision.</p></div>}
-            </article>
-            <article className={styles.panel}>
-              <div className={styles.panelHeading}><div><span className={styles.eyebrow}>FORWARD PAPER EVIDENCE</span><h2>Immutable personal decisions</h2></div><span>{decisionState === 'ready' ? `${decisions.length} stored` : 'Owner only'}</span></div>
-              <p>AI-signal decisions keep the original assessment cutoff. User-paper decisions keep the later user clock. They are never combined into one entry timestamp.</p>
-              {decisionState === 'error' ? (
-                <div className={styles.error} role="alert"><strong>Decision Lab unavailable</strong><span>{decisionError}</span><button type="button" onClick={() => void loadPrivateData(user.id)}>Reload private data</button></div>
-              ) : decisionState === 'loading' || decisionState === 'idle' ? (
-                <div className={styles.empty} role="status"><strong>Loading private decisions…</strong><p>No decision or result is shown until the complete owner-scoped read succeeds.</p></div>
-              ) : decisions.length === 0 ? (
-                <div className={styles.empty} role="status"><strong>No forward decisions have been captured.</strong><p>This is the current owner's real private empty state. Historical decisions and returns are not reconstructed.</p></div>
-              ) : (
-                <>
-                <div className={styles.recommendationFacts} aria-label="Separate decision evidence cohorts">
-                  {decisionCohorts.map((cohort) => <div key={cohort.sourceType}><span>{cohort.sourceType === 'AI_SIGNAL' ? 'AI-signal cohort' : 'User-paper cohort'}</span><strong>{cohort.evidenced}/{cohort.decisions} with forward evidence</strong><small>{cohort.completedBuyReturns.length ? `${formatReturn(cohort.completedBuyReturns.reduce((total, value) => total + value, 0) / cohort.completedBuyReturns.length)} mean completed BUY simulation · ${cohort.completedBuyReturns.length} outcome${cohort.completedBuyReturns.length === 1 ? '' : 's'}` : 'No completed BUY simulation available'}</small></div>)}
-                </div>
-                <p className={styles.disclosure}>Cohorts remain separate and are not ranked. Means use only the latest persisted configured-horizon or EXIT snapshot per BUY decision; unresolved and observational actions are excluded, not counted as zero.</p>
-                <ul className={styles.decisionList}>
-                  {decisions.map((decision) => {
-                    const instrument = instruments.find((item) => item.id === decision.instrument_id)
-                    const terminal = decision.events.find((event) => event.event_type === 'EXIT' || event.event_type === 'CANCEL')
-                    const hasPaperPosition = positions.some((position) => position.source_decision_id === decision.id)
-                    const lifecycle = terminal ? 'COMPLETED' : hasPaperPosition ? 'OPEN' : 'PENDING ENTRY'
-                    const snapshots = returnSnapshots.filter((snapshot) => snapshot.decision_id === decision.id)
-                    return <li key={decision.id}>
-                      <div className={styles.panelHeading}><div><span className={styles.eyebrow}>{decision.source_type.replaceAll('_', ' ')}</span><h3>{instrument?.symbol ?? 'Unresolved instrument'} · {decision.action}</h3></div><span>{lifecycle}</span></div>
-                      <div className={styles.recommendationFacts}><div><span>Decision clock</span><strong>{new Date(decision.decision_at).toLocaleString()}</strong></div><div><span>Source cutoff</span><strong>{new Date(decision.source_cutoff).toLocaleString()}</strong></div><div><span>Horizon</span><strong>{decision.horizon_sessions} sessions</strong></div></div>
-                      <dl className={styles.provenance}><div><dt>Entry rule</dt><dd>{decision.entry_rule.replaceAll('_', ' ')}</dd></div><div><dt>Calculation</dt><dd>{decision.calculation_version}</dd></div><div><dt>Source identity</dt><dd>{decision.source_hash.slice(0, 12)}…</dd></div></dl>
-                      {snapshots.length ? <ul className={styles.decisionSourceList}>{snapshots.map((snapshot) => <li key={snapshot.id}><div><strong>{snapshot.checkpoint_code} · {snapshot.quality_status.replaceAll('_', ' ')}</strong><span>Cutoff {new Date(snapshot.evaluation_cutoff).toLocaleString()} · evidence {snapshot.source_identity_hash.slice(0, 12)}…</span><small>{snapshot.net_simulated_return === null ? `Net simulation unavailable${snapshot.quality_reasons.length ? ` — ${snapshot.quality_reasons.join(', ')}` : ''}` : `Net simulated return ${formatReturn(snapshot.net_simulated_return)} · base return ${formatReturn(snapshot.base_currency_return)} · drawdown ${formatReturn(snapshot.maximum_drawdown)}`}</small></div></li>)}</ul> : <p className={styles.disclosure}>No evaluator snapshot exists yet. Entry price and returns remain unavailable until forward evidence exists; missing evidence is never shown as zero.</p>}
-                      <p className={styles.disclosure}>{decision.source_type === 'AI_SIGNAL' ? `Assessment action: ${decision.source_action}. The AI cutoff controls this clock.` : `User action snapshot: ${decision.source_action}. The server capture clock controls this record.`} {terminal ? `Latest terminal event: ${terminal.event_type} at ${new Date(terminal.event_at).toLocaleString()}.` : 'This decision remains forward-looking from its own immutable clock.'}</p>
-                    </li>
-                  })}
-                </ul>
-                </>
-              )}
-              <p className={styles.disclosure}>Decision Lab is simulated research only. It cannot place orders, connect a broker or present an unresolved return as zero.</p>
             </article>
           </div>
         ) : (

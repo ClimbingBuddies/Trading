@@ -18,7 +18,7 @@ function isPalette(value: string | null): value is PaletteId {
   return PALETTES.some((palette) => palette.value === value)
 }
 
-export default function ThemePaletteSelector() {
+export default function ThemePaletteSelector({ showLabel = true }: { showLabel?: boolean }) {
   const [palette, setPalette] = useState<PaletteId>('midnight-blue')
 
   useEffect(() => {
@@ -38,7 +38,7 @@ export default function ThemePaletteSelector() {
 
   return (
     <label className="themePaletteControl">
-      <span className="themePaletteLabel">Palette</span>
+      {showLabel && <span className="themePaletteLabel">Palette</span>}
       <span className="themePaletteSelectRow">
         <span className="themePaletteSwatch" aria-hidden="true" />
         <select

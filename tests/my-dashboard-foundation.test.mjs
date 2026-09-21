@@ -7,6 +7,7 @@ const componentPath = new URL('../components/MyDashboardClient.tsx', import.meta
 const stylesPath = new URL('../components/MyDashboardClient.module.css', import.meta.url)
 const pagePath = new URL('../app/my-dashboard/page.tsx', import.meta.url)
 const loginComponentPath = new URL('../components/LoginClient.tsx', import.meta.url)
+const accountMenuPath = new URL('../components/AccountMenu.tsx', import.meta.url)
 
 test('MYDASH-002 migration enforces permanent-user ownership on both personal tables', async () => {
   const sql = await readFile(migrationPath, 'utf8')
@@ -20,9 +21,9 @@ test('MYDASH-002 migration enforces permanent-user ownership on both personal ta
   assert.doesNotMatch(sql, /grant all on table public\.user_market_(preferences|interests) to authenticated/i)
 })
 
-test('MYDASH-002 shell exposes six accessible tabs and honest private states', async () => {
+test('MYDASH-002 shell exposes combined watchlist and accessible private tabs', async () => {
   const component = await readFile(componentPath, 'utf8')
-  for (const key of ['today', 'recommendations', 'watchlists', 'opportunities', 'portfolio-health', 'decision-lab']) {
+  for (const key of ['today', 'recommendations', 'opportunities', 'portfolio-health', 'decision-lab']) {
     assert.match(component, new RegExp(`key: '${key}'`))
   }
   assert.match(component, /role="tablist"/)
@@ -56,11 +57,11 @@ test('MYDASH-008 preserves accessible, responsive and privacy-safe completion bo
 })
 
 test('MYDASH-003 keeps the dashboard behind login and identifies the authenticated account', async () => {
-  const component = await readFile(componentPath, 'utf8')
+  const [component, accountMenu] = await Promise.all([readFile(componentPath, 'utf8'), readFile(accountMenuPath, 'utf8')])
   assert.match(component, /router\.replace\('\/login\?next=\/my-dashboard'\)/)
-  assert.match(component, /Signed in as/)
-  assert.match(component, /user\.email \?\? 'authenticated user'/)
-  assert.match(component, />Sign out</)
+  assert.match(accountMenu, /Signed in as/)
+  assert.match(accountMenu, /data\.session\?\.user\.email/)
+  assert.match(accountMenu, />Sign out</)
   assert.doesNotMatch(component, /signInWithOtp|Send secure link/)
 })
 
@@ -130,7 +131,7 @@ test('MYDASH-002 keeps failed private-data results unknown and renders only retr
   assert.match(component, /setPrivateDataState\('error'\)/)
   assert.match(component, /privateDataState === 'error'/)
   assert.match(component, /PRIVATE DATA UNAVAILABLE/)
-  assert.match(component, /\{privateDataState === 'error' \? \([\s\S]*\) : privateDataState !== 'ready' \|\| !counts \? \([\s\S]*\) : selectedTab === 'today' \? \(/)
+  assert.match(component, /privateDataState === 'error' \? \([\s\S]*\) : privateDataState !== 'ready' \|\| !counts \? \([\s\S]*\) : selectedTab === 'today' \? \(/)
   assert.match(component, /Personal counts and preferences remain hidden until the complete private-data load succeeds/)
 })
 

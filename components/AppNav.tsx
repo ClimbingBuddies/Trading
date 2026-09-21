@@ -2,11 +2,12 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { getBrowserSupabase } from '@/lib/supabase-browser'
 
 const items = [
   { href: '/login', label: 'Sign in', icon: '○' },
   { href: '/my-dashboard', label: 'My Dashboard', icon: '⌂' },
-  { href: '/admin', label: 'Admin', icon: '◫' },
   { href: '/markets', label: 'Markets', icon: '⌁' },
   { href: '/assessments', label: 'Assessments', icon: '◇' },
   { href: '/opportunities', label: 'Opportunities', icon: '◎' },
@@ -18,6 +19,16 @@ const items = [
 
 export default function AppNav() {
   const pathname = usePathname()
+  const [signedIn, setSignedIn] = useState<boolean | null>(null)
+
+  useEffect(() => {
+    const client = getBrowserSupabase()
+    void client.auth.getSession().then(({ data }) => setSignedIn(Boolean(data.session)))
+    const { data: listener } = client.auth.onAuthStateChange((_event, session) => setSignedIn(Boolean(session)))
+    return () => listener.subscription.unsubscribe()
+  }, [])
+
+  const visibleItems = items.filter((item) => item.href !== '/login' || signedIn === false)
 
   return (
     <aside className="sideNav">
@@ -31,7 +42,7 @@ export default function AppNav() {
       </div>
 
       <nav aria-label="Primary navigation">
-        {items.map((item) => {
+        {visibleItems.map((item) => {
           const active = pathname === item.href || pathname.startsWith(`${item.href}/`)
           return (
             <Link className={active ? 'navItem navActive' : 'navItem'} href={item.href} key={item.href}>

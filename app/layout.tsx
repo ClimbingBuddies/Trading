@@ -8,7 +8,7 @@ import './opportunity-exposure-inspector.css'
 import './mobile-interaction.css'
 import type { Metadata } from 'next'
 import AppNav from '@/components/AppNav'
-import ThemePaletteSelector from '@/components/ThemePaletteSelector'
+import AccountMenu from '@/components/AccountMenu'
 import OpportunityMarketLinkFallback from '@/components/OpportunityMarketLinkFallback'
 import OpportunityExposurePanel from '@/components/OpportunityExposurePanel'
 import PerformanceWaterfallReporter from '@/components/PerformanceWaterfallReporter'
@@ -48,8 +48,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <AppNav />
           <div className="contentShell">
             <div className="globalTopBar">
-              <div className="globalPaletteDock">
-                <ThemePaletteSelector />
+              <div className="globalAccountDock">
+                <AccountMenu />
               </div>
             </div>
             <main className="mainContent">{children}</main>
