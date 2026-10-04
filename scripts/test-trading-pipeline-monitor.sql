@@ -32,8 +32,14 @@ begin
  hit:=false;
  begin perform private.claim_trading_stage_v1('preflight',repeat('a',40)); exception when others then hit:=SQLERRM='STAGE_RETRY_BUDGET_EXHAUSTED'; end;
  if not hit then raise exception 'FAIL unbounded preflight receipts'; end if;
- perform private.run_trading_watchdog_v1();
- perform private.run_trading_watchdog_v1();
+ perform private.reconcile_trading_watchdog_v1('2026-10-06T02:15:00Z');
+ if (select count(*) from private.trading_pipeline_incidents where incident_key='2026-10-06:CONTROLLER_NOT_SEEN' and resolved_at is null)<>1 then raise exception 'FAIL missing run did not produce saved alert'; end if;
+ perform private.reconcile_trading_watchdog_v1('2026-10-06T02:30:00Z');
+ if (select count(*) from private.trading_pipeline_incidents where incident_key='2026-10-06:CONTROLLER_NOT_SEEN')<>1 then raise exception 'FAIL repeated alert'; end if;
+ insert into private.trading_controller_attempts(morning_date,stage,spec_revision,started_at,finished_at,state)
+ values('2026-10-06','preflight',repeat('a',40),'2026-10-06T02:31:00Z','2026-10-06T02:32:00Z','completed');
+ perform private.reconcile_trading_watchdog_v1('2026-10-06T02:45:00Z');
+ if not exists(select 1 from private.trading_pipeline_incidents where incident_key='2026-10-06:CONTROLLER_NOT_SEEN' and resolved_at='2026-10-06T02:45:00Z') then raise exception 'FAIL recovery not recorded'; end if;
  if exists(select incident_key from private.trading_pipeline_incidents group by incident_key having count(*)>1) then raise exception 'FAIL duplicate incidents'; end if;
  if (select count(*) from public.shared_decision_calls)<>initial_calls or (select count(*) from public.shared_decision_private_notes)<>initial_notes then raise exception 'FAIL monitor changed AI or private data'; end if;
 end $$;

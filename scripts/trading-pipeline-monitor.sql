@@ -89,7 +89,7 @@ begin
     from public.gpt_market_assessments a join public.gpt_market_runs r using(run_id)
     where a.instrument_id=item.id and not a.technical_engine_input_used and r.analysis_mode='scheduled'
     and r.status in ('succeeded','partial') and r.completed_at<=p_now and a.created_at<=p_now
-    and r.analysis_cutoff_time>=p_now-interval '24 hours' and r.analysis_cutoff_time<=r.completed_at
+    and r.analysis_cutoff_time>=deadline-interval '24 hours' and r.analysis_cutoff_time<=r.completed_at
     and (r.analysis_cutoff_time at time zone 'America/New_York')::date=nyday
     order by a.created_at desc limit 1;
     if ass.assessment_id is null then reason:='FRESH_RESEARCH_MISSING';
@@ -130,9 +130,9 @@ begin
  'problems',problems,'instruments',instruments,'calendarExpiresAt',calendar.valid_until);
 end $$;
 
-create function private.run_trading_watchdog_v1() returns jsonb
+create function private.reconcile_trading_watchdog_v1(p_now timestamptz) returns jsonb
 language plpgsql set search_path=pg_catalog as $$
-declare now_at timestamptz:=clock_timestamp(); snap jsonb; problem jsonb; day date; keys text[]:='{}'; key text;
+declare now_at timestamptz:=p_now; snap jsonb; problem jsonb; day date; keys text[]:='{}'; key text;
 begin
  perform pg_advisory_xact_lock(hashtextextended('trading-watchdog',0));
  snap:=private.trading_pipeline_snapshot_v1(now_at); day:=(snap->>'morningDate')::date;
@@ -150,6 +150,9 @@ begin
  return snap;
 end $$;
 
+create function private.run_trading_watchdog_v1() returns jsonb
+language sql set search_path=pg_catalog as $$ select private.reconcile_trading_watchdog_v1(clock_timestamp()); $$;
+
 create function public.trading_pipeline_status_v1() returns jsonb
 language plpgsql stable security definer set search_path=pg_catalog as $$
 declare snap jsonb; incidents jsonb; latest_ok timestamptz;
@@ -161,7 +164,7 @@ begin
  from (select * from private.trading_pipeline_incidents where resolved_at is null order by opened_at desc limit 20) x;
  return jsonb_build_object('contractVersion',1,'snapshot',snap,'lastCompletedMorningAt',latest_ok,'incidents',incidents);
 end $$;
-revoke all on function private.claim_trading_stage_v1(text,text),private.finish_trading_stage_v1(uuid,text,text),private.trading_pipeline_snapshot_v1(timestamptz),private.run_trading_watchdog_v1() from public,anon,authenticated,service_role;
+revoke all on function private.claim_trading_stage_v1(text,text),private.finish_trading_stage_v1(uuid,text,text),private.trading_pipeline_snapshot_v1(timestamptz),private.reconcile_trading_watchdog_v1(timestamptz),private.run_trading_watchdog_v1() from public,anon,authenticated,service_role;
 revoke all on function public.trading_pipeline_status_v1() from public,anon,service_role;
 grant execute on function public.trading_pipeline_status_v1() to authenticated;
 commit;

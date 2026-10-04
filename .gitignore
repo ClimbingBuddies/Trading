@@ -3,3 +3,4 @@ node_modules/
 public/generated/user-guide/
 .env*
 !.env.example
+.vercel
