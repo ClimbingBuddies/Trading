@@ -90,3 +90,8 @@ Final reliability verification, 4 October 2026:
 - PASS: actual React status component rendered with the saved monitor snapshot and network disabled. Headless Edge verified collapsed default, click-to-open, saved evidence, share coverage and no horizontal overflow at 1440px and 375px. This is isolated component verification; production authentication, hydration and populated Decision Lab remain unverified.
 - SOURCE: first checkpoint pushed as 22fbcdf on project/decision-lab-completion. Follow-up fixes freeze freshness to the morning deadline and exercise saved incident recovery. Independent reviewer acceptance was not performed for this reliability checkpoint.
 - PENDING: Vercel authentication completed and the terminal linked to the existing boulders-market project. Git deployment is disabled; a separate production deployment is required. External notifications remain unconfigured pending the owner's channel and destination.
+
+Production release verified, 4 October 2026:
+- PASS: deployment dpl_61nBrMSd9vPynb9RZuVbfXUarjRK is READY, target production, source commit 04090387b6524f9f0fa5452e846e57545e280add. Alias discoverbouldersmarkets.vercel.app points to this deployment. Vercel build completed successfully in 15 seconds.
+- PASS: headless Edge production smoke check returned HTTP 200, redirected the unauthenticated visitor to /login?next=/my-dashboard, served the new trading_pipeline_status_v1 component asset and reported zero page errors.
+- LIMIT: this smoke check does not prove a signed-in populated Decision Lab or private-note browser isolation. Those remain Stage 1 acceptance requirements. The production release does not imply fresh research or a started observation week.
