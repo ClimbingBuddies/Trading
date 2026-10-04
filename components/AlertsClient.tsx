@@ -4,6 +4,7 @@ import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react'
 import type { User } from '@supabase/supabase-js'
 import { getBrowserSupabase } from '@/lib/supabase-browser'
 import styles from './WatchlistsClient.module.css'
+import TradingPipelineStatus from './TradingPipelineStatus'
 
 type AlertType = 'price_threshold' | 'data_freshness' | 'market_assessment' | 'opportunity_assessment' | 'market_convergence' | 'technical_score'
 type TargetScope = 'instrument' | 'watchlist' | 'theme'
@@ -345,6 +346,7 @@ export default function AlertsClient() {
 
   return (
     <div className={styles.shell}>
+      <TradingPipelineStatus />
       <header className={styles.hero}>
         <div><h1>Alerts</h1><p>Edge-triggered monitoring backed by persisted source data and owner-scoped RLS.</p></div>
         <div className={styles.signedIn}><span>{user.email ?? 'Authenticated user'}</span><button className={styles.secondaryButton} type="button" onClick={signOut} disabled={busy}>Sign out</button></div>

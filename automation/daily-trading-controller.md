@@ -1,7 +1,7 @@
 # Daily Trading Controller
 
-**Specification version:** 1.5 (shared Decision Lab release candidate)
-**Last updated:** 20 September 2026
+**Specification version:** 1.6 (shared Decision Lab with operational monitoring)
+**Last updated:** 4 October 2026
 **System:** Discover Boulders Markets / Trading  
 **Supabase project:** `glvbqcplgjdfgjyknzsa`
 
@@ -221,3 +221,14 @@ Only say that the Daily Trading pipeline completed normally when every required 
 The Daily Trading Controller is one scheduled orchestrator, not a fourth analytical opinion.
 
 Its job is to execute the right independent subsystem at the right time, using durable state to avoid duplicates, then leave the morning Trading data reconciled and observable.
+
+
+## Durable invocation receipts and independent watchdog
+
+Retrieve documentation/trading-pipeline-reliability.md at the same exact commit SHA. The database watchdog is an independent monitor, not an analytical controller. It checks saved records every 15 minutes and raises overdue incidents after 10:15 Australia/Perth, starting 5 October 2026.
+
+Before work commit private.claim_trading_stage_v1(stage, exact_commit_sha) and retain the attempt UUID. Commit the start separately from research or evaluation. Stage names are opportunity, external, market, publication, evaluation, or preflight when no analytical stage is eligible. Finish using private.finish_trading_stage_v1(attempt_uuid, terminal_state, sanitized_reason_code) after checking the subsystem receipt. A completed attempt is not proof of business completion. Refresh private.run_trading_watchdog_v1() after finalization and report its per-share counts/blockers.
+
+At most two attempts per analytical stage per Perth morning; at most six preflight receipts. Exhausting an independent earlier stage must not starve a later independently eligible stage. Preserve the failed prerequisite and do not bypass actual research dependencies. Supported shares may progress from a truthful terminal partial assessment. Do not race a recent running attempt. After 45 minutes inspect actual task/subsystem activity before recording interruption or attempting safe resume. Never change a frozen cutoff or backdate a missed decision.
+
+By the final 09:30 invocation report saved research, shared publication and accepted scheduled evaluation receipts, unsupported coverage and exact missing evidence. Zero new BUY calls is not a failure if the required reviews are saved. No calls to evaluate, missing fresh research or missing controller receipts cannot count as successful operation. Renew calendar verification from official sources before expiry; never merely extend a timestamp.

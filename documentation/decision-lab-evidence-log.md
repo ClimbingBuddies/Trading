@@ -17,6 +17,16 @@ Baseline recorded 17 September 2026. This log distinguishes earlier verified fou
 
 Future entries must include date/time, check ID, exact command/query or test path, relevant run/record/commit ID, result, and recovery action. These baseline PASS entries do not imply the ten feature-level completion checks have passed.
 
+## 27 September 2026 — live controller restoration
+
+- PASS: created and activated the Codex `Daily Trading Controller` automation on the saved Trading project. Schedule is 04:30–09:30 Australia/Perth daily at 30 minutes past each hour. The task requires `project/decision-lab-completion`, controller specification v1.5 or later, and records the exact GitHub commit before execution.
+- PASS: enabled verified shared publication configuration for AVGO, BEAM, MRVL and NVDA using the active Tiingo mapping and same-currency QQQ benchmark. Live observations for all five symbols were present through the 25 September 2026 Nasdaq session. ASX 1AI/WA1 and NYSE FIG remain explicitly unsupported.
+- PASS: imported immutable Nasdaq calendar review revision `nasdaq-2026-reviewed-2026-09-27`, manifest SHA256 `dea5bee7eb1b044e761206f40a97b70a605a902f178f8feaf0ad8b7cf95d340b`, valid through 6 October 2026 UTC after review of the official Nasdaq calendar and system-status sources.
+- PASS: 94 shared calendar, adapter, database transport, engine and adversarial tests passed. Command: `node --test tests/shared-market-calendar.test.mjs tests/shared-paper-adapter.test.mjs tests/shared-paper-db.test.mjs tests/shared-paper-engine.test.mjs tests/shared-paper-adversarial.test.mjs`.
+- PASS: enabled `private.shared_evaluator_release` at accepted revision `395b740ebfb6a7022dd899acdb055716113e5caa`.
+- PASS with expected blocker: committed manual verification receipt `3f742b0f-70b5-4e55-a341-5f263e0713da` returned `NO_SHARED_CALLS_TO_EVALUATE`. This proves the released runner executes and audits truthfully; it is not evidence of a shared call or outcome.
+- NEXT: the first legitimate fresh Market Assessment and shared publication can occur only after a completed US weekday session. Verify the Tuesday 29 September Perth morning controller invocations for the Monday US session, persisted assessment, first genuine shared call and populated dashboard drawer.
+
 ## 19 September 2026 — paper mechanics checkpoint
 PASS: 18 deterministic tests in tests/shared-paper-engine.test.mjs (node --test). Entry 100, exit 110, net return 9.7802197802%, benchmark 2%. Covers loss, hold, missing/duplicate/currency-invalid prices, revisions, future evidence, cancellation, calendar validation, checkpoints and reruns.
 PASS: scripts/test-shared-decision-lab.sql rerun against Supabase; privacy, retry and immutable original checks passed, fixtures rolled back.
@@ -62,3 +72,14 @@ Deployment: Supabase glvbqcplgjdfgjyknzsa. Installed additive migrations shared_
 - Security adviser identified new immutable-input trigger mutable search_path; fixed to pg_catalog. Reference: https://supabase.com/docs/guides/database/database-linter?lint=0011_function_search_path_mutable . Existing unrelated advisories were not changed.
 
 Recovery: keep private.shared_evaluator_release.enabled false until release acceptance. Apply source migrations in the order above (foundation/reference/validator/source validation/writer/return shape/runner/pinned-value validation/failure health); do not delete original calls, reviews or outcomes. Token receipts reconcile uncertain commits; absent receipt is unresolved, never automatic retry permission.
+
+
+## 4 October 2026 - independent operational monitoring
+
+Installed additive monitoring tables and functions in live Supabase; no research, decisions, outcomes or private notes changed. Initial verification found and fixed loop-variable, optional-record and retry-expression defects before final acceptance. Rollback-only monitor checks now pass: missing-run deadline, Perth/NY date, weekend skip, unauthenticated/private privilege boundary, overlapping work, two analytical attempts, six preflight receipts, repeat-monitor deduplication and unchanged call/note counts. Fixture rows rolled back.
+
+Five local status tests passed: completed counts, missing/future/stale evidence, unresolved historical incidents, weekend message and malformed/partial states. TypeScript noEmit and palette compliance passed at the initial UI checkpoint; rerun after integration. Official Nasdaq calendar sources checked; independent consistency script passed all 365 dates, ten holidays, two early closes and timezone/DST boundaries. New immutable calendar revision nasdaq-2026-published-schedule-reviewed-2026-10-04 imported, valid until 2026-10-11T03:14:10.367Z.
+
+Supabase cron trading-pipeline-watchdog-v1 installed every 15 minutes. Manual receipt reports SETUP, four supported and three unsupported shares; genuine scheduled cron receipt still needs verification. Supabase advisors identify the intended authenticated SECURITY DEFINER status API and private tables with no public policies; no anonymous execution or public mutation granted. Existing unrelated advisories remain unchanged.
+
+Genuine fresh scheduled research/publication/evaluation, populated production dashboard, two-user browser acceptance and external-channel delivery remain UNVERIFIED. No observation week started.

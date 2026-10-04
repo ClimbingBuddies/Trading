@@ -1,0 +1,10 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {describePipelineStatus} from '../lib/trading-pipeline-status.mjs';
+const now=Date.parse('2026-10-06T02:20:00Z');
+const fixture=()=>({snapshot:{checkedAt:'2026-10-06T02:15:00Z',state:'COMPLETE',marketDue:true,counts:{supported:4,blocked:0,researched:4,published:4,evaluated:4}},incidents:[]});
+test('verified completed review reports saved counts, not Buy count',()=>{const p=fixture();assert.equal(describePipelineStatus(p,now).warning,false);assert.match(describePipelineStatus(p,now).detail,/4\/4 researched/)});
+test('missing, future and stale monitor evidence never reads healthy',()=>{for(const p of [null,{snapshot:{}},{snapshot:{...fixture().snapshot,checkedAt:'2026-10-07T00:00:00Z'}},{snapshot:{...fixture().snapshot,checkedAt:'2026-10-06T01:00:00Z'}}])assert.equal(describePipelineStatus(p,now).warning,true)});
+test('unresolved previous incident remains visible after todays success',()=>{const p=fixture();p.incidents=[{id:'missed'}];assert.equal(describePipelineStatus(p,now).warning,true)});
+test('weekend has no invented research count',()=>{const p=fixture();p.snapshot.marketDue=false;assert.match(describePipelineStatus(p,now).detail,/No US Decision Lab review due/)});
+test('partial, unknown and malformed evidence fail visibly',()=>{for(const s of ['PARTIAL','garbage']){const p=fixture();p.snapshot.state=s;assert.equal(describePipelineStatus(p,now).warning,true)}const p=fixture();p.snapshot.counts.evaluated=-1;assert.equal(describePipelineStatus(p,now).warning,true)});

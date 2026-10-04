@@ -1,6 +1,6 @@
 # Decision Lab — controller project plan
 
-Updated 20 September 2026. Authoritative build status; development controller owns updates. Source: approved playbook v3. This file does not imply an active background agent.
+Updated 4 October 2026. Authoritative build status; development controller owns updates. Source: approved playbook v3. This file does not imply an active background agent.
 
 | ID | Workstream / deliverable | Dependencies | Status | Acceptance evidence / next action |
 | --- | --- | --- | --- | --- |
@@ -9,9 +9,9 @@ Updated 20 September 2026. Authoritative build status; development controller ow
 | ENG1 | Independent review of local mechanics | Existing engine | accepted | Independent tester: 21 repository + 7 adversarial tests passed. Reviewer verified chronology/calendar fixes at SHA256 F41783DD0C84F4240F704EE1F681E5627572149221A27CF949CB49017BF6FCA2. Local mechanics only; not DB integration. |
 | ENG2 | Trusted publisher and persistence adapter | C1, ENG1 fixes | in_progress | Private hash-bound publisher/candidate functions installed; privilege/registry/missing-assessment checks pass. Review-version invalidation installed and rollback-tested. JS adapter independently accepted locally: 29 adapter tests plus 28 engine tests pass. Outcome writes gated until trusted calendar and atomic DB read/commit transports pass. |
 | D1 | Approved dashboard table and drawer | C1 | awaiting_review | Shared UI built and signed-in empty state verified on localhost:3001. TypeScript/palette checks pass. Read API rollback tests pass; populated drawer and two-user browser acceptance remain. |
-| DATA1 | Data/session/benchmark readiness | C1 | in_progress | Nasdaq 2026 calendar and five Tiingo conventions installed and tested. ASX and cross-venue benchmarks remain blocked; provider evidence mismatches withheld. |
+| DATA1 | Data/session/benchmark readiness | C1 | in_progress | Nasdaq calendar trust renewed through 6 October 2026; AVGO, BEAM, MRVL and NVDA enabled with verified Tiingo/QQQ configuration. ASX and cross-venue benchmarks remain blocked. |
 | I1 | Dashboard + mechanics integration | ENG2, DATA1, D1 | in_progress | Authenticated read projections installed and tested; live page reconciles zero calls and seven pending shares. No genuine shared call or persisted outcome yet. |
-| S1 | Scheduled trading integration | I1 | in_progress | Private audited runner installed and rollback-tested. Local controller v1.5 release candidate saved; actual schedule has NOT adopted it. |
+| S1 | Scheduled trading integration | I1 | in_progress | Daily Trading Controller automation activated on 27 September and pinned to branch controller v1.5+. Evaluator enabled at revision 395b740 after 94 passing tests. First scheduled invocation and genuine publication remain to be verified. |
 | A1 | Stage 1 acceptance | S1, independent test/review | queued | All required acceptance checks evidenced, at least one genuine shared call displayed, every watched share accounted for. |
 | O1 | One-week observation | A1 | queued | Start/end dates recorded only after acceptance; no forced trades or invented results. |
 
@@ -44,3 +44,18 @@ ENG2 remains in_progress: database snapshot, independent SQL calculator, validat
 DATA1 is partial: verified published Nasdaq calendar (review expires 21 September 2026 14:28:15 UTC) and five Tiingo input conventions installed. No publisher configurations or genuine shared calls. Missing source evidence is withheld. ASX and cross-venue support remain blocked.
 
 Next: fresh published research and verified per-instrument publisher/benchmark configuration, independent release acceptance, adoption of the shared controller specification by the existing schedule, then one genuine scheduled run and populated browser verification. A1 remains queued; O1 has not started. No schedule or heartbeat changed.
+
+## 27 September 2026 - live operation enabled
+
+The missing Daily Trading Controller automation was created and activated for the saved Trading project, scheduled at 04:30–09:30 Australia/Perth. It is pinned to `project/decision-lab-completion` and rejects controller specifications older than v1.5. Verified Nasdaq/Tiingo/QQQ configuration is enabled for AVGO, BEAM, MRVL and NVDA; Nasdaq calendar trust is renewed through 6 October. The evaluator release is enabled at revision `395b740ebfb6a7022dd899acdb055716113e5caa`. A manual run correctly recorded `NO_SHARED_CALLS_TO_EVALUATE`; Stage 1 remains incomplete until a fresh scheduled Market Assessment produces a genuine shared call that reconciles in the dashboard.
+
+
+## 4 October 2026 - reliability milestone
+
+RELIABILITY1: database monitor, private stage receipts, per-stage retry budgets, authenticated status projection, compact dashboard/Alerts indicator and recovery runbook implemented. Independent Supabase watchdog checks every 15 minutes; morning enforcement begins 5 October at 10:15 Perth. Actual scheduled watchdog receipts must be distinguished from manual validation. Official Nasdaq schedule reverified across all 365 days; new immutable trust revision expires 11 October 2026.
+
+Latest audit: zero shared calls/reviews/outcomes; latest research saved 17 September Perth; latest scheduled evaluator 28 September blocked NO_SHARED_CALLS_TO_EVALUATE. Supported configured names: AVGO, BEAM, MRVL, NVDA. 1AI, WA1 and FIG remain explicitly unsupported by current shared configuration. The active local controller begins 5 October at 04:30-09:30 Perth. Monday corresponds to a US non-session date; the first normal fresh US research/publication expectation is Tuesday 6 October morning.
+
+A1 and O1 remain queued. Do not start the observation clock based on monitor installation. Required next evidence: actual source-revision-tagged controller invocation; fresh eligible assessment; genuine shared call/review; accepted evaluator receipt; rendered record reconciliation and private-note isolation. Dashboard alerts are implemented. A second external alert channel/destination is awaiting owner selection; delivery is UNVERIFIED. Code publication and production dashboard deployment must be recorded separately.
+
+Next priorities: verify Tuesday's complete pipeline; test missing-run/recovery delivery; resolve unsupported coverage without blocking supported names; begin observation only after acceptance. Predictive-quality evaluation remains separate from operational completion and must include costs, matched benchmarks, losing calls and missing sessions.
