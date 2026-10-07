@@ -1,6 +1,6 @@
 # Daily shared Decision Lab — release candidate v1
 
-20 September 2026. This file is not evidence that the existing scheduled task has adopted it. Record its GitHub commit SHA on each actual invocation. The live evaluator release gate remains disabled pending acceptance. Do not change the existing timetable or create another controller.
+Updated 7 October 2026. This file is not evidence that a scheduled invocation adopted it. Record its exact GitHub commit SHA on each actual invocation. Inspect the database-owned evaluator release gate and accepted revision before execution; do not infer eligibility from this document. Keep the existing timetable and single controller.
 
 ## Inputs and ownership
 
@@ -23,6 +23,16 @@ Call `private.publish_shared_decision_v1(assessment_id, action, thesis, risks, m
 
 Record per-instrument published/reviewed/skipped/blocked results with exact saved identifiers. A fresh scheduled assessment is still required when a candidate reports `FRESH_PUBLISHED_ASSESSMENT_REQUIRED`. Do not bypass that requirement because price history exists.
 
+## Publish research-only ASX recommendations
+
+For active watched ASX shares without enabled measurable shared configuration, use `documentation/asx-research-loop-contract.md` and `scripts/shared-research-recommendations.sql`. This is a separate publication type, excluded from calls, action trials, measured returns and operational supported-coverage totals.
+
+Before freezing an assessment cutoff, verify original issuer documents and insert trusted `private.shared_research_source_receipts` with original HTTPS URL, publication timestamp when known, concise exact evidence summary and SHA256 of fetched content. The database stamps verification time; never override/backdate it. Preserve historical report dates and explicitly state incomplete latest-news/valuation coverage. Each direct assessment evidence row must link through `private.shared_research_evidence_links` to a matching receipt verified before cutoff. Existing atomic opinions must have nonfuture observed/publication timestamps. Missing proof means blocked; later evidence requires a legitimate new assessment, never moving a frozen cutoff.
+
+After an eligible independent assessment completes, obtain `private.shared_research_input_v1(assessment_id)`, compute SHA256 of the exact database JSONB text, and generate a supported action, thesis and risks. Call `private.publish_shared_research_v1(assessment_id, action, thesis, risks, actual_model_identity, hash, concrete_measurement_blocker)`. Known retries must reuse the exact payload; never insert recommendations directly. Publish research-only results in the same bounded publication stage as eligible measurable candidates. Report their saved IDs separately and keep ASX measurement blockers visible. Manual scoped research does not replace the scheduled daily lifecycle or prove full watchlist completion.
+
+The authenticated reader displays immutable original/latest/history, source verification/publication dates and frozen price provenance. Raw Yahoo history does not authorize ASX paper fills. Once verified ASX calendars, mappings and AUD benchmark inputs support the normal path, publish a new prospective measurable call; never retrofit historical research into performance. A later measurable call archives the active research display while preserving originals.
+
 ## Evaluate outcomes
 
 Run only when `private.shared_evaluator_release.enabled` is accepted and true. A disabled gate is a deployment blocker, not an invitation to enable it from a routine trading invocation.
@@ -44,6 +54,6 @@ An evaluation receipt confirms a committed calculation, not a new AI recommendat
 - Shared dashboard IDs and values reconcile with saved calls/outcomes; private notes remain outside this process.
 - Report partial/blocked/unverified checks explicitly. Stay quiet when state is unchanged; report material failure, first genuine results or required action.
 
-## Current release blockers
+## Historical release blockers (20 September 2026)
 
-As of the 20 September implementation checkpoint: writer/controller entry-point rollback tests pass, but no genuine shared calls exist; the latest completed research is stale; publisher benchmark configuration is not enabled; actual scheduled invocation and populated dashboard acceptance remain unverified. ASX 1AI/WA1 lack provider mappings/history. FIG needs verified NYSE/benchmark session compatibility. The observation week has not started.
+Historical state at the 20 September implementation checkpoint (superseded by subsequent evidence-log entries): writer/controller entry-point rollback tests pass, but no genuine shared calls exist; the latest completed research is stale; publisher benchmark configuration is not enabled; actual scheduled invocation and populated dashboard acceptance remain unverified. ASX 1AI/WA1 have Yahoo research history but lack verified paper-session attribution, provider mappings and AUD benchmark support. Research-only publication is available separately. FIG needs verified NYSE/benchmark session compatibility. The observation week has not started.

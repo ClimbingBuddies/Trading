@@ -5,6 +5,7 @@ import { getBrowserSupabase } from '@/lib/supabase-browser'
 import styles from './SharedDecisionWorkspace.module.css'
 import TradingPipelineStatus from './TradingPipelineStatus'
 import SharedAIPerformance from './SharedAIPerformance'
+import SharedResearchRecommendations from './SharedResearchRecommendations'
 
 type Instrument = { id: string; symbol: string; name: string; exchange: string; currency: string }
 type Decision = { id: string; action: string; publishedAt: string; sourceCutoff: string; thesis: string; risks: string; modelIdentity: string; assessmentId: string }
@@ -56,6 +57,7 @@ export default function SharedDecisionWorkspace() {
     {payload && payload.counts.trackedCalls > 0 && <div className={styles.summary}><span>{payload.counts.open + payload.counts.exitSignal} open</span><span>{payload.counts.closed} closed</span><span>{payload.counts.watching + payload.counts.awaitingEntry} waiting</span></div>}
     <div className={styles.toolbar}><div><button aria-pressed={scope === 'all'} onClick={() => { setScope('all'); setPage({ cursor: null, blocked: null }) }}>All AI calls</button><button aria-pressed={scope === 'watched'} onClick={() => { setScope('watched'); setPage({ cursor: null, blocked: null }) }}>My watched shares</button></div><label>Performance <select value={checkpoint} onChange={e => { setCheckpoint(e.target.value); setPage({ cursor: null, blocked: null }) }}><option value="latest">Latest</option><option value="5">5 sessions</option><option value="20">20 sessions</option></select></label><button disabled={loading} onClick={reset}>Refresh</button></div>
     <SharedAIPerformance scope={scope} revision={revision} />
+    <SharedResearchRecommendations scope={scope} revision={revision} />
     {loading && <p role="status">Loading shared records…</p>}
     {error && <div className={styles.error} role="alert">{error}</div>}
     {payload && <>

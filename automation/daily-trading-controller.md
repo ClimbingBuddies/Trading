@@ -1,7 +1,7 @@
 # Daily Trading Controller
 
-**Specification version:** 1.6 (shared Decision Lab with operational monitoring)
-**Last updated:** 4 October 2026
+**Specification version:** 1.7 (shared Decision Lab with separate ASX research publication)
+**Last updated:** 7 October 2026
 **System:** Discover Boulders Markets / Trading  
 **Supabase project:** `glvbqcplgjdfgjyknzsa`
 
@@ -232,3 +232,7 @@ Before work commit private.claim_trading_stage_v1(stage, exact_commit_sha) and r
 At most two attempts per analytical stage per Perth morning; at most six preflight receipts. Exhausting an independent earlier stage must not starve a later independently eligible stage. Preserve the failed prerequisite and do not bypass actual research dependencies. Supported shares may progress from a truthful terminal partial assessment. Do not race a recent running attempt. After 45 minutes inspect actual task/subsystem activity before recording interruption or attempting safe resume. Never change a frozen cutoff or backdate a missed decision.
 
 By the final 09:30 invocation report saved research, shared publication and accepted scheduled evaluation receipts, unsupported coverage and exact missing evidence. Zero new BUY calls is not a failure if the required reviews are saved. No calls to evaluate, missing fresh research or missing controller receipts cannot count as successful operation. Renew calendar verification from official sources before expiry; never merely extend a timestamp.
+
+## ASX research-only continuation
+
+During source collection, record original issuer documents in immutable private research receipts before freezing the applicable assessment cutoff. Follow the research-only section of `automation/daily-shared-decision-lab.md` at the same exact source SHA. Fresh completed independent ASX assessments without measurable configuration may publish via the guarded research publisher in the existing publication stage. Keep research-only saved counts separate from measured calls/evaluation and preserve missing-data blockers. The original WA1/1AI manual study is a bounded historical primary-source review; it does not prove complete current-news coverage or a successful scheduled daily run.
