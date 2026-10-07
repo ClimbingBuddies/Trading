@@ -1,10 +1,10 @@
 # Daily Trading reliability and recovery
 
-Version 1, 4 October 2026. Applies to the single existing local trading controller.
+Version 2, 7 October 2026. Applies to the single existing local trading controller.
 
 ## Independent monitor
 
-Supabase cron `trading-pipeline-watchdog-v1` reconciles durable records every 15 minutes even if the local computer is off. A morning is due by 10:15 Australia/Perth, after the final 09:30 controller slot. Enforcement begins 5 October 2026. Opportunity remains daily; US shared research is due only for the applicable New York trading day. Missing or expired calendar trust raises a blocker rather than manufacturing a holiday skip.
+Supabase cron `trading-pipeline-watchdog-v1` reconciles durable records every 15 minutes even if the local computer is off. A morning is due by 10:15 Australia/Perth, following the single 08:00 Perth controller run and its 90-minute operating budget. Enforcement begins 5 October 2026. Opportunity remains daily; US shared research is due only for the applicable New York trading day. Missing or expired calendar trust raises a blocker rather than manufacturing a holiday skip.
 
 `private.trading_pipeline_mornings` saves each day's latest reconciliation. `private.trading_pipeline_incidents` retains deduplicated per-day failures and recovery timestamps. Unresolved previous mornings remain visible; a successful later morning does not erase them. The monitor does not generate research, rewrite calls, evaluate hypothetical trades or access private notes.
 
@@ -46,3 +46,7 @@ Coverage limitations remain PARTIAL, never COMPLETE. Calendar expiry warnings be
 - External notification delivery is tested after the owner selects a channel and destination.
 
 The first eight checks can be tested now using local or rollback-only fixtures. The genuine scheduled-flow check remains UNVERIFIED until an actual run exists. Dashboard alerts are implemented; external delivery must not be claimed before configured and tested. Observation and prediction-quality scoring begin only after Stage 1 acceptance.
+
+## Single daily unattended run
+
+Run once daily at 08:00 Australia/Perth, scoped only to Trading. Execute eligible stages sequentially, each with a separate claim and terminal receipt; the database's two-attempt budget is a safety ceiling, not an instruction to schedule retries. Inspect overlap before any work and do not race an active worker. Do not wait indefinitely for approval, prices or a failed tool. Stop new work after 90 minutes, finalize safe receipts and report partial/blocked outcomes. An unreturned write requires durable-state inspection before replay. Permission failures do not authorize bypassing access controls. The 10:15 watchdog deadline and cloud monitor frequency remain unchanged.
