@@ -1,6 +1,6 @@
 # Daily Trading Controller
 
-**Specification version:** 1.7 (shared Decision Lab with separate ASX research publication)
+**Specification version:** 1.8 (complete watched recommendation coverage)
 **Last updated:** 7 October 2026
 **System:** Discover Boulders Markets / Trading  
 **Supabase project:** `glvbqcplgjdfgjyknzsa`
@@ -233,6 +233,8 @@ At most two attempts per analytical stage per Perth morning; at most six preflig
 
 By the final 09:30 invocation report saved research, shared publication and accepted scheduled evaluation receipts, unsupported coverage and exact missing evidence. Zero new BUY calls is not a failure if the required reviews are saved. No calls to evaluate, missing fresh research or missing controller receipts cannot count as successful operation. Renew calendar verification from official sources before expiry; never merely extend a timestamp.
 
-## ASX research-only continuation
+## Unconfigured-venue research-only continuation
 
-During source collection, record original issuer documents in immutable private research receipts before freezing the applicable assessment cutoff. Follow the research-only section of `automation/daily-shared-decision-lab.md` at the same exact source SHA. Fresh completed independent ASX assessments without measurable configuration may publish via the guarded research publisher in the existing publication stage. Keep research-only saved counts separate from measured calls/evaluation and preserve missing-data blockers. The original WA1/1AI manual study is a bounded historical primary-source review; it does not prove complete current-news coverage or a successful scheduled daily run.
+During source collection, record original issuer documents in immutable private research receipts before freezing the applicable assessment cutoff. Follow the research-only section of `automation/daily-shared-decision-lab.md` at the same exact source SHA. Fresh completed independent ASX, NYSE or Nasdaq equity assessments without measurable configuration may publish via the guarded research publisher in the existing publication stage. Keep research-only saved counts separate from measured calls/evaluation and preserve missing-data blockers. The original WA1/1AI manual study is a bounded historical primary-source review; it does not prove complete current-news coverage or a successful scheduled daily run.
+
+At final verification reconcile all active watched shares against saved AI recommendation coverage, using the guarded owner projection and per-instrument research/publication receipts. Report missing names and exact evidence blockers; never use a placeholder action to claim coverage. A current manually published research-only view can complete recommendation display coverage without completing the scheduled daily pipeline or becoming measurable.

@@ -58,7 +58,7 @@ export default function SharedResearchRecommendations({ scope, revision = 0 }: {
   const payload = current?.payload
   return <section className={styles.panel} aria-labelledby={`${id}-title`}>
     <header><h2 id={`${id}-title`}>Research-only AI recommendations</h2><p>{scope === 'watched' ? 'My watched shares' : 'All shared research'} · Saved research and decision evidence</p></header>
-    <p className={styles.notice}>These recommendations are not measurable yet and are excluded from AI performance figures, event counts and paper returns. Verified ASX session attribution and benchmark support are still required.</p>
+    <p className={styles.notice}>These recommendations are not measurable yet and are excluded from AI performance figures, event counts and paper returns. Verified venue sessions, provider attribution and benchmark support are still required.</p>
     {!current && <p role="status">Loading saved research recommendations…</p>}
     {current?.error && <div className={styles.error} role="alert"><p>Saved research recommendations could not be verified. The service may be unavailable or access could not be confirmed. No recommendations have been substituted.</p><button onClick={() => setRetry(value => value + 1)}>Retry research</button></div>}
     {payload && <>
