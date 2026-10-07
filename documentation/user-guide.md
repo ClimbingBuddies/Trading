@@ -390,3 +390,5 @@ Verified signed-out states:
 The signed-out forms verify only the access boundary. UGUIDE-003 owner-state screenshots remain `AUTH_REQUIRED`; its task instructions are source-, contract- and RLS-verified and do not claim that an authenticated UI session was observed.
 
 Recommendations include saved shared calls and published research-only calls as well as completed scheduled assessments. The explicit saved action takes priority over an assessment rating. Research-only rows show their blocker and have no measurable paper plan. If no eligible research exists, the share remains unassessed; no default Wait is substituted.
+
+In **AI performance**, use the **›** beside a saved decision or verified trial to open **Decision history**. Pending calls also have history controls. The drawer preserves the locked original reasoning, risks, model, research cutoff, dated timeline and private notes. Drawer returns follow the paper Buy-to-Sell cycle; the scorecard separately measures standalone 5/20-session action trials.
