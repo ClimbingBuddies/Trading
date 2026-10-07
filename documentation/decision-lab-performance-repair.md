@@ -14,3 +14,6 @@ Browser acceptance is incomplete: the browser automation runtime fails at Window
 
 For each evaluation invocation run the accepted legacy evaluator and private.run_shared_action_evaluation_v1() in the same SERIALIZABLE transaction. Preserve the accepted legacy evaluator revision independently from operational source SHA. Schedule timing and first actual unattended invocation require recorded verification.
 
+Release verified: PR #27 merged into project/decision-lab-completion (merge d46508b90d74e456a4f71f9c8c933364c662d0cb). Production deployment dpl_7mt4fZi1pZ7xw9TZ4iZkE9EHRrPc is READY at source 472d01cde335ce8b1f48e811b8480084af68b473; hostname discoverbouldersmarkets.vercel.app resolves to that deployment. Connector HTTP smoke check returned 200 with that deployment ID; it does not execute signed-in hydration.
+
+Existing Daily Trading Controller updated, preserving model/project/notification preferences, with explicit UTC hours corresponding to 04:30–09:30 Perth. Saved schedule verified. First future unattended invocation still needs actual time and durable-receipt verification. The watchdog retains ATTENTION for missed morning deadline/opportunity work and unsupported coverage; manual after-deadline recovery does not erase that incident or count as scheduled acceptance.
