@@ -1,14 +1,14 @@
 'use client'
 
-import { useEffect, useId, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import { getBrowserSupabase } from '@/lib/supabase-browser'
 import styles from './SharedResearchRecommendations.module.css'
 
 type Decision = { id: string; action: string; thesis: string; risks: string; modelIdentity: string; publishedAt: string; sourceCutoff: string; assessmentId: string }
 type Source = { name: string; url: string | null; text: string; availableAt: string; sourcePublishedAt: string | null }
 type PriceEvidence = { status: 'AVAILABLE' | 'ABSENT'; latestAt: string | null; latestLoadedAt: string | null; providers: string[]; sampleRows: number; availableRows: number; omittedRows: number; caveat: string }
-type Item = { instrument: { id: string; symbol: string; name: string; exchange: string; currency: string }; original: Decision; latest: Decision; history: Decision[]; sources: Source[]; priceEvidence: PriceEvidence; measurementStatus: 'NOT_MEASURABLE'; measurementBlocker: string; includedInPerformance: false }
-type Payload = { contractVersion: 1; generatedAt: string; items: Item[] }
+export type ResearchItem = { instrument: { id: string; symbol: string; name: string; exchange: string; currency: string }; original: Decision; latest: Decision; history: Decision[]; sources: Source[]; priceEvidence: PriceEvidence; measurementStatus: 'NOT_MEASURABLE'; measurementBlocker: string; includedInPerformance: false }
+type Payload = { contractVersion: 1; generatedAt: string; items: ResearchItem[] }
 const actions = new Set(['BUY', 'WAIT', 'HOLD', 'SELL', 'REDUCE', 'AVOID'])
 const record = (value: unknown): value is Record<string, unknown> => value !== null && typeof value === 'object' && !Array.isArray(value)
 const nonempty = (value: unknown) => typeof value === 'string' && value.trim() !== ''
@@ -36,8 +36,7 @@ function DecisionEvidence({ decision, title }: { decision: Decision; title: stri
   return <section className={styles.decision}><h4>{title} · {decision.action}</h4><p className={styles.timestamps}>Published <time dateTime={decision.publishedAt}>{date(decision.publishedAt)}</time><br />Research cutoff <time dateTime={decision.sourceCutoff}>{date(decision.sourceCutoff)}</time> · Model: {decision.modelIdentity}</p><p><strong>Thesis:</strong> {decision.thesis}</p><p><strong>Risks:</strong> {decision.risks}</p><p className={styles.identity}>Saved recommendation {decision.id} · Assessment {decision.assessmentId}</p></section>
 }
 
-export default function SharedResearchRecommendations({ scope, revision = 0 }: { scope: 'all' | 'watched'; revision?: number }) {
-  const id = useId()
+export function useSharedResearchRecommendations(scope: 'all' | 'watched', revision = 0) {
   const [retry, setRetry] = useState(0)
   const requestKey = `${scope}:${revision}:${retry}`
   const [result, setResult] = useState<{ key: string; payload: Payload | null; error: boolean } | null>(null)
@@ -56,18 +55,19 @@ export default function SharedResearchRecommendations({ scope, revision = 0 }: {
   }, [scope, requestKey])
   const current = result?.key === requestKey ? result : null
   const payload = current?.payload
-  return <section className={styles.panel} aria-labelledby={`${id}-title`}>
-    <header><h2 id={`${id}-title`}>Research-only AI recommendations</h2><p>{scope === 'watched' ? 'My watched shares' : 'All shared research'} · Saved research and decision evidence</p></header>
-    <p className={styles.notice}>These recommendations are not measurable yet and are excluded from AI performance figures, event counts and paper returns. Verified venue sessions, provider attribution and benchmark support are still required.</p>
-    {!current && <p role="status">Loading saved research recommendations…</p>}
-    {current?.error && <div className={styles.error} role="alert"><p>Saved research recommendations could not be verified. The service may be unavailable or access could not be confirmed. No recommendations have been substituted.</p><button onClick={() => setRetry(value => value + 1)}>Retry research</button></div>}
-    {payload && <>
-      {payload.items.length === 0 ? <p>No research-only recommendations published in this scope yet.</p> : <div className={styles.list}>{payload.items.map(item => <article key={item.instrument.id} className={styles.item}>
-        <header className={styles.heading}><div><h3>{item.instrument.symbol}</h3><p>{item.instrument.name} · {item.instrument.exchange} · {item.instrument.currency}</p></div><span className={styles.badge}>Not measurable · Excluded from performance</span></header>
+  return { payload, loading: !current, error: current?.error ? 'Saved research recommendations could not be verified. No recommendations have been substituted.' : '', retry: () => setRetry(value => value + 1) }
+}
+
+export default function ResearchDecisionDrawer({ item, onClose }: { item: ResearchItem; onClose: () => void }) {
+  const id = useId()
+  const dialog = useRef<HTMLDialogElement>(null)
+  useEffect(() => { const element = dialog.current; element?.showModal(); return () => element?.close() }, [])
+  return <dialog ref={dialog} className={styles.drawer} aria-labelledby={`${id}-title`} onCancel={onClose}>
+        <header className={styles.heading}><div><h2 id={`${id}-title`}>{item.instrument.symbol} · Decision history</h2><p>{item.instrument.name} · {item.instrument.exchange} · {item.instrument.currency}</p></div><button onClick={onClose} aria-label="Close research decision history">Close</button></header><p className={styles.notice}>Research only · Not measurable · Excluded from performance. No paper trial or private-note journal exists for this research record.</p>
         <DecisionEvidence decision={item.latest} title="Latest saved recommendation" />
         <p className={styles.blocker}><strong>Measurement blocker:</strong> {item.measurementBlocker}</p>
         <details><summary>Original recommendation, history and sources</summary>
-          <DecisionEvidence decision={item.original} title="Original saved recommendation" />
+          <details open><summary>Read original reasoning</summary><DecisionEvidence decision={item.original} title="Original saved recommendation · Locked" /></details>
           <h4>Immutable recommendation history</h4>{item.history.length === 0 ? <p>No additional history was returned.</p> : <ol className={styles.history}>{item.history.map(decision => <li key={decision.id}><DecisionEvidence decision={decision} title="Saved recommendation" /></li>)}</ol>}
           <h4>Saved source evidence</h4>{item.sources.length === 0 ? <p>No source references were returned.</p> : <ul className={styles.sources}>{item.sources.map((source, index) => { const href = safeHref(source.url); return <li key={`${source.name}-${index}`}>{href ? <a href={href} target="_blank" rel="noopener noreferrer">{source.name}</a> : <strong>{source.name}</strong>}<p>{source.text || 'No additional source text was recorded.'}</p><p className={styles.timestamps}>Available / verified <time dateTime={source.availableAt}>{date(source.availableAt)}</time><br />Source published {source.sourcePublishedAt ? <time dateTime={source.sourcePublishedAt}>{date(source.sourcePublishedAt)}</time> : 'Unknown'}</p>{source.url && !href && <small>No safe HTTPS source link is available.</small>}</li> })}</ul>}
           <h4>Frozen price evidence · {item.priceEvidence.status === 'AVAILABLE' ? 'Available' : 'Absent'}</h4>
@@ -76,8 +76,6 @@ export default function SharedResearchRecommendations({ scope, revision = 0 }: {
           <p className={styles.muted}>This frozen price evidence supports research provenance only. It is not an entry, return or performance result.</p>
           <p className={styles.muted}>Recommendations and their research cutoffs remain as published. Source text describes evidence dates and any price-provider limitations; raw price observations alone do not establish verified paper performance.</p>
         </details>
-      </article>)}</div>}
-      <p className={styles.muted}>Research records retrieved <time dateTime={payload.generatedAt}>{date(payload.generatedAt)}</time></p>
-    </>}
-  </section>
+
+  </dialog>
 }
