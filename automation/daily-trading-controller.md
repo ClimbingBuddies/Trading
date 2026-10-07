@@ -1,6 +1,6 @@
 # Daily Trading Controller
 
-**Specification version:** 1.8 (complete watched recommendation coverage)
+**Specification version:** 1.9 (single 08:00 Perth scheduled run)
 **Last updated:** 7 October 2026
 **System:** Discover Boulders Markets / Trading  
 **Supabase project:** `glvbqcplgjdfgjyknzsa`
@@ -9,7 +9,7 @@
 
 This is the canonical execution specification for the **single scheduled Daily Trading Controller**.
 
-The controller is the only ChatGPT scheduled task required for the morning Trading workflow. It runs several times through the early Perth morning, inspects current timezone-aware clock state and persisted Supabase state, and executes the next eligible stage itself.
+The controller is the only ChatGPT scheduled task required for the morning Trading workflow. It runs once daily at 08:00 Australia/Perth, inspects current timezone-aware clock state and persisted Supabase state, and executes eligible stages sequentially within one bounded invocation. Scope is exclusively the Trading project and ClimbingBuddies/Trading; do not include Discover Stories.
 
 The downstream analytical specifications remain authoritative for methodology:
 
@@ -24,16 +24,7 @@ Do not duplicate or paraphrase those methodologies here. Retrieve the applicable
 
 ## Single-task schedule
 
-Run this same controller task at:
-
-- 04:30 Australia/Perth
-- 05:30 Australia/Perth
-- 06:30 Australia/Perth
-- 07:30 Australia/Perth
-- 08:30 Australia/Perth
-- 09:30 Australia/Perth
-
-This hourly morning cadence intentionally spans both US daylight-saving states.
+Run this controller once daily at **08:00 Australia/Perth (00:00 UTC)**. There are no additional hourly runs, automatic follow-up chats or routine retry schedules. At this time New York is normally 20:00 on the previous date during daylight saving and 19:00 during standard time, after both evening eligibility gates.
 
 The controller must derive the actual current `Australia/Perth` and `America/New_York` date/time on every invocation. Never assume a fixed offset between them.
 
@@ -65,7 +56,7 @@ Before reporting completion, run all eight evidence checks in the playbook. Stor
 
 ### A. Daily Opportunity Assessment
 
-Due once per current Australia/Perth date, beginning at or after the first 04:30 Perth controller invocation.
+Due once per current Australia/Perth date, beginning at or after the 08:00 Perth controller invocation.
 
 Inspect `public.opportunity_assessment_runs` and the current daily Opportunity state according to `automation/daily-opportunity-assessment.md`.
 
@@ -130,9 +121,9 @@ The owner-specific Personal Recommendations stage is superseded. Preserve existi
 
 Retrieve `automation/daily-shared-decision-lab.md` fresh and follow its release/readiness gates. This stage researches the distinct union of watched instruments plus open shared calls once per instrument; personal notes must never enter shared research or performance. Supported instruments proceed individually; explicitly report unsupported inputs.
 
-Publication is an analytical stage subject to the existing one-stage-per-invocation limit. Deterministic evaluation is separate: run the private shared evaluator in a SERIALIZABLE transaction only after its release gate is accepted. Existing original calls remain locked; append dated reviews. A WAIT is a valid call, not an instruction to force a position. Weekly/monthly checkpoints never force a sale.
+Publication is a separate analytical stage within the single sequential daily invocation, with its own claim and terminal receipt. Deterministic evaluation is separate: run the private shared evaluator in a SERIALIZABLE transaction only after its release gate is accepted. Existing original calls remain locked; append dated reviews. A WAIT is a valid call, not an instruction to force a position. Weekly/monthly checkpoints never force a sale.
 
-This specification is a release candidate until the shared stage acceptance and deployed source revision are recorded. If the release gate is disabled, report `SHARED_EVALUATOR_ADAPTER_NOT_VERIFIED`; continue the independent upstream stages and do not fall back to personal recommendations or bypass the gate. The existing 04:30-09:30 Perth cadence and analytical independence are unchanged.
+This specification is a release candidate until the shared stage acceptance and deployed source revision are recorded. If the release gate is disabled, report `SHARED_EVALUATOR_ADAPTER_NOT_VERIFIED`; continue the independent upstream stages and do not fall back to personal recommendations or bypass the gate. The single 08:00 Perth invocation governs timing; analytical independence is unchanged.
 
 ## Per-invocation behaviour
 
@@ -143,26 +134,21 @@ On every controller invocation:
 3. calculate current Perth and New York timezone-aware date/time;
 4. inspect persisted states for Opportunity, External Opinion, Market Assessment, shared Decision Lab and Opportunity-history cleanup;
 5. determine the earliest eligible unfinished stage;
-6. execute **at most one analytical stage** in that invocation;
+6. execute eligible unfinished analytical stages **sequentially**, each at most once in this invocation with its own separately committed claim and terminal receipt; order Opportunity, External Opinion, Market Assessment, shared publication, then accepted evaluation. Opportunity failures must not starve independently eligible work; External Opinion and Market prerequisites still apply;
 7. after a Market Assessment execution completes, history cleanup may also be started in the same invocation if every prerequisite is now terminal and doing so is safe;
 8. if no analytical stage is due, advance or verify history cleanup if applicable;
 9. never race a currently running recent stage;
 10. never create a duplicate same-date logical run merely because the controller is invoked again.
 
-Later morning invocations are deliberate checkpoints. They should normally find earlier stages already terminal and advance the next eligible stage rather than repeat work.
+No hourly follow-up is expected. Recheck persisted prerequisites between stages and skip completed same-date work. Queue missing history and report blocked research if prices are not ready; do not wait for another worker or poll indefinitely.
 
 ## Expected morning timing
 
-During US daylight saving, the normal pattern is approximately:
+Start at 08:00 Perth daily. Use the actual New York date and verified exchange calendar for External Opinion and Market Assessment; their 17:00 and 18:15 gates remain unchanged. Run eligible stages in sequence and report once at the end. Stop starting new work after 90 minutes (normally 09:30 Perth), finalize safe committed receipts, and report remaining work as partial or blocked. This is an operating budget, not a guaranteed platform cancellation timer.
 
-- 04:30 Perth — Opportunity Assessment
-- 05:30 Perth — External Opinion Review, after 17:00 New York
-- 06:30 Perth — Market Assessment, after 18:15 New York
-- 06:30/07:30 onward — history cleanup and verification
+## Unattended execution
 
-During US standard time, External Opinion and Market Assessment naturally shift roughly one Perth hour later, while the controller schedule remains unchanged.
-
-The objective is normally to have the complete morning pipeline settled by the final 09:30 Perth invocation without maintaining separate ChatGPT task cards.
+Use only permissions already available to the scheduled Trading task. Do not request expanded access, enable evaluator gates, fabricate credentials or wait for interactive approval. If a tool needs approval, fails, times out or has an uncertain write outcome, inspect durable receipts when possible and terminate with a specific blocker; never assume an unreturned write failed or blindly replay it. If access prevents terminal receipt writes, report the attempt UUID and unverified state for recovery. No self-created schedules or indefinite sleeps. A healthy scheduled run must end with a completion, partial, blocked or failure report.
 
 ## Retry, idempotency and overlap
 
@@ -198,7 +184,7 @@ If Tiingo returns a quota/rate-limit condition, stop new provider calls and pres
 
 ## Reporting
 
-Each invocation should report only material state changes. Do not produce six repetitive morning notifications when nothing changed.
+Each invocation should report only material state changes. Emit one end-of-run report; stay quiet when state is unchanged under the saved notification policy.
 
 The final morning state should summarise:
 
@@ -231,7 +217,7 @@ Before work commit private.claim_trading_stage_v1(stage, exact_commit_sha) and r
 
 At most two attempts per analytical stage per Perth morning; at most six preflight receipts. Exhausting an independent earlier stage must not starve a later independently eligible stage. Preserve the failed prerequisite and do not bypass actual research dependencies. Supported shares may progress from a truthful terminal partial assessment. Do not race a recent running attempt. After 45 minutes inspect actual task/subsystem activity before recording interruption or attempting safe resume. Never change a frozen cutoff or backdate a missed decision.
 
-By the final 09:30 invocation report saved research, shared publication and accepted scheduled evaluation receipts, unsupported coverage and exact missing evidence. Zero new BUY calls is not a failure if the required reviews are saved. No calls to evaluate, missing fresh research or missing controller receipts cannot count as successful operation. Renew calendar verification from official sources before expiry; never merely extend a timestamp.
+At the end of the single 08:00 invocation report saved research, shared publication and accepted scheduled evaluation receipts, unsupported coverage and exact missing evidence. Zero new BUY calls is not a failure if the required reviews are saved. No calls to evaluate, missing fresh research or missing controller receipts cannot count as successful operation. Renew calendar verification from official sources before expiry; never merely extend a timestamp.
 
 ## Unconfigured-venue research-only continuation
 
