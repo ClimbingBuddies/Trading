@@ -1,6 +1,6 @@
 # Daily shared Decision Lab — release candidate v1
 
-Updated 7 October 2026. This file is not evidence that a scheduled invocation adopted it. Record its exact GitHub commit SHA on each actual invocation. Inspect the database-owned evaluator release gate and accepted revision before execution; do not infer eligibility from this document. Keep the existing timetable and single controller.
+Updated 7 October 2026. This file is not evidence that a scheduled invocation adopted it. Record its exact GitHub commit SHA on each actual invocation. Inspect the database-owned evaluator release gate and accepted revision before execution; do not infer eligibility from this document. Use the single daily 08:00 Australia/Perth Trading controller; no hourly follow-up schedule.
 
 ## Inputs and ownership
 
@@ -17,7 +17,7 @@ Read the fresh `automation/daily-trading-controller.md`, independent Market Asse
 
 ## Publish genuine shared research
 
-Publication is one analytical stage under the controller's existing limit. For each eligible candidate, use its current independent assessment plus the exact database-returned input bundle and hash. Generate a concise action, thesis and material risks using the actual model identity. BUY, WAIT, HOLD, SELL, REDUCE and AVOID are possible; do not force a BUY to populate the screen.
+Publication is a separate analytical stage in the controller's single sequential daily invocation, with its own claim and terminal receipt. For each eligible candidate, use its current independent assessment plus the exact database-returned input bundle and hash. Generate a concise action, thesis and material risks using the actual model identity. BUY, WAIT, HOLD, SELL, REDUCE and AVOID are possible; do not force a BUY to populate the screen.
 
 Call `private.publish_shared_decision_v1(assessment_id, action, thesis, risks, model_identity, input_hash)`. The database owns publication time, locks the instrument, enforces assessment reuse and appends reviews to an open cycle. Reuse an identical payload for a known retry; changed content for the same assessment is rejected. Do not insert calls/reviews directly, backdate them, copy sample calls or copy an old personal call into shared history.
 
