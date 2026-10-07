@@ -7,7 +7,6 @@ import type { User } from '@supabase/supabase-js'
 import { getBrowserSupabase } from '@/lib/supabase-browser'
 import { parseHoldingsCsv, type HoldingsCsvValue } from '@/lib/portfolio-holdings-csv.mjs'
 import styles from './MyDashboardClient.module.css'
-import PredictionWorkspace from './PredictionWorkspace'
 import SharedDecisionWorkspace from './SharedDecisionWorkspace'
 import WatchlistsClient from './WatchlistsClient'
 
@@ -1112,9 +1111,7 @@ export default function MyDashboardClient() {
 
   return (
     <div className={styles.dashboard}>
-      <header className={styles.header}>
-        <h1 className={styles.srOnly}>My Dashboard</h1>
-      </header>
+      {selectedTab !== 'decision-lab' && <header className={styles.header}><h1 className={styles.srOnly}>My Dashboard</h1></header>}
 
       <div className={styles.tabScroller}>
         <div className={styles.tabs} role="tablist" aria-label="My Dashboard sections">
@@ -1129,7 +1126,7 @@ export default function MyDashboardClient() {
         {selectedTab === 'recommendations' ? (
           <WatchlistsClient key={user.id} ownerId={user.id} embedded />
         ) : selectedTab === 'decision-lab' ? (
-          <><SharedDecisionWorkspace key={user.id} /><details><summary>Legacy personal Decision Lab</summary><PredictionWorkspace key={user.id} ownerId={user.id} mode="decision-lab" /></details></>
+          <SharedDecisionWorkspace key={user.id} />
         ) : privateDataState === 'error' ? (
           <article className={styles.stateCard} aria-live="assertive">
             <span className={styles.eyebrow}>PRIVATE DATA UNAVAILABLE</span>
