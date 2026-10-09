@@ -8,6 +8,8 @@ One immutable original `shared_decision_calls.id` identifies a paper cycle for a
 
 Only trusted publication accepts independent research with a validated 64-character SHA-256 input hash, actual model identity, source cutoff and database-owned publication timestamp. The local engine does not validate research authenticity. Public reads contain no owner IDs, watchlist membership of other users, private notes or raw generation snapshots.
 
+For future publications, the private input bundle includes `opportunity_context` version `opportunity-context-v1`. It contains only theme mappings and Opportunity assessments already completed at the frozen Market Assessment cutoff, with a seven-day lookback and explicit missing/partial status. The bundle is hash-pinned with the other candidate inputs. Opportunity is a separate long-term lens for the final shared action and thesis; it never changes the independent Market Assessment score or Market Convergence. Older calls and evidence snapshots remain unchanged.
+
 ## Public read model
 
 The future server/API adapter returns `contractVersion: 1`, `generatedAt` (UTC ISO timestamp), `items`, `nextCursor` (opaque string or null), counts and scheduled-run status. Each item has:
@@ -37,6 +39,8 @@ The engine's string state is an intermediate result, not a persisted UI enum. Th
 ## Lists and filtering
 
 `scope=all|watched`, `checkpoint=latest|5|20`, page size 50 capped at 100. Watched scope is calculated under the current authenticated user's RLS; never accept a caller-supplied owner ID. Sort by original publication descending then call ID descending with a cursor over both keys. Stable list refresh may restart pagination. Counts describe the entire selected scope, not the current page, using disjoint position states; needs-attention is a separate overlapping data-health count. All cycles can be listed; label closed cycles clearly. Blocking rows without calls are counted separately from tracked calls.
+
+Decision Lab lives at `/decision-lab` in primary navigation, outside My Dashboard's personal tabs. The default `all` scope shows the same shared calls to every signed-in account; `watched` filters those calls using only that account's private watchlists. Accounts choose instruments at `/watchlists`. A watchlist change affects the personal view, not the shared publication universe or historical results. The old `/my-dashboard?tab=decision-lab` link redirects to the standalone page. The page remains authenticated while private notes are available in its drawer; anonymous publication requires a separate read-access and notes-isolation design decision.
 
 ## Detail drawer and evidence
 

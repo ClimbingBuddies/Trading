@@ -1,10 +1,10 @@
 # Daily Trading reliability and recovery
 
-Version 2, 7 October 2026. Applies to the single existing local trading controller.
+Version 2, 7 October 2026. Applies to the single cloud ChatGPT Daily Trading Controller.
 
 ## Independent monitor
 
-Supabase cron `trading-pipeline-watchdog-v1` reconciles durable records every 15 minutes even if the local computer is off. A morning is due by 10:15 Australia/Perth, following the single 08:00 Perth controller run and its 90-minute operating budget. Enforcement begins 5 October 2026. Opportunity remains daily; US shared research is due only for the applicable New York trading day. Missing or expired calendar trust raises a blocker rather than manufacturing a holiday skip.
+Supabase cron `trading-pipeline-watchdog-v1` reconciles durable records every 15 minutes independently of the cloud ChatGPT task. A morning is due by 10:15 Australia/Perth, following the single 08:00 Perth controller run and its 90-minute operating budget. Enforcement begins 5 October 2026. Opportunity remains daily; US shared research is due only for the applicable New York trading day. Missing or expired calendar trust raises a blocker rather than manufacturing a holiday skip.
 
 `private.trading_pipeline_mornings` saves each day's latest reconciliation. `private.trading_pipeline_incidents` retains deduplicated per-day failures and recovery timestamps. Unresolved previous mornings remain visible; a successful later morning does not erase them. The monitor does not generate research, rewrite calls, evaluate hypothetical trades or access private notes.
 
@@ -22,7 +22,7 @@ If an independent earlier stage exhausts its retry budget, preserve its blocker 
 
 The monitor verifies a successful complete Opportunity receipt; terminal scheduled external research; fresh independent scheduled Market Assessments for the target NY date; assessment usage in the immutable shared publication registry; and successful per-call evaluation receipts from the accepted scheduled evaluator revision after publication. It does not trust the task's active setting or a completion message. WAIT is a valid published call. Zero new BUY calls can be healthy.
 
-Coverage limitations remain PARTIAL, never COMPLETE. Calendar expiry warnings begin 48 hours before expiry. The browser warns if monitor evidence is missing, malformed, from the future or more than 30 minutes old. Local research still depends on the computer/app, tools, quota and correct Trading project folder; the cloud monitor detects resulting silence but does not remove that dependency.
+Coverage limitations remain PARTIAL, never COMPLETE. Calendar expiry warnings begin 48 hours before expiry. The browser warns if monitor evidence is missing, malformed, from the future or more than 30 minutes old. Cloud research depends on the scheduled task's connected tools, authorization and usage limits; the independent Supabase monitor detects resulting silence but does not perform the research itself.
 
 ## Recovery
 
