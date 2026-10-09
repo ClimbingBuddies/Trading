@@ -50,6 +50,59 @@ create trigger shared_call_assessment_usage after insert on public.shared_decisi
 create trigger shared_review_assessment_usage after insert on public.shared_decision_reviews
  for each row execute function private.register_shared_assessment_v1();
 
+-- Optional downstream context: Opportunity remains independent from the Market
+-- Assessment. Only rows already completed at the frozen Market cutoff enter the
+-- private, hash-pinned publication bundle.
+create function private.shared_opportunity_context_v1(p_instrument uuid,p_cutoff timestamptz) returns jsonb
+language plpgsql security definer set search_path=pg_catalog as $$
+declare mapped_count integer; assessed_count integer; themes jsonb; context_status text;
+begin
+ if p_instrument is null or p_cutoff is null or p_cutoff>clock_timestamp()
+ then raise exception 'INVALID_OPPORTUNITY_CONTEXT_CUTOFF'; end if;
+ with mapped as (
+  select m.theme_id,m.exposure_type,m.exposure_score,m.rationale,m.created_at mapping_created_at,
+   m.updated_at mapping_updated_at,t.theme_name
+  from public.opportunity_theme_instruments m
+  join public.opportunity_themes t on t.id=m.theme_id
+  where m.instrument_id=p_instrument and m.is_active
+   and m.created_at<=p_cutoff and m.updated_at<=p_cutoff
+   and t.created_at<=p_cutoff and t.updated_at<=p_cutoff
+ ), available as (
+  select m.*,a.id assessment_id,a.assessment_date,a.opportunity_score,
+   a.opportunity_confidence,a.opportunity_level,a.commercial_readiness,a.time_horizon,
+   a.assessment_run_id,r.completed_at run_completed_at
+  from mapped m left join lateral (
+   select a.* from public.opportunity_assessments a
+   join public.opportunity_assessment_runs r on r.run_id=a.assessment_run_id
+   where a.theme_id=m.theme_id and a.methodology_version='opportunity-convergence-v1'
+    and r.assessment_date=a.assessment_date and r.status in ('succeeded','partial')
+    and r.completed_at is not null and r.completed_at<=p_cutoff
+    and a.created_at<=p_cutoff and a.updated_at<=p_cutoff
+    and a.assessment_date between (p_cutoff at time zone 'Australia/Perth')::date-6
+      and (p_cutoff at time zone 'Australia/Perth')::date
+   order by a.assessment_date desc,a.updated_at desc,a.id desc limit 1
+  ) a on true
+  left join public.opportunity_assessment_runs r on r.run_id=a.assessment_run_id
+ )
+ select count(*)::integer,count(assessment_id)::integer,
+  coalesce(jsonb_agg(jsonb_build_object(
+   'theme_id',theme_id,'theme_name',theme_name,'exposure_type',exposure_type,
+   'exposure_score',exposure_score,'exposure_rationale',rationale,
+   'mapping_created_at',mapping_created_at,'mapping_updated_at',mapping_updated_at,
+   'assessment_id',assessment_id,'assessment_date',assessment_date,
+   'opportunity_score',opportunity_score,'opportunity_confidence',opportunity_confidence,
+   'opportunity_level',opportunity_level,'commercial_readiness',commercial_readiness,
+   'time_horizon',time_horizon,'assessment_run_id',assessment_run_id,
+   'run_completed_at',run_completed_at) order by theme_name,theme_id),'[]'::jsonb)
+ into mapped_count,assessed_count,themes from available;
+ context_status:=case when mapped_count=0 then 'NO_MAPPED_THEME'
+  when assessed_count=0 then 'NO_AS_OF_ASSESSMENT'
+  when assessed_count<mapped_count then 'PARTIAL' else 'AVAILABLE' end;
+ return jsonb_build_object('version','opportunity-context-v1','status',context_status,'as_of_cutoff',p_cutoff,
+  'lookback_days',7,'mapped_count',mapped_count,'assessed_count',assessed_count,
+  'themes',themes);
+end $$;
+
 create function private.shared_decision_input_v1(p_assessment uuid) returns jsonb
 language plpgsql security definer set search_path=pg_catalog as $$
 declare a record; cfg record; prices jsonb; benchmarks jsonb; history jsonb;
@@ -106,7 +159,9 @@ begin
  union all select r.id,r.assessment_id,r.published_at,r.source_cutoff,r.action,r.thesis,r.risks from public.shared_decision_reviews r
  join public.shared_decision_calls c on c.id=r.call_id where c.instrument_id=a.instrument_id) e;
  return jsonb_build_object('assessment',to_jsonb(a),'configuration',to_jsonb(cfg),
- 'prices',prices,'benchmark_prices',benchmarks,'history',history,'methodology','shared-decision-lab-v1');
+ 'prices',prices,'benchmark_prices',benchmarks,'history',history,
+ 'opportunity_context',private.shared_opportunity_context_v1(a.instrument_id,a.analysis_cutoff_time),
+ 'methodology','shared-decision-lab-v1');
 end $$;
 
 create function private.publish_shared_decision_v1(p_assessment uuid,p_action text,p_thesis text,p_risks text,p_model text,p_input_hash text)
@@ -198,6 +253,6 @@ begin
   return next;
  end loop;
 end $$;
-revoke all on function private.shared_decision_input_v1(uuid),private.publish_shared_decision_v1(uuid,text,text,text,text,text),
+revoke all on function private.shared_opportunity_context_v1(uuid,timestamptz),private.shared_decision_input_v1(uuid),private.publish_shared_decision_v1(uuid,text,text,text,text,text),
  private.shared_decision_candidates_v1(),private.register_shared_assessment_v1(),private.shared_outcome_gate_v1() from public,anon,authenticated,service_role;
 commit;
