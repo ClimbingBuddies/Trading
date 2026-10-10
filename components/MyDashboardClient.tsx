@@ -7,7 +7,6 @@ import type { User } from '@supabase/supabase-js'
 import { getBrowserSupabase } from '@/lib/supabase-browser'
 import { parseHoldingsCsv, type HoldingsCsvValue } from '@/lib/portfolio-holdings-csv.mjs'
 import styles from './MyDashboardClient.module.css'
-import SharedDecisionWorkspace from './SharedDecisionWorkspace'
 import WatchlistsClient from './WatchlistsClient'
 
 const tabs = [
@@ -15,7 +14,6 @@ const tabs = [
   { key: 'recommendations', label: 'Recommendations' },
   { key: 'opportunities', label: 'Opportunities' },
   { key: 'portfolio-health', label: 'Portfolio Health' },
-  { key: 'decision-lab', label: 'Decision Lab' },
 ] as const
 
 const DEFAULT_BASE_CURRENCY = 'AUD'
@@ -296,6 +294,10 @@ export default function MyDashboardClient() {
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const selectedTab = validTab(searchParams.get('tab'))
+
+  useEffect(() => {
+    if (searchParams.get('tab') === 'decision-lab') router.replace('/decision-lab')
+  }, [router, searchParams])
   const activeOwnerRef = useRef<string | null>(null)
   const loadGenerationRef = useRef(0)
   const [user, setUser] = useState<User | null>(null)
@@ -1111,7 +1113,7 @@ export default function MyDashboardClient() {
 
   return (
     <div className={styles.dashboard}>
-      {selectedTab !== 'decision-lab' && <header className={styles.header}><h1 className={styles.srOnly}>My Dashboard</h1></header>}
+      <header className={styles.header}><h1 className={styles.srOnly}>My Dashboard</h1></header>
 
       <div className={styles.tabScroller}>
         <div className={styles.tabs} role="tablist" aria-label="My Dashboard sections">
@@ -1125,8 +1127,6 @@ export default function MyDashboardClient() {
       <section id={`my-dashboard-panel-${selectedTab}`} role="tabpanel" aria-labelledby={`my-dashboard-tab-${selectedTab}`} tabIndex={0}>
         {selectedTab === 'recommendations' ? (
           <WatchlistsClient key={user.id} ownerId={user.id} embedded />
-        ) : selectedTab === 'decision-lab' ? (
-          <SharedDecisionWorkspace key={user.id} />
         ) : privateDataState === 'error' ? (
           <article className={styles.stateCard} aria-live="assertive">
             <span className={styles.eyebrow}>PRIVATE DATA UNAVAILABLE</span>

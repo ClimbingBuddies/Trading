@@ -11,6 +11,7 @@ const items = [
   { href: '/markets', label: 'Markets', icon: '⌁' },
   { href: '/assessments', label: 'Assessments', icon: '◇' },
   { href: '/opportunities', label: 'Opportunities', icon: '◎' },
+  { href: '/decision-lab', label: 'Decision Lab', icon: '◈' },
   { href: '/watchlists', label: 'Watchlists', icon: '☆' },
   { href: '/alerts', label: 'Alerts', icon: '!' },
   { href: '/strategies', label: 'Strategies', icon: '⬡' },
