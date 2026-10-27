@@ -12,10 +12,11 @@ function fmtScore(value: number | null | undefined) {
   return value === null || value === undefined ? '—' : Math.round(value).toString()
 }
 
-function fmtDelta(value: number | null | undefined) {
+function fmtDelta(value: number | null | undefined, isToday: boolean) {
   if (value === null || value === undefined) return 'New assessment'
-  if (Math.abs(value) < 0.005) return '— 0.0 today'
-  return value > 0 ? `▲ +${value.toFixed(1)} today` : `▼ ${value.toFixed(1)} today`
+  const period = isToday ? 'today' : 'in last run'
+  if (Math.abs(value) < 0.005) return `— 0.0 ${period}`
+  return value > 0 ? `▲ +${value.toFixed(1)} ${period}` : `▼ ${value.toFixed(1)} ${period}`
 }
 
 function deltaTone(value: number | null | undefined) {
@@ -97,7 +98,7 @@ export default function OpportunityCarousel({
               </div>
               <div className={`${styles.cardScore} ${dailyStyles.cardScoreStack}`}>
                 <div className={dailyStyles.cardScoreMain}><strong>{fmtScore(row.latest?.opportunity_score)}</strong><span>/100</span></div>
-                {daily?.updatedInLatestRun && <div className={`${dailyStyles.cardDelta} ${deltaTone(daily.scoreDelta)}`}>{fmtDelta(daily.scoreDelta)}</div>}
+                {daily?.updatedInLatestRun && <div className={`${dailyStyles.cardDelta} ${deltaTone(daily.scoreDelta)}`}>{fmtDelta(daily.scoreDelta, latestRunIsToday)}</div>}
               </div>
             </div>
             <p>{row.theme.description ?? row.latest?.summary ?? 'Assessment detail will appear after the next Opportunity Assessment.'}</p>
