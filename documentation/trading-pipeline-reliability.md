@@ -10,6 +10,12 @@ Supabase cron `trading-pipeline-watchdog-v1` reconciles durable records every 15
 
 The authenticated `trading_pipeline_status_v1` projection provides shared operational counts and sanitized blocker codes only. Monitoring tables and mutation functions are inaccessible to anonymous users, authenticated users and the service role. The privileged controller uses the private SQL boundary.
 
+### Display evidence safeguards — 27 October 2026
+
+The browser validates the full rendered status contract and clears previous status after a failed or malformed refresh. A COMPLETE label cannot override incomplete/inconsistent stage counts, missing completion/controller/research evidence, absent/expired calendar trust, current blockers or unsupported coverage. A non-session skip also requires calendar trust. Unknown status names are treated as unverified rather than looked up through object prototypes.
+
+A pre-deadline PENDING snapshot is not a failed run. If its deadline passes without a verified post-deadline check, the browser labels completion unverified and does not claim that the controller failed. Current problems and older unresolved incidents remain visible. These safeguards do not write stage receipts or repair jobs; see the [verification checkpoint](project-audits/REL-002-monitor-2026-10-27.md).
+
 ## Controller receipts and budgets
 
 Before executing the selected stage, commit `select private.claim_trading_stage_v1('[STAGE]','[EXACT_GITHUB_COMMIT_SHA]');` and retain its returned UUID. After inspecting the subsystem's saved receipt, commit `select private.finish_trading_stage_v1('[ATTEMPT_UUID]','[completed|partial|blocked|failed]','[SANITIZED_REASON_OR_NULL]');`. Start and finish must use separate committed transactions so crashes leave visible evidence. Do not record secrets, source text or private notes in a reason code.
