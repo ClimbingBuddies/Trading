@@ -16,6 +16,7 @@ The [canonical project plan](project-plan.md) points to the active [Reliable Res
 - [Reliable Research and Decision Lab — active improvement plan](trading-reliability-and-decision-plan.md)
 - [Formal product review — 26 October 2026](project-audits/PRODUCT-REVIEW-2026-10-26.md)
 - [Source recovery and first implementation checkpoint — 27 October 2026](project-audits/REL-001-2026-10-27.md)
+- [Assessment source labels and recovery diagnostics — 27 October 2026](project-audits/REL-003-2026-10-27.md)
 - [Trading product acceptance specification](specifications/trading-product-acceptance.md)
 - [Platform architecture](platform-architecture.md)
 - [Assessment system overview](assessment-system-overview.md)

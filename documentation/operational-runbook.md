@@ -1,5 +1,13 @@
 # Discover Boulders Markets — Operational Runbook
 
+## Current shared Decision Lab recovery — 27 October 2026
+
+Use the recovered shared-production source, not old main's personal prediction workflow. The [source-reconciliation checkpoint](project-audits/REL-001-2026-10-27.md) records the deployed identity; the [active improvement plan](trading-reliability-and-decision-plan.md) tracks what remains unverified. The historical personal-workflow section below is not an instruction to reapply its migration or replace shared records.
+
+An authorised database administrator can run [the read-only recovery inventory](../scripts/inspect-trading-recovery.sql) in a client that stops on error. It uses a read-only transaction, bounded timeouts and rollback; it selects no cron command text, function bodies, user notes or credentials. It has passed representative schema-fixture execution, not production-admin acceptance. Missing relations or denied permissions require source/access reconciliation; do not grant browser/service-role access or run old migrations to force it through.
+
+The inventory distinguishes backend cron jobs from the **external single 08:00 Perth controller**. Inspect that controller's actual saved source pin and invocation history separately. Compare receipts, supported instrument configuration, calendar expiry and evaluator release before attempting recovery. Use the existing supported claim/publication/evaluation paths after restoring their diagnosed prerequisites; the inventory itself changes nothing. Preserve original decisions and frozen evidence, do not backdate missed work, and never create a second controller because a receipt is absent.
+
 ## Personal prediction workflow
 
 The additive migration source is `scripts/prediction-ledger-v1.sql`, applied under the migration name `personal_prediction_ledger_v1`. The standard CLI could not initialise its local cache in the restricted desktop environment, so this change uses the Supabase migration connector. Do not apply the SQL twice.
