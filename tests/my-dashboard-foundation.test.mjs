@@ -23,9 +23,12 @@ test('MYDASH-002 migration enforces permanent-user ownership on both personal ta
 
 test('MYDASH-002 shell exposes combined watchlist and accessible private tabs', async () => {
   const component = await readFile(componentPath, 'utf8')
-  for (const key of ['today', 'recommendations', 'opportunities', 'portfolio-health', 'decision-lab']) {
+  for (const key of ['today', 'recommendations', 'opportunities', 'portfolio-health']) {
     assert.match(component, new RegExp(`key: '${key}'`))
   }
+  assert.doesNotMatch(component, /key: 'decision-lab'/)
+  const navigation = await readFile(new URL('../components/AppNav.tsx', import.meta.url), 'utf8')
+  assert.match(navigation, /href: '\/decision-lab', label: 'Decision Lab'/)
   assert.match(component, /role="tablist"/)
   assert.match(component, /ArrowRight/)
   assert.match(component, /ArrowLeft/)

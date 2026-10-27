@@ -8,8 +8,8 @@ const researchItems=['1AI','FIG','WA1'].map((symbol,n)=>({instrument:{id:'resear
 const dashboard=()=>({contractVersion:1,items:structuredClone(calls),blockedItems:[],nextCursor:null,blockedNextCursor:null,counts:{trackedCalls:4,callsNeedingAttention:0,blockedWithoutCall:0}});
 const status=()=>calls.map(c=>({callId:c.callId,eventId:c.original.id,status:'pending',actionReturn:null,asOf:null,blocker:null}));
 function load(file,append,states=[],research={payload:{items:researchItems},loading:false,error:''},client={}){
- let index=0;const writes=[],effects=[];const react={useId:()=> 'research',useState:v=>{const n=index++;return[n in states?states[n]:v,value=>writes.push({n,value})]},useEffect:f=>effects.push(f),useCallback:f=>f,useRef:v=>({current:v})};
- const source=fs.readFileSync(new URL('../components/'+file+'.tsx',import.meta.url),'utf8');const exports={};vm.runInNewContext(ts.transpileModule(source+'\n'+append,{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX,target:ts.ScriptTarget.ES2022}}).outputText,{exports,require:name=>name==='react'?react:name==='react/jsx-runtime'?{jsx,jsxs:jsx,Fragment:'fragment'}:name.includes('supabase-browser')?{getBrowserSupabase:()=>client}:name.includes('SharedResearchRecommendations')?{default:name,useSharedResearchRecommendations:()=>research}:{default:name},Set,Map,Date,Number,crypto:{randomUUID:()=> 'request'}});return {exports,writes,effects};
+ let index=0;const writes=[],effects=[],redirects=[];const react={useId:()=> 'research',useState:v=>{const n=index++;return[n in states?states[n]:v,value=>writes.push({n,value})]},useEffect:f=>effects.push(f),useCallback:f=>f,useRef:v=>({current:v})};
+ const source=fs.readFileSync(new URL('../components/'+file+'.tsx',import.meta.url),'utf8');const exports={};vm.runInNewContext(ts.transpileModule(source+'\n'+append,{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX,target:ts.ScriptTarget.ES2022}}).outputText,{exports,require:name=>name==='react'?react:name==='react/jsx-runtime'?{jsx,jsxs:jsx,Fragment:'fragment'}:name==='next/navigation'?{useRouter:()=>({replace:path=>redirects.push(path)})}:name.includes('supabase-browser')?{getBrowserSupabase:()=>client}:name.includes('SharedResearchRecommendations')?{default:name,useSharedResearchRecommendations:()=>research}:{default:name},Set,Map,Date,Number,crypto:{randomUUID:()=> 'request'}});return {exports,writes,effects,redirects};
 }
 function render(options={}){
  const p=options.payload===undefined?dashboard():options.payload;const scope=options.scope||'all',h=options.horizon||5,page=options.page||{cursor:null,blocked:null},revision=options.revision||0;
@@ -35,5 +35,36 @@ test('verified mature fraction is formatted once; paper-cycle return remains dis
 test('missing latest event triggers review attention while genuine pending trials do not',()=>{const complete=render();const completeButton=nodes(complete.tree,n=>n.type==='button'&&text(n).startsWith('Review status'))[0];assert.equal(text(completeButton).includes('Attention'),false);const statuses=status();statuses[0].eventId='obsolete';const missing=render({statuses,reviewOpen:true});assert.match(text(nodes(missing.tree,n=>n.type==='button'&&text(n).startsWith('Review status'))[0]),/Attention/);assert.match(text(nodes(missing.tree,n=>n.type==='\.\/TradingPipelineStatus')[0]),/No verified result matches/);});
 test('research hook suppresses stale scope/revision response and stale cached payload',async()=>{let resolve;const r=load('SharedResearchRecommendations','',[0,null],undefined,{rpc:()=>new Promise(done=>resolve=done)});r.exports.useSharedResearchRecommendations('all',0);const cleanup=r.effects[0]();cleanup();resolve({error:null,data:{contractVersion:1,generatedAt:'2026-10-07T02:00:00Z',items:researchItems}});await new Promise(done=>setTimeout(done,0));assert.equal(r.writes.length,0);const changed=load('SharedResearchRecommendations','',[0,{key:'all:0:0',payload:{items:researchItems},error:false}]);const value=changed.exports.useSharedResearchRecommendations('watched',1);assert.equal(value.payload,undefined);assert.equal(value.loading,true);});
 test('status validator rejects non-mature checkpoint and mature blocker contradictions',()=>{const {exports}=render();for(const changes of [{asOf:'2026-10-07T00:00:00Z'},{status:'blocked',asOf:'2026-10-07T00:00:00Z'},{status:'matured',actionReturn:'0.125',asOf:'2026-10-07T00:00:00Z',blocker:'PINNED_EVIDENCE_REVISED'}]){const p={contractVersion:1,horizon:5,items:[{...status()[0],...changes}]};assert.equal(exports.validActionStatus(p,5),false);}});
-test('dashboard Decision Lab branch renders only shared compact workspace',()=>{const source=fs.readFileSync(new URL('../components/MyDashboardClient.tsx',import.meta.url),'utf8');const ast=ts.createSourceFile('MyDashboardClient.tsx',source,ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX);let branch;function visit(n){if(ts.isConditionalExpression(n)&&n.condition.getText(ast).replace(/\s+/g,'')==="selectedTab==='decision-lab'")branch=n.whenTrue;ts.forEachChild(n,visit);}visit(ast);assert.ok(branch);assert.match(branch.getText(ast),/SharedDecisionWorkspace/);assert.equal(/PredictionWorkspace|DecisionWorkspace|<h[12]/.test(branch.getText(ast).replace('SharedDecisionWorkspace','')),false);});
+test('standalone Decision Lab keeps loading and signed-out visitors outside shared workspace',()=>{
+ for(const state of [null,false]){
+  const r=load('DecisionLabClient','',[state]),tree=r.exports.default();r.effects[1]();
+  assert.equal(nodes(tree,n=>n.type==='./SharedDecisionWorkspace').length,0);
+  assert.deepEqual(r.redirects,state===false?['/login?next=/decision-lab']:[]);
+  assert.match(text(tree),state===false?/Taking you to sign in/:/Checking your session/);
+ }
+ const signedIn=load('DecisionLabClient','',[true]),tree=signedIn.exports.default();
+ assert.equal(nodes(tree,n=>n.type==='./SharedDecisionWorkspace').length,1);
+ assert.equal(nodes(tree,n=>n.type==='h1').length,1);
+ assert.equal(nodes(tree,n=>n.type==='./PredictionWorkspace').length,0);
+ const page=fs.readFileSync(new URL('../app/decision-lab/page.tsx',import.meta.url),'utf8');
+ assert.ok(page.includes('<DecisionLabClient />'));
+});
+test('standalone session resolution rejects anonymous or failed authentication and cleans up subscription',async()=>{
+ for(const [session,error,expected]of [[null,null,false],[{user:{is_anonymous:true}},null,false],[{user:{is_anonymous:false}},new Error('session unavailable'),false],[{user:{is_anonymous:false}},null,true]]){
+  let unsubscribed=false,authChanged;
+  const client={auth:{
+   getSession:async()=>({data:{session},error}),
+   onAuthStateChange(callback){
+    authChanged=callback;
+    return {data:{subscription:{unsubscribe(){unsubscribed=true}}}};
+   },
+  }};
+  const r=load('DecisionLabClient','',[null],undefined,client);r.exports.default();const cleanup=r.effects[0]();
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(r.writes.at(-1).value,expected);
+  authChanged('SIGNED_OUT',null);assert.equal(r.writes.at(-1).value,false);
+  cleanup();assert.equal(unsubscribed,true);
+  const count=r.writes.length;authChanged('SIGNED_IN',{user:{is_anonymous:false}});assert.equal(r.writes.length,count);
+ }
+});
 test('pending blocker and unsafe or absent blocked code are rejected',()=>{const {exports}=render();for(const changes of [{blocker:'PINNED_EVIDENCE_REVISED'},{status:'blocked',blocker:null},{status:'blocked',blocker:'Private exception https://secret.example'}])assert.equal(exports.validActionStatus({contractVersion:1,horizon:5,items:[{...status()[0],...changes}]},5),false);assert.equal(exports.validActionStatus({contractVersion:1,horizon:5,items:[{...status()[0],status:'blocked',blocker:'PINNED_EVIDENCE_REVISED'}]},5),true);});
