@@ -1,5 +1,7 @@
 # My Dashboard — Agentic Project Plan
 
+> **Historical delivery plan — current direction updated 26 October 2026.** The [Reliable Research and Decision Lab programme](trading-reliability-and-decision-plan.md) controls new improvement priorities. The DONE gates, private-journal design and completion state below retain their historical meaning; they do not establish present-day production reliability. The live `/decision-lab` now exposes shared AI calls, while personal watchlists and notes remain private. Its production/source alignment, fresh publication, asset coverage and outcome evidence require reconciliation. Preserve this plan and its audits rather than restarting its old agent loop or assuming every historical schema is the current shared implementation. No automation is changed by this note.
+
 **Repository:** ClimbingBuddies/Trading  
 **Production:** https://discoverbouldersmarkets.vercel.app  
 **Supabase project:** glvbqcplgjdfgjyknzsa  

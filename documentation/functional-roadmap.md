@@ -1,6 +1,9 @@
 # Functional Roadmap
 
-**Last reconciled:** 25 August 2026
+**Current direction updated:** 26 October 2026<br>
+**Historical baseline reconciled:** 25 August 2026
+
+The active roadmap is [Reliable Research and Decision Lab](trading-reliability-and-decision-plan.md): restore trustworthy daily operation and source/deployment alignment, verify forward outcomes, add correctly modelled ETFs and FX, then simplify the product. Its evidence-based milestones supersede the future-work ordering below. The earlier operational baseline is retained as dated history and must be reverified before current readiness claims.
 
 The original platform delivery roadmap is complete. Historical task status is retained in the [canonical project plan](project-plan.md) and [independent audit records](project-audits/); it is not repeated here.
 

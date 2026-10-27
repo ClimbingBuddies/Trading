@@ -4,7 +4,14 @@
 **Supabase:** `glvbqcplgjdfgjyknzsa`  
 **Production:** `https://discoverbouldersmarkets.vercel.app`  
 **Vercel project:** `boulders-market`  
-**Last reviewed:** 25 August 2026
+**Current programme reviewed:** 26 October 2026<br>
+**Historical baseline reviewed:** 25 August 2026
+
+## Current improvement programme
+
+The active forward plan is [Reliable Research and Decision Lab](trading-reliability-and-decision-plan.md), strengthened with owner authority on 26 October 2026. It prioritises production/source reconciliation, reliable research and publication, honest freshness and outcome measurement, ETF/FX coverage, and a simpler product.
+
+The implementation tasks, operational labels and completion log below are the **historical platform delivery baseline**. They must not be read as proof that today's pipelines, current shared Decision Lab or investment performance are complete. Preserve those audit records; use the active programme's evidence-specific acceptance criteria for new work. The historical Builder/Auditor process below does not activate this new programme or change scheduled tasks.
 
 ## Purpose
 

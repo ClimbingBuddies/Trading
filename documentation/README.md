@@ -9,10 +9,14 @@ This directory documents the current Discover Boulders Markets platform. Obsolet
 3. Vercel deployment configuration and production behaviour.
 4. Historical audit records for how a result was verified.
 
-The [canonical project plan](project-plan.md) controls authorised work. The [development workflow](development-workflow.md) requires documentation-impact review for significant architecture, schema, security, automation and operational changes.
+The [canonical project plan](project-plan.md) points to the active [Reliable Research and Decision Lab programme](trading-reliability-and-decision-plan.md), strengthened on 26 October 2026. Older completed plans and audit records are historical delivery evidence, not proof of current operation. The [development workflow](development-workflow.md) requires documentation-impact review for significant architecture, schema, security, automation and operational changes.
 
 ## Architecture and product
 
+- [Reliable Research and Decision Lab — active improvement plan](trading-reliability-and-decision-plan.md)
+- [Formal product review — 26 October 2026](project-audits/PRODUCT-REVIEW-2026-10-26.md)
+- [Source recovery and first implementation checkpoint — 27 October 2026](project-audits/REL-001-2026-10-27.md)
+- [Trading product acceptance specification](specifications/trading-product-acceptance.md)
 - [Platform architecture](platform-architecture.md)
 - [Assessment system overview](assessment-system-overview.md)
 - [Supabase data model](supabase-data-model.md)
