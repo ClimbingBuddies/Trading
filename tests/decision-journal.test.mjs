@@ -30,4 +30,37 @@ test('A later AI sell and an observed exit are separate events',()=>{
 test('Unresolved evidence gaps withhold a provisional return',()=>{
  const out=[outcome('ENTRY','2026-01-03'),outcome('MARK','2026-01-10',{net_return:.2}),outcome('DATA_GAP','2026-01-10')]
  assert.equal(decisionRow(p,events,out,[]).result,null)
+ assert.equal(decisionRow(p,events,out,[]).status,'Missing data')
+})
+
+test('A later verified mark resolves an older evidence gap',()=>{
+ const out=[outcome('ENTRY','2026-01-03'),outcome('DATA_GAP','2026-01-10'),outcome('MARK','2026-01-11',{net_return:-.1})]
+ const row=decisionRow(p,events,out,[])
+ assert.equal(row.status,'Open');assert.equal(row.result.net_return,-.1)
+ assert.equal(row.closed,false);assert.equal(row.completed,false)
+})
+
+test('An observed exit preserves its recorded loss despite a later gap',()=>{
+ const out=[outcome('ENTRY','2026-01-03'),outcome('EXIT','2026-01-09',{net_return:-.2}),outcome('DATA_GAP','2026-01-10')]
+ const row=decisionRow(p,events,out,[])
+ assert.equal(row.status,'Closed');assert.equal(row.result.net_return,-.2)
+ assert.equal(row.closed,true);assert.equal(row.completed,true)
+})
+
+test('Cancelled journals are terminal without becoming completed trades',()=>{
+ const row=decisionRow(p,events,[outcome('CANCELLED','2026-01-03'),outcome('DATA_GAP','2026-01-10')],[])
+ assert.equal(row.status,'Not entered');assert.equal(row.closed,true)
+ assert.equal(row.completed,false);assert.equal(row.result,null)
+})
+
+test('Legacy not-entered results close the timing plan without scoring a return',()=>{
+ const legacy={...p,methodology:'timing-v1',action:'BUY',horizon_sessions:5}
+ const results=[{prediction_id:'p',status:'PENDING_ENTRY',evaluated_at:'2026-01-02'},
+  {prediction_id:'p',status:'NOT_ENTERED',evaluated_at:'2026-01-10',net_return:0}]
+ for(const checkpoint of ['MARK','CHECKPOINT_5']) {
+  const row=decisionRow(legacy,[],[],results,checkpoint)
+  assert.equal(row.status,'Not entered');assert.equal(row.closed,true)
+  assert.equal(row.completed,false);assert.equal(row.result,null)
+  assert.equal(row.entry,null);assert.equal(row.exit,null)
+ }
 })
