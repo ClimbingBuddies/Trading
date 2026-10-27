@@ -36,6 +36,10 @@ The frontend is a presentation and owner-workspace layer over Supabase. It does 
 - External opinion is provenance-bearing evidence within its approved Market research role; it is not counted twice.
 - Strategy results are evidence, not permission to trade. The current outcome remains `continue_testing`.
 
+### Saved assessment dates and source identity — 27 October 2026
+
+`/assessments` presents saved research, not verified current calls. AI and Convergence ages use New York calendar dates and are not trading-session freshness verdicts. Convergence counts are separated by exact displayed AI record and instrument identity; mismatched records remain visible as historical/different AI input. Missing or invalid provenance cannot count as a match. Reported model confidence is not a measured prediction success rate. This presentation safeguard does not refresh research or change publication/evaluation methodology. See the [REL-003 checkpoint](project-audits/REL-003-2026-10-27.md).
+
 ## Interaction contract
 
 - Navigation, cards, tabs and selectors must remain keyboard operable.
