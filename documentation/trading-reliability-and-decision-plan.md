@@ -18,6 +18,8 @@
 
 **Fourth increment:** [Private journal status corrections](project-audits/REL-004-journal-status-2026-10-27.md) verified with 408 passing tests. This fixes two reproduced legacy helper defects; the shared outcome audit remains outstanding.
 
+**Fifth increment:** [Shared dashboard response checks](project-audits/REL-004-dashboard-contract-2026-10-27.md) passed 411 tests and the production build; real all/watched read responses also passed. Invalid nested records now fail visibly before entering the dashboard. Shared outcome calculation verification remains outstanding.
+
 ## Product intent
 
 Build a trustworthy investment-research and paper-testing workspace that answers:

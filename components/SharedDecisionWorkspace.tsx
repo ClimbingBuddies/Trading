@@ -51,7 +51,7 @@ export default function SharedDecisionWorkspace() {
         const client = getBrowserSupabase()
         if (!client) throw new Error('Unavailable')
         const { data, error: failure } = await client.rpc('shared_decision_dashboard_v1', { p_scope: scope, p_checkpoint: 'latest', p_cursor: page.cursor, p_blocked_cursor: page.blocked, p_limit: 50 })
-        if (failure || !data || data.contractVersion !== 1 || !Array.isArray(data.items) || !Array.isArray(data.blockedItems) || !data.counts) throw new Error('Invalid response')
+        if (failure || !validDashboard(data)) throw new Error('Invalid response')
         if (!cancelled) setDashboard({ key: requestKey, payload: data as Payload, error: '' })
       } catch { if (!cancelled) setDashboard({ key: requestKey, payload: null, error: readError }) }
     })()
@@ -124,6 +124,30 @@ export default function SharedDecisionWorkspace() {
     {selected && <DecisionDrawer key={`${selected.callId}:${selected.eventId || ''}`} callId={selected.callId} eventId={selected.eventId} onClose={() => setSelected(null)} />}
     {selectedResearch && <ResearchDecisionDrawer key={selectedResearch.latest.id} item={selectedResearch} onClose={() => setSelectedResearch(null)} />}
   </div>
+}
+
+// Validate every dashboard field dereferenced by this view before storing it.
+// Detail evidence and action-trial returns have separate read contracts.
+function validDashboard(value: unknown): value is Payload {
+  const record = (v: unknown): v is Record<string, unknown> => !!v && typeof v === 'object' && !Array.isArray(v)
+  const nonempty = (v: unknown): v is string => typeof v === 'string' && v.trim().length > 0
+  const timestamp = (v: unknown) => typeof v === 'string' && Number.isFinite(Date.parse(v))
+  const cursor = (v: unknown) => v === null || nonempty(v)
+  const instrument = (v: unknown) => record(v) && ['id', 'symbol', 'name', 'exchange', 'currency'].every(key => nonempty(v[key]))
+  const decision = (v: unknown) => record(v) && nonempty(v.id) && nonempty(v.action) && timestamp(v.publishedAt)
+  const blocker = (v: unknown) => record(v) && ['code', 'message', 'stage', 'nextAction'].every(key => nonempty(v[key])) && (v.lastAttemptAt === null || timestamp(v.lastAttemptAt))
+  if (!record(value) || value.contractVersion !== 1 || !Array.isArray(value.items) || !Array.isArray(value.blockedItems) || !record(value.counts) || !cursor(value.nextCursor) || !cursor(value.blockedNextCursor)) return false
+  for (const key of ['trackedCalls', 'callsNeedingAttention', 'blockedWithoutCall']) {
+    const count = value.counts[key]
+    if (typeof count !== 'number' || !Number.isSafeInteger(count) || count < 0) return false
+  }
+  if ((value.counts.trackedCalls as number) < value.items.length) return false
+  const ids = new Set<string>()
+  for (const item of value.items) {
+    if (!record(item) || !nonempty(item.callId) || ids.has(item.callId) || !instrument(item.instrument) || !decision(item.original) || !(item.latestReview === null || decision(item.latestReview)) || !nonempty(item.state) || !nonempty(item.dataStatus) || !(item.blocker === null || blocker(item.blocker))) return false
+    ids.add(item.callId)
+  }
+  return value.blockedItems.every(item => record(item) && instrument(item.instrument) && blocker(item.blocker))
 }
 
 type ActionStatus = { callId: string; eventId: string; status: 'pending' | 'blocked' | 'matured'; actionReturn: string | null; asOf: string | null; blocker: string | null }

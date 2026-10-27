@@ -15,7 +15,7 @@ function render(options={}){
  const p=options.payload===undefined?dashboard():options.payload;const scope=options.scope||'all',h=options.horizon||5,page=options.page||{cursor:null,blocked:null},revision=options.revision||0;
  const key=`${scope}:${page.cursor||''}:${page.blocked||''}:${revision}`,eventKey=(p?.items||[]).map(c=>`${c.callId}:${c.latestReview?.id||c.original.id}`).join('|');
  const states=[scope,h,page,revision,options.selected||null,options.selectedResearch||null,!!options.performanceOpen,!!options.reviewOpen,{warning:false,title:'Ready'},options.loading?null:{key:options.dashboardKey||key,payload:p,error:options.error||''},options.trialLoading?null:{key:options.trialKey||`${scope}:${h}:${revision}:${eventKey}`,items:options.statuses||status(),error:!!options.trialError}];
- const r=load('SharedDecisionWorkspace','export {validActionStatus,latestDecision};',states,options.research,options.client);return {...r,tree:r.exports.default()};
+ const r=load('SharedDecisionWorkspace','export {validActionStatus,latestDecision,validDashboard};',states,options.research,options.client);return {...r,tree:r.exports.default()};
 }
 const mainTable=tree=>nodes(tree,n=>n.type==='table'&&text(n).includes('Saved AI decisions and selected-horizon action trials'))[0];
 test('compact single table combines four pending calls and three excluded research rows',()=>{const {tree}=render();const rows=nodes(mainTable(tree),n=>n.type==='tbody')[0].props.children;assert.equal(nodes(rows,n=>n.type==='tr').length,7);assert.equal(nodes(rows,n=>n.type==='button').length,7);assert.equal((text(rows).match(/Pending/g)||[]).length,4);assert.equal((text(rows).match(/Research only/g)||[]).length,3);assert.equal(text(rows).includes('99.00%'),false);assert.match(text(tree),/7 saved decisions/);assert.match(text(tree),/4 pending on page/);assert.equal(nodes(tree,n=>n.type==='./SharedAIPerformance').length,0);assert.equal(nodes(tree,n=>n.type==='select').length,2);assert.equal(nodes(tree,n=>n.type==='h1').length,1);});
@@ -68,3 +68,52 @@ test('standalone session resolution rejects anonymous or failed authentication a
  }
 });
 test('pending blocker and unsafe or absent blocked code are rejected',()=>{const {exports}=render();for(const changes of [{blocker:'PINNED_EVIDENCE_REVISED'},{status:'blocked',blocker:null},{status:'blocked',blocker:'Private exception https://secret.example'}])assert.equal(exports.validActionStatus({contractVersion:1,horizon:5,items:[{...status()[0],...changes}]},5),false);assert.equal(exports.validActionStatus({contractVersion:1,horizon:5,items:[{...status()[0],status:'blocked',blocker:'PINNED_EVIDENCE_REVISED'}]},5),true);});
+
+test('dashboard validator rejects nested malformed records and impossible scoped counts',()=>{
+ const {exports}=render()
+ assert.equal(exports.validDashboard(dashboard()),true)
+ for(const mutate of [
+  p=>p.items[0]=null,
+  p=>p.items[0].instrument=null,
+  p=>p.items[0].instrument.symbol=42,
+  p=>p.items[0].original=null,
+  p=>p.items[0].original.publishedAt='invalid',
+  p=>p.items[0].latestReview={id:'review'},
+  p=>p.items[0].dataStatus=null,
+  p=>p.items[0].blocker={message:'Missing details'},
+  p=>{p.items.push(p.items[0]);p.counts.trackedCalls++},
+  p=>p.counts.trackedCalls=3,
+  p=>p.counts.callsNeedingAttention='0',
+  p=>p.counts.blockedWithoutCall=-1,
+  p=>p.nextCursor={},
+  p=>p.blockedItems=[null],
+  p=>p.blockedItems=[{instrument:calls[0].instrument,blocker:null}],
+ ]){
+  const payload=dashboard();mutate(payload)
+  assert.equal(exports.validDashboard(payload),false)
+ }
+})
+test('invalid dashboard responses clear prior records and show unavailable instead of storing unsafe data',async()=>{
+ for(const data of [null,{...dashboard(),items:[null]},{...dashboard(),counts:{}}]){
+  const r=render({client:{rpc:async()=>({data,error:null})}})
+  r.effects[0]()
+  await new Promise(done=>setImmediate(done))
+  const update=r.writes.find(w=>w.n===9)
+  assert.ok(update);assert.equal(update.value.payload,null)
+  assert.match(update.value.error,/No results have been substituted/)
+  const failed=render({payload:null,error:update.value.error,research:{payload:{items:[]},loading:false,error:''}})
+  assert.match(text(failed.tree),/Decision records could not be verified/)
+  assert.equal(text(failed.tree).includes('No saved AI decisions in this scope'),false)
+ }
+})
+test('valid dashboard response is retained while cancelled requests cannot replace it',async()=>{
+ const payload=dashboard()
+ const r=render({client:{rpc:async()=>({data:payload,error:null})}})
+ r.effects[0]();await new Promise(done=>setImmediate(done))
+ assert.equal(r.writes.find(w=>w.n===9).value.payload,payload)
+ let resolve
+ const late=render({client:{rpc:()=>new Promise(done=>resolve=done)}})
+ const cleanup=late.effects[0]();cleanup();resolve({data:payload,error:null})
+ await new Promise(done=>setImmediate(done))
+ assert.equal(late.writes.filter(w=>w.n===9).length,0)
+})
