@@ -2,16 +2,14 @@
 
 import { useEffect, useState, type ReactNode } from 'react'
 import { getBrowserSupabase } from '@/lib/supabase-browser'
-import { describePipelineStatus } from '@/lib/trading-pipeline-status.mjs'
+import { describePipelineStatus, isPipelineStatusPayload, type PipelineProblem, type PipelineStatus } from '@/lib/trading-pipeline-status.mjs'
 import styles from './TradingPipelineStatus.module.css'
 
-type Problem = { code: string; message: string; nextAction: string }
-type Status = { contractVersion: number; lastCompletedMorningAt: string | null; incidents: (Problem & {id:string;date:string})[]; snapshot: {checkedAt:string;deadline:string;nextExpectedAt:string;marketSession:string;lastResearchAt:string|null;controllerLastSeenAt:string|null;calendarExpiresAt:string|null;problems:Problem[];instruments:{symbol:string;reason:string|null}[]} | null }
 const when=(s?:string|null)=>s&&Number.isFinite(Date.parse(s))?new Intl.DateTimeFormat('en-AU',{timeZone:'Australia/Perth',dateStyle:'medium',timeStyle:'short'}).format(new Date(s)):'Not verified'
-const nextAction=(p:Problem)=>p.code==='CONTROLLER_NOT_SEEN'?'Check the cloud Scheduled task, its latest run, connected plugins and usage limits.':p.nextAction
+const nextAction=(p:PipelineProblem)=>p.code==='CONTROLLER_NOT_SEEN'?'Check the cloud Scheduled task, its latest run, connected plugins and usage limits.':p.nextAction
 
 export default function TradingPipelineStatus({ compact = false, attentionCount = null, children, embedded = false, hidden = false, panelId, onStatusChange }: { compact?: boolean; attentionCount?: number | null; children?: ReactNode; embedded?: boolean; hidden?: boolean; panelId?: string; onStatusChange?: (value: { warning: boolean; title: string }) => void } = {}) {
- const [status,setStatus]=useState<Status|null>(null)
+ const [status,setStatus]=useState<PipelineStatus|null>(null)
  const [failed,setFailed]=useState(false)
  const [now,setNow]=useState(Date.now())
  useEffect(()=>{
@@ -22,9 +20,9 @@ export default function TradingPipelineStatus({ compact = false, attentionCount 
    try {
     const client=getBrowserSupabase()
     const {data,error}=await client.rpc('trading_pipeline_status_v1')
-    if(error||data?.contractVersion!==1||!Array.isArray(data.incidents))throw new Error('Invalid status')
-    if(alive){setStatus(data as Status);setFailed(false)}
-   }catch{if(alive)setFailed(true)}
+    if(error||!isPipelineStatusPayload(data))throw new Error('Invalid status')
+    if(alive){setStatus(data);setFailed(false)}
+   }catch{if(alive){setStatus(null);setFailed(true)}}
    finally{loading=false;if(alive)setNow(Date.now())}
   }
   void read()
