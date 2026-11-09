@@ -1,22 +1,22 @@
 {
   "protocol": 1,
-  "revision": 5,
-  "status": "held",
-  "owner": "Cody",
-  "ownerId": "cody",
-  "cloneId": "a70b247a-5a71-4c2c-acf8-986bda831196",
-  "acquisitionId": "bootstrap-2026-11-09-cody",
-  "taskId": "coordination-rollout",
-  "task": "Implement shared development coordination and recovery",
+  "revision": 6,
+  "status": "free",
+  "owner": null,
+  "ownerId": null,
+  "cloneId": null,
+  "acquisitionId": null,
+  "taskId": null,
+  "task": null,
   "scope": [
     "agent instructions",
     "coordination scripts",
     "development documentation"
   ],
   "startedAt": "2026-11-09T08:37:07.647Z",
-  "heartbeatAt": "2026-11-09T09:06:47.268Z",
-  "localChanges": "clean",
-  "branch": "codex/shared-development-coordination",
+  "heartbeatAt": "2026-11-09T09:07:45.805Z",
+  "localChanges": "secured",
+  "branch": null,
   "publishedCommit": "4a5131c7e77accd673f632062dcaf120e85272ca",
   "stableIntegration": null,
   "production": {
@@ -40,5 +40,8 @@
   "lastJournal": {
     "path": "journal/000001-coordination-rollout.json",
     "commit": "4a5131c7e77accd673f632062dcaf120e85272ca"
-  }
+  },
+  "releasedAt": "2026-11-09T09:07:45.805Z",
+  "lastOwner": "Cody",
+  "handoff": null
 }
