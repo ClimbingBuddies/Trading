@@ -1,0 +1,67 @@
+{
+  "description": "Completed explicitly approved PR #41 merge to main; coordination protocol is now on both default and operational branches.",
+  "databaseAndApi": "No application API, database, migration, live schedule or deployment changes.",
+  "decisions": [
+    "Apply only the reviewed coordination patch to main; preserve divergent application histories.",
+    "User explicitly approved merging PR #41 after the earlier approval-review block."
+  ],
+  "risks": [
+    "Other developer enrollment and pre-existing local work remain unverified.",
+    "Previously recorded baseline dependency-install issue and two application-test failures remain separate work.",
+    "No full-application stable checkpoint is asserted."
+  ],
+  "tests": [
+    {
+      "command": "git diff --exit-code 39716eebd1437bd04245d7dffdbb12d087dda4f9 origin/main",
+      "result": "passed",
+      "scope": "Merged tree exactly matches reviewed candidate"
+    },
+    {
+      "command": "Compare coordination script blob IDs between main and tested implementation",
+      "result": "passed",
+      "scope": "Identical blob 2550019a82b7074471b7275544389290b0833f12; previous 15 safety cases reused"
+    },
+    {
+      "command": "git diff --exit-code previous-main origin/main -- app components lib supabase package.json package-lock.json vercel.json",
+      "result": "passed",
+      "scope": "Runtime, data and deployment configuration unchanged"
+    }
+  ],
+  "outstanding": [
+    "Other developer must enroll using documentation/coordination-onboarding.md.",
+    "Application-history reconciliation, baseline test/dependency repair and optional server protections remain separate decisions."
+  ],
+  "recovery": "If protocol repair is needed, retain coordination history and secure work; use an owned reviewed revert/fix. No database rollback applies.",
+  "relevantCommits": {
+    "implementation": "4a5131c7e77accd673f632062dcaf120e85272ca",
+    "operationalIntegration": "3688c16b6b3b818d3b2c168aea236bff8fe83353",
+    "mainIntegration": "d78d80970f8ad409d7e71bcabacea43fd0c98455"
+  },
+  "pullRequests": [
+    40,
+    41
+  ],
+  "approval": "User explicitly selected Approve merging PR #41 into main on 9 November 2026.",
+  "productionEvidence": "Latest Vercel production deployment remains dpl_Faea5XSbZDdFqXmhU2E25xfHWdPg; no new deployment.",
+  "localWorkInspection": "Clean source tree; no stashes or extra worktrees; implementation branch fully published. Local main is behind remote and has no unique work.",
+  "sequence": 2,
+  "timestamp": "2026-11-09T09:18:36.953Z",
+  "author": "Cody",
+  "taskId": "coordination-main-integration",
+  "commit": "4a5131c7e77accd673f632062dcaf120e85272ca",
+  "baseCommit": "4a5131c7e77accd673f632062dcaf120e85272ca",
+  "branch": "codex/shared-development-coordination",
+  "files": [],
+  "checkpoints": {
+    "localWorking": "4a5131c7e77accd673f632062dcaf120e85272ca",
+    "locallyTested": "4a5131c7e77accd673f632062dcaf120e85272ca",
+    "remotelyPublished": "4a5131c7e77accd673f632062dcaf120e85272ca",
+    "approvedStableIntegration": null,
+    "production": {
+      "commit": "84a40702f4beaa7f11359772682b36d5831d23c1",
+      "deployment": "dpl_Faea5XSbZDdFqXmhU2E25xfHWdPg",
+      "verification": "observed-ready-not-revalidated"
+    }
+  },
+  "evidenceNote": "Test results are explicit author attestations; stable integration requires separate approval and evidence."
+}
