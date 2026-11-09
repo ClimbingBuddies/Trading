@@ -1,0 +1,87 @@
+{
+  "description": "Rolled out atomic shared development coordination to the operational branch; default-branch PR awaits explicit merge approval.",
+  "databaseAndApi": "No application API, hosted database, migration or deployment changes.",
+  "decisions": [
+    "Use one fast-forward-only coordination branch and a display-only GitHub issue.",
+    "Preserve main and operational application histories; apply protocol-only changes separately.",
+    "No expiry-based unlock, no automatic takeover, no full-application stable baseline asserted."
+  ],
+  "risks": [
+    "Other developer and external development controllers are not yet enrolled.",
+    "Hooks are local and bypassable; server-side protection was not configured.",
+    "Existing npm lockfile fails npm ci; two unchanged dashboard-tab assertions fail."
+  ],
+  "tests": [
+    {
+      "command": "node --test tests/coordination.test.mjs (14 cases in final full run plus targeted nested-directory case)",
+      "result": "passed",
+      "scope": "15 coordination safety cases"
+    },
+    {
+      "command": "node --check scripts/coordination.mjs; git diff --check",
+      "result": "passed"
+    },
+    {
+      "command": "node --test --test-reporter=tap tests/*.test.mjs",
+      "result": "failed",
+      "scope": "376/378 passed; two unchanged application dashboard-tab assertions"
+    }
+  ],
+  "outstanding": [
+    "PR #41 is ready; default-branch merge requires explicit approval after automatic review rejection.",
+    "Other developer must enroll and disclose any pre-existing local-only work.",
+    "Application-history reconciliation, clean dependency install and baseline test repairs are separate tasks."
+  ],
+  "recovery": "Preserve the shared lock/history. Repair or revert protocol source through an owned reviewed feature branch; no DB rollback. Uncertain transitions use resolve, never a new acquisition.",
+  "relevantCommits": {
+    "implementation": "4a5131c7e77accd673f632062dcaf120e85272ca",
+    "operationalIntegration": "3688c16b6b3b818d3b2c168aea236bff8fe83353",
+    "mainCandidate": "39716eebd1437bd04245d7dffdbb12d087dda4f9"
+  },
+  "pullRequests": [
+    40,
+    41
+  ],
+  "coordinationVerifiedCheckpoint": "4a5131c7e77accd673f632062dcaf120e85272ca",
+  "publicationEvidence": "Feature branch and operational integration read back; identical trees. Production deployment remains dpl_Faea5XSbZDdFqXmhU2E25xfHWdPg.",
+  "localWorkInspection": "Clean tracked/untracked source tree; no stashes or additional worktrees. Feature commit published. Ignored files are installed TypeScript and generated user-guide test assets.",
+  "sequence": 1,
+  "timestamp": "2026-11-09T09:06:47.268Z",
+  "author": "Cody",
+  "taskId": "coordination-rollout",
+  "commit": "4a5131c7e77accd673f632062dcaf120e85272ca",
+  "baseCommit": "84a40702f4beaa7f11359772682b36d5831d23c1",
+  "branch": "codex/shared-development-coordination",
+  "files": [
+    ".github/pull_request_template.md",
+    "AGENTS.md",
+    "README.md",
+    "automation/in-app-user-guide-agentic-controller.md",
+    "automation/my-dashboard-agentic-controller.md",
+    "automation/project-plan-auditor.md",
+    "automation/project-plan-builder.md",
+    "documentation/README.md",
+    "documentation/coordination-onboarding.md",
+    "documentation/coordination-rollout.md",
+    "documentation/development-coordination.md",
+    "documentation/development-workflow.md",
+    "documentation/operational-runbook.md",
+    "documentation/platform-architecture.md",
+    "documentation/project-context.md",
+    "documentation/security-and-operational-notes.md",
+    "scripts/coordination.mjs",
+    "tests/coordination.test.mjs"
+  ],
+  "checkpoints": {
+    "localWorking": "4a5131c7e77accd673f632062dcaf120e85272ca",
+    "locallyTested": null,
+    "remotelyPublished": "4a5131c7e77accd673f632062dcaf120e85272ca",
+    "approvedStableIntegration": null,
+    "production": {
+      "commit": "84a40702f4beaa7f11359772682b36d5831d23c1",
+      "deployment": "dpl_Faea5XSbZDdFqXmhU2E25xfHWdPg",
+      "verification": "observed-ready-not-revalidated"
+    }
+  },
+  "evidenceNote": "Test results are explicit author attestations; stable integration requires separate approval and evidence."
+}
