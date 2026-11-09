@@ -1,5 +1,7 @@
 # Project Plan Auditor
 
+Read-only inspection is allowed while another developer holds the shared lock. Before writing audit/project state or changing any shared resource, follow root [AGENTS.md](../AGENTS.md) and [development coordination](../documentation/development-coordination.md); acquire ownership or accept a verified handoff. Never bypass Builder/Auditor independence. Fresh-source/evidence requirements below remain mandatory.
+
 **Specification version:** 1.3  
 **Last updated:** 25 August 2026  
 **System:** Discover Boulders Markets / Trading  

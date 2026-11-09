@@ -7,6 +7,8 @@
 
 ## System ownership
 
+Development coordination is separate from runtime application state. The GitHub `coordination` branch owns an exclusive development lock and compact change journal; local scripts perform fast-forward-only transitions. An issue mirrors the warning. See [coordination architecture and limits](development-coordination.md). This adds no hosted database tables, runtime services or application dependencies.
+
 | Layer | Responsibility |
 |---|---|
 | Supabase Postgres | Persisted market data, assessments, research, operational telemetry, private owner data and strategy evidence |
