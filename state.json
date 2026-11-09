@@ -1,21 +1,21 @@
 {
   "protocol": 1,
-  "revision": 9,
-  "status": "held",
-  "owner": "Cody",
-  "ownerId": "cody",
-  "cloneId": "a70b247a-5a71-4c2c-acf8-986bda831196",
-  "acquisitionId": "73a54fcb-22ba-4690-8514-21f8bc31b718",
-  "taskId": "coordination-main-integration",
-  "task": "Complete explicitly approved PR 41 integration to main",
+  "revision": 10,
+  "status": "free",
+  "owner": null,
+  "ownerId": null,
+  "cloneId": null,
+  "acquisitionId": null,
+  "taskId": null,
+  "task": null,
   "scope": [
     "coordination protocol",
     "main integration"
   ],
   "startedAt": "2026-11-09T09:16:31.082Z",
-  "heartbeatAt": "2026-11-09T09:18:36.953Z",
-  "localChanges": "unknown-editing",
-  "branch": "codex/shared-development-coordination",
+  "heartbeatAt": "2026-11-09T09:18:44.376Z",
+  "localChanges": "secured",
+  "branch": null,
   "publishedCommit": null,
   "stableIntegration": null,
   "production": {
@@ -47,7 +47,7 @@
     "path": "journal/000002-coordination-main-integration.json",
     "commit": "4a5131c7e77accd673f632062dcaf120e85272ca"
   },
-  "releasedAt": "2026-11-09T09:07:45.805Z",
+  "releasedAt": "2026-11-09T09:18:44.376Z",
   "lastOwner": "Cody",
   "handoff": null
 }
