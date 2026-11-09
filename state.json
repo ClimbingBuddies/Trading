@@ -1,0 +1,30 @@
+{
+  "protocol": 1,
+  "revision": 1,
+  "status": "held",
+  "owner": "Cody",
+  "ownerId": "cody",
+  "cloneId": "bootstrap-cody-trading",
+  "acquisitionId": "bootstrap-2026-11-09-cody",
+  "taskId": "coordination-rollout",
+  "task": "Implement shared development coordination and recovery",
+  "scope": [
+    "agent instructions",
+    "coordination scripts",
+    "development documentation"
+  ],
+  "startedAt": "2026-11-09T08:37:07.647Z",
+  "heartbeatAt": "2026-11-09T08:37:07.647Z",
+  "localChanges": "unknown",
+  "branch": "codex/shared-development-coordination",
+  "publishedCommit": null,
+  "stableIntegration": null,
+  "production": {
+    "commit": "84a40702f4beaa7f11359772682b36d5831d23c1",
+    "deployment": "dpl_Faea5XSbZDdFqXmhU2E25xfHWdPg",
+    "verification": "observed-ready-not-revalidated"
+  },
+  "warningIssue": null,
+  "journal": [],
+  "adoption": "Other developer enrollment and pre-existing local work not yet verified"
+}
