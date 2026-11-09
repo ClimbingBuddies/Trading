@@ -1,23 +1,22 @@
 {
   "protocol": 1,
-  "revision": 6,
-  "status": "free",
-  "owner": null,
-  "ownerId": null,
-  "cloneId": null,
-  "acquisitionId": null,
-  "taskId": null,
-  "task": null,
+  "revision": 7,
+  "status": "held",
+  "owner": "Cody",
+  "ownerId": "cody",
+  "cloneId": "a70b247a-5a71-4c2c-acf8-986bda831196",
+  "acquisitionId": "73a54fcb-22ba-4690-8514-21f8bc31b718",
+  "taskId": "coordination-main-integration",
+  "task": "Complete explicitly approved PR 41 integration to main",
   "scope": [
-    "agent instructions",
-    "coordination scripts",
-    "development documentation"
+    "coordination protocol",
+    "main integration"
   ],
-  "startedAt": "2026-11-09T08:37:07.647Z",
-  "heartbeatAt": "2026-11-09T09:07:45.805Z",
-  "localChanges": "secured",
-  "branch": null,
-  "publishedCommit": "4a5131c7e77accd673f632062dcaf120e85272ca",
+  "startedAt": "2026-11-09T09:16:31.082Z",
+  "heartbeatAt": "2026-11-09T09:16:31.082Z",
+  "localChanges": "clean",
+  "branch": "codex/shared-development-coordination",
+  "publishedCommit": null,
   "stableIntegration": null,
   "production": {
     "commit": "84a40702f4beaa7f11359772682b36d5831d23c1",
@@ -35,12 +34,9 @@
     }
   ],
   "adoption": "Other developer enrollment and pre-existing local work not yet verified",
-  "baseCommit": "84a40702f4beaa7f11359772682b36d5831d23c1",
+  "baseCommit": "4a5131c7e77accd673f632062dcaf120e85272ca",
   "localHead": "84a40702f4beaa7f11359772682b36d5831d23c1",
-  "lastJournal": {
-    "path": "journal/000001-coordination-rollout.json",
-    "commit": "4a5131c7e77accd673f632062dcaf120e85272ca"
-  },
+  "lastJournal": null,
   "releasedAt": "2026-11-09T09:07:45.805Z",
   "lastOwner": "Cody",
   "handoff": null
