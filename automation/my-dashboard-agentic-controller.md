@@ -6,7 +6,7 @@ For MYDASH-004, a bounded iteration means one meaningful completion phase, not o
 
 ## Authoritative sources
 
-At the beginning of every run, read fresh from the local repository at `C:\Users\ibisx\Documents\GitHub\Trading`:
+Before any mutation, follow root [AGENTS.md](../AGENTS.md) and [shared development coordination](../documentation/development-coordination.md). At the beginning of every run, read fresh from the developer's enrolled local clone (historically `C:\Users\ibisx\Documents\GitHub\Trading`; Cody's clone is `C:\Codex\Trading App`):
 
 1. documentation/my-dashboard-agentic-project-plan.md
 2. documentation/my-dashboard-controller-journal.md
@@ -19,7 +19,7 @@ At the beginning of every run, read fresh from the local repository at `C:\Users
 
 Retrieve current Supabase truth from project glvbqcplgjdfgjyknzsa whenever the active gate touches data, schema, RLS, grants, functions, jobs, calculations, auth or persisted evidence. Inspect the local UI at `http://localhost:3001` with the connected browser for UI gates, starting the local development server when required.
 
-Record the local commit and working-tree identities plus relevant schema identities used. The local repository is authoritative for process and source during development, Supabase for persisted application truth, and localhost for current UI behaviour. GitHub `main` is the owner-visible progress record. Travis authorised recurring GitHub publication on 6 September 2026 so the project plan, journal, evidence and corresponding verified My Dashboard implementation remain current online. This standing authority covers safe fetch/reconciliation, bounded commits of My Dashboard work, and pushes to `origin/main`; it does not authorise pull requests, merges of unrelated branches, force-pushes, deployment, Vercel, hosted Supabase or production changes. Do not rely on remembered state or prior conversation summaries.
+Record the local commit and working-tree identities plus relevant schema identities used. The local repository is authoritative for process and source during development, Supabase for persisted application truth, and localhost for current UI behaviour. Owner-visible progress is published on the owned feature branch and indexed by the shared coordination journal. The shared-development protocol adopted on 9 November 2026 supersedes the historical direct-to-`origin/main` publication procedure. Preserve the original bounded scope: no unrelated-history merge, force push, deployment, Vercel, hosted Supabase or production authority is implied. Independent owner-review gates remain intact. Do not rely on remembered state or prior conversation summaries.
 
 ## Select exactly one role
 
@@ -138,11 +138,11 @@ After every material cycle, update the active row in the project plan's **Work g
 
 After a material cycle is verified and its plan/journal/audit handoff is complete:
 
-1. Fetch `origin/main` and reconcile remote changes without discarding, overwriting or silently absorbing unrelated user work.
+1. Inspect the live lock and relevant remote integration heads, then reconcile the approved baseline without discarding, overwriting or silently absorbing unrelated user work. Preserve the known `main`/operational-branch divergence.
 2. Commit only the bounded My Dashboard implementation, tests, migrations and documentation that support the reported outcome. Never commit credentials, private values, screenshots, portfolio rows, authentication material, generated caches or unrelated working-tree changes.
-3. Push the reconciled commit to `origin/main` so `documentation/my-dashboard-agentic-project-plan.md` always exposes the latest verified outcomes, outstanding work and forecast at its stable GitHub URL.
+3. Publish the reconciled commit on the owned feature branch using the coordination publication command; record a link to its plan/journal/evidence. Do not push directly to `origin/main`. Integration is a separate approved step.
 4. Record the published commit identity in the journal, audit and automation memory. A cycle is not reported as published until the remote branch contains that commit.
-5. Never force-push. If reconciliation has a real conflict or publication is unavailable, preserve the local work, record `GITHUB_STATUS_PUBLICATION_DEFERRED` with the exact non-sensitive reason, and retry on the next cycle before beginning new material work.
+5. Never force-push. If reconciliation has a real conflict or publication is unavailable, preserve local work and the shared lock, record `GITHUB_STATUS_PUBLICATION_DEFERRED` with the exact non-sensitive reason, and diagnose the outcome before a bounded retry on a later cycle. No new material work starts while publication/ownership is uncertain.
 
 This publication contract is delivery visibility only. It does not grant deployment, production, hosted-database, provider, broker or trading authority.
 

@@ -1,5 +1,7 @@
 # Development Workflow — Documentation Impact Checklist
 
+Before development, follow [the shared coordination and recovery procedure](development-coordination.md) and root [AGENTS.md](../AGENTS.md). The exclusive lock, feature-branch, checkpoint and safe-release rules apply to all developers and development controllers. Existing fresh-source and independent-review gates remain required. Routine startup uses the bounded status command; review only relevant changes unless risk requires broader inspection.
+
 **Applies to:** all significant changes to the Trading platform  
 **Repository:** `ClimbingBuddies/Trading`  
 **Last reviewed:** 25 August 2026

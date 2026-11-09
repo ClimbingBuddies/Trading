@@ -1,12 +1,14 @@
 # Discover Boulders Markets
 
+> **Before modifying this shared project:** check the [live development lock](https://github.com/ClimbingBuddies/Trading/blob/coordination/state.json) and [development warning](https://github.com/ClimbingBuddies/Trading/issues/39). If occupied, stay read-only. Start with [agent instructions](AGENTS.md) and the [compact project context](documentation/project-context.md).
+
 Discover Boulders Markets is a Supabase-backed trading research, monitoring and strategy-validation platform with a Next.js frontend deployed on Vercel.
 
 ## Canonical systems
 
 - **GitHub:** `ClimbingBuddies/Trading` — application source, canonical methodology, specifications, documentation and audit evidence.
 - **Supabase:** project `glvbqcplgjdfgjyknzsa` — persisted market data, assessments, operational state, user-owned data and strategy evidence.
-- **Vercel:** project `boulders-market`, production branch `main`.
+- **Vercel:** project `boulders-market`. Discovery on 9 November 2026 matched production to `project/decision-lab-completion`, not `main`; see the [baseline record](documentation/project-context.md). Integration and production deployment require separate authorization.
 - **Production:** https://discoverbouldersmarkets.vercel.app
 
 Do not create or use a duplicate Trading deployment project. The frontend uses the Supabase publishable key only; service-role and provider secrets must never be exposed to the browser.
