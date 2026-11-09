@@ -1,5 +1,9 @@
 # Discover Boulders Markets — Operational Runbook
 
+## Development ownership and recovery
+
+Before changing source, schema, schedules or deployments, follow [development coordination](development-coordination.md). Check current lock ownership and the exact environment; inspect pending changes and recovery compatibility. Source publication, approved integration, database migration and production deployment are separate checkpoints. Discovery found divergent `main` and deployed-source histories; do not assume `main` is a production rollback point. Existing runtime jobs retain their existing authority; this protocol does not pause or change them.
+
 ## Personal prediction workflow
 
 The additive migration source is `scripts/prediction-ledger-v1.sql`, applied under the migration name `personal_prediction_ledger_v1`. The standard CLI could not initialise its local cache in the restricted desktop environment, so this change uses the Supabase migration connector. Do not apply the SQL twice.

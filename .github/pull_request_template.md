@@ -4,6 +4,10 @@ Describe the implementation and the user/system contract it changes.
 
 ## Verification
 
+- [ ] Development lock ownership checked; feature branch and exact tested/published commit recorded.
+- [ ] Shared coordination journal records risks, outstanding work and recovery; local-only work is secured before release.
+- [ ] Integration/deployment approval is explicit where applicable; a task pass is not production authorization.
+
 - [ ] Relevant implementation checks/tests have been run.
 - [ ] Production/deployment evidence is included when the change affects deployed behaviour.
 - [ ] No fabricated data, evidence or success state was introduced.

@@ -1,5 +1,7 @@
 # Security and Operational Notes
 
+Shared development follows [the coordination protocol](development-coordination.md). Its GitHub lock prevents competing compliant acquisitions, but it is not an authorization boundary against repository administrators or direct console changes. Public lock/journal/issue content must be sanitized. Hosted mutations still require environment checks, recovery planning, ownership and applicable approval; no credentials are stored by the coordination scripts.
+
 **Last reconciled:** 25 August 2026
 
 This document summarises the durable Trading platform security and operational boundaries. Detailed decisions and dated evidence remain in the linked specifications, pipelines and audit records.
