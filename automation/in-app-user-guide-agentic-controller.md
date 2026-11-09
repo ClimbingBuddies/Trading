@@ -4,7 +4,7 @@ Run one bounded controller iteration for the Discover Boulders Markets In-App Us
 
 ## Authoritative sources
 
-At the beginning of every run, retrieve these fresh from GitHub:
+Before any mutation, follow root [AGENTS.md](../AGENTS.md) and [shared development coordination](../documentation/development-coordination.md). Hold the project lock, publish on a feature branch, and retain ownership until work is secured. Integration/deployment still needs its applicable authorization. At the beginning of every run, retrieve these fresh from GitHub:
 
 1. `documentation/in-app-user-guide-project-plan.md`
 2. `documentation/in-app-user-guide-controller-journal.md`

@@ -1,5 +1,7 @@
 # Project Plan Builder
 
+Before any source/schema/deployment or journal mutation, follow root [AGENTS.md](../AGENTS.md) and [shared development coordination](../documentation/development-coordination.md). Check/acquire the project lock, use a feature branch, and retain it until work is secured. This does not waive the fresh-source requirements or independent Auditor gates below. Publication is not integration/deployment approval.
+
 **Specification version:** 1.3  
 **Last updated:** 25 August 2026  
 **System:** Discover Boulders Markets / Trading  

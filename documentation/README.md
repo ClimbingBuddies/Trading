@@ -1,5 +1,9 @@
 # Trading Platform Documentation
 
+Shared development starts with the [compact project context](project-context.md) and [coordination/recovery procedure](development-coordination.md). Check the [authoritative lock](https://github.com/ClimbingBuddies/Trading/blob/coordination/state.json) before modifications. These coordination rules supplement existing methodology and independent audit gates.
+
+For a second clone, use [the short onboarding message](coordination-onboarding.md). [Rollout verification](coordination-rollout.md) records tested scope and limitations.
+
 This directory documents the current Discover Boulders Markets platform. Obsolete delivery-status narratives have been removed; historical implementation evidence remains in the audit records.
 
 ## Source-of-truth order
