@@ -1,21 +1,21 @@
-# DEVELOPMENT LOCK AVAILABLE
+# ACTIVE DEVELOPMENT — DO NOT MODIFY
 
-Status: free
+Status: held
 
-Owner: none
+Owner: Cody
 
-Task: none
+Task: Move Trading AI control to Cody and revise monitoring cadence
 
-Started (UTC): 2026-11-10T06:45:38.758Z
+Started (UTC): 2026-11-10T23:38:45.055Z
 
-Heartbeat (UTC): 2026-11-10T07:17:18.824Z
+Heartbeat (UTC): 2026-11-10T23:38:45.055Z
 
-Branch: n/a
+Branch: codex/ai-control-transfer
 
-Local changes at last observation: secured
+Local changes at last observation: clean
 
-Published commit: cac433c0d77881ebb9d6ac375c97a484b8a52070
+Published commit: none verified
 
-State revision: 35
+State revision: 36
 
 Read state.json before acting. A stale heartbeat is never permission to take over. This branch is authoritative; the issue is a display only. Do not merge this branch into application branches.
