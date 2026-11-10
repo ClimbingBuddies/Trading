@@ -62,8 +62,13 @@ export default function ResearchDecisionDrawer({ item, onClose }: { item: Resear
   const id = useId()
   const dialog = useRef<HTMLDialogElement>(null)
   useEffect(() => { const element = dialog.current; element?.showModal(); return () => element?.close() }, [])
-  return <dialog ref={dialog} className={styles.drawer} aria-labelledby={`${id}-title`} onCancel={onClose}>
-        <header className={styles.heading}><div><h2 id={`${id}-title`}>{item.instrument.symbol} · Decision history</h2><p>{item.instrument.name} · {item.instrument.exchange} · {item.instrument.currency}</p></div><button onClick={onClose} aria-label="Close research decision history">Close</button></header><p className={styles.notice}>Research only · Not measurable · Excluded from performance. No paper trial or private-note journal exists for this research record.</p>
+  function closeDrawer() {
+    // Restore native dialog focus while the dialog is still connected.
+    dialog.current?.close()
+    onClose()
+  }
+  return <dialog ref={dialog} className={styles.drawer} aria-labelledby={`${id}-title`} onCancel={event => { event.preventDefault(); closeDrawer() }}>
+        <header className={styles.heading}><div><h2 id={`${id}-title`}>{item.instrument.symbol} · Decision history</h2><p>{item.instrument.name} · {item.instrument.exchange} · {item.instrument.currency}</p></div><button onClick={closeDrawer} aria-label="Close research decision history">Close</button></header><p className={styles.notice}>Research only · Not measurable · Excluded from performance. No paper trial or private-note journal exists for this research record.</p>
         <DecisionEvidence decision={item.latest} title="Latest saved recommendation" />
         <p className={styles.blocker}><strong>Measurement blocker:</strong> {item.measurementBlocker}</p>
         <details><summary>Original recommendation, history and sources</summary>

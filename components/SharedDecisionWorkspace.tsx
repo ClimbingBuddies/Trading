@@ -164,6 +164,11 @@ function DecisionDrawer({ callId, eventId, onClose }: { callId: string; eventId?
   const notesRequest = useRef(0)
   const request = useRef<{ id: string; action: string; note: string } | null>(null)
   useEffect(() => { const element = dialog.current; element?.showModal(); return () => element?.close() }, [])
+  function closeDrawer() {
+    // Restore native dialog focus while the dialog is still connected.
+    dialog.current?.close()
+    onClose()
+  }
   useEffect(() => {
     let cancelled = false
     void (async () => { try {
@@ -220,8 +225,8 @@ function DecisionDrawer({ callId, eventId, onClose }: { callId: string; eventId?
     ...detail.reviews.map(r => ({ id: r.id, at: r.publishedAt, action: r.action, text: r.thesis.length <= 70 ? r.thesis : 'AI review', reason: r.thesis.length > 70 ? r.thesis : undefined })),
     ...detail.outcomes.map(o => ({ id: o.id, at: o.asOf, action: '', text: outcomeLabel(o.kind || o.outcome_type || '') }))
   ].sort((a, b) => a.at.localeCompare(b.at) || a.id.localeCompare(b.id)) : []
-  return <dialog ref={dialog} className={styles.drawer} aria-labelledby="shared-call-title" onCancel={onClose}>
-    <header><div><h2 id="shared-call-title">{item?.instrument.symbol || 'Shared AI record'} · Decision history</h2>{item && <p className={styles.muted}>{item.instrument.name}</p>}</div><button onClick={onClose} aria-label="Close decision details">Close</button></header>
+  return <dialog ref={dialog} className={styles.drawer} aria-labelledby="shared-call-title" onCancel={event => { event.preventDefault(); closeDrawer() }}>
+    <header><div><h2 id="shared-call-title">{item?.instrument.symbol || 'Shared AI record'} · Decision history</h2>{item && <p className={styles.muted}>{item.instrument.name}</p>}</div><button onClick={closeDrawer} aria-label="Close decision details">Close</button></header>
     {error && <p role="alert">{error}</p>}{!detail && !error && <p role="status">Loading decision evidence...</p>}
     {item && detail && <>
       <section><div className={styles.sectionHeading}><h3>Shared AI record</h3><span>Visible to signed-in users</span></div>
