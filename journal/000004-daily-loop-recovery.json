@@ -1,0 +1,84 @@
+{
+  "description": "Approved PR42 integrated, reviewed worker7 deployed and immutable calendar renewal verified. Published scheduler-owner handover and exact remaining gates.",
+  "databaseAndApi": "Existing history worker7 deployed with JWT retained; exact source readback verified. One reviewed immutable Nasdaq calendar revision inserted; previous4calendar rows unchanged. No schema, scheduler, evaluator gate, queue reset or frontend deployment change.",
+  "decisions": [
+    "User-approved integration4426da44e45c0f416c8c06b16330bdc6b49f1c0f; do not reconcile divergent main",
+    "Scheduler belongs to the other contributor's ChatGPT account; preserve existing task",
+    "Handover is informational; receiving developer must check live lock and acquire own identity"
+  ],
+  "risks": [
+    "Scheduled worker response was idle, not evidence of price recovery",
+    "Fresh research/publication/evaluator receipts and convergence wiring remain absent",
+    "Mobile overflow and drawer focus need follow-up; two-user browser privacy unverified",
+    "Calendar trust expires17November2026 12:20:42Perth and requires renewed official verification"
+  ],
+  "tests": [
+    {
+      "command": "Exact deployed worker source comparison",
+      "result": "passed",
+      "scope": "All3files match reviewed candidate, version7 ACTIVE and verify_jwt=true"
+    },
+    {
+      "command": "Existing scheduled invocation log plus protected HTTP response",
+      "result": "passed",
+      "scope": "Version7 HTTP200 at05:42UTC, response idle; no price-processing claim"
+    },
+    {
+      "command": "Calendar row/hash and prior-history comparison",
+      "result": "passed",
+      "scope": "365days251sessions exact reviewed canonical hash and expiry;4old rows unchanged"
+    },
+    {
+      "command": "Read-only supported evaluator snapshots and scheduled watchdog read",
+      "result": "passed",
+      "scope": "All4supported calls select new calendar;13:45Perth watchdog removed calendar expiry blocker; analytical loop remains incomplete"
+    },
+    {
+      "command": "Independent handover documentation review and git diff --check",
+      "result": "passed",
+      "scope": "Final handover hash71FB9192A02B1D4E12526F105B9A2C1AA1D3A517E19190310AA16A1B9AAD2426; docs only"
+    }
+  ],
+  "outstanding": [
+    "Follow-up documentation PR integration",
+    "Scheduler-owner diagnosis and authorized existing-task recovery",
+    "Genuine unattended research/publication/evaluation receipts and bounded history recovery",
+    "Reviewed convergence execution wiring",
+    "Mobile/focus correction and authorized two-user acceptance",
+    "Observation week has not started"
+  ],
+  "recovery": "Worker code recovery is reviewed previous version6 baseline3688c16; code rollback cannot undo observations. Calendar requires reviewed forward correction, not historical edits. Frontend unchanged. All source and handover are published; no stashes or local-only commits. Generated .next,node_modules,user-guide assets are reproducible and contain no authored recovery work. Release only after verifying final publication/journal.",
+  "sequence": 4,
+  "timestamp": "2026-11-10T05:51:04.096Z",
+  "author": "Cody",
+  "taskId": "daily-loop-recovery",
+  "commit": "479d30181dcf1eaa1a2635714090f113e96cd64b",
+  "baseCommit": "4a5131c7e77accd673f632062dcaf120e85272ca",
+  "branch": "codex/daily-loop-recovery",
+  "files": [
+    "data/shared-market-calendars/nasdaq-2026-reviewed-2026-11-10.json",
+    "data/shared-market-calendars/nasdaq-2026-reviewed-2026-11-10.trust.json",
+    "documentation/decision-lab-evidence-log.md",
+    "documentation/decision-lab-project-plan.md",
+    "documentation/recommendations-controller-handoff.md",
+    "package-lock.json",
+    "supabase/functions/market-history-maintenance-worker/README.md",
+    "supabase/functions/market-history-maintenance-worker/yahoo.mjs",
+    "supabase/functions/market-history-maintenance-worker/yahoo.test.mjs",
+    "tests/compact-decision-lab.test.mjs",
+    "tests/my-dashboard-foundation.test.mjs",
+    "tests/yahoo-history.test.mjs"
+  ],
+  "checkpoints": {
+    "localWorking": "479d30181dcf1eaa1a2635714090f113e96cd64b",
+    "locallyTested": "479d30181dcf1eaa1a2635714090f113e96cd64b",
+    "remotelyPublished": "479d30181dcf1eaa1a2635714090f113e96cd64b",
+    "approvedStableIntegration": null,
+    "production": {
+      "commit": "84a40702f4beaa7f11359772682b36d5831d23c1",
+      "deployment": "dpl_Faea5XSbZDdFqXmhU2E25xfHWdPg",
+      "verification": "observed-ready-not-revalidated"
+    }
+  },
+  "evidenceNote": "Test results are explicit author attestations; stable integration requires separate approval and evidence."
+}
