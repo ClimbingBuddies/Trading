@@ -1,7 +1,7 @@
 # Daily Trading Controller
 
-**Specification version:** 1.9 (single 08:00 Perth scheduled run)
-**Last updated:** 7 October 2026
+**Specification version:** 1.10 (single 08:00 Perth scheduled run; convergence continuation)
+**Last updated:** 10 November 2026
 **System:** Discover Boulders Markets / Trading  
 **Supabase project:** `glvbqcplgjdfgjyknzsa`
 
@@ -19,6 +19,7 @@ The downstream analytical specifications remain authoritative for methodology:
 4. `documentation/pipelines/opportunity-exposure-history-cleanup.md`
 5. `documentation/pipelines/historical-market-data-backfill.md` when a provider seed is required
 6. `automation/daily-shared-decision-lab.md`
+7. `documentation/pipelines/market-convergence-pipeline.md`
 
 Do not duplicate or paraphrase those methodologies here. Retrieve the applicable file fresh immediately before executing its stage.
 
@@ -94,6 +95,16 @@ If already complete, skip it. Otherwise execute/resume it exactly as its specifi
 
 Preserve Market Assessment independence from Opportunity, Technical Engine and Market Convergence. External opinion may be consumed only under the existing `external-opinion-v1` rules.
 
+### C.1. Deterministic Market Convergence continuation
+
+After C is truthfully terminal for the applicable production date, including when C was already completed and skipped, retrieve `documentation/pipelines/market-convergence-pipeline.md` and `scripts/market-convergence-readiness.sql` at this invocation's exact GitHub commit. Follow the pipeline's controller continuation procedure. Do not run before due Market work is terminal or manufacture a weekend/missed-date run.
+
+The readiness query is read-only and freezes a new current convergence cutoff after independent source writes have committed. Execute only its non-null `invocation_sql` for READY instruments, sequentially, once per instrument in this invocation. This uses the existing private `market_convergence.run_v1` with per-instrument scheduled scope. Do not use a whole-universe call: a zero-fresh successful run would consume that scope's day. Preserve the canonical four-calendar-day freshness rule; never backdate or move a saved cutoff to admit later inputs.
+
+Use the native `public.market_convergence_runs` ID as the durable receipt. The private controller claim API does not support a `convergence` stage: do not invent that claim or mislabel convergence as Market research. Follow the pipeline's receipt, uncertainty and bounded-retry instructions; report skipped/missing/stale inputs explicitly. A zero-write result is healthy only when a fresh, matching lineage-backed result already exists. A zero-fresh result is not completion.
+
+Convergence remains downstream of the two independent branches. It cannot modify them or become an input to Market research. Its blocker must not starve independently eligible shared publication/evaluation or history cleanup. Do not add a cron, trigger, follow-up invocation or extra research stage. The same 90-minute controller budget applies.
+
 ### D. Opportunity Exposure History Cleanup
 
 Eligible after:
@@ -132,9 +143,9 @@ On every controller invocation:
 1. retrieve this file fresh;
 2. verify Trading Supabase access;
 3. calculate current Perth and New York timezone-aware date/time;
-4. inspect persisted states for Opportunity, External Opinion, Market Assessment, shared Decision Lab and Opportunity-history cleanup;
+4. inspect persisted states for Opportunity, External Opinion, Market Assessment, Market Convergence, shared Decision Lab and Opportunity-history cleanup;
 5. determine the earliest eligible unfinished stage;
-6. execute eligible unfinished analytical stages **sequentially**, each at most once in this invocation with its own separately committed claim and terminal receipt; order Opportunity, External Opinion, Market Assessment, shared publication, then accepted evaluation. Opportunity failures must not starve independently eligible work; External Opinion and Market prerequisites still apply;
+6. execute eligible unfinished analytical stages **sequentially**, each at most once in this invocation with its own separately committed claim and terminal receipt; order Opportunity, External Opinion, Market Assessment, its deterministic C.1 convergence continuation using native run receipts, shared publication, then accepted evaluation. Opportunity or convergence failures must not starve independently eligible work; External Opinion and Market prerequisites still apply;
 7. after a Market Assessment execution completes, history cleanup may also be started in the same invocation if every prerequisite is now terminal and doing so is safe;
 8. if no analytical stage is due, advance or verify history cleanup if applicable;
 9. never race a currently running recent stage;
@@ -193,6 +204,7 @@ The final morning state should summarise:
 - Opportunity status;
 - External Opinion status;
 - Market Assessment status;
+- Market Convergence run IDs, fresh/blocked coverage and lineage reconciliation (separate from Market research completion);
 - Shared Decision Lab published/reviewed/evaluated/blocked counts and concrete missing-data reasons;
 - Opportunity Exposure History Cleanup status;
 - any recovery/resume performed;
@@ -214,6 +226,8 @@ Its job is to execute the right independent subsystem at the right time, using d
 Retrieve documentation/trading-pipeline-reliability.md at the same exact commit SHA. The database watchdog is an independent monitor, not an analytical controller. It checks saved records every 15 minutes and raises overdue incidents after 10:15 Australia/Perth, starting 5 October 2026.
 
 Before work commit private.claim_trading_stage_v1(stage, exact_commit_sha) and retain the attempt UUID. Commit the start separately from research or evaluation. Stage names are opportunity, external, market, publication, evaluation, or preflight when no analytical stage is eligible. Finish using private.finish_trading_stage_v1(attempt_uuid, terminal_state, sanitized_reason_code) after checking the subsystem receipt. A completed attempt is not proof of business completion. Refresh private.run_trading_watchdog_v1() after finalization and report its per-share counts/blockers.
+
+Exception for the deterministic C.1 continuation: use its existing native convergence run receipts, not the unsupported controller claim stage. The current watchdog does not verify convergence; report its saved evidence separately and never infer convergence success from a healthy watchdog.
 
 At most two attempts per analytical stage per Perth morning; at most six preflight receipts. Exhausting an independent earlier stage must not starve a later independently eligible stage. Preserve the failed prerequisite and do not bypass actual research dependencies. Supported shares may progress from a truthful terminal partial assessment. Do not race a recent running attempt. After 45 minutes inspect actual task/subsystem activity before recording interruption or attempting safe resume. Never change a frozen cutoff or backdate a missed decision.
 

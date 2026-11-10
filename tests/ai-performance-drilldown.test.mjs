@@ -43,6 +43,24 @@ test('selected original event is explicitly identified without inventing a revie
 test('selected review call/event identity is preserved in parent drawer props and key',()=>{const selected={callId:item.callId,eventId:review.id};const {tree}=render('SharedDecisionWorkspace','default',{},['all',5,{cursor:null,blocked:null},0,selected]);const drawer=nodes(tree,n=>typeof n.type==='function'&&n.type.name==='DecisionDrawer')[0];assert.ok(drawer);assert.equal(drawer.props.callId,item.callId);assert.equal(drawer.props.eventId,review.id);assert.equal(drawer.key,'call-id:review-event');});
 for(const cursor of ['more-reviews',null])test(`unloaded selected review never substitutes original (cursor=${cursor})`,()=>{const d=detail();d.reviews=[];d.reviewNextCursor=cursor;const {tree}=render('SharedDecisionWorkspace','DecisionDrawer',{callId:item.callId,eventId:review.id,onClose:()=>{}},[d]);const selected=nodes(tree,n=>n.props['aria-label']==='Selected performance decision event')[0];assert.match(text(selected),/not in the loaded review history/);assert.match(text(selected),/has not been substituted/);assert.equal(text(selected).includes(original.thesis),false);assert.equal(nodes(tree,n=>n.type==='button'&&text(n)==='Load more history').length,cursor?1:0);});
 test('drawer loading and error do not fabricate original/review evidence',()=>{for(const [states,message] of [[[null,''],'Loading decision evidence'],[[null,'Not available'],'Not available']]){const {tree}=render('SharedDecisionWorkspace','DecisionDrawer',{callId:item.callId,eventId:review.id,onClose:()=>{}},states);assert.match(text(tree),new RegExp(message));assert.equal(text(tree).includes(original.thesis),false);}});
-test('Close and native cancel handlers dismiss; native modal lifecycle cleanup closes',()=>{
- let count=0;const {tree,effects,modal}=render('SharedDecisionWorkspace','DecisionDrawer',{callId:item.callId,onClose:()=>count++},[detail()]);tree.props.onCancel();nodes(tree,n=>n.type==='button'&&n.props['aria-label']==='Close decision details')[0].props.onClick();assert.equal(count,2);const cleanup=effects[0]();assert.equal(modal.showCount,1);cleanup();assert.equal(modal.closeCount,1);
+const researchItem={instrument:item.instrument,original,latest:review,history:[],sources:[],measurementBlocker:'No verified trial',priceEvidence:{status:'ABSENT',latestAt:null,latestLoadedAt:null,providers:[],sampleRows:0,availableRows:0,omittedRows:0,caveat:'No price evidence'}};
+for(const drawer of [
+ {name:'shared loading',file:'SharedDecisionWorkspace',fn:'DecisionDrawer',props:{callId:item.callId},states:[null,'']},
+ {name:'shared loaded',file:'SharedDecisionWorkspace',fn:'DecisionDrawer',props:{callId:item.callId},states:[detail()]},
+ {name:'shared error',file:'SharedDecisionWorkspace',fn:'DecisionDrawer',props:{callId:item.callId},states:[null,'Unavailable']},
+ {name:'research',file:'SharedResearchRecommendations',fn:'default',props:{item:researchItem},states:[]}
+]) for(const dismissal of ['button','Escape']) test(`${drawer.name}: ${dismissal} closes native dialog before unmount so focus can return`,()=>{
+ let dismissCount=0,prevented=false,connected=true;
+ const {tree,effects,modal}=render(drawer.file,drawer.fn,{...drawer.props,onClose:()=>{
+  assert.equal(modal.closeCount,1,'Native close must run before React removes the dialog');
+  if(dismissal==='Escape') assert.equal(prevented,true,'Cancel default must be prevented before unmount');
+  dismissCount++;connected=false;
+ }},drawer.states);
+ const nativeClose=modal.close.bind(modal);
+ modal.close=()=>{if(dismissCount===0)assert.equal(connected,true);nativeClose()};
+ const cleanup=effects[0]();assert.equal(modal.showCount,1);
+ if(dismissal==='Escape')tree.props.onCancel({preventDefault(){prevented=true}});
+ else nodes(tree,n=>n.type==='button'&&text(n)==='Close')[0].props.onClick();
+ assert.equal(dismissCount,1);assert.equal(modal.closeCount,1);
+ cleanup();assert.equal(modal.closeCount,2);
 });
