@@ -1,13 +1,13 @@
 {
   "protocol": 1,
-  "revision": 24,
-  "status": "held",
-  "owner": "Cody",
-  "ownerId": "cody",
-  "cloneId": "a70b247a-5a71-4c2c-acf8-986bda831196",
-  "acquisitionId": "ce8d7115-086e-4470-8d89-1307cacd9b3c",
-  "taskId": "daily-loop-recovery",
-  "task": "Restore reproducible baseline and verify the supported daily research loop",
+  "revision": 25,
+  "status": "free",
+  "owner": null,
+  "ownerId": null,
+  "cloneId": null,
+  "acquisitionId": null,
+  "taskId": null,
+  "task": null,
   "scope": [
     "dependencies",
     "tests",
@@ -17,9 +17,9 @@
     "verification"
   ],
   "startedAt": "2026-11-10T03:30:14.875Z",
-  "heartbeatAt": "2026-11-10T05:51:04.096Z",
-  "localChanges": "clean",
-  "branch": "codex/daily-loop-recovery",
+  "heartbeatAt": "2026-11-10T05:51:43.458Z",
+  "localChanges": "secured",
+  "branch": null,
   "publishedCommit": "479d30181dcf1eaa1a2635714090f113e96cd64b",
   "stableIntegration": null,
   "production": {
@@ -65,7 +65,7 @@
     "path": "journal/000004-daily-loop-recovery.json",
     "commit": "479d30181dcf1eaa1a2635714090f113e96cd64b"
   },
-  "releasedAt": "2026-11-09T09:18:44.376Z",
+  "releasedAt": "2026-11-10T05:51:43.458Z",
   "lastOwner": "Cody",
   "handoff": null
 }
