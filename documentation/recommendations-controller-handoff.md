@@ -1,4 +1,37 @@
-# Current implementation — Decision Journal v3
+# Current handover — shared daily-loop recovery, 10 November 2026
+
+This section supersedes the historical personal-controller handovers below. The user confirmed that the existing hosted **Daily Trading Controller** belongs to the other contributor's ChatGPT account. Owner-side access is now the dependency for scheduler recovery. Do not create a replacement task or assume that a GitHub prompt change updates the hosted task.
+
+## Message for the receiving GPT
+
+Continue the existing Trading daily-loop recovery. First read `AGENTS.md`, `documentation/project-context.md`, `documentation/development-coordination.md`, and live `coordination/state.json`. Check the lock rather than inferring availability from this handover. Enroll your own clone/identity, preserve local work and acquire the exclusive lock on a dedicated feature branch before changing code, scheduler configuration or shared services. If another owner holds it, remain read-only and report the owner/task. A message handover is not a lock transfer.
+
+The approved operational branch is `project/decision-lab-completion`. PR #42 merged at `4426da44e45c0f416c8c06b16330bdc6b49f1c0f`. Do not merge divergent `main` or enable automatic Vercel Git deployment. Read the latest recovery-branch evidence and coordination journal as well as the integration branch; release documentation can be newer than executable code.
+
+Already completed:
+
+- Reproducible dependency lock repair and current dedicated-route tests. Clean install, full baseline suite, production build, independent review and testing passed.
+- Existing Supabase history worker deployed as version 7, with exact reviewed source and JWT verification retained. Its existing cron successfully invoked it; response was idle because no eligible jobs were pending. Failed queue history remains intact. Deployed code is not evidence of recovered price coverage.
+- New immutable Nasdaq revision `nasdaq-2026-published-schedule-reviewed-2026-11-10` imported. Canonical hash `d6cf6a33e87e425a30c90c9c470d4d730e67005fd20cfb99715b5b167e22016c`; expiry 17 November 2026, 12:20:42 Australia/Perth. All previous calendar rows unchanged. Supported snapshot reads select it and the scheduled watchdog has cleared the calendar-expired blocker. Recheck official alerts daily and renew through a fresh reviewed revision before expiry.
+- One actual signed-in app session verified populated results, original/review distinction, review explanation, watched filtering and horizon switching. No private notes changed. Two-user browser isolation remains unverified. Mobile page overflow and drawer-close focus restoration require a follow-up; no frontend deployment was part of PR #42.
+
+Next, in order:
+
+1. Locate the **existing Daily Trading Controller** in your owner's ChatGPT task account. Read its saved task ID, enabled state, timezone, recurrence, prompt/source branch and available terminal history. GitHub issues #34 and #37 record an earlier disabled state and a first-stage claim rejected by a tool safety control; distinguish the rejection from the unknown cause of disablement. Historical separate Market/Opportunity task IDs in old audits are not the replacement controller. Do not reactivate those old tasks.
+2. Reconcile the saved prompt with `automation/daily-trading-controller.md` and `automation/daily-shared-decision-lab.md` at a verified current operational SHA. Preserve one 08:00 Australia/Perth invocation, sequential stages, existing notification preference, real lifecycle/idempotency and the 90-minute budget. Reconcile the repo's older local/cloud wording against actual saved task state. Require the owner's authority for scheduler changes; do not bypass a denied tool call, expand access or fabricate credentials. Report the precise rejection and legitimate remediation when access remains blocked.
+3. After authorized correction, verify a genuine eligible unattended run from separately committed stage claims, terminal subsystem receipts and the watchdog. Record actual source SHA and attempt/run identities in protected evidence. Enabled status alone is not completion. No backdating, moved frozen cutoffs, placeholder WAITs, forced trades or invented research. Supported instruments progress independently while unsupported coverage remains explicit.
+4. Reconcile fresh independent research, shared publication and both accepted paper evaluators. Keep the database-owned evaluator release gate/revision unchanged unless separately reviewed/authorized. Calendar renewal alone did not run evaluators. Missing or revised prices remain blockers.
+5. Verify the deployed history repair on real eligible existing queue work. Identical duplicate value tuples collapse with audit; conflicting dates are excluded entirely and other valid dates load. Do not bulk-reset exhausted jobs or delete previous observations. Review any already-stored conflicting session before relying on it; request a bounded approved retry if the existing daily enqueue has not produced the needed work.
+6. Address missing convergence invocation: `market_convergence` functions exist, but no convergence cron/source trigger was found and the current controller spec does not call them; latest saved run was 22 August. Review wiring, freshness, idempotency and durable receipts before changing scheduling. Technical and Market inputs must remain independent, and stale inputs must not create new combined conclusions.
+7. Complete mobile/focus and authorized two-user verification, notification delivery, and Stage 1 acceptance before starting the observation week. No observation week has begun; real market-session outcomes cannot be accelerated.
+
+Keep issues #34–#38 open until their full acceptance evidence exists; append only sanitized technical updates. Do not publish account/watchlist details, raw database evidence, task credentials or private notes. Detailed evidence and recovery boundaries are in `documentation/decision-lab-evidence-log.md` under 10 November. Worker code recovery is version 6 at baseline 3688c16; code rollback does not reverse ingested observations. Calendar correction requires a reviewed forward revision, not editing immutable history.
+
+Return: exact saved task configuration and authority, root cause/remaining blocker, actual unattended receipts, independently reconciled research/publication/evaluation counts, price recovery evidence and convergence status. Do not claim end-to-end recovery from schedule enablement or an idle worker response.
+
+---
+
+# Historical implementation — Decision Journal v3 (superseded)
 
 Updated 13 September 2026. Decision Lab is implemented. This section supersedes the historical v2 handoff below. The canonical controller instructions are `automation/daily-personal-recommendations.md`; the existing Daily Trading Controller includes that stage. Apply `scripts/decision-journal-v3.sql` for the database contract.
 
