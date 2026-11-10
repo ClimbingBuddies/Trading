@@ -1,6 +1,6 @@
 {
   "protocol": 1,
-  "revision": 21,
+  "revision": 22,
   "status": "held",
   "owner": "Cody",
   "ownerId": "cody",
@@ -17,8 +17,8 @@
     "verification"
   ],
   "startedAt": "2026-11-10T03:30:14.875Z",
-  "heartbeatAt": "2026-11-10T05:44:55.365Z",
-  "localChanges": "unknown-editing",
+  "heartbeatAt": "2026-11-10T05:48:39.717Z",
+  "localChanges": "unpublished",
   "branch": "codex/daily-loop-recovery",
   "publishedCommit": "6cec5cbd3265979d2aa4bc1c826b75fdf0278fdc",
   "stableIntegration": null,
@@ -53,7 +53,7 @@
   ],
   "adoption": "Other developer enrollment and pre-existing local work not yet verified",
   "baseCommit": "4a5131c7e77accd673f632062dcaf120e85272ca",
-  "localHead": "6cec5cbd3265979d2aa4bc1c826b75fdf0278fdc",
+  "localHead": "4426da44e45c0f416c8c06b16330bdc6b49f1c0f",
   "lastJournal": {
     "path": "journal/000003-daily-loop-recovery.json",
     "commit": "6cec5cbd3265979d2aa4bc1c826b75fdf0278fdc"
