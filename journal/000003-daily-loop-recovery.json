@@ -1,0 +1,88 @@
+{
+  "description": "Published independently reviewed reproducible-baseline repair, Yahoo duplicate-session quarantine and immutable calendar renewal candidate in draft PR42. Daily-loop recovery remains incomplete.",
+  "databaseAndApi": "No hosted mutations. Existing worker source matched the operational baseline. Calendar import and worker deployment remain pending explicit approval.",
+  "decisions": [
+    "Preserve operational baseline and divergent main history",
+    "Exclude an entire conflicting provider session while retaining unambiguous history and source audit",
+    "Renew calendar through a new reviewed immutable revision",
+    "Use the existing controller only; no duplicate schedule"
+  ],
+  "risks": [
+    "Mock tests do not prove hosted audit persistence or scheduler operation",
+    "Existing saved observations for rejected sessions require separate reconciliation",
+    "Prepared calendar trust expires and needs fresh official-alert checks before import",
+    "Convergence lacks current invocation wiring"
+  ],
+  "tests": [
+    {
+      "command": "npm ci --ignore-scripts --no-audit --no-fund",
+      "result": "passed",
+      "scope": "Baseline locked install; existing package records and versions unchanged"
+    },
+    {
+      "command": "node --test --test-reporter=dot tests/*.test.mjs",
+      "result": "passed",
+      "scope": "Complete baseline suite at5c61e3a; final Yahoo/calendar delta verified separately"
+    },
+    {
+      "command": "npm run build",
+      "result": "passed",
+      "scope": "Baseline production build, TypeScript and palette checks with safe local placeholders"
+    },
+    {
+      "command": "node --test tests/shared-market-calendar.test.mjs tests/yahoo-history.test.mjs",
+      "result": "passed",
+      "scope": "Final candidate31/31; independent Yahoo12/12 plus222 synthetic permutation cases"
+    },
+    {
+      "command": "node scripts/verify-published-nasdaq-calendar.mjs data/shared-market-calendars/nasdaq-2026-reviewed-2026-11-10.json",
+      "result": "passed",
+      "scope": "365dates251sessions; independent official-source and final-hash review"
+    },
+    {
+      "command": "git diff --check",
+      "result": "passed",
+      "scope": "Final candidate whitespace validation"
+    }
+  ],
+  "outstanding": [
+    "Integration and production approval for PR42, existing worker bundle and exact calendar import",
+    "Existing hosted controller identity/access and rejected stage-claim diagnosis",
+    "Authenticated browser and two-user isolation",
+    "Current research/publication/evaluation receipts and reviewed convergence execution",
+    "Observation week not started"
+  ],
+  "recovery": "Before deployment, revert feature commits with no database impact. Worker code recovery is previous version6 bundle at operational baseline3688c16; code rollback does not undo observations. Calendar imports are immutable and require reviewed forward correction, never destructive historical edits. Keep lock held pending next authorized recovery step.",
+  "sequence": 3,
+  "timestamp": "2026-11-10T04:25:24.612Z",
+  "author": "Cody",
+  "taskId": "daily-loop-recovery",
+  "commit": "6cec5cbd3265979d2aa4bc1c826b75fdf0278fdc",
+  "baseCommit": "4a5131c7e77accd673f632062dcaf120e85272ca",
+  "branch": "codex/daily-loop-recovery",
+  "files": [
+    "data/shared-market-calendars/nasdaq-2026-reviewed-2026-11-10.json",
+    "data/shared-market-calendars/nasdaq-2026-reviewed-2026-11-10.trust.json",
+    "documentation/decision-lab-evidence-log.md",
+    "documentation/decision-lab-project-plan.md",
+    "package-lock.json",
+    "supabase/functions/market-history-maintenance-worker/README.md",
+    "supabase/functions/market-history-maintenance-worker/yahoo.mjs",
+    "supabase/functions/market-history-maintenance-worker/yahoo.test.mjs",
+    "tests/compact-decision-lab.test.mjs",
+    "tests/my-dashboard-foundation.test.mjs",
+    "tests/yahoo-history.test.mjs"
+  ],
+  "checkpoints": {
+    "localWorking": "6cec5cbd3265979d2aa4bc1c826b75fdf0278fdc",
+    "locallyTested": "6cec5cbd3265979d2aa4bc1c826b75fdf0278fdc",
+    "remotelyPublished": "6cec5cbd3265979d2aa4bc1c826b75fdf0278fdc",
+    "approvedStableIntegration": null,
+    "production": {
+      "commit": "84a40702f4beaa7f11359772682b36d5831d23c1",
+      "deployment": "dpl_Faea5XSbZDdFqXmhU2E25xfHWdPg",
+      "verification": "observed-ready-not-revalidated"
+    }
+  },
+  "evidenceNote": "Test results are explicit author attestations; stable integration requires separate approval and evidence."
+}
