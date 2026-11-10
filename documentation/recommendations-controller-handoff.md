@@ -1,6 +1,10 @@
 # Current handover — shared daily-loop recovery, 10 November 2026
 
-This section supersedes the historical personal-controller handovers below. The user confirmed that the existing hosted **Daily Trading Controller** belongs to the other contributor's ChatGPT account. Owner-side access is now the dependency for scheduler recovery. Do not create a replacement task or assume that a GitHub prompt change updates the hosted task.
+This section supersedes the historical personal-controller handovers below. Cody has resumed responsibility for completing the project under the owner's broad authorization. The other contributor is needed only for the existing hosted **Daily Trading Controller**, which belongs to their ChatGPT account. They can perform that account-bound work remotely; sharing credentials or being physically present is unnecessary. This browser reaches ChatGPT sign-in and cannot inspect their saved task. Do not create a replacement task or assume that a GitHub prompt change updates the hosted task.
+
+## Account owner's immediate action
+
+In your own ChatGPT account, open **Scheduled/Tasks** and select the existing **Daily Trading Controller**. Ask your GPT to read the latest version of this handover on `project/decision-lab-completion`, inspect the saved task and its failure history, and follow the account-bound recovery steps below. Do not share a password or activate the three historical separate tasks. Inspecting is read-only; before changing the hosted controller, follow the live coordination lock requirements. If Cody still holds the lock, return the task diagnosis and leave the change pending until a verified release/handoff. GitHub/Vercel/Supabase sign-in does not grant access to this ChatGPT task.
 
 ## Message for the receiving GPT
 
