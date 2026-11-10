@@ -1,6 +1,23 @@
 # Decision Lab — controller project plan
 
-Updated 4 October 2026. Authoritative build status; development controller owns updates. Source: approved playbook v3. This file does not imply an active background agent.
+Current recovery milestone authorized 10 November 2026. Development controller owns updates. Source: approved playbook v3. This file does not imply an active background agent.
+
+## Current milestone — reproducible baseline and supported daily loop
+
+Owner: Cody. Feature branch: `codex/daily-loop-recovery`, based on operational integration `3688c16b6b3b818d3b2c168aea236bff8fe83353`. The following recovery gates supersede the historical opening status table below; preserve that table and dated records as implementation history. No observation week has started.
+
+| Gate | Status | Scope and acceptance |
+| --- | --- | --- |
+| REC-01 | awaiting_review | Local repair accepted by independent reviewer and tester: clean install, complete local suite and production build passed. Existing dependency records/versions preserved; dedicated-route tests corrected. Evidence recorded below/in evidence log. Publication and integration remain separate. |
+| REC-02 | queued | Diagnose existing controller scheduling and rejected stage-claim execution; prepare a bounded recovery for the existing controller, preserving approval boundaries and notification preferences. Verify saved configuration and genuine unattended receipts separately. |
+| REC-03 | queued | Restore officially verified calendar trust and defensible unique daily prices. Review source duplicates before defining validation policy; retain conflicting-price errors, immutable observations and failure history. |
+| REC-04 | queued | Verify independent research, publication, both paper evaluators and convergence on supported coverage. Use saved current receipts, explicit unsupported blockers and no backdated calls. |
+| REC-05 | queued | Verify actual signed-in populated desktop/mobile views, original/review evidence, freshness and authorized two-user note isolation. Prepare exact release/recovery evidence and obtain any outstanding integration/production approval only after the candidate is reviewable. |
+| REC-06 | queued | Begin the planned one-week observation only after Stage 1 acceptance and verified notification delivery. Record actual start/end and expected-session coverage; do not infer predictive quality from operational success. |
+
+Current evidence: production is deployed and database ingestion/technical processing remain active, but the supported analytical loop lacks current completion receipts. Open faults are tracked in GitHub issues #34–#38. Public evidence must contain only sanitized technical categories, never account/watchlist details or raw production records. Wider coverage and new features are deferred until the supported loop passes acceptance.
+
+## Historical implementation table (4 October; later dated evidence follows)
 
 | ID | Workstream / deliverable | Dependencies | Status | Acceptance evidence / next action |
 | --- | --- | --- | --- | --- |
