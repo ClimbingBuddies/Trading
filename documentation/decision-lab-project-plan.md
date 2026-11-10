@@ -1,6 +1,23 @@
 # Decision Lab — controller project plan
 
-Updated 4 October 2026. Authoritative build status; development controller owns updates. Source: approved playbook v3. This file does not imply an active background agent.
+Current recovery milestone authorized 10 November 2026. Development controller owns updates. Source: approved playbook v3. This file does not imply an active background agent.
+
+## Current milestone — reproducible baseline and supported daily loop
+
+Owner: Cody. Feature branch: `codex/daily-loop-recovery`, based on operational integration `3688c16b6b3b818d3b2c168aea236bff8fe83353`. The following recovery gates supersede the historical opening status table below; preserve that table and dated records as implementation history. No observation week has started.
+
+| Gate | Status | Scope and acceptance |
+| --- | --- | --- |
+| REC-01 | accepted | Local repair independently accepted: clean install, complete local suite and production build passed. Published commit `5c61e3a`; existing dependency records/versions preserved and dedicated-route tests corrected. Integration/production remain separate. |
+| REC-02 | blocked | Existing hosted controller identity/owning scheduler session needed. No local automation exists in this clone. Earlier rejected stage claim and disablement are distinct faults; current hosted setting is unverified. Restore only the existing controller after exact permission-path diagnosis, then verify an unattended receipt. |
+| REC-03 | in_progress | Yahoo duplicate-session repair independently passes local review/tests; renewed Nasdaq manifest/trust candidate prepared from official sources. Neither is deployed/imported. Production approval, bounded queue recovery, saved trust and actual price coverage remain required. |
+| REC-04 | blocked | Current research/publication/evaluation receipts absent. Convergence functions exist but no cron/trigger invokes them and latest run is August; add reviewed execution wiring after independent fresh inputs. Preserve supported/unsupported accounting and original cutoffs. |
+| REC-05 | blocked | In-app browser reaches login; authenticated desktop/mobile and two-user isolation remain unverified. Prepare exact release/recovery evidence; integration/production need explicit approval under coordination rules. |
+| REC-06 | queued | Begin the planned one-week observation only after Stage 1 acceptance and verified notification delivery. Record actual start/end and expected-session coverage; do not infer predictive quality from operational success. |
+
+Current evidence: production is deployed and database ingestion/technical processing remain active, but the supported analytical loop lacks current completion receipts. Open faults are tracked in GitHub issues #34–#38. Public evidence must contain only sanitized technical categories, never account/watchlist details or raw production records. Wider coverage and new features are deferred until the supported loop passes acceptance.
+
+## Historical implementation table (4 October; later dated evidence follows)
 
 | ID | Workstream / deliverable | Dependencies | Status | Acceptance evidence / next action |
 | --- | --- | --- | --- | --- |

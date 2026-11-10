@@ -35,5 +35,24 @@ test('verified mature fraction is formatted once; paper-cycle return remains dis
 test('missing latest event triggers review attention while genuine pending trials do not',()=>{const complete=render();const completeButton=nodes(complete.tree,n=>n.type==='button'&&text(n).startsWith('Review status'))[0];assert.equal(text(completeButton).includes('Attention'),false);const statuses=status();statuses[0].eventId='obsolete';const missing=render({statuses,reviewOpen:true});assert.match(text(nodes(missing.tree,n=>n.type==='button'&&text(n).startsWith('Review status'))[0]),/Attention/);assert.match(text(nodes(missing.tree,n=>n.type==='\.\/TradingPipelineStatus')[0]),/No verified result matches/);});
 test('research hook suppresses stale scope/revision response and stale cached payload',async()=>{let resolve;const r=load('SharedResearchRecommendations','',[0,null],undefined,{rpc:()=>new Promise(done=>resolve=done)});r.exports.useSharedResearchRecommendations('all',0);const cleanup=r.effects[0]();cleanup();resolve({error:null,data:{contractVersion:1,generatedAt:'2026-10-07T02:00:00Z',items:researchItems}});await new Promise(done=>setTimeout(done,0));assert.equal(r.writes.length,0);const changed=load('SharedResearchRecommendations','',[0,{key:'all:0:0',payload:{items:researchItems},error:false}]);const value=changed.exports.useSharedResearchRecommendations('watched',1);assert.equal(value.payload,undefined);assert.equal(value.loading,true);});
 test('status validator rejects non-mature checkpoint and mature blocker contradictions',()=>{const {exports}=render();for(const changes of [{asOf:'2026-10-07T00:00:00Z'},{status:'blocked',asOf:'2026-10-07T00:00:00Z'},{status:'matured',actionReturn:'0.125',asOf:'2026-10-07T00:00:00Z',blocker:'PINNED_EVIDENCE_REVISED'}]){const p={contractVersion:1,horizon:5,items:[{...status()[0],...changes}]};assert.equal(exports.validActionStatus(p,5),false);}});
-test('dashboard Decision Lab branch renders only shared compact workspace',()=>{const source=fs.readFileSync(new URL('../components/MyDashboardClient.tsx',import.meta.url),'utf8');const ast=ts.createSourceFile('MyDashboardClient.tsx',source,ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX);let branch;function visit(n){if(ts.isConditionalExpression(n)&&n.condition.getText(ast).replace(/\s+/g,'')==="selectedTab==='decision-lab'")branch=n.whenTrue;ts.forEachChild(n,visit);}visit(ast);assert.ok(branch);assert.match(branch.getText(ast),/SharedDecisionWorkspace/);assert.equal(/PredictionWorkspace|DecisionWorkspace|<h[12]/.test(branch.getText(ast).replace('SharedDecisionWorkspace','')),false);});
+test('dedicated Decision Lab route renders one shared workspace only after sign-in', () => {
+ const page = fs.readFileSync(new URL('../app/decision-lab/page.tsx', import.meta.url), 'utf8');
+ assert.match(page, /<DecisionLabClient\s*\/>/);
+ const source = fs.readFileSync(new URL('../components/DecisionLabClient.tsx', import.meta.url), 'utf8');
+ const compiled = ts.transpileModule(source, {compilerOptions: {module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX}}).outputText;
+ for (const signedIn of [null, false, true]) {
+  const exports = {}, effects = [], redirects = [];
+  vm.runInNewContext(compiled, {exports, require: name => {
+   if (name === 'react') return {useState: () => [signedIn, () => {}], useEffect: effect => effects.push(effect)};
+   if (name === 'next/navigation') return {useRouter: () => ({replace: url => redirects.push(url)})};
+   if (name === 'react/jsx-runtime') return {jsx, jsxs: jsx, Fragment: 'fragment'};
+   return {default: name};
+  }});
+  const tree = exports.default();
+  assert.equal(nodes(tree, n => n.type === './SharedDecisionWorkspace').length, signedIn === true ? 1 : 0);
+  assert.equal(nodes(tree, n => /(?:^|\/)PredictionWorkspace$|(?:^|\/)DecisionWorkspace$/.test(String(n.type))).length, 0);
+  effects[1]();
+  assert.deepEqual(redirects, signedIn === false ? ['/login?next=/decision-lab'] : []);
+ }
+});
 test('pending blocker and unsafe or absent blocked code are rejected',()=>{const {exports}=render();for(const changes of [{blocker:'PINNED_EVIDENCE_REVISED'},{status:'blocked',blocker:null},{status:'blocked',blocker:'Private exception https://secret.example'}])assert.equal(exports.validActionStatus({contractVersion:1,horizon:5,items:[{...status()[0],...changes}]},5),false);assert.equal(exports.validActionStatus({contractVersion:1,horizon:5,items:[{...status()[0],status:'blocked',blocker:'PINNED_EVIDENCE_REVISED'}]},5),true);});

@@ -1,5 +1,25 @@
 # ASX Yahoo daily history
 
+## Recovery candidate — 10 November 2026 (not deployed)
+
+Repeated provider dates no longer fail the entire response. Within the requested
+completed-session window, identical OHLC, adjusted close and volume values collapse
+to one record. Conflicting values exclude the entire date; no first/last selection
+or filling missing values from another record is allowed. Other valid dates load.
+Both cases retain source timestamps and original values in sync-run metadata.
+Conflicts use `rejected_bars`; identical repetitions use `duplicate_bars`.
+Even an all-rejected failed run retains this evidence.
+
+Successful jobs with rejected dates retain a warning. `received_count` counts
+usable and rejected session groups, not raw timestamps; empty rows are counted
+separately. Success does not certify complete coverage or resolve a missing outcome
+price. Existing saved observations are not deleted when a new fetch rejects a date;
+review any previously stored conflicting session before relying on it downstream.
+
+Local verification: `node --test tests/yahoo-history.test.mjs` (also included by
+`npm test`). Deployment, bounded queue recovery and actual scheduled success remain
+separate gates. Do not retry all failed jobs or clear quarantine as part of release.
+
 ## Latest verified result — 17 September 2026
 
 Worker version 6 loads valid bars while quarantining invalid OHLC/volume records

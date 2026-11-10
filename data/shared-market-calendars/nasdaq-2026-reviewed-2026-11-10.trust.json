@@ -1,0 +1,8 @@
+{
+  "exchange": "NASDAQ",
+  "revision": "nasdaq-2026-published-schedule-reviewed-2026-11-10",
+  "manifestHash": "d6cf6a33e87e425a30c90c9c470d4d730e67005fd20cfb99715b5b167e22016c",
+  "verifiedAt": "2026-11-10T04:20:42.000Z",
+  "validUntil": "2026-11-17T04:20:42.000Z",
+  "reference": "Official Nasdaq 2026 published calendar and regular equity hours reviewed 2026-11-10; current system status and equity alerts checked independently. Prospective regular-session schedule only, not exhaustive historical emergency-closure verification. Daily official-alert review remains required. See documentation/decision-lab-evidence-log.md (REC-03)."
+}
