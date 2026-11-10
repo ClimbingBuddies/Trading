@@ -1,0 +1,75 @@
+{
+  "description": "Released mobile/dialog repair and reviewed existing-controller convergence continuation; verified manual evaluator recovery and preserved the account-owner dependency.",
+  "databaseAndApi": "No schema change. Existing accepted evaluators executed with manual_verification and exact-request replay; four supported calls evaluated, original calls/reviews unchanged, no duplicate outcomes/marks. Existing worker/calendar release preserved.",
+  "decisions": [
+    "Operational branch only; main remains separate",
+    "No duplicate scheduler; controller v1.10 requires hosted adoption",
+    "Current stale/missing inputs block convergence rather than creating zero-fresh completion",
+    "PR44 merge f4f63d3c940296eed6cacba92b85adbe8c2eb86d deployed as dpl_GcfGMpNsisfaF5U9JDw41HBZLUiN READY; PR45 docs merged a2005d8230a6fc894f12f4067a7103b6dba8a956"
+  ],
+  "risks": [
+    "Actual scheduled completion requires existing owner ChatGPT access",
+    "One replay guard collided with agent read-only coordination status; orchestration erroneously continued, immediate recheck confirmed unchanged ownership; recorded in evidence log and subsequent batches explicitly stopped on failure"
+  ],
+  "tests": [
+    {
+      "command": "node --test tests/ai-performance-drilldown.test.mjs tests/compact-decision-lab.test.mjs",
+      "result": "passed",
+      "scope": "UI dismissal and compact contract; 37/37 passed independently"
+    },
+    {
+      "command": "npm run build",
+      "result": "passed",
+      "scope": "Next production compilation, TypeScript and palette; passed with safe local configuration"
+    },
+    {
+      "command": "node scripts/test-market-convergence.mjs with PGlite 0.5.16",
+      "result": "passed",
+      "scope": "Actual canonical SQL, freshness, terminal source cutoff, lineage and bounded retry; 26/26 passed independently; corrected static review PASS"
+    },
+    {
+      "command": "Actual-component local browser and signed-in production checks",
+      "result": "passed",
+      "scope": "375/390px local widths and all8focus cases; production no page overflow at390 and both drawer Close/Escape focus, recovered saved results render; passed"
+    }
+  ],
+  "outstanding": [
+    "Owner inspect/restore existing ChatGPT task and verify genuine unattended receipts",
+    "Fresh independent research/publication and convergence execution",
+    "New Yahoo worker non-idle job evidence on existing schedule",
+    "Authorized two-user browser privacy, notification delivery and Stage1 observation acceptance"
+  ],
+  "recovery": "Frontend previous compatible deployment dpl_Faea5XSbZDdFqXmhU2E25xfHWdPg or reviewed code revert; controller source can be reverted without duplicate schedule. Never delete evaluator history or infer database rollback from code. All relevant source published; no stashes or other worktrees; ignored build/dependency assets reproducible.",
+  "sequence": 5,
+  "timestamp": "2026-11-10T07:17:11.069Z",
+  "author": "Cody",
+  "taskId": "daily-loop-completion",
+  "commit": "cac433c0d77881ebb9d6ac375c97a484b8a52070",
+  "baseCommit": "479d30181dcf1eaa1a2635714090f113e96cd64b",
+  "branch": "codex/daily-loop-completion",
+  "files": [
+    "automation/daily-trading-controller.md",
+    "components/SharedDecisionWorkspace.module.css",
+    "components/SharedDecisionWorkspace.tsx",
+    "components/SharedResearchRecommendations.tsx",
+    "documentation/decision-lab-evidence-log.md",
+    "documentation/decision-lab-project-plan.md",
+    "documentation/pipelines/market-convergence-pipeline.md",
+    "documentation/recommendations-controller-handoff.md",
+    "scripts/market-convergence-readiness.sql",
+    "scripts/test-market-convergence.mjs",
+    "tests/ai-performance-drilldown.test.mjs"
+  ],
+  "checkpoints": {
+    "localWorking": "cac433c0d77881ebb9d6ac375c97a484b8a52070",
+    "locallyTested": "cac433c0d77881ebb9d6ac375c97a484b8a52070",
+    "remotelyPublished": "cac433c0d77881ebb9d6ac375c97a484b8a52070",
+    "approvedStableIntegration": null,
+    "production": {
+      "commit": "84a40702f4beaa7f11359772682b36d5831d23c1",
+      "deployment": "dpl_Faea5XSbZDdFqXmhU2E25xfHWdPg",
+      "verification": "observed-ready-not-revalidated"
+    }
+  },
+  "evidenceNote": "Test results are explicit author attestations; stable integration requires separate approval and evidence."
+}
