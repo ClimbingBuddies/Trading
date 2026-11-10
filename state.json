@@ -1,6 +1,6 @@
 {
   "protocol": 1,
-  "revision": 16,
+  "revision": 17,
   "status": "held",
   "owner": "Cody",
   "ownerId": "cody",
@@ -17,8 +17,8 @@
     "verification"
   ],
   "startedAt": "2026-11-10T03:30:14.875Z",
-  "heartbeatAt": "2026-11-10T04:15:15.739Z",
-  "localChanges": "unknown-editing",
+  "heartbeatAt": "2026-11-10T04:18:19.953Z",
+  "localChanges": "unpublished",
   "branch": "codex/daily-loop-recovery",
   "publishedCommit": "5c61e3ad01f35cdac93882dcec0cc6a5e15b5b77",
   "stableIntegration": null,
