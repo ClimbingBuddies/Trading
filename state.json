@@ -1,21 +1,25 @@
 {
   "protocol": 1,
-  "revision": 10,
-  "status": "free",
-  "owner": null,
-  "ownerId": null,
-  "cloneId": null,
-  "acquisitionId": null,
-  "taskId": null,
-  "task": null,
+  "revision": 11,
+  "status": "held",
+  "owner": "Cody",
+  "ownerId": "cody",
+  "cloneId": "a70b247a-5a71-4c2c-acf8-986bda831196",
+  "acquisitionId": "ce8d7115-086e-4470-8d89-1307cacd9b3c",
+  "taskId": "daily-loop-recovery",
+  "task": "Restore reproducible baseline and verify the supported daily research loop",
   "scope": [
-    "coordination protocol",
-    "main integration"
+    "dependencies",
+    "tests",
+    "pipeline",
+    "controller",
+    "documentation",
+    "verification"
   ],
-  "startedAt": "2026-11-09T09:16:31.082Z",
-  "heartbeatAt": "2026-11-09T09:18:44.376Z",
-  "localChanges": "secured",
-  "branch": null,
+  "startedAt": "2026-11-10T03:30:14.875Z",
+  "heartbeatAt": "2026-11-10T03:30:14.875Z",
+  "localChanges": "clean",
+  "branch": "codex/daily-loop-recovery",
   "publishedCommit": null,
   "stableIntegration": null,
   "production": {
@@ -43,10 +47,7 @@
   "adoption": "Other developer enrollment and pre-existing local work not yet verified",
   "baseCommit": "4a5131c7e77accd673f632062dcaf120e85272ca",
   "localHead": "4a5131c7e77accd673f632062dcaf120e85272ca",
-  "lastJournal": {
-    "path": "journal/000002-coordination-main-integration.json",
-    "commit": "4a5131c7e77accd673f632062dcaf120e85272ca"
-  },
+  "lastJournal": null,
   "releasedAt": "2026-11-09T09:18:44.376Z",
   "lastOwner": "Cody",
   "handoff": null
