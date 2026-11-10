@@ -17,20 +17,33 @@ export function normalizeYahoo(payload, symbol, currency, start, end) {
   const timestamps = result.timestamp;
   const quotes = result.indicators?.quote?.[0];
   if (!Array.isArray(timestamps) || !quotes) throw new Error('Yahoo returned no price series');
-  const rows = [], rejected = [], seen = new Set();
+  const rows = [], rejected = [], duplicates = [], byDate = new Map();
+  const fields = ['open', 'high', 'low', 'close', 'adjusted_close', 'volume'];
   let skipped = 0;
   for (let i = 0; i < timestamps.length; i++) {
     if (!Number.isFinite(timestamps[i])) throw new Error('Yahoo invalid timestamp');
     const date = sydneyDate(new Date(timestamps[i] * 1000));
     // Exclude today's partial session and any bars outside the requested window.
     if (date < start || date > end) continue;
-    if (seen.has(date)) throw new Error('Yahoo duplicate trading date: ' + date);
-    seen.add(date);
-    const values = ['open', 'high', 'low', 'close'].map(k => quotes[k]?.[i]);
-    if (values.every(v => v == null)) { skipped++; continue; }
-    const [open, high, low, close] = values;
-    const volume = quotes.volume?.[i] ?? null;
-    const adjusted_close = result.indicators?.adjclose?.[0]?.adjclose?.[i] ?? null;
+    const bar = { date, source_timestamp: timestamps[i],
+      ...Object.fromEntries(['open', 'high', 'low', 'close', 'volume'].map(k => [k, quotes[k]?.[i] ?? null])),
+      adjusted_close: result.indicators?.adjclose?.[0]?.adjclose?.[i] ?? null };
+    const group = byDate.get(date) ?? [];
+    group.push(bar);
+    byDate.set(date, group);
+  }
+  for (const [date, bars] of byDate) {
+    const first = bars[0];
+    // Never pick the first/last price or fill a missing value from another bar.
+    // One ambiguous session must not prevent unrelated valid history loading.
+    if (bars.some(bar => fields.some(key => !Object.is(bar[key], first[key])))) {
+      rejected.push({ date, reason: 'Conflicting duplicate daily bars; entire session excluded', source_bars: bars });
+      continue;
+    }
+    if (bars.length > 1) duplicates.push({ date, count: bars.length, source_bars: bars, reason: 'Identical daily values collapsed' });
+    const { open, high, low, close, volume, adjusted_close } = first;
+    const values = [open, high, low, close];
+    if (values.every(v => v == null)) { skipped += bars.length; continue; }
     const tolerance = Math.max(...values) * 1e-6;
     if (values.some(v => !Number.isFinite(v) || v <= 0) || high + tolerance < Math.max(open, close, low) || low - tolerance > Math.min(open, close, high) || (volume !== null && (!Number.isFinite(volume) || volume < 0)) || (adjusted_close !== null && (!Number.isFinite(adjusted_close) || adjusted_close <= 0))) {
       rejected.push({ date, open, high, low, close, adjusted_close, volume, reason: 'Invalid OHLC or volume; original provider values preserved, excluded from observations' });
@@ -39,7 +52,7 @@ export function normalizeYahoo(payload, symbol, currency, start, end) {
     rows.push({ date, open, high, low, close, adjusted_close, volume });
   }
   rows.sort((a, b) => a.date.localeCompare(b.date));
-  return { rows, rejected, skipped, meta, events: result.events ?? {} };
+  return { rows, rejected, skipped, duplicates, meta, events: result.events ?? {} };
 }
 export async function fetchYahoo(symbol, currency, start, end) {
   const endpoint = new URL('https://query1.finance.yahoo.com/v8/finance/chart/' + encodeURIComponent(symbol));
@@ -66,10 +79,12 @@ export async function backfillYahoo(db, inst, job) {
   const metadata = { function: 'asx-yahoo-market-history', provider: 'yahoo', symbol: inst.symbol, provider_symbol: symbol, exchange: 'ASX', requested_start_date: start, requested_end_date: end, price_basis: 'Yahoo native OHLC plus separately supplied adjusted close' };
   const { data: run, error: re } = await db.from('sync_runs').insert({ provider_id: provider.id, requested_count: 1, status: 'running', metadata }).select('id').single();
   if (re || !run) throw new Error(re?.message ?? 'Could not create Yahoo sync run');
+  let auditMetadata = metadata;
   try {
     const result = await fetchYahoo(symbol, inst.currency_code.trim(), start, end);
+    auditMetadata = { ...metadata, valid_rows: result.rows.length, rejected_bars: result.rejected, coverage_has_rejected_bars: result.rejected.length > 0, duplicate_bars: result.duplicates, skipped_empty_bars: result.skipped, events: result.events, retrieved_at: new Date().toISOString() };
     if (!result.rows.length) throw new Error('Yahoo returned no usable daily bars');
-    const retrieved_at = new Date().toISOString();
+    const retrieved_at = auditMetadata.retrieved_at;
     let inserted = 0;
     for (let offset = 0; offset < result.rows.length; offset += 250) {
       const rows = result.rows.slice(offset, offset + 250).map(row => ({
@@ -87,12 +102,12 @@ export async function backfillYahoo(db, inst, job) {
     }
     const coverage_start = result.rows[0].date + 'T00:00:00Z';
     const coverage_end = result.rows.at(-1).date + 'T00:00:00Z';
-    const warning = result.rejected.length ? `Loaded valid history; ${result.rejected.length} invalid Yahoo bars excluded. See sync_runs metadata.rejected_bars.` : null;
-    const { error: auditError } = await db.from('sync_runs').update({ status: 'succeeded', finished_at: new Date().toISOString(), received_count: result.rows.length + result.rejected.length, inserted_count: inserted, metadata: { ...metadata, coverage_start, coverage_end, valid_rows: result.rows.length, rejected_bars: result.rejected, coverage_has_rejected_bars: result.rejected.length > 0, skipped_empty_bars: result.skipped, events: result.events, retrieved_at } }).eq('id', run.id);
+    const warning = result.rejected.length ? `Loaded valid history; ${result.rejected.length} invalid or ambiguous Yahoo sessions excluded. See sync_runs metadata.rejected_bars.` : null;
+    const { error: auditError } = await db.from('sync_runs').update({ status: 'succeeded', finished_at: new Date().toISOString(), received_count: result.rows.length + result.rejected.length, inserted_count: inserted, metadata: { ...auditMetadata, coverage_start, coverage_end } }).eq('id', run.id);
     if (auditError) throw new Error(auditError.message);
     return { sync_run_id: run.id, requested_start: start, requested_end: end, coverage_start, coverage_end, received_count: result.rows.length + result.rejected.length, inserted_count: inserted, last_error: warning };
   } catch (error) {
-    await db.from('sync_runs').update({ status: 'failed', finished_at: new Date().toISOString(), error_message: String(error).slice(0, 2000) }).eq('id', run.id);
+    await db.from('sync_runs').update({ status: 'failed', finished_at: new Date().toISOString(), error_message: String(error).slice(0, 2000), metadata: auditMetadata }).eq('id', run.id);
     throw error;
   }
 }
