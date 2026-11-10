@@ -1,20 +1,23 @@
 {
   "protocol": 1,
-  "revision": 37,
+  "revision": 38,
   "status": "held",
   "owner": "Cody",
   "ownerId": "cody",
   "cloneId": "a70b247a-5a71-4c2c-acf8-986bda831196",
   "acquisitionId": "093dd204-4d44-4b1b-b82f-bca5ed59fc16",
   "taskId": "ai-control-transfer",
-  "task": "Move Trading AI control to Cody and revise monitoring cadence",
+  "task": "Move AI execution to Cody with equal project input and four-hour quote cycles",
   "scope": [
     "automation",
     "documentation",
-    "scheduler"
+    "scheduler",
+    "functions",
+    "database",
+    "tests"
   ],
   "startedAt": "2026-11-10T23:38:45.055Z",
-  "heartbeatAt": "2026-11-10T23:39:39.310Z",
+  "heartbeatAt": "2026-11-10T23:48:12.507Z",
   "localChanges": "unknown-editing",
   "branch": "codex/ai-control-transfer",
   "publishedCommit": null,
