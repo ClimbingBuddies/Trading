@@ -72,7 +72,7 @@ Historical Tiingo `1day` observations are analytical/backtest data. They must no
 ## First checks
 
 1. Read the most recent `sync_runs` rows for the Twelve Data loader.
-2. Check the active cron job `trading-market-data-every-15-minutes` and confirm it is active.
+2. Check job 1, `trading-market-data-every-15-minutes`, is active with schedule `0-14/2 3,7,11,15,19,23 * * *`. Its legacy name is retained; the schedule defines four-hour cycles with internal two-minute batches.
 3. Check the latest `quote` observation time and `loaded_at` time for affected active instruments.
 4. Check instrument eligibility before calling data stale:
    - forex and crypto are normally continuously eligible;
@@ -87,7 +87,11 @@ Historical Tiingo `1day` observations are analytical/backtest data. They must no
 
 A successful cron invocation is not sufficient proof that every instrument is current. Verify the affected observations as well.
 
+Cycle-aware receipts include `cycle_started_at` and `selected_instrument_ids`. Reconcile selected, inserted, failed and unfinished instruments across the whole cycle. Capacity is at most 64 eligible symbols; overflow blocks explicitly and delays can reduce completed coverage. The service-only claim RPC serializes selection/initial receipts. Any unfinished cycle-aware run blocks further claims across cycles; do not clear it automatically. Investigate execution termination and stored observations before a separately reviewed forward recovery. Terminal batches impose a 60-second cooldown. Current operational freshness allows 255 minutes; due extends through 285 minutes, then stale while active. Analytical freshness/cutoffs and daily history remain separate. See the claim SQL, `scripts/market-quotes-four-hour.sql` and its paired rollback; code recovery alone does not restore the prior schedule or thresholds.
+
 ## Recovery
+
+For quote-worker replacement or rollback, pause job 1 with `cron.alter_job`, account for its queued HTTP requests and allow at least eight minutes from the last possible old invocation start before switching workers/resuming. [Supabase's hosted wall-clock limits](https://supabase.com/docs/guides/functions/limits) are at most 400 seconds. Keep original observations and receipts. Two exact pre-cutover unfinished legacy receipts from 2 and 7 November are excluded by the new claim gate because their workers cannot still be running; their unknown outcomes remain unchanged. Every other unfinished receipt blocks claims and requires investigation. The release/rollback SQL requires paused dispatch and restores activity only with the matching schedule.
 
 ### One or a few symbols failed
 

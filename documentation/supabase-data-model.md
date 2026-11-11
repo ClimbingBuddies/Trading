@@ -1,5 +1,9 @@
 # Supabase Data Model
 
+## Four-hour quote cycles (11 November 2026)
+
+`scripts/market-quotes-cycle-claim.sql` adds the service-role-only `public.claim_twelve_data_cycle_batch_v1` RPC. It serializes batch selection and the initial `sync_runs` receipt in one advisory-locked transaction, retaining the existing observations/run tables and history. Receipts identify the cycle and selected instrument IDs; unfinished cycle-aware work blocks subsequent claims until reviewed recovery. `scripts/market-quotes-four-hour.sql` changes job 1's schedule and the existing operational freshness classifier to 255/285 minutes without changing its grants or session rules. See the quote pipeline/runbook and deployment evidence for actual installation state.
+
 ## Personal prediction ledger (12 September 2026 change)
 
 `scripts/prediction-ledger-v1.sql` is the additive migration source for the new prediction workflow. It is independent of the older, undeployed personal-decision tables. `personal_prediction_tracking` records an authenticated owner's enrolment time. `personal_prediction_plans` preserves every supported watched-equity/ETF AI call, its original source snapshot and publication time, and separate 5/20-session timing rules. `personal_prediction_results` stores append-only evaluation states and frozen entry/exit evidence. All three tables have owner-only SELECT policies; browser writes are restricted to the no-argument enrolment RPC. Plan, result and enrolment updates/deletes are rejected by triggers.

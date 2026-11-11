@@ -4,6 +4,8 @@
 
 Discover Boulders Markets is a Supabase-backed trading research, monitoring and strategy-validation platform with a Next.js frontend deployed on Vercel.
 
+Both contributors retain equal project input and existing access. Cody operates the AI accounts and schedules; see the [AI execution handover](documentation/ai-execution-handover.md) for the account-side cutover and stock ticker cadence.
+
 ## Canonical systems
 
 - **GitHub:** `ClimbingBuddies/Trading` — application source, canonical methodology, specifications, documentation and audit evidence.

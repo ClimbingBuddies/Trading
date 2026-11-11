@@ -84,7 +84,7 @@ The two systems may be displayed together after they are independently produced,
 
 - Twelve Data loader is active.
 - 30 active instruments are tracked.
-- Market data is scheduled every 15 minutes.
+- Current quote refresh is configured for four-hour cycles with paced batches; see `documentation/ai-execution-handover.md` and the evidence log for deployment status. Daily history and analytical schedules remain separate.
 - US equity/ETF market-hours logic exists.
 - `market_observations` and `sync_runs` support monitoring.
 

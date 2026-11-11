@@ -28,7 +28,7 @@ Select the role once from state that existed at the beginning of the run. Do not
 1. If project_status is MY_DASHBOARD_PROJECT_COMPLETE, report completion and make no changes.
 2. If the sole active gate is NEXT or IN_PROGRESS and handoff_owner is PRODUCER, perform one Producer iteration on that gate only.
 3. If the sole active gate is IN_REVIEW and handoff_owner is AUDITOR, perform one Auditor iteration on that gate only.
-4. If state is OWNER_REVIEW, present the exact persisted review package and wait for Travis's explicit decision. An intentional owner gate is not a failure or blocker. If the same unchanged review package has already been reported and no decision exists, emit no duplicate update.
+4. If state is OWNER_REVIEW, present the exact persisted review package and wait for an explicit decision from either contributor. An intentional owner gate is not a failure or blocker. If the same unchanged review package has already been reported and no decision exists, emit no duplicate update.
 5. If the plan, journal, audit record, migration state, implementation identity or deployment disagree, use primary evidence to classify the mismatch:
    - reconcile harmless metadata where underlying work and identities are unchanged;
    - regenerate a missing or malformed handoff where the verified implementation is unchanged; or
@@ -123,7 +123,7 @@ At OWNER_REVIEW:
 - retrieve and present the persisted review package;
 - explain what passed, what remains uncertain and what decision is required;
 - make no implementation, schema, data, deployment or gate-progression changes;
-- wait for explicit Travis approval, retention or bounded revision;
+- wait for explicit approval from either contributor, retention or bounded revision;
 - persist the owner decision before resuming work.
 
 ## Handoff and evidence discipline

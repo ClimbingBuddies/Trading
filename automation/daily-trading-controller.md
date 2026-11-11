@@ -7,6 +7,8 @@
 
 ## Purpose
 
+AI runtime operator: Cody, following `documentation/ai-execution-handover.md`. Both contributors retain equal project input and existing access. Do not infer that this repository update transferred a hosted task; verify the controlled cutover before enabling a replacement. This does not change the daily 08:00 schedule or the analytical methodology.
+
 This is the canonical execution specification for the **single scheduled Daily Trading Controller**.
 
 The controller is the only ChatGPT scheduled task required for the morning Trading workflow. It runs once daily at 08:00 Australia/Perth, inspects current timezone-aware clock state and persisted Supabase state, and executes eligible stages sequentially within one bounded invocation. Scope is exclusively the Trading project and ClimbingBuddies/Trading; do not include Discover Stories.

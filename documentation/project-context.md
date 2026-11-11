@@ -27,6 +27,8 @@ Start with `node scripts/coordination.mjs status`. [The coordination branch](htt
 
 ## Boundaries
 
+Both contributors retain equal project input and existing access. Cody is the designated AI execution operator (accounts, prompts and schedules); this is not sole project ownership. Follow [the AI execution handover](ai-execution-handover.md) for inventory and controlled scheduler cutover. Repository prompt changes alone do not transfer hosted tasks.
+
 Market, Technical and Opportunity assessments remain analytically independent. Preserve immutable decision evidence and owner access boundaries. Never fabricate data or infer success from an empty UI. Production database history includes SQL from `scripts/` as well as migration files; do not blindly replay or repair migration history.
 
 Local unit tests: `npm test`. Coordination tests: `node --test tests/coordination.test.mjs`. Local build: `npm run build` with the required safe local configuration. Install the locked dependencies with `npm ci --ignore-scripts` where needed. Some isolated SQL tests need PGlite; full Supabase needs its CLI and Docker. Missing tools/evidence must be reported, not replaced with production experiments. Coordination itself needs no npm dependencies or hosted builds.

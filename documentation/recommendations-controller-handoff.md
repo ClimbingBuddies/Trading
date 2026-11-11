@@ -1,4 +1,8 @@
-# Current handover — shared daily-loop recovery, 10 November 2026
+# Current direction — AI execution handover, 11 November 2026
+
+Follow [AI execution handover](ai-execution-handover.md): both contributors retain equal project input; Cody operates the AI side. The instruction below to restore the controller in the other contributor's account is superseded by inventory and a coordinated pause-old/enable-new cutover. Historical recovery evidence and analytical acceptance requirements remain applicable. Hosted transfer is pending verified account-side evidence.
+
+# Previous handover — shared daily-loop recovery, 10 November 2026
 
 This section supersedes the historical personal-controller handovers below. Cody has resumed responsibility for completing the project under the owner's broad authorization. The other contributor is needed only for the existing hosted **Daily Trading Controller**, which belongs to their ChatGPT account. They can perform that account-bound work remotely; sharing credentials or being physically present is unnecessary. This browser reaches ChatGPT sign-in and cannot inspect their saved task. Do not create a replacement task or assume that a GitHub prompt change updates the hosted task.
 
