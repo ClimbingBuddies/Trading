@@ -1,0 +1,97 @@
+{
+  "description": "Released four-hour quote cycles and AI execution handover preserving equal contributor input; PRs46/47 integrated and exact production source verified.",
+  "databaseAndApi": "Trading glvbqcplgjdfgjyknzsa: service-only claim_twelve_data_cycle_batch_v1; full-twelve-data-load v7 exact files/JWT verified; job1 active0-14/2 at3,7,11,15,19,23 UTC with unchanged command hash; operational freshness255/285,ACL preserved. Other7jobs unchanged.",
+  "decisions": [
+    "Cody operates AI accounts and schedules; both contributors retain equal project input/access.",
+    "Atomic receipt claim,unfinished-run exclusion and60-second cooldown prevent overlapping quote batches.",
+    "Preserve two exact expired legacy unfinished receipts without inventing their outcomes.",
+    "Daily AI/history/evaluator schedules remain separate from quote cadence."
+  ],
+  "risks": [
+    "64 is maximum input capacity,not guaranteed completed coverage under delays.",
+    "Unfinished new receipts block further cycles until reviewed recovery.",
+    "PGlite cannot prove independent-session lock contention; provider timestamp semantics unchanged."
+  ],
+  "tests": [
+    {
+      "command": "npm test",
+      "result": "passed",
+      "scope": "Repository suite; passed409/409 after sandbox fixture-write retry"
+    },
+    {
+      "command": "node --test tests/twelve-data-cycle.test.mjs",
+      "result": "passed",
+      "scope": "Worker/helper mocked RPC behavior; passed11/11"
+    },
+    {
+      "command": "scripts/test-market-quotes-claim.mjs and scripts/test-market-quotes-release.mjs with PGLITE_MODULE",
+      "result": "passed",
+      "scope": "Actual PostgreSQL claim permissions,selection,cooldown,guards,freshness,rollback;synthetic cron/session/clock; passed179 assertions including17claim scenarios"
+    },
+    {
+      "command": "TypeScript,npm run build,frontend boundary checks",
+      "result": "passed",
+      "scope": "Safe-local build and16freshness boundaries; passed"
+    },
+    {
+      "command": "Independent review and live source/schedule/permissions/HTTP readback",
+      "result": "passed",
+      "scope": "Supabase v7 and Vercel dpl_64hzC2ibgnGCWjozL6nfFyfNjByM READY on5b51b1c;operational docs58aef86;Alerts200 andnewlabels; passed"
+    }
+  ],
+  "outstanding": [
+    "Other account must inventory/export AI tasks and verify pause/no in-flight execution before Cody enables replacements;handover prompt published.",
+    "Nextquote cycle11Nov03UTC/11Perth coverage not yet observed.",
+    "Actual unattended AI research/publication/evaluation,remainingcoverage andobservation acceptance remainunverified."
+  ],
+  "recovery": "Pause quote dispatch,account queuedHTTP,drain8minutes;restore worker v6 from9f56300,applyscripts/market-quotes-four-hour-rollback.sql andpriorfrontend dpl_GcfGMpNsisfaF5U9JDw41HBZLUiN. Preserveobservations/receipts;unusedservice-onlyRPCcanremain. Allfeaturebranches verifiedremote;no stashes/otherworktrees;ignoredassetsgenerated.",
+  "sequence": 6,
+  "timestamp": "2026-11-11T00:10:29.512Z",
+  "author": "Cody",
+  "taskId": "ai-control-transfer",
+  "commit": "20c38064eb02ba807236301a46db887eb3018506",
+  "baseCommit": "cac433c0d77881ebb9d6ac375c97a484b8a52070",
+  "branch": "codex/ai-control-transfer",
+  "files": [
+    "README.md",
+    "automation/daily-trading-controller.md",
+    "automation/my-dashboard-agentic-controller.md",
+    "automation/project-plan-auditor.md",
+    "automation/project-plan-builder.md",
+    "components/AlertsClient.tsx",
+    "documentation/README.md",
+    "documentation/ai-execution-handover.md",
+    "documentation/alert-lifecycle.md",
+    "documentation/decision-lab-evidence-log.md",
+    "documentation/operational-runbook.md",
+    "documentation/pipelines/market-assessment-pipeline.md",
+    "documentation/pipelines/market-data-pipeline.md",
+    "documentation/project-context.md",
+    "documentation/project-plan.md",
+    "documentation/recommendations-controller-handoff.md",
+    "documentation/security-and-operational-notes.md",
+    "documentation/supabase-data-model.md",
+    "lib/dashboard.ts",
+    "scripts/market-quotes-cycle-claim.sql",
+    "scripts/market-quotes-four-hour-rollback.sql",
+    "scripts/market-quotes-four-hour.sql",
+    "scripts/test-market-quotes-claim.mjs",
+    "scripts/test-market-quotes-release.mjs",
+    "supabase/functions/full-twelve-data-load/cycle.ts",
+    "supabase/functions/full-twelve-data-load/deno.json",
+    "supabase/functions/full-twelve-data-load/index.ts",
+    "tests/twelve-data-cycle.test.mjs"
+  ],
+  "checkpoints": {
+    "localWorking": "20c38064eb02ba807236301a46db887eb3018506",
+    "locallyTested": "20c38064eb02ba807236301a46db887eb3018506",
+    "remotelyPublished": "20c38064eb02ba807236301a46db887eb3018506",
+    "approvedStableIntegration": null,
+    "production": {
+      "commit": "84a40702f4beaa7f11359772682b36d5831d23c1",
+      "deployment": "dpl_Faea5XSbZDdFqXmhU2E25xfHWdPg",
+      "verification": "observed-ready-not-revalidated"
+    }
+  },
+  "evidenceNote": "Test results are explicit author attestations; stable integration requires separate approval and evidence."
+}
