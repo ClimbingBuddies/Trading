@@ -1,6 +1,6 @@
 {
   "protocol": 1,
-  "revision": 43,
+  "revision": 44,
   "status": "held",
   "owner": "Cody",
   "ownerId": "cody",
@@ -17,8 +17,8 @@
     "tests"
   ],
   "startedAt": "2026-11-10T23:38:45.055Z",
-  "heartbeatAt": "2026-11-11T00:03:41.320Z",
-  "localChanges": "clean",
+  "heartbeatAt": "2026-11-11T00:07:32.879Z",
+  "localChanges": "unknown-editing",
   "branch": "codex/ai-control-transfer",
   "publishedCommit": "0c010212e73f1b625bc050453baba172f35e3121",
   "stableIntegration": null,
@@ -67,7 +67,7 @@
   ],
   "adoption": "Other developer enrollment and pre-existing local work not yet verified",
   "baseCommit": "cac433c0d77881ebb9d6ac375c97a484b8a52070",
-  "localHead": "9f56300d11fa1d3cd18e9275f700d26b14d1988e",
+  "localHead": "5b51b1c48693bb908f87c86b92a8d85d8f416248",
   "lastJournal": null,
   "releasedAt": "2026-11-10T07:17:18.824Z",
   "lastOwner": "Cody",
