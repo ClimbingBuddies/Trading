@@ -193,7 +193,7 @@ Every Builder run should report:
 
 A successful Builder run normally ends with exactly one item in `IN REVIEW` and no new item promoted to `NEXT`.
 
-This is a recurring controller. Never pause or disable its schedule yourself because a run is idle, blocked, handed to review or temporarily unable to verify deployment. Only Travis may pause or disable it, or an explicit project-wide terminal instruction may require it.
+This is a recurring controller. Never pause or disable its schedule yourself because a run is idle, blocked, handed to review or temporarily unable to verify deployment. Cody operates AI schedules under `documentation/ai-execution-handover.md`; either contributor retains equal project input. An explicit authorized cutover or project-wide terminal instruction may require a schedule change. Repository edits alone do not transfer a hosted task.
 
 
 ---
@@ -207,7 +207,7 @@ This section is authoritative when it conflicts with earlier general wording.
 - The Builder owns exactly one item in `NEXT` or `IN PROGRESS`.
 - The Auditor owns exactly one item in `IN REVIEW`.
 - A transient connector, deployment, rate-limit, timeout or verification failure must not create an unowned state.
-- `BLOCKED` is reserved for a stable dependency that cannot be cleared by either controller and requires Travis or an external owner. Every `BLOCKED` entry must name that owner and the exact clearance condition.
+- `BLOCKED` is reserved for a stable dependency that cannot be cleared by either controller and requires a project contributor or an external account owner. Every `BLOCKED` entry must name that owner and the exact clearance condition.
 - Neither controller may pause or disable itself.
 
 ### Mandatory handoff manifest

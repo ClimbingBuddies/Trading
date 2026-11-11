@@ -249,7 +249,7 @@ The Auditor's key question is:
 
 If the answer is no, the project must not advance.
 
-This is a recurring controller. Never pause or disable its schedule yourself because there is no `IN REVIEW` item, a deployment is pending, or a run reaches a terminal audit decision. Only Travis may pause or disable it, or an explicit project-wide terminal instruction may require it.
+This is a recurring controller. Never pause or disable its schedule yourself because there is no `IN REVIEW` item, a deployment is pending, or a run reaches a terminal audit decision. Cody operates AI schedules under `documentation/ai-execution-handover.md`; either contributor retains equal project input. An explicit authorized cutover or project-wide terminal instruction may require a schedule change. Repository edits alone do not transfer a hosted task.
 
 
 ---
@@ -270,7 +270,7 @@ The Auditor must scope evidence to the Definition of Done and the handoff's `aff
 2. Before multi-source verification, create or append the task's audit file with an `AUDIT ATTEMPT STARTED` checkpoint containing the run ID, timestamp, implementation commit, affected layers and planned checks.
 3. Retry each essential read or transient tool call up to three times during the run.
 4. If a connector, Vercel operation, rate limit, timeout or evidence source remains temporarily unavailable, append `RETRY PENDING` with the exact source, error and next check. Keep the project item `IN REVIEW` and keep `handoff_owner: AUDITOR`.
-5. Never change a retryable review to `BLOCKED`. `BLOCKED` is allowed only for a stable dependency requiring Travis or an external owner; record `blocker_owner` and `clearance_condition`.
+5. Never change a retryable review to `BLOCKED`. `BLOCKED` is allowed only for a stable dependency requiring a project contributor or an external account owner; record `blocker_owner` and `clearance_condition`.
 6. If GitHub itself is unavailable and no checkpoint can be written, report the failure explicitly; because the item remains `IN REVIEW`, the next Auditor run must retry it.
 
 ### Stale-state and partial-write recovery

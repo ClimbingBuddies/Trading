@@ -8,6 +8,10 @@ This document summarises the durable Trading platform security and operational b
 
 ## Frontend credential model
 
+AI execution responsibility moves to Cody under `ai-execution-handover.md`; both contributors retain equal input and existing access. Saved AI tasks/connections require an account-side controlled cutover. Do not move credentials through GitHub or treat this as a repository/Vercel/Supabase ownership transfer.
+
+The four-hour quote claim RPC is callable only by `service_role` (not PUBLIC, anon or authenticated), uses an empty search path and validates the provider/active instrument mappings before recording work. Its advisory transaction lock, unfinished-receipt exclusion and terminal cooldown enforce batch coordination; the existing frontend never receives these credentials. Preserve existing RLS and freshness-function privileges.
+
 The Next.js frontend uses the Supabase project URL and publishable key from deployment environment variables.
 
 It does not use a Supabase service-role/secret key or the Twelve Data API key. Backend credentials remain in trusted Supabase/Vercel execution paths. SEC-005 removed hard-coded frontend fallbacks and independently verified fallback-free production routes.

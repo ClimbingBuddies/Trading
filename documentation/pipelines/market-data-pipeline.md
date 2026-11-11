@@ -103,7 +103,7 @@ The view still returns one latest live quote per instrument using `observed_at`,
 pg_cron job:
 
 - name: `trading-market-data-every-15-minutes`
-- schedule: `*/15 * * * *`
+- schedule: `0-14/2 3,7,11,15,19,23 * * *` (four-hour cycles; internal batches every two minutes for the first 15 minutes)
 - active: true
 
 The cron job calls the Supabase Edge Function `full-twelve-data-load` through `net.http_post`.
@@ -112,7 +112,7 @@ The project URL and publishable key used by the scheduled HTTP call are stored i
 
 ### Edge Function: `full-twelve-data-load`
 
-Current deployed version at the time of this document: 4.
+Version 6 was captured as the exact recovery baseline at commit `9f56300`. The cycle-aware replacement is version-controlled under `supabase/functions/full-twelve-data-load`; see the evidence log for actual deployment verification.
 
 JWT verification is enabled.
 
@@ -134,11 +134,11 @@ Futures and unknown asset types are currently skipped.
 
 ### Refresh control
 
-Before selecting a batch, the loader queries observations loaded during the previous 60 minutes.
+The loader accepts batch starts only in the first 15 minutes of a four-hour cycle anchored at 03:00 UTC (also 03/07/11/15/19/23 Australia/Perth).
 
-Recently loaded instruments are excluded, then remaining eligible instruments are sorted by symbol and limited to a maximum batch of 8.
+It excludes IDs already selected in this cycle's durable `sync_runs` receipts, then selects up to eight eligible symbols. Selection is recorded before provider calls; failures do not starve subsequent batches. More than 64 eligible instruments blocks the cycle for capacity review. Provider requests time out after 10 seconds.
 
-The cron triggers every 15 minutes, but an individual instrument is normally refreshed no more frequently than about once an hour.
+The job name retains its legacy 15-minute label to preserve identity/history; its schedule is authoritative. Refresh cycles occur every four hours, with internal paced batches. The service-only claim RPC serializes selection/receipt insertion, blocks unfinished cycle-aware work across cycles and enforces a 60-second cooldown after terminal completion. A crash requires reviewed recovery, not an automatic retry that might overlap. Failed/unfinished receipts are not successful refresh evidence. The 64-symbol cap is theoretical slot capacity; slow work reduces actual coverage. Operational freshness uses 255/285-minute current/due thresholds; analytical cutoff rules remain unchanged.
 
 ### Quote retrieval
 
@@ -150,7 +150,7 @@ Successful provider responses are inserted into `market_observations` with `inte
 
 ### Current-loader audit
 
-Every invocation creates a `sync_runs` record with status `running`, then updates it with counts, finish time, final status and any error message.
+Every selected batch creates a `sync_runs` record with status `running`, then updates it with counts, finish time, final status and sanitized failures. Outside-window and no-pending-symbol invocations return an explicit skip without creating a successful batch receipt.
 
 Status logic:
 

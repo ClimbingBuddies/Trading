@@ -11,7 +11,7 @@ The primary orchestration model is now a **ChatGPT Scheduled Task with access to
 ```text
 Supabase pg_cron
    |
-   +--> full-twelve-data-load every 15 minutes
+   +--> full-twelve-data-load every four hours (paced batches within each cycle)
            |
            +--> market_observations
            +--> sync_runs

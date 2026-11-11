@@ -72,6 +72,8 @@ The alert subsystem reuses the permanent-user model established by MON-001/MON-0
 
 ## Six evaluator branches
 
+Current quote cadence update (11 November 2026): operational freshness is current through 255 minutes and due through 285 minutes, then stale while active. The evaluator still runs every 15 minutes against saved data. Historical audit thresholds below describe their original checkpoint; they do not override this current configuration.
+
 `alerting.evaluate_one_v1` observes only the persisted source appropriate to the alert type:
 
 | Alert type | Authoritative source |

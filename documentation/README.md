@@ -4,6 +4,8 @@ Shared development starts with the [compact project context](project-context.md)
 
 For a second clone, use [the short onboarding message](coordination-onboarding.md). [Rollout verification](coordination-rollout.md) records tested scope and limitations.
 
+For AI account/schedule operation under Cody with equal contributor input, use the [AI execution handover](ai-execution-handover.md). Hosted task transfer remains separate from repository edits.
+
 This directory documents the current Discover Boulders Markets platform. Obsolete delivery-status narratives have been removed; historical implementation evidence remains in the audit records.
 
 ## Source-of-truth order

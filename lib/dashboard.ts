@@ -106,8 +106,8 @@ type MarketRun = {
 }
 
 const PAGE_SIZE = 1000
-const CURRENT_DATA_MINUTES = 90
-const DUE_DATA_MINUTES = 120
+const CURRENT_DATA_MINUTES = 255
+const DUE_DATA_MINUTES = 285
 
 function dateKey(date: Date) {
   return `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, '0')}-${String(date.getUTCDate()).padStart(2, '0')}`

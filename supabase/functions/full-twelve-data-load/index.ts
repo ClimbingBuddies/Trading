@@ -1,4 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { BATCH_SIZE, orderedCycleMappings, refreshCycle, REQUEST_TIMEOUT_MS } from "./cycle.ts";
 
 const headers = {
   "Content-Type": "application/json",
@@ -116,6 +117,12 @@ Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers });
   if (req.method !== "POST") return json({ error: "Use POST." }, 405);
 
+  const now = new Date();
+  const cycle = refreshCycle(now);
+  if (!cycle.acceptsStarts) {
+    return json({ ok: true, status: "skipped", reason: "outside_refresh_window", cycle_started_at: cycle.startedAt });
+  }
+
   const url = Deno.env.get("SUPABASE_URL");
   const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
   const apiKey = Deno.env.get("TWELVE_DATA_API_KEY");
@@ -127,7 +134,6 @@ Deno.serve(async (req: Request) => {
     auth: { autoRefreshToken: false, persistSession: false },
   });
 
-  const now = new Date();
   const { data: provider, error: providerError } = await db
     .from("data_providers")
     .select("id")
@@ -142,45 +148,45 @@ Deno.serve(async (req: Request) => {
     .select("provider_symbol,instrument_id,instruments(symbol,currency_code,is_active,asset_type)")
     .eq("provider_id", provider.id)
     .eq("is_active", true);
-  if (mappingsError) return json({ error: mappingsError.message }, 500);
+  if (mappingsError) return json({ error: "Could not read provider mappings." }, 500);
 
   const allMappings = (mappings ?? []).filter((mapping: any) => mapping.instruments?.is_active);
   const eligibleMappings = allMappings.filter((mapping: any) =>
     isEligibleNow(String(mapping.instruments.asset_type ?? ""), now)
   );
 
-  const { data: recent } = await db
-    .from("market_observations")
-    .select("instrument_id")
-    .eq("provider_id", provider.id)
-    .gte("loaded_at", new Date(now.getTime() - 60 * 60 * 1000).toISOString());
-
-  const seen = new Set((recent ?? []).map((row: any) => row.instrument_id));
-  const batch = eligibleMappings
-    .filter((mapping: any) => !seen.has(mapping.instrument_id))
-    .sort((a: any, b: any) => a.instruments.symbol.localeCompare(b.instruments.symbol))
-    .slice(0, 8);
-
-  const runMetadata = {
-    function: "full-twelve-data-load",
-    batch_size: 8,
-    market_hours_aware: true,
-    eligible_count: eligibleMappings.length,
-    skipped_out_of_session: allMappings.length - eligibleMappings.length,
-    evaluated_at: now.toISOString(),
-  };
-
-  const { data: run, error: runError } = await db
-    .from("sync_runs")
-    .insert({
-      provider_id: provider.id,
-      requested_count: batch.length,
-      status: "running",
-      metadata: runMetadata,
-    })
-    .select("id")
-    .single();
-  if (runError || !run) return json({ error: "Could not create sync run." }, 500);
+  let ordered;
+  try {
+    ordered = orderedCycleMappings(eligibleMappings);
+  } catch {
+    return json({ error: "Cycle instrument capacity requires review." }, 500);
+  }
+  const { data: claims, error: claimError } = await db.rpc("claim_twelve_data_cycle_batch_v1", {
+    p_provider_id: provider.id,
+    p_instrument_ids: ordered.map((mapping: any) => mapping.instrument_id),
+  });
+  if (claimError || !Array.isArray(claims) || claims.length !== 1) {
+    return json({ error: "Could not confirm atomic cycle claim." }, 500);
+  }
+  const claim = claims[0];
+  if (claim.claim_status !== "claimed") {
+    if (!["outside_refresh_window", "batch_running", "batch_cooldown", "no_unattempted_eligible_instruments"].includes(claim.claim_status)
+      || claim.sync_run_id !== null || !Array.isArray(claim.selected_instrument_ids) || claim.selected_instrument_ids.length) {
+      return json({ error: "Invalid atomic cycle claim response." }, 500);
+    }
+    return json({ ok: true, status: "skipped", reason: claim.claim_status,
+      cycle_started_at: claim.cycle_started_at, eligible_count: claim.eligible_count,
+      remaining_estimate: claim.remaining_count });
+  }
+  const mappingById = new Map(ordered.map((mapping: any) => [mapping.instrument_id, mapping]));
+  const selectedIds = claim.selected_instrument_ids;
+  if (typeof claim.sync_run_id !== "string" || !claim.sync_run_id || !Array.isArray(selectedIds)
+    || selectedIds.length < 1 || selectedIds.length > BATCH_SIZE || new Set(selectedIds).size !== selectedIds.length
+    || selectedIds.some((id: unknown) => typeof id !== "string" || !mappingById.has(id))) {
+    return json({ error: "Invalid atomic cycle claim response." }, 500);
+  }
+  const run = { id: claim.sync_run_id };
+  const batch = selectedIds.map((id: string) => mappingById.get(id));
 
   let received = 0;
   let inserted = 0;
@@ -192,11 +198,11 @@ Deno.serve(async (req: Request) => {
       const requestUrl = new URL("https://api.twelvedata.com/quote");
       requestUrl.searchParams.set("symbol", mapping.provider_symbol);
       requestUrl.searchParams.set("apikey", apiKey);
-      const response = await fetch(requestUrl);
+      const response = await fetch(requestUrl, { signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS) });
       const payload = await response.json();
 
       if (!response.ok || payload.status === "error" || payload.code) {
-        failures.push({ symbol, message: payload.message ?? `HTTP ${response.status}` });
+        failures.push({ symbol, message: !response.ok ? `PROVIDER_HTTP_${response.status}` : "PROVIDER_REPORTED_ERROR" });
         continue;
       }
 
@@ -217,19 +223,20 @@ Deno.serve(async (req: Request) => {
         raw_payload: payload,
       });
 
-      if (observationError) failures.push({ symbol, message: observationError.message });
+      if (observationError) failures.push({ symbol, message: "OBSERVATION_WRITE_FAILED" });
       else inserted++;
     } catch (error) {
       failures.push({
         symbol,
-        message: error instanceof Error ? error.message : "Unexpected error",
+        message: error instanceof Error && (error.name === "TimeoutError" || error.name === "AbortError")
+          ? "PROVIDER_REQUEST_TIMEOUT" : "PROVIDER_REQUEST_FAILED",
       });
     }
     await new Promise((resolve) => setTimeout(resolve, 250));
   }
 
   const status = failures.length === 0 ? "succeeded" : inserted ? "partial" : "failed";
-  await db.from("sync_runs").update({
+  const { error: finishError } = await db.from("sync_runs").update({
     finished_at: new Date().toISOString(),
     received_count: received,
     inserted_count: inserted,
@@ -237,20 +244,22 @@ Deno.serve(async (req: Request) => {
     error_message: failures.length
       ? failures.map((failure: any) => `${failure.symbol}: ${failure.message}`).join("; ").slice(0, 4000)
       : null,
-    metadata: runMetadata,
   }).eq("id", run.id);
+
+  if (finishError) return json({ error: "Sync run finalization could not be confirmed.", sync_run_id: run.id }, 500);
 
   return json({
     ok: failures.length === 0,
     status,
     sync_run_id: run.id,
+    cycle_started_at: claim.cycle_started_at,
     requested_count: batch.length,
     received_count: received,
     inserted_count: inserted,
     eligible_count: eligibleMappings.length,
     skipped_out_of_session: allMappings.length - eligibleMappings.length,
     us_market_open: isUsMarketOpen(now),
-    remaining_estimate: Math.max(0, eligibleMappings.length - seen.size - batch.length),
+    remaining_estimate: claim.remaining_count,
     failures,
   });
 });
