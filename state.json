@@ -1,20 +1,20 @@
 {
   "protocol": 1,
-  "revision": 50,
-  "status": "held",
-  "owner": "Codex for Travis",
-  "ownerId": "travis",
-  "cloneId": "5473e820-a077-4e4e-b285-1cf1fb5ef907",
-  "acquisitionId": "37ec1387-e802-4c13-acbc-a2919fd29eb2",
-  "taskId": "github-ai-handover",
-  "task": "Publish Cody's GitHub AI handover",
+  "revision": 51,
+  "status": "free",
+  "owner": null,
+  "ownerId": null,
+  "cloneId": null,
+  "acquisitionId": null,
+  "taskId": null,
+  "task": null,
   "scope": [
     "documentation"
   ],
   "startedAt": "2026-11-12T01:50:41.171Z",
-  "heartbeatAt": "2026-11-12T01:55:56.669Z",
-  "localChanges": "clean",
-  "branch": "codex/github-ai-handover",
+  "heartbeatAt": "2026-11-12T01:56:33.797Z",
+  "localChanges": "secured",
+  "branch": null,
   "publishedCommit": "e733f8ea9b18849298c9d572ceeb023b6b1309c0",
   "stableIntegration": null,
   "production": {
@@ -81,7 +81,7 @@
     "path": "journal/000007-github-ai-handover.json",
     "commit": "e733f8ea9b18849298c9d572ceeb023b6b1309c0"
   },
-  "releasedAt": "2026-11-11T00:10:38.248Z",
-  "lastOwner": "Cody",
+  "releasedAt": "2026-11-12T01:56:33.797Z",
+  "lastOwner": "Codex for Travis",
   "handoff": null
 }
