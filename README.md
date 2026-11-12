@@ -1,21 +1,21 @@
-# DEVELOPMENT LOCK AVAILABLE
+# ACTIVE DEVELOPMENT — DO NOT MODIFY
 
-Status: free
+Status: held
 
-Owner: none
+Owner: Codex for Travis
 
-Task: none
+Task: Publish Cody's GitHub AI handover
 
-Started (UTC): 2026-11-10T23:38:45.055Z
+Started (UTC): 2026-11-12T01:50:41.171Z
 
-Heartbeat (UTC): 2026-11-11T00:10:38.248Z
+Heartbeat (UTC): 2026-11-12T01:50:41.171Z
 
-Branch: n/a
+Branch: codex/github-ai-handover
 
-Local changes at last observation: secured
+Local changes at last observation: clean
 
-Published commit: 20c38064eb02ba807236301a46db887eb3018506
+Published commit: none verified
 
-State revision: 47
+State revision: 48
 
 Read state.json before acting. A stale heartbeat is never permission to take over. This branch is authoritative; the issue is a display only. Do not merge this branch into application branches.
