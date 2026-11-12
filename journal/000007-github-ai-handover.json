@@ -1,0 +1,63 @@
+{
+  "description": "Published the self-contained Trading AI execution handover for Cody in PR #48 and linked the pinned GitHub start page from progress issue #34.",
+  "databaseAndApi": "No runtime, database, API, scheduler or deployment change.",
+  "decisions": [
+    "Document the hosted 08:00 Perth controller and 10:30 Perth tracker, prior tasks, prompts and cutover in the Trading repository.",
+    "Preserve both contributors' access, public repository privacy and single-writer protections."
+  ],
+  "risks": [
+    "The source inventory is a dated snapshot. Verify live schedule, connectors, overlap and gates during cutover.",
+    "Unattended write access and an eligible scheduled run require live verification."
+  ],
+  "tests": [
+    {
+      "command": "GitHub exact-commit file readback and PR file list",
+      "result": "passed",
+      "scope": "All eight files matched; documentation-only changes and exact parent verified."
+    },
+    {
+      "command": "Relative links and configuration validation",
+      "result": "passed",
+      "scope": "Paths at operational source, prompt references, JSON, time zones and schedule settings."
+    },
+    {
+      "command": "Progress issue readback",
+      "result": "passed",
+      "scope": "Start page pinned to exact commit and prior issue body retained."
+    }
+  ],
+  "outstanding": [
+    "Review PR #48 for stable integration.",
+    "Coordinate the account-bound task cutover and verify durable results from the first eligible unattended run."
+  ],
+  "recovery": "Use issue #34 and the pinned handover for follow-up. Use the coordinated rollback procedure if a replacement has to be stopped; preserve historical records and prevent overlap.",
+  "sequence": 7,
+  "timestamp": "2026-11-12T01:55:56.669Z",
+  "author": "Codex for Travis",
+  "taskId": "github-ai-handover",
+  "commit": "e733f8ea9b18849298c9d572ceeb023b6b1309c0",
+  "baseCommit": "58aef864314e53b569f79c17afd05bde92a09824",
+  "branch": "codex/github-ai-handover",
+  "files": [
+    "documentation/ai-handover/README.md",
+    "documentation/ai-handover/configuration.json",
+    "documentation/ai-handover/task-inventory.md",
+    "documentation/ai-handover/cutover.md",
+    "documentation/ai-handover/controller-prompt.txt",
+    "documentation/ai-handover/progress-tracker-prompt.txt",
+    "documentation/ai-handover/historical-prompts.md",
+    "documentation/ai-execution-handover.md"
+  ],
+  "checkpoints": {
+    "localWorking": "e733f8ea9b18849298c9d572ceeb023b6b1309c0",
+    "locallyTested": "e733f8ea9b18849298c9d572ceeb023b6b1309c0",
+    "remotelyPublished": "e733f8ea9b18849298c9d572ceeb023b6b1309c0",
+    "approvedStableIntegration": null,
+    "production": {
+      "commit": "84a40702f4beaa7f11359772682b36d5831d23c1",
+      "deployment": "dpl_Faea5XSbZDdFqXmhU2E25xfHWdPg",
+      "verification": "observed-ready-not-revalidated"
+    }
+  },
+  "evidenceNote": "Connector-only publication. Document and GitHub checks are author attestations. No live schedule acceptance or production change."
+}
