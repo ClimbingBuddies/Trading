@@ -10,6 +10,8 @@ The [historical prompt archive](historical-prompts.md) preserves previous instru
 
 ## Paste into your AI
 
+Use your own browser and account for this step. No agent cursor control or sign-in to an agent-controlled browser is needed. In ChatGPT on the web, open a Trading chat with your existing connections and paste the paragraph below. Review saved tasks in **Scheduled**. The desktop automation connector available during the 14 November repair supports local execution only; it cannot create these hosted replacements. A local job is not an equivalent unattended cloud replacement.
+
 > Read this handover folder in ClimbingBuddies/Trading and the latest AGENTS.md, project context, development coordination rules and AI execution handover on project/decision-lab-completion. Check the live coordination state. Using only my existing Trading access, do the read-only verification in cutover.md. Prepare the hosted 08:00 Australia/Perth Daily Trading Controller and the hosted 10:30 Australia/Perth Trading Progress Tracker from configuration.json and their prompt files. Keep prepared replacements disabled or unsaved until the handover conditions are met. Return the actual saved settings or the precise account action still required. After the coordinated cutover, validate an eligible unattended run and record the sanitized receipt in issue #34. Preserve the other contributor’s access, existing evidence and single-writer protections.
 
 ## Source and status

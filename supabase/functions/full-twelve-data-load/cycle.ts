@@ -1,6 +1,7 @@
 export const BATCH_SIZE = 8;
 export const MAX_CYCLE_INSTRUMENTS = 64;
 export const REQUEST_TIMEOUT_MS = 10_000;
+export const DB_REQUEST_TIMEOUT_MS = 15_000;
 const CYCLE_MS = 4 * 60 * 60 * 1000;
 const UTC_ANCHOR_MS = 3 * 60 * 60 * 1000;
 const START_WINDOW_MS = 15 * 60 * 1000;
