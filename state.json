@@ -1,13 +1,13 @@
 {
   "protocol": 1,
-  "revision": 74,
-  "status": "held",
-  "owner": "Cody",
-  "ownerId": "cody",
-  "cloneId": "a70b247a-5a71-4c2c-acf8-986bda831196",
-  "acquisitionId": "d95c52a8-fdc7-4066-99f3-ddc5f7404959",
-  "taskId": "calendar-readiness",
-  "task": "Renew reviewed Nasdaq calendar trust and reconcile recovery readiness",
+  "revision": 75,
+  "status": "free",
+  "owner": null,
+  "ownerId": null,
+  "cloneId": null,
+  "acquisitionId": null,
+  "taskId": null,
+  "task": null,
   "scope": [
     "calendar",
     "database",
@@ -15,9 +15,9 @@
     "tests"
   ],
   "startedAt": "2026-11-14T07:10:36.720Z",
-  "heartbeatAt": "2026-11-14T07:26:01.190Z",
-  "localChanges": "clean",
-  "branch": "codex/calendar-readiness-20261114",
+  "heartbeatAt": "2026-11-14T07:26:26.912Z",
+  "localChanges": "secured",
+  "branch": null,
   "publishedCommit": "86bf825d02ff2f642655e5fc9403c2d112a0684e",
   "stableIntegration": null,
   "production": {
@@ -112,7 +112,7 @@
     "path": "journal/000011-calendar-readiness.json",
     "commit": "86bf825d02ff2f642655e5fc9403c2d112a0684e"
   },
-  "releasedAt": "2026-11-14T06:23:41.110Z",
+  "releasedAt": "2026-11-14T07:26:26.912Z",
   "lastOwner": "Cody",
   "handoff": null
 }
