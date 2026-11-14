@@ -1,21 +1,24 @@
 {
   "protocol": 1,
-  "revision": 67,
-  "status": "free",
-  "owner": null,
-  "ownerId": null,
-  "cloneId": null,
-  "acquisitionId": null,
-  "taskId": null,
-  "task": null,
+  "revision": 68,
+  "status": "held",
+  "owner": "Cody",
+  "ownerId": "cody",
+  "cloneId": "a70b247a-5a71-4c2c-acf8-986bda831196",
+  "acquisitionId": "d95c52a8-fdc7-4066-99f3-ddc5f7404959",
+  "taskId": "calendar-readiness",
+  "task": "Renew reviewed Nasdaq calendar trust and reconcile recovery readiness",
   "scope": [
-    "scheduler"
+    "calendar",
+    "database",
+    "documentation",
+    "tests"
   ],
-  "startedAt": "2026-11-14T06:20:12.992Z",
-  "heartbeatAt": "2026-11-14T06:23:41.110Z",
-  "localChanges": "secured",
-  "branch": null,
-  "publishedCommit": "b70f91eb8c600cc0a264a2997c909e548806f4b3",
+  "startedAt": "2026-11-14T07:10:36.720Z",
+  "heartbeatAt": "2026-11-14T07:10:36.720Z",
+  "localChanges": "clean",
+  "branch": "codex/calendar-readiness-20261114",
+  "publishedCommit": null,
   "stableIntegration": null,
   "production": {
     "commit": "84a40702f4beaa7f11359772682b36d5831d23c1",
@@ -96,12 +99,9 @@
     }
   ],
   "adoption": "Other developer enrollment and pre-existing local work not yet verified",
-  "baseCommit": "b70f91eb8c600cc0a264a2997c909e548806f4b3",
+  "baseCommit": "b96ed236d62613d95ba8e42e42888c208a062b6e",
   "localHead": "b70f91eb8c600cc0a264a2997c909e548806f4b3",
-  "lastJournal": {
-    "path": "journal/000010-cody-hosted-ai-activation.json",
-    "commit": "b70f91eb8c600cc0a264a2997c909e548806f4b3"
-  },
+  "lastJournal": null,
   "releasedAt": "2026-11-14T06:23:41.110Z",
   "lastOwner": "Cody",
   "handoff": null
