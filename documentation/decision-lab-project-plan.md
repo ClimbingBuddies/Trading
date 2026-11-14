@@ -2,7 +2,7 @@
 
 Current recovery milestone authorized 10 November 2026. Development controller owns updates. Source: approved playbook v3. This file does not imply an active background agent.
 
-14 November checkpoint: PR #49 quote interruption repair is deployed as worker version 8 with the reviewed recovery migration. The expired running receipt was recovered without changing any saved quote observation; job 1 is active on the four-hour schedule. Independent review and 412 Node tests passed, plus actual SQL recovery/regression checks. Next scheduled coverage verification is 14 November 15:00 Perth. AI handover configuration is merged; hosted task creation and cutover under Cody remain pending the account step below. Detailed release evidence is in the [evidence log](decision-lab-evidence-log.md).
+14 November readiness checkpoint: the repaired quote worker completed the genuine 15:00 Perth cycle. Daily history has processed real scheduled work. Cody's hosted controller and tracker are enabled after verified source-task pause; their first unattended acceptance remains pending. Reviewed Nasdaq calendar trust is installed through 21 November 15:13 Perth. Detailed evidence and limitations are in the [evidence log](decision-lab-evidence-log.md).
 
 ## Current milestone — reproducible baseline and supported daily loop
 
@@ -11,13 +11,21 @@ Owner: Cody. Completion resumed on `codex/daily-loop-completion` from operationa
 | Gate | Status | Scope and acceptance |
 | --- | --- | --- |
 | REC-01 | accepted | Repair independently accepted and merged in PR #42 at `4426da4`: clean install, complete baseline suite and production build passed. Existing dependency records/versions preserved and dedicated-route tests corrected. Frontend deployment unchanged. |
-| REC-02 | in_progress; account setup pending | Handover inventory/configuration merged in PR #48; copy-ready hosted prompts available. Cody operates AI execution, with equal project input/access preserved. Use Cody's own browser/account; no agent desktop/cursor/browser control. Available connector supports local scheduling only. Hosted replacements are not enabled; fresh old-task pause/no-overlap, tracker cutover, saved settings and a genuine unattended run remain required. |
-| REC-03 | in_progress | Reviewed worker version 7 and immutable Nasdaq renewal are live. All 15 ASX instruments with historical failed jobs have observations through 9 November; no blanket retry is justified. New worker has received idle scheduled invocations but has not yet processed eligible real work. Failed history retained. |
-| REC-04 | in_progress | Manual evaluator recovery succeeded for four supported calls; 7 five-session and 4 twenty-session trials matured, 3 twenty-session trials pending, none blocked. Originals/reviews unchanged; same-request replay added no outcomes/marks. Fresh research/publication and unattended completion remain absent. Convergence continuation released; hosted adoption/execution pending. Current readiness blocks all 59 active instruments for stale/missing independent inputs. |
+| REC-02 | in_progress; hosted cutover complete | Source tasks paused and idle; exactly one Cody controller at 08:00 and tracker at 10:30 Australia/Perth enabled. Activation receipt is in issue #34. First scheduled runs are 15 November. Runtime write permissions, durable stage completion and tracker reporting still require genuine unattended evidence. Both contributors retain equal project input/access. |
+| REC-03 | in_progress; scheduled ingestion recovered | Quote worker v8 completed the genuine 14 November 15:00 Perth cycle. History worker v7 processed eligible real work in the last day; previously affected ASX instruments have recent observations. Immutable calendar renewal is live through 21 November 15:13 Perth. Failed/quarantined history is preserved; supported coverage and provider/mapping gaps remain separate acceptance checks. |
+| REC-04 | in_progress | Manual evaluator recovery succeeded for four supported calls; 7 five-session and 4 twenty-session trials matured, 3 twenty-session trials pending, none blocked. Originals/reviews unchanged; same-request replay added no outcomes/marks. Latest research remains 22 October and latest scheduled shared evaluation remains 22 October. Fresh research/publication, convergence and unattended completion are still required. The earlier all-blocked readiness result is historical, not a fresh coverage assessment. |
 | REC-05 | in_progress | Mobile/focus repair released through PR #44 at `f4f63d3`, Vercel `dpl_GcfGMpNsisfaF5U9JDw41HBZLUiN` READY. Independent tests/review/build and local browser fixtures pass. Signed-in production confirms no document overflow at 390 px, both drawers restore opener focus on Close/Escape, and recovered results render. Two-user browser privacy remains unverified without a second authorized session. |
 | REC-06 | queued | Begin the planned one-week observation only after Stage 1 acceptance and verified notification delivery. Record actual start/end and expected-session coverage; do not infer predictive quality from operational success. |
 
 Current evidence: production is deployed and database ingestion/technical processing remain active, but the supported analytical loop lacks current completion receipts. Open faults are tracked in GitHub issues #34–#38. Public evidence must contain only sanitized technical categories, never account/watchlist details or raw production records. Wider coverage and new features are deferred until the supported loop passes acceptance.
+
+### Next work in order
+
+1. Verify the first eligible unattended controller/tracker execution, fresh research, publication or explicit per-instrument blockers, convergence and durable evaluation. A manual check cannot certify unattended runtime permission. Keep issue #37 open until actual evidence resolves it.
+2. Finish the ingestion-efficiency and coverage audit: distinguish idle two-minute worker invocations from provider requests, preserve four-hour quotes, and resolve the pending owner choice in issue #34 before changing backfill policy. Do not blanket-retry historic failures or bypass provider entitlement/mapping holds.
+3. Explain partial Technical scores and unsupported instruments using source coverage and scoring requirements. Missing forex volume is not evidence that zero volume should be invented. Extend supported venues/benchmarks only through reviewed configuration.
+4. Complete two-user browser isolation and notification-delivery acceptance using authorized sessions and the user's own browser, without agent cursor control.
+5. Start the observation week only after Stage 1 acceptance. Operational success alone does not establish investment quality. Renew calendar trust before expiry with fresh official-source review.
 
 ## Historical implementation table (4 October; later dated evidence follows)
 
@@ -38,7 +46,7 @@ Current evidence: production is deployed and database ingestion/technical proces
 
 For each update record: task ID, date/time, assigned agent, base revision/file hashes, owned paths, status, acceptance check IDs, test command/results, review findings, deployment state, blocker/next action. Append detailed evidence to `documentation/decision-lab-evidence-log.md`.
 
-## Current bounded scope
+## Historical bounded scope (September; superseded by recovery gates above)
 
 C1/ENG1 accepted. D1 UI and authenticated read projections now integrated locally; database publication boundary installed. ENG2 remains partial: trusted calendar/outcome adapter, configured providers/benchmarks and publication acceptance required. Seven candidates need fresh published research; zero live shared calls/outcomes. Existing schedules unchanged. No observation week has started. Next bounded milestone: DATA1 plus verified evaluator persistence, then genuine shared call and populated-drawer acceptance before S1.
 

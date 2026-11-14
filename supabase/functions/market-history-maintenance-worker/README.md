@@ -1,6 +1,12 @@
 # ASX Yahoo daily history
 
-## Recovery candidate — 10 November 2026 (not deployed)
+## Recovery deployed — 10 November; scheduled processing verified 14 November 2026
+
+Worker version 7 is deployed. The 14 November read-only readiness audit confirms
+eligible history jobs have completed under the existing schedule, and previously
+affected ASX instruments have recent daily observations. See the dated Decision
+Lab evidence log. Old failed jobs and rejected-bar evidence remain preserved;
+successful ingestion does not certify gap-free history or provider entitlement.
 
 Repeated provider dates no longer fail the entire response. Within the requested
 completed-session window, identical OHLC, adjusted close and volume values collapse
@@ -17,10 +23,10 @@ price. Existing saved observations are not deleted when a new fetch rejects a da
 review any previously stored conflicting session before relying on it downstream.
 
 Local verification: `node --test tests/yahoo-history.test.mjs` (also included by
-`npm test`). Deployment, bounded queue recovery and actual scheduled success remain
-separate gates. Do not retry all failed jobs or clear quarantine as part of release.
+`npm test`). Deployment and actual scheduled processing are verified separately
+in the evidence log. Do not retry all failed jobs or clear quarantine as part of release.
 
-## Latest verified result — 17 September 2026
+## Historical verified result — 17 September 2026
 
 Worker version 6 loads valid bars while quarantining invalid OHLC/volume records
 in `sync_runs.metadata.rejected_bars`, including their original values and dates.
