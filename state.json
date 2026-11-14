@@ -1,20 +1,20 @@
 {
   "protocol": 1,
-  "revision": 66,
-  "status": "held",
-  "owner": "Cody",
-  "ownerId": "cody",
-  "cloneId": "595d9bee-10b7-9f89-3171-cf4061183f0f",
-  "acquisitionId": "c9d05934-2322-7bbd-7a00-2bba278c7f4b",
-  "taskId": "cody-hosted-ai-activation",
-  "task": "Activate Cody’s hosted Trading schedules",
+  "revision": 67,
+  "status": "free",
+  "owner": null,
+  "ownerId": null,
+  "cloneId": null,
+  "acquisitionId": null,
+  "taskId": null,
+  "task": null,
   "scope": [
     "scheduler"
   ],
   "startedAt": "2026-11-14T06:20:12.992Z",
-  "heartbeatAt": "2026-11-14T06:23:10.557Z",
-  "localChanges": "clean",
-  "branch": "codex/cody-hosted-ai-activation",
+  "heartbeatAt": "2026-11-14T06:23:41.110Z",
+  "localChanges": "secured",
+  "branch": null,
   "publishedCommit": "b70f91eb8c600cc0a264a2997c909e548806f4b3",
   "stableIntegration": null,
   "production": {
@@ -102,7 +102,7 @@
     "path": "journal/000010-cody-hosted-ai-activation.json",
     "commit": "b70f91eb8c600cc0a264a2997c909e548806f4b3"
   },
-  "releasedAt": "2026-11-14T05:49:19.258Z",
-  "lastOwner": "Codex for Travis",
+  "releasedAt": "2026-11-14T06:23:41.110Z",
+  "lastOwner": "Cody",
   "handoff": null
 }
