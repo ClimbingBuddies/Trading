@@ -1,21 +1,21 @@
 {
   "protocol": 1,
-  "revision": 62,
-  "status": "held",
-  "owner": "Codex for Travis",
-  "ownerId": "travis",
-  "cloneId": "8983b6ff-55b2-4a48-a5a0-2504083276c3",
-  "acquisitionId": "0d8252cf-3256-4819-ad44-9775c7cdbf86",
-  "taskId": "source-account-ai-cutover",
-  "task": "Verify and pause source Trading AI tasks for Cody",
+  "revision": 63,
+  "status": "free",
+  "owner": null,
+  "ownerId": null,
+  "cloneId": null,
+  "acquisitionId": null,
+  "taskId": null,
+  "task": null,
   "scope": [
     "hosted AI schedules",
     "cutover receipt"
   ],
   "startedAt": "2026-11-14T05:46:34.851Z",
-  "heartbeatAt": "2026-11-14T05:49:05.072Z",
-  "localChanges": "clean",
-  "branch": "codex/source-account-ai-cutover",
+  "heartbeatAt": "2026-11-14T05:49:19.258Z",
+  "localChanges": "secured",
+  "branch": null,
   "publishedCommit": "b70f91eb8c600cc0a264a2997c909e548806f4b3",
   "stableIntegration": null,
   "production": {
@@ -96,7 +96,7 @@
     "path": "journal/000009-source-account-ai-cutover.json",
     "commit": "b70f91eb8c600cc0a264a2997c909e548806f4b3"
   },
-  "releasedAt": "2026-11-14T04:58:53.087Z",
-  "lastOwner": "Cody",
+  "releasedAt": "2026-11-14T05:49:19.258Z",
+  "lastOwner": "Codex for Travis",
   "handoff": null
 }
