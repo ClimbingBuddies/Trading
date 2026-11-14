@@ -1,0 +1,45 @@
+{
+  "description": "Verified both source Trading tasks are paused and idle, and published the cutover receipt in issue #34.",
+  "databaseAndApi": "Read-only Trading database checks found no running controller stages or checked subsystems. Paused only the source Trading Progress Tracker; the source Daily Trading Controller was already paused.",
+  "decisions": [
+    "Preserved source task prompts, recurrence and run history. Cody performs replacement-account activation."
+  ],
+  "risks": [],
+  "tests": [
+    {
+      "command": "Reopen both source tasks and reconcile live database run state",
+      "result": "passed",
+      "scope": "Saved paused states, terminal latest scheduler runs, no active checked database attempts, and same prompts and schedules."
+    },
+    {
+      "command": "Read back GitHub issue #34 and verify feature branch head",
+      "result": "passed",
+      "scope": "Cutover receipt and published work checkpoint."
+    }
+  ],
+  "outstanding": [
+    "Cody to verify replacement settings and activate under the cutover checklist.",
+    "Verify a genuine unattended run after activation."
+  ],
+  "recovery": "Receipt: https://github.com/ClimbingBuddies/Trading/issues/34#issuecomment-6872630043. Source schedules remain paused pending coordinated activation. No repository source changes or database writes.",
+  "sequence": 9,
+  "timestamp": "2026-11-14T05:49:05.072Z",
+  "author": "Codex for Travis",
+  "taskId": "source-account-ai-cutover",
+  "commit": "b70f91eb8c600cc0a264a2997c909e548806f4b3",
+  "baseCommit": "b70f91eb8c600cc0a264a2997c909e548806f4b3",
+  "branch": "codex/source-account-ai-cutover",
+  "files": [],
+  "checkpoints": {
+    "localWorking": "b70f91eb8c600cc0a264a2997c909e548806f4b3",
+    "locallyTested": null,
+    "remotelyPublished": "b70f91eb8c600cc0a264a2997c909e548806f4b3",
+    "approvedStableIntegration": null,
+    "production": {
+      "commit": "84a40702f4beaa7f11359772682b36d5831d23c1",
+      "deployment": "dpl_Faea5XSbZDdFqXmhU2E25xfHWdPg",
+      "verification": "observed-ready-not-revalidated"
+    }
+  },
+  "evidenceNote": "Verification covers the source cutover only."
+}

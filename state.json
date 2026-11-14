@@ -1,6 +1,6 @@
 {
   "protocol": 1,
-  "revision": 61,
+  "revision": 62,
   "status": "held",
   "owner": "Codex for Travis",
   "ownerId": "travis",
@@ -13,10 +13,10 @@
     "cutover receipt"
   ],
   "startedAt": "2026-11-14T05:46:34.851Z",
-  "heartbeatAt": "2026-11-14T05:47:31.140Z",
-  "localChanges": "unknown-editing",
+  "heartbeatAt": "2026-11-14T05:49:05.072Z",
+  "localChanges": "clean",
   "branch": "codex/source-account-ai-cutover",
-  "publishedCommit": null,
+  "publishedCommit": "b70f91eb8c600cc0a264a2997c909e548806f4b3",
   "stableIntegration": null,
   "production": {
     "commit": "84a40702f4beaa7f11359772682b36d5831d23c1",
@@ -80,12 +80,22 @@
       "taskId": "quote-recovery-ai-cutover",
       "commit": "b96ed236d62613d95ba8e42e42888c208a062b6e",
       "description": "Merged AI handover and deployed reviewed quote interruption recovery; hosted AI account setup and next genuine cycle remain pending."
+    },
+    {
+      "sequence": 9,
+      "path": "journal/000009-source-account-ai-cutover.json",
+      "taskId": "source-account-ai-cutover",
+      "commit": "b70f91eb8c600cc0a264a2997c909e548806f4b3",
+      "description": "Verified both source Trading tasks are paused and idle, and published the cutover receipt in issue #34."
     }
   ],
   "adoption": "Other developer enrollment and pre-existing local work not yet verified",
   "baseCommit": "b70f91eb8c600cc0a264a2997c909e548806f4b3",
   "localHead": "b70f91eb8c600cc0a264a2997c909e548806f4b3",
-  "lastJournal": null,
+  "lastJournal": {
+    "path": "journal/000009-source-account-ai-cutover.json",
+    "commit": "b70f91eb8c600cc0a264a2997c909e548806f4b3"
+  },
   "releasedAt": "2026-11-14T04:58:53.087Z",
   "lastOwner": "Cody",
   "handoff": null
