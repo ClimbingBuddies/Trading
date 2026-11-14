@@ -1,6 +1,6 @@
 {
   "protocol": 1,
-  "revision": 65,
+  "revision": 66,
   "status": "held",
   "owner": "Cody",
   "ownerId": "cody",
@@ -12,8 +12,8 @@
     "scheduler"
   ],
   "startedAt": "2026-11-14T06:20:12.992Z",
-  "heartbeatAt": "2026-11-14T06:21:22.147Z",
-  "localChanges": "unknown-editing",
+  "heartbeatAt": "2026-11-14T06:23:10.557Z",
+  "localChanges": "clean",
   "branch": "codex/cody-hosted-ai-activation",
   "publishedCommit": "b70f91eb8c600cc0a264a2997c909e548806f4b3",
   "stableIntegration": null,
@@ -86,12 +86,22 @@
       "taskId": "source-account-ai-cutover",
       "commit": "b70f91eb8c600cc0a264a2997c909e548806f4b3",
       "description": "Verified both source Trading tasks are paused and idle, and published the cutover receipt in issue #34."
+    },
+    {
+      "sequence": 10,
+      "path": "journal/000010-cody-hosted-ai-activation.json",
+      "taskId": "cody-hosted-ai-activation",
+      "commit": "b70f91eb8c600cc0a264a2997c909e548806f4b3",
+      "description": "Activated and verified Cody’s two hosted Trading schedules after the source pause and overlap checks."
     }
   ],
   "adoption": "Other developer enrollment and pre-existing local work not yet verified",
   "baseCommit": "b70f91eb8c600cc0a264a2997c909e548806f4b3",
   "localHead": "b70f91eb8c600cc0a264a2997c909e548806f4b3",
-  "lastJournal": null,
+  "lastJournal": {
+    "path": "journal/000010-cody-hosted-ai-activation.json",
+    "commit": "b70f91eb8c600cc0a264a2997c909e548806f4b3"
+  },
   "releasedAt": "2026-11-14T05:49:19.258Z",
   "lastOwner": "Codex for Travis",
   "handoff": null

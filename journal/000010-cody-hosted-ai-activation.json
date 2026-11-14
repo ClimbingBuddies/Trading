@@ -1,0 +1,46 @@
+{
+  "description": "Activated and verified Cody’s two hosted Trading schedules after the source pause and overlap checks.",
+  "databaseAndApi": "Read-only overlap checks passed. Enabled the Daily Trading Controller and Trading Progress Tracker.",
+  "decisions": [
+    "Used the supplied prompts verbatim with daily Perth recurrence."
+  ],
+  "risks": [
+    "Unattended runtime permissions and completion remain unverified."
+  ],
+  "tests": [
+    {
+      "command": "Reopen saved hosted schedules",
+      "result": "passed",
+      "scope": "Unique titles, exact prompts, active flags, Perth timezone, daily recurrence and next due times."
+    },
+    {
+      "command": "Read back source and activation receipts and feature branch",
+      "result": "passed",
+      "scope": "Sanitized GitHub receipts and clean published source checkpoint."
+    }
+  ],
+  "outstanding": [
+    "Verify genuine eligible unattended controller and tracker results."
+  ],
+  "recovery": "Pause the replacement and verify idle before any coordinated restoration. Activation receipt: https://github.com/ClimbingBuddies/Trading/issues/34#issuecomment-6873051267",
+  "sequence": 10,
+  "timestamp": "2026-11-14T06:23:10.557Z",
+  "author": "Cody",
+  "taskId": "cody-hosted-ai-activation",
+  "commit": "b70f91eb8c600cc0a264a2997c909e548806f4b3",
+  "baseCommit": "b70f91eb8c600cc0a264a2997c909e548806f4b3",
+  "branch": "codex/cody-hosted-ai-activation",
+  "files": [],
+  "checkpoints": {
+    "localWorking": "b70f91eb8c600cc0a264a2997c909e548806f4b3",
+    "locallyTested": null,
+    "remotelyPublished": "b70f91eb8c600cc0a264a2997c909e548806f4b3",
+    "approvedStableIntegration": null,
+    "production": {
+      "commit": "84a40702f4beaa7f11359772682b36d5831d23c1",
+      "deployment": "dpl_Faea5XSbZDdFqXmhU2E25xfHWdPg",
+      "verification": "observed-ready-not-revalidated"
+    }
+  },
+  "evidenceNote": "Verification covers activation and schedule readback. No application changes were made."
+}
