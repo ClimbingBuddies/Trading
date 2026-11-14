@@ -1,6 +1,6 @@
 {
   "protocol": 1,
-  "revision": 64,
+  "revision": 65,
   "status": "held",
   "owner": "Cody",
   "ownerId": "cody",
@@ -12,10 +12,10 @@
     "scheduler"
   ],
   "startedAt": "2026-11-14T06:20:12.992Z",
-  "heartbeatAt": "2026-11-14T06:20:12.992Z",
-  "localChanges": "clean",
+  "heartbeatAt": "2026-11-14T06:21:22.147Z",
+  "localChanges": "unknown-editing",
   "branch": "codex/cody-hosted-ai-activation",
-  "publishedCommit": null,
+  "publishedCommit": "b70f91eb8c600cc0a264a2997c909e548806f4b3",
   "stableIntegration": null,
   "production": {
     "commit": "84a40702f4beaa7f11359772682b36d5831d23c1",
