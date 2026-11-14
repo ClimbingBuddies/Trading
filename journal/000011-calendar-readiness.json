@@ -1,0 +1,68 @@
+{
+  "description": "Renewed reviewed Nasdaq calendar trust and reconciled daily-loop readiness; PR51 merged at 8335aba0facb261c90513d04e0d5de8494db5702, tree verified against reviewed feature.",
+  "databaseAndApi": "Trading immutable calendar revision nasdaq-2026-published-schedule-reviewed-2026-11-14 installed through 2026-11-21T07:13:00Z. Existing rows preserved; no DDL/runtime/schedule change.",
+  "decisions": [
+    "Both contributors retain equal input/access; Cody operates hosted AI.",
+    "Calendar dates unchanged; fresh official-source review extends trust only.",
+    "Genuine scheduled quote/history recovery is distinct from pending unattended analytical acceptance."
+  ],
+  "risks": [
+    "Calendar requires fresh official-alert review and renewal before expiry.",
+    "Hosted runtime write permissions and first eligible analytical completion unverified."
+  ],
+  "tests": [
+    {
+      "command": "node --test --test-reporter=tap tests/shared-market-calendar.test.mjs",
+      "result": "passed",
+      "scope": "19 calendar tests"
+    },
+    {
+      "command": "node scripts/verify-published-nasdaq-calendar.mjs data/shared-market-calendars/nasdaq-2026-reviewed-2026-11-14.json",
+      "result": "passed",
+      "scope": "365 dates, holidays, early closes, DST"
+    },
+    {
+      "command": "Independent PGlite import and immutable-trigger probes",
+      "result": "passed",
+      "scope": "26 assertions; prior-row preservation, replay/update/delete rejection"
+    },
+    {
+      "command": "Live read-only calendar verification",
+      "result": "passed",
+      "scope": "Exact revision/hash/expiry and unchanged prior-row aggregate digest"
+    }
+  ],
+  "outstanding": [
+    "First eligible unattended controller/tracker run; issue37 remains open.",
+    "Ingestion efficiency/coverage decision, partial Technical scores, authorized two-user browser privacy and notification delivery.",
+    "Observation week not started."
+  ],
+  "recovery": "Preserve calendar and decision history. Correct changed facts through independently reviewed forward revision; code rollback does not remove installed data.",
+  "sequence": 11,
+  "timestamp": "2026-11-14T07:26:01.190Z",
+  "author": "Cody",
+  "taskId": "calendar-readiness",
+  "commit": "86bf825d02ff2f642655e5fc9403c2d112a0684e",
+  "baseCommit": "b96ed236d62613d95ba8e42e42888c208a062b6e",
+  "branch": "codex/calendar-readiness-20261114",
+  "files": [
+    "data/shared-market-calendars/nasdaq-2026-reviewed-2026-11-14.json",
+    "data/shared-market-calendars/nasdaq-2026-reviewed-2026-11-14.trust.json",
+    "documentation/decision-lab-evidence-log.md",
+    "documentation/decision-lab-project-plan.md",
+    "scripts/import-nasdaq-calendar-20261114.sql",
+    "supabase/functions/market-history-maintenance-worker/README.md"
+  ],
+  "checkpoints": {
+    "localWorking": "86bf825d02ff2f642655e5fc9403c2d112a0684e",
+    "locallyTested": "86bf825d02ff2f642655e5fc9403c2d112a0684e",
+    "remotelyPublished": "86bf825d02ff2f642655e5fc9403c2d112a0684e",
+    "approvedStableIntegration": null,
+    "production": {
+      "commit": "84a40702f4beaa7f11359772682b36d5831d23c1",
+      "deployment": "dpl_Faea5XSbZDdFqXmhU2E25xfHWdPg",
+      "verification": "observed-ready-not-revalidated"
+    }
+  },
+  "evidenceNote": "Test results are explicit author attestations; stable integration requires separate approval and evidence."
+}
