@@ -1,0 +1,51 @@
+{
+  "snapshot_date": "2026-11-12",
+  "snapshot_timezone": "Australia/Perth",
+  "status": "draft_only_not_enabled",
+  "operator": "Cody",
+  "source": {
+    "repository": "ClimbingBuddies/Trading",
+    "branch": "project/decision-lab-completion",
+    "export_commit": "58aef864314e53b569f79c17afd05bde92a09824",
+    "minimum_controller_version": "1.10",
+    "resolve_live_commit_each_run": true
+  },
+  "controller": {
+    "name": "Daily Trading Controller",
+    "prompt_file": "controller-prompt.txt",
+    "platform": "ChatGPT hosted cloud",
+    "cadence": "daily",
+    "time": "08:00",
+    "timezone": "Australia/Perth",
+    "end": "never",
+    "model": "Verify available supported model and reasoning in Cody’s account. Previous hosted display: Default / Medium; reasoning control unavailable.",
+    "run_context": "Dedicated Trading context. Read back the actual saved context mode.",
+    "notifications": "Material results, changes, blockers or required owner action. Verify account-level delivery in Cody’s account.",
+    "next_due": null,
+    "work_budget_minutes": 90,
+    "connections": [
+      "GitHub ClimbingBuddies/Trading",
+      "Existing authorized Trading-only Supabase connection verified from documentation/project-context.md",
+      "Official-source web research"
+    ]
+  },
+  "tracker": {
+    "name": "Trading Progress Tracker",
+    "prompt_file": "progress-tracker-prompt.txt",
+    "platform": "ChatGPT hosted cloud",
+    "cadence": "daily",
+    "time": "10:30",
+    "timezone": "Australia/Perth",
+    "end": "never",
+    "model": "GPT-6.1 Sol / Light if available. Read back the actual setting.",
+    "run_context": "Dedicated Trading monitoring context. Read back the actual saved context mode.",
+    "analytical_writes": false,
+    "next_due": null,
+    "notifications": "Material changes, failures, verified recovery/completion or owner action. Verify account-level delivery in Cody’s account.",
+    "connections": [
+      "GitHub ClimbingBuddies/Trading with existing issue documentation access",
+      "Existing authorized Trading-only Supabase connection verified from documentation/project-context.md"
+    ]
+  },
+  "deployment": "Existing Trading Vercel project is available for read-only verification if relevant. Deployment changes are outside this cutover."
+}

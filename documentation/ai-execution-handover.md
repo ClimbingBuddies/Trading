@@ -1,5 +1,7 @@
 # AI execution handover — 11 November 2026
 
+[Start here for Cody’s GitHub handover](./ai-handover/README.md). It includes the saved task inventory, replacement prompts, schedule settings and cutover checklist.
+
 ## Agreed responsibilities
 
 Both contributors retain equal input into priorities, design, reviews and development, with their existing repository and application access. Cody will operate the project's AI accounts, prompts, schedules and runtime connections. This is an AI execution handover, not sole ownership of the project. Either contributor can propose work through the shared repository; all development still follows the exclusive coordination lock and existing review/approval gates.
