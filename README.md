@@ -1,21 +1,21 @@
-# DEVELOPMENT LOCK AVAILABLE
+# ACTIVE DEVELOPMENT — DO NOT MODIFY
 
-Status: free
+Status: held
 
-Owner: none
+Owner: Codex for Travis
 
-Task: none
+Task: Verify and pause source Trading AI tasks for Cody
 
-Started (UTC): 2026-11-14T04:31:01.405Z
+Started (UTC): 2026-11-14T05:46:34.851Z
 
-Heartbeat (UTC): 2026-11-14T04:58:53.088Z
+Heartbeat (UTC): 2026-11-14T05:46:34.851Z
 
-Branch: n/a
+Branch: codex/source-account-ai-cutover
 
-Local changes at last observation: secured
+Local changes at last observation: clean
 
-Published commit: b96ed236d62613d95ba8e42e42888c208a062b6e
+Published commit: none verified
 
-State revision: 59
+State revision: 60
 
 Read state.json before acting. A stale heartbeat is never permission to take over. This branch is authoritative; the issue is a display only. Do not merge this branch into application branches.

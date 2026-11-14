@@ -1,26 +1,22 @@
 {
   "protocol": 1,
-  "revision": 59,
-  "status": "free",
-  "owner": null,
-  "ownerId": null,
-  "cloneId": null,
-  "acquisitionId": null,
-  "taskId": null,
-  "task": null,
+  "revision": 60,
+  "status": "held",
+  "owner": "Codex for Travis",
+  "ownerId": "travis",
+  "cloneId": "8983b6ff-55b2-4a48-a5a0-2504083276c3",
+  "acquisitionId": "0d8252cf-3256-4819-ad44-9775c7cdbf86",
+  "taskId": "source-account-ai-cutover",
+  "task": "Verify and pause source Trading AI tasks for Cody",
   "scope": [
-    "functions",
-    "database",
-    "tests",
-    "automation",
-    "documentation",
-    "scheduler"
+    "hosted AI schedules",
+    "cutover receipt"
   ],
-  "startedAt": "2026-11-14T04:31:01.405Z",
-  "heartbeatAt": "2026-11-14T04:58:53.088Z",
-  "localChanges": "secured",
-  "branch": null,
-  "publishedCommit": "b96ed236d62613d95ba8e42e42888c208a062b6e",
+  "startedAt": "2026-11-14T05:46:34.851Z",
+  "heartbeatAt": "2026-11-14T05:46:34.851Z",
+  "localChanges": "clean",
+  "branch": "codex/source-account-ai-cutover",
+  "publishedCommit": null,
   "stableIntegration": null,
   "production": {
     "commit": "84a40702f4beaa7f11359772682b36d5831d23c1",
@@ -87,12 +83,9 @@
     }
   ],
   "adoption": "Other developer enrollment and pre-existing local work not yet verified",
-  "baseCommit": "20c38064eb02ba807236301a46db887eb3018506",
+  "baseCommit": "b70f91eb8c600cc0a264a2997c909e548806f4b3",
   "localHead": "55e4cddc48cdb4a9f59d10b43ceeb551119ed2f8",
-  "lastJournal": {
-    "path": "journal/000008-quote-recovery-ai-cutover.json",
-    "commit": "b96ed236d62613d95ba8e42e42888c208a062b6e"
-  },
+  "lastJournal": null,
   "releasedAt": "2026-11-14T04:58:53.087Z",
   "lastOwner": "Cody",
   "handoff": null
