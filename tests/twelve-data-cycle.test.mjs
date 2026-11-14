@@ -15,7 +15,7 @@ const mapping = n => ({ instrument_id: `instrument-${String(n).padStart(2, '0')}
 
 function worker(options = {}) {
   let now = options.now || '2026-11-11T03:00:00Z';
-  const state = { runs: [], observations: [], fetches: [], timeouts: [], reads: [], finishError: false, ...options };
+  const state = { runs: [], observations: [], fetches: [], timeouts: [], reads: [], progressWrites: [], dbRequests: [], finishError: false, ...options };
   class Clock extends Date { constructor(...args) { super(...(args.length ? args : [now])); } }
   const db = { async rpc(name, args) {
     assert.equal(name, 'claim_twelve_data_cycle_batch_v1'); assert.equal(args.p_provider_id, 'provider');
@@ -36,7 +36,7 @@ function worker(options = {}) {
     const pending = args.p_instrument_ids.filter(id => !attempted.has(id));
     if (!pending.length) return skip('no_unattempted_eligible_instruments');
     const selected = pending.slice(0, 8);
-    const run = { id: `run-${state.runs.length}`, provider_id: 'provider', status: 'running',
+    const run = { id: `run-${state.runs.length}`, provider_id: 'provider', status: 'running', requested_count: selected.length,
       metadata: { function: 'full-twelve-data-load', cycle_started_at: at.startedAt, selected_instrument_ids: selected } };
     state.runs.push(run);
     return { data: [{ ...base, sync_run_id: run.id, selected_instrument_ids: selected, claim_status: 'claimed', remaining_count: pending.length - selected.length }], error: null };
@@ -46,9 +46,19 @@ function worker(options = {}) {
       if (table === 'data_providers') return { data: { id: 'provider' }, error: null };
       if (table === 'provider_instruments') return { data: state.mappings || Array.from({ length: 30 }, (_, n) => mapping(n)), error: null };
       if (table === 'sync_runs' && action === 'update') {
-        if (state.finishError) return { data: null, error: { message: 'secret finalization diagnostic' } };
         const run = state.runs.find(run => run.id === filters.find(([key]) => key === 'id')[1]);
-        Object.assign(run, structuredClone(value)); return { data: null, error: null };
+        assert.equal(filters.find(([key]) => key === 'status')?.[1], 'running');
+        if (value.status && state.recoverBeforeFinish) {
+          run.status = 'failed'; run.metadata.completion_counts_verified = false;
+        }
+        if (!value.status && state.recoverBeforeProgress) {
+          run.status = 'failed'; run.metadata.completion_counts_verified = false;
+        }
+        if (run.status !== 'running') return { data: [], error: null };
+        if (value.status && state.finishError) return { data: null, error: { message: 'secret finalization diagnostic' } };
+        if (!value.status && state.progressErrorAfter === state.fetches.length) return { data: null, error: { message: 'secret progress diagnostic' } };
+        if (!value.status) state.progressWrites.push(structuredClone(value));
+        Object.assign(run, structuredClone(value)); return { data: [{ id: run.id }], error: null };
       }
       if (table === 'market_observations' && action === 'insert') {
         if (state.observationError) return { data: null, error: { message: 'secret observation diagnostic' } };
@@ -63,12 +73,15 @@ function worker(options = {}) {
   } };
   let handler;
   vm.runInNewContext(compile('index.ts'), {
-    exports: {}, require: name => name === './cycle.ts' ? cycle : { createClient: () => db },
+    exports: {}, require: name => name === './cycle.ts' ? cycle : { createClient: (_url, _key, configuration) => { state.dbTransport = configuration.global.fetch; return db; } },
     Deno: { serve(fn) { handler = fn; }, env: { get: key => key === 'TWELVE_DATA_API_KEY' ? 'DO-NOT-LOG-KEY' : 'server-config' } },
     Date: Clock, Intl, Set, Map, Error, URL, Response, Request,
-    AbortSignal: { timeout(ms) { state.timeouts.push(ms); return new AbortController().signal; } },
+    AbortSignal: { timeout(ms) { state.timeouts.push(ms); return new AbortController().signal; }, any: signals => AbortSignal.any(signals) },
     setTimeout(fn) { fn(); return 0; },
     fetch: async (url, init) => {
+      if (new URL(url).hostname === 'db.example') {
+        state.dbRequests.push({ input: String(url), signal: init.signal }); return new Response('{}');
+      }
       const symbol = url.searchParams.get('symbol');
       const active = state.runs.at(-1);
       assert.equal(active.status, 'running', 'The selected IDs must be durable before any provider call');
@@ -170,10 +183,38 @@ test('malformed same-cycle receipts and capacity overflow require review without
 test('timeout and write errors retain sanitized receipts without credential-bearing diagnostics', async () => {
   const error = new Error('https://provider.example/?apikey=DO-NOT-LOG-KEY'); error.name = 'TimeoutError';
   for (const options of [{ fetchError: error }, { observationError: true }]) {
-    const w = worker(options); const result = await w.invoke(); assert.equal(result.body.status, 'failed');
+    const w = worker(options); const result = await w.invoke();
+    if (options.observationError) { assert.equal(result.status, 500); assert.equal(w.state.runs[0].status, 'running'); }
+    else assert.equal(result.body.status, 'failed');
     assert.equal(JSON.stringify([result, w.state.runs]).includes('DO-NOT-LOG-KEY'), false);
     assert.equal(JSON.stringify([result, w.state.runs]).includes('secret'), false);
   }
+});
+
+test('per-request progress survives five saved quotes before an uncertain progress write stops the batch', async () => {
+  const w = worker({ progressErrorAfter: 5 }); const result = await w.invoke();
+  assert.equal(result.status, 500); assert.equal(w.state.fetches.length, 5); assert.equal(w.state.observations.length, 5);
+  assert.equal(w.state.runs[0].status, 'running'); assert.equal(w.state.runs[0].requested_count, 8);
+  assert.equal(w.state.runs[0].received_count, 4); assert.equal(w.state.runs[0].inserted_count, 4);
+  assert.equal(w.state.progressWrites.length, 4);
+  assert.equal(JSON.stringify(result).includes('secret'), false);
+});
+
+test('late progress and terminal writes cannot overwrite a recovered receipt', async () => {
+  for (const options of [{ recoverBeforeProgress: true }, { recoverBeforeFinish: true }]) {
+    const w = worker(options); const result = await w.invoke();
+    assert.equal(result.status, 500); assert.equal(w.state.runs[0].status, 'failed');
+    assert.equal(w.state.runs[0].metadata.completion_counts_verified, false);
+    assert.equal(w.state.fetches.length, options.recoverBeforeProgress ? 1 : 8);
+  }
+});
+
+test('database transport has a 15-second deadline and preserves caller cancellation', async () => {
+  const w = worker(); await w.invoke();
+  const cancellation = new AbortController(); cancellation.abort();
+  await w.state.dbTransport('https://db.example/rest/v1/test', { signal: cancellation.signal });
+  assert.equal(w.state.timeouts.at(-1), 15_000);
+  assert.equal(w.state.dbRequests[0].signal.aborted, true);
 });
 
 test('equity session rules remain unchanged while forex can refresh outside US hours', async () => {

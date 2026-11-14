@@ -1,5 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { BATCH_SIZE, orderedCycleMappings, refreshCycle, REQUEST_TIMEOUT_MS } from "./cycle.ts";
+import { BATCH_SIZE, DB_REQUEST_TIMEOUT_MS, orderedCycleMappings, refreshCycle, REQUEST_TIMEOUT_MS } from "./cycle.ts";
 
 const headers = {
   "Content-Type": "application/json",
@@ -132,6 +132,12 @@ Deno.serve(async (req: Request) => {
 
   const db = createClient(url, serviceRoleKey, {
     auth: { autoRefreshToken: false, persistSession: false },
+    global: { fetch: (input: RequestInfo | URL, init?: RequestInit) => fetch(input, {
+      ...init,
+      signal: init?.signal
+        ? AbortSignal.any([init.signal, AbortSignal.timeout(DB_REQUEST_TIMEOUT_MS)])
+        : AbortSignal.timeout(DB_REQUEST_TIMEOUT_MS),
+    }) },
   });
 
   const { data: provider, error: providerError } = await db
@@ -194,6 +200,7 @@ Deno.serve(async (req: Request) => {
 
   for (const mapping of batch as any[]) {
     const symbol = mapping.instruments.symbol;
+    let observationWriteStarted = false;
     try {
       const requestUrl = new URL("https://api.twelvedata.com/quote");
       requestUrl.searchParams.set("symbol", mapping.provider_symbol);
@@ -203,50 +210,67 @@ Deno.serve(async (req: Request) => {
 
       if (!response.ok || payload.status === "error" || payload.code) {
         failures.push({ symbol, message: !response.ok ? `PROVIDER_HTTP_${response.status}` : "PROVIDER_REPORTED_ERROR" });
-        continue;
+      } else {
+        received++;
+        observationWriteStarted = true;
+        const { error: observationError } = await db.from("market_observations").insert({
+          instrument_id: mapping.instrument_id,
+          provider_id: provider.id,
+          interval_code: "quote",
+          observed_at: now.toISOString(),
+          open: num(payload.open),
+          high: num(payload.high),
+          low: num(payload.low),
+          close: num(payload.close),
+          adjusted_close: num(payload.close),
+          volume: num(payload.volume),
+          currency_code: payload.currency ?? mapping.instruments.currency_code,
+          is_delayed: true,
+          raw_payload: payload,
+        });
+
+        // An unreturned/failed database write may still have committed. Stop
+        // without a terminal claim; recovery will retain counts as unverified.
+        if (observationError) return json({ error: "Observation write outcome could not be confirmed.", sync_run_id: run.id }, 500);
+        inserted++;
       }
-
-      received++;
-      const { error: observationError } = await db.from("market_observations").insert({
-        instrument_id: mapping.instrument_id,
-        provider_id: provider.id,
-        interval_code: "quote",
-        observed_at: now.toISOString(),
-        open: num(payload.open),
-        high: num(payload.high),
-        low: num(payload.low),
-        close: num(payload.close),
-        adjusted_close: num(payload.close),
-        volume: num(payload.volume),
-        currency_code: payload.currency ?? mapping.instruments.currency_code,
-        is_delayed: true,
-        raw_payload: payload,
-      });
-
-      if (observationError) failures.push({ symbol, message: "OBSERVATION_WRITE_FAILED" });
-      else inserted++;
     } catch (error) {
+      if (observationWriteStarted) return json({ error: "Observation write outcome could not be confirmed.", sync_run_id: run.id }, 500);
       failures.push({
         symbol,
         message: error instanceof Error && (error.name === "TimeoutError" || error.name === "AbortError")
           ? "PROVIDER_REQUEST_TIMEOUT" : "PROVIDER_REQUEST_FAILED",
       });
     }
+    try {
+      const { data: progress, error: progressError } = await db.from("sync_runs").update({
+        received_count: received, inserted_count: inserted,
+      }).eq("id", run.id).eq("status", "running").select("id");
+      if (progressError || !Array.isArray(progress) || progress.length !== 1 || progress[0].id !== run.id) {
+        return json({ error: "Sync run progress could not be confirmed.", sync_run_id: run.id }, 500);
+      }
+    } catch {
+      return json({ error: "Sync run progress could not be confirmed.", sync_run_id: run.id }, 500);
+    }
     await new Promise((resolve) => setTimeout(resolve, 250));
   }
 
   const status = failures.length === 0 ? "succeeded" : inserted ? "partial" : "failed";
-  const { error: finishError } = await db.from("sync_runs").update({
-    finished_at: new Date().toISOString(),
-    received_count: received,
-    inserted_count: inserted,
-    status,
-    error_message: failures.length
-      ? failures.map((failure: any) => `${failure.symbol}: ${failure.message}`).join("; ").slice(0, 4000)
-      : null,
-  }).eq("id", run.id);
+  let finishConfirmed = false;
+  try {
+    const { data: finished, error: finishError } = await db.from("sync_runs").update({
+      finished_at: new Date().toISOString(),
+      received_count: received,
+      inserted_count: inserted,
+      status,
+      error_message: failures.length
+        ? failures.map((failure: any) => `${failure.symbol}: ${failure.message}`).join("; ").slice(0, 4000)
+        : null,
+    }).eq("id", run.id).eq("status", "running").select("id");
+    finishConfirmed = !finishError && Array.isArray(finished) && finished.length === 1 && finished[0].id === run.id;
+  } catch { /* Preserve the durable running receipt for interruption recovery. */ }
 
-  if (finishError) return json({ error: "Sync run finalization could not be confirmed.", sync_run_id: run.id }, 500);
+  if (!finishConfirmed) return json({ error: "Sync run finalization could not be confirmed.", sync_run_id: run.id }, 500);
 
   return json({
     ok: failures.length === 0,
