@@ -1,0 +1,79 @@
+{
+  "description": "Merged AI handover and deployed reviewed quote interruption recovery; hosted AI account setup and next genuine cycle remain pending.",
+  "databaseAndApi": "Applied 20261114044931_market_quotes_interruption_recovery_v1; deployed full-twelve-data-load v8 with JWT retained. Verified exact source, service-only grants, preserved observation digest, idempotent recovery and unchanged schedules after resume.",
+  "decisions": [
+    "Both contributors retain equal project input/access; Cody operates AI execution.",
+    "Only validated quote worker receipts older than ten minutes are recovered; counts remain explicitly unverified. Development locks never expire.",
+    "Use the user's own browser for hosted account setup; no agent cursor or browser control. Local scheduler is not a cloud substitute."
+  ],
+  "risks": [
+    "Actual next scheduled quote coverage and real intersession locking remain unverified.",
+    "Hosted replacement AI tasks are not saved/enabled; source controller pause/no-overlap and tracker cutover still require account evidence."
+  ],
+  "tests": [
+    {
+      "command": "npm test",
+      "result": "passed",
+      "scope": "complete repository suite: passed 412/412; sandbox Git fixture failure resolved by authorized local rerun"
+    },
+    {
+      "command": "node scripts/test-market-quotes-interruption-recovery.mjs",
+      "result": "passed",
+      "scope": "actual local PostgreSQL recovery: passed 22 scenarios"
+    },
+    {
+      "command": "independent new-claim regressions and edge probes",
+      "result": "passed",
+      "scope": "new SQL deduplication, expiry, provider budgets and history preservation: 17 scenarios / 131 assertions plus five boundary probes passed"
+    },
+    {
+      "command": "independent review and native timeout checks",
+      "result": "passed",
+      "scope": "frozen implementation, deployment runbook and final evidence: PASS; 15004ms timeout and caller cancellation passed"
+    }
+  ],
+  "outstanding": [
+    "Verify next scheduled quote window on 14 November at 07:00 UTC / 15:00 Perth.",
+    "Complete hosted AI setup using published handover, fresh single-writer checks and genuine unattended analytical run.",
+    "Other contributor may resume development after release through normal acquisition."
+  ],
+  "recovery": "PR49 merged at 5da91c70ad46a34ec92c366478cedb67a5e1c143. PR50 records deployment. Preserve recovered receipt and all observations; pause/drain quote dispatch before further worker changes and prefer forward correction. Prior worker/claim source is at 58aef864314e53b569f79c17afd05bde92a09824; code rollback cannot undo recovery. No frontend deployment required. No stashes or other worktrees; historical local feature branches have matching published remote heads. Existing ignored generated guide images were untouched; no new private artifacts are needed for this release.",
+  "sequence": 8,
+  "timestamp": "2026-11-14T04:58:39.348Z",
+  "author": "Cody",
+  "taskId": "quote-recovery-ai-cutover",
+  "commit": "b96ed236d62613d95ba8e42e42888c208a062b6e",
+  "baseCommit": "20c38064eb02ba807236301a46db887eb3018506",
+  "branch": "codex/quote-recovery-ai-cutover",
+  "files": [
+    "documentation/ai-execution-handover.md",
+    "documentation/ai-handover/README.md",
+    "documentation/ai-handover/configuration.json",
+    "documentation/ai-handover/controller-prompt.txt",
+    "documentation/ai-handover/cutover.md",
+    "documentation/ai-handover/historical-prompts.md",
+    "documentation/ai-handover/progress-tracker-prompt.txt",
+    "documentation/ai-handover/task-inventory.md",
+    "documentation/decision-lab-evidence-log.md",
+    "documentation/decision-lab-project-plan.md",
+    "documentation/market-quotes-interruption-recovery.md",
+    "documentation/operational-runbook.md",
+    "scripts/market-quotes-interruption-recovery.sql",
+    "scripts/test-market-quotes-interruption-recovery.mjs",
+    "supabase/functions/full-twelve-data-load/cycle.ts",
+    "supabase/functions/full-twelve-data-load/index.ts",
+    "tests/twelve-data-cycle.test.mjs"
+  ],
+  "checkpoints": {
+    "localWorking": "b96ed236d62613d95ba8e42e42888c208a062b6e",
+    "locallyTested": "b96ed236d62613d95ba8e42e42888c208a062b6e",
+    "remotelyPublished": "b96ed236d62613d95ba8e42e42888c208a062b6e",
+    "approvedStableIntegration": null,
+    "production": {
+      "commit": "84a40702f4beaa7f11359772682b36d5831d23c1",
+      "deployment": "dpl_Faea5XSbZDdFqXmhU2E25xfHWdPg",
+      "verification": "observed-ready-not-revalidated"
+    }
+  },
+  "evidenceNote": "Test results are explicit author attestations; stable integration requires separate approval and evidence."
+}
