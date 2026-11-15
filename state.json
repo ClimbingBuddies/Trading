@@ -1,22 +1,22 @@
 {
   "protocol": 1,
-  "revision": 95,
-  "status": "held",
-  "owner": "Cody",
-  "ownerId": "cody",
-  "cloneId": "a70b247a-5a71-4c2c-acf8-986bda831196",
-  "acquisitionId": "dfef8137-fa74-4f5f-8031-3965ab5e67fc",
-  "taskId": "technical-coverage-review",
-  "task": "Review incomplete Technical scores and supported data coverage",
+  "revision": 96,
+  "status": "free",
+  "owner": null,
+  "ownerId": null,
+  "cloneId": null,
+  "acquisitionId": null,
+  "taskId": null,
+  "task": null,
   "scope": [
     "coverage-diagnostics",
     "tests",
     "documentation"
   ],
   "startedAt": "2026-11-15T02:43:45.283Z",
-  "heartbeatAt": "2026-11-15T03:02:26.159Z",
-  "localChanges": "clean",
-  "branch": "codex/technical-coverage-review",
+  "heartbeatAt": "2026-11-15T03:03:03.575Z",
+  "localChanges": "secured",
+  "branch": null,
   "publishedCommit": "0edd77f029dd4e5e582352cc35d4fc142fd1c477",
   "stableIntegration": null,
   "production": {
@@ -125,7 +125,7 @@
     "path": "journal/000013-technical-coverage-review.json",
     "commit": "0edd77f029dd4e5e582352cc35d4fc142fd1c477"
   },
-  "releasedAt": "2026-11-15T02:21:14.370Z",
+  "releasedAt": "2026-11-15T03:03:03.575Z",
   "lastOwner": "Cody",
   "handoff": null
 }
