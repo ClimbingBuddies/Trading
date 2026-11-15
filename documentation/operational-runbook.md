@@ -237,6 +237,10 @@ If source data is clearly stale, loader health is bad, there was no relevant ses
 
 The Technical Engine consumes persisted canonical daily history under its own methodology. Diagnose its required source history separately from live-quote freshness.
 
+Use [`scripts/technical-coverage-review.sql`](../scripts/technical-coverage-review.sql) through an authorized operator connection for a read-only inventory. It includes every instrument, chooses the latest compatible v1 score by score date/calculation time/ID, and groups active and inactive records separately. It includes missing scores and daily provider presence without exposing symbols or account data. Provider presence means stored rows exist, not that prices are valid, complete, current or licensed for additional ingestion. `complete` is the persisted score's input-availability status, not an overall workflow health verdict. Compare the returned date ranges with the applicable market sessions separately.
+
+For partial scores, inspect the persisted availability weights and source indicator reasons before repair. A new listing cannot supply 200 completed weeks; do not splice predecessor histories to manufacture them. Forex historical volume may be unavailable; zero or bid/ask sizes are not substitutes. Existing v1 indicators and scoring use Tiingo, so Yahoo-only daily history requires a reviewed source/methodology extension. Inactive history support must not be promoted into the active universe to improve a count. Verify mapping, listing identity, provider entitlement and evidenced gaps before any new backfill. Local diagnostic verification: `node scripts/test-technical-coverage-review.mjs` with `PGLITE_MODULE` pointing to an installed PGlite module if required.
+
 ### Opportunity Assessment
 
 Do not block or alter Opportunity conclusions merely because live quote data is stale. Opportunity must remain independent of short-term prices and Market/Technical conclusions.
