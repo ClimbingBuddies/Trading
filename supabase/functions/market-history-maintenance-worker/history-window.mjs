@@ -74,6 +74,18 @@ export function acceptedProviderDates(window, responses) {
     .filter(date => date >= window.horizonStart && date <= window.end).sort();
 }
 
+export function mergeConsistentDailyRows(...responses) {
+  const byDate = new Map(), conflicts = new Set();
+  const rejectedDates = new Set(responses.flatMap(response => (response.rejected ?? []).map(row => row.date)));
+  for (const response of responses) for (const row of response.rows) {
+    if (rejectedDates.has(row.date)) conflicts.add(row.date);
+    const previous = byDate.get(row.date);
+    if (previous && FIELDS.some(field => !Object.is(numeric(row[field]), numeric(previous[field])))) conflicts.add(row.date);
+    else byDate.set(row.date, row);
+  }
+  return { rows: [...byDate.values()].sort((a, b) => a.date.localeCompare(b.date)), conflicts: [...conflicts].sort() };
+}
+
 export function mergeEventManifest(previous, current, start, end, horizonStart) {
   return { ...Object.fromEntries(Object.entries(previous).filter(([, value]) => value.date >= horizonStart && (value.date < start || value.date > end))), ...current };
 }

@@ -1,5 +1,5 @@
 // Yahoo's unofficial chart endpoint. No credentials or paid subscription required.
-import { acceptedProviderDates, assessDailyRevision, historyWindow, mergeEventManifest, yahooEventManifest } from './history-window.mjs';
+import { acceptedProviderDates, assessDailyRevision, historyWindow, mergeConsistentDailyRows, mergeEventManifest, yahooEventManifest } from './history-window.mjs';
 import { JobStateUnconfirmed } from './job-state.mjs';
 export function sydneyDate(value = new Date()) {
   return new Intl.DateTimeFormat('en-CA', { timeZone: 'Australia/Sydney', year: 'numeric', month: '2-digit', day: '2-digit' }).format(value);
@@ -180,9 +180,17 @@ export async function backfillYahoo(db, inst, job) {
       const gapOnly = decision.reasons.every(reason => reason === 'PROVIDER_CONFIRMED_DATES_MISSING_FROM_STORAGE')
         && !(prior.correction?.reasons ?? []).some(reason => reason !== 'PROVIDER_CONFIRMED_DATES_MISSING_FROM_STORAGE');
       if (!gapOnly) throw unresolvedError;
-      // An old unfillable gap must not stall unrelated daily closes. Only the
-      // separately validated, unrevised recent response may be written here.
-      result = recentResult; start = recentStart;
+      // Expanded revision checks above establish that existing prices/events
+      // agree. Retain recovered gaps as well as recent closes, but never choose
+      // between conflicting valid values from the two provider responses.
+      const merged = mergeConsistentDailyRows(result, recentResult);
+      if (merged.conflicts.length) {
+        auditMetadata = { ...auditMetadata, correction: { ...auditMetadata.correction,
+          reasons: [...auditMetadata.correction.reasons, 'CONFLICTING_PROVIDER_RESPONSES'], conflicting_dates: merged.conflicts } };
+        throw new Error('Yahoo recent and correction responses disagree; no prices written');
+      }
+      result = { ...result, rows: merged.rows };
+      start = correctionAttempted ? window.horizonStart : recentStart;
       auditMetadata = { ...auditMetadata, daily_closes_preserved_while_gap_unresolved: true,
         written_start_date: start, written_end_date: end };
     }

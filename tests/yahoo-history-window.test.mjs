@@ -169,6 +169,59 @@ test('daily job repairs newly deleted B even while prior unfillable A remains re
   assert.equal(db.updates.at(-1).metadata.correction.state, 'resolved');
 });
 
+test('pure-gap repair saves recovered B while A stays absent and suppresses only remaining A', async t => {
+  const missingB = addDays(old, 1);
+  const prior = { history_window_version: 1, accepted_provider_dates: [old, missingB, latest],
+    correction: { state: 'unresolved', completed_provider_attempt: true, signature: 'old-A-only',
+      reasons: ['PROVIDER_CONFIRMED_DATES_MISSING_FROM_STORAGE'], unresolved_dates: [old], original_missing_dates: [old] } };
+  const db = fakeDb({ prior });
+  const windows = mockProvider(t, [payload([bar(latest), bar(end)]), payload([bar(missingB), bar(latest), bar(end)])]);
+  const result = await backfillYahoo(db, instrument, dailyJob);
+  assert.match(result.last_error, /incomplete/); assert.equal(windows.length, 2);
+  assert.deepEqual(db.writes.map(row => row.observed_at.slice(0, 10)), [missingB, latest, end]);
+  const audit = db.updates.at(-1).metadata;
+  assert.deepEqual(audit.correction.unresolved_dates, [old]);
+  t.mock.restoreAll();
+  const retry = fakeDb({ prior: audit, rows: [bar(missingB), bar(latest), bar(end)] });
+  const retriedWindows = mockProvider(t, [payload([bar(latest), bar(end)])]);
+  const retried = await backfillYahoo(retry, instrument, dailyJob);
+  assert.match(retried.last_error, /suppressed/); assert.equal(retriedWindows.length, 1);
+  assert.deepEqual(retry.updates.at(-1).metadata.known_missing_provider_dates, [old]);
+});
+
+test('pure-gap response merge never chooses conflicting new prices', async t => {
+  const db = fakeDb({ prior: { history_window_version: 1, accepted_provider_dates: [old, latest] } });
+  mockProvider(t, [payload([bar(latest), bar(end)]), payload([bar(latest), bar(end, { adjusted_close: 9 })])]);
+  await assert.rejects(backfillYahoo(db, instrument, dailyJob), /responses disagree/);
+  assert.deepEqual(db.writes, []);
+  assert.deepEqual(db.updates.at(-1).metadata.correction.conflicting_dates, [end]);
+  assert.ok(db.updates.at(-1).metadata.correction.reasons.includes('CONFLICTING_PROVIDER_RESPONSES'));
+});
+
+test('pure-gap merge quarantines valid/rejected cross-response conflicts in either direction', async t => {
+  for (const rejectedIn of ['recent', 'wide']) {
+    const db = fakeDb({ prior: { history_window_version: 1, accepted_provider_dates: [old, latest] } });
+    const recentBar = bar(end, rejectedIn === 'recent' ? { high: 1 } : {});
+    const wideBar = bar(end, rejectedIn === 'wide' ? { high: 1 } : {});
+    mockProvider(t, [payload([bar(latest), recentBar]), payload([bar(latest), wideBar])]);
+    await assert.rejects(backfillYahoo(db, instrument, dailyJob), /responses disagree/);
+    assert.deepEqual(db.writes, []);
+    const audit = db.updates.at(-1).metadata;
+    assert.deepEqual(audit.correction.conflicting_dates, [end]);
+    assert.ok(audit.fetch_attempts.some(attempt => attempt.rejected_bars.some(row => row.date === end)));
+    t.mock.restoreAll();
+  }
+});
+
+test('a rejected old gap with no competing valid row still permits safe daily closes', async t => {
+  const db = fakeDb({ prior: { history_window_version: 1, accepted_provider_dates: [old, latest] } });
+  mockProvider(t, [payload([bar(latest), bar(end)]), payload([bar(old, { high: 1 }), bar(latest), bar(end)])]);
+  const result = await backfillYahoo(db, instrument, dailyJob);
+  assert.match(result.last_error, /incomplete/);
+  assert.deepEqual(db.writes.map(row => row.observed_at.slice(0, 10)), [latest, end]);
+  assert.equal(db.updates.at(-1).metadata.rejected_bars[0].date, old);
+});
+
 test('wide correction omitting a newly confirmed recent date cannot resolve a price revision', async t => {
   const revised = bar(latest, { adjusted_close: 9 });
   const db = fakeDb({ rows: [bar(old), bar(latest)] });
