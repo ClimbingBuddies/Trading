@@ -1,6 +1,6 @@
 # ASX Yahoo daily history
 
-## Demand-driven daily source release — 15 November 2026
+## Demand-driven daily release — version 8 deployed 15 November 2026
 
 Daily close requests use recent persisted Yahoo history plus a fourteen-day
 overlap. Wider one-year repairs require missing provider-confirmed dates or
@@ -15,9 +15,11 @@ is due. The existing atomic claim and retry cadence remain unchanged. Job status
 writes require an acknowledged matching running claim; ambiguous writes return
 `state_unconfirmed` and require durable-state inspection before recovery.
 
-See the historical pipeline procedure and Decision Lab evidence log for exact
-release state, limitations, testing and recovery. Source presence alone is not
-deployment or scheduled-operation evidence.
+Version 8 source and JWT configuration were read back exactly after deployment.
+Final full tests passed 440/440 with independent review/testing accepted. The
+deployment queue was empty; actual new-version provider processing awaits the
+next eligible daily job. See the historical pipeline procedure and Decision Lab
+evidence log for limitations, testing and recovery.
 
 ## Recovery deployed — 10 November; scheduled processing verified 14 November 2026
 
