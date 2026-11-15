@@ -345,6 +345,30 @@ If a required evidence layer is unavailable, report that explicitly rather than 
 
 ## Related canonical documentation
 
+### History demand dispatch and correction recovery
+
+The source release in `scripts/market-history-demand-dispatch.sql` wraps only
+the existing history cron HTTP call with the installed claim's pending/due
+predicate. Apply only after exact command-hash/cadence checks pass. The paired
+`scripts/market-history-demand-dispatch-rollback.sql` restores only that exact
+wrapper and rejects drift. No observations or queue history are deleted.
+
+Before replacing the history worker, pause its existing cron under the project
+lock, account for queued HTTP work and running jobs, and allow already dispatched
+work to finish. Deploy all worker dependencies with JWT verification retained.
+Restore the same cron's active state, then apply the reviewed dispatch wrapper.
+Verify exact files/version, the cron command, unchanged other jobs, and an actual
+scheduled receipt. Worker source rollback is the complete previous version,
+including its dependencies; database command rollback is separate.
+
+A `state_unconfirmed` response means a job receipt write was not acknowledged.
+Do not report success or blindly reset the job. Read its durable status and
+matching sync-run evidence before a bounded recovery. Unresolved Yahoo price/event
+revisions remain failures. A pure unresolved gap may coexist with successful safe
+daily closes, but retains an explicit warning and unresolved repair metadata.
+Review the provider-confirmed missing/revised dates.
+Never fabricate prices, reopen entitlement holds, or reset all historical failures.
+
 - `documentation/pipelines/market-data-pipeline.md`
 - `documentation/pipelines/market-assessment-pipeline.md`
 - `automation/daily-market-assessment.md`
