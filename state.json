@@ -1,23 +1,23 @@
 {
   "protocol": 1,
-  "revision": 96,
-  "status": "free",
-  "owner": null,
-  "ownerId": null,
-  "cloneId": null,
-  "acquisitionId": null,
-  "taskId": null,
-  "task": null,
+  "revision": 97,
+  "status": "held",
+  "owner": "Cody",
+  "ownerId": "cody",
+  "cloneId": "a70b247a-5a71-4c2c-acf8-986bda831196",
+  "acquisitionId": "14bfb3b3-740e-430c-a5ba-1d0132efdbd5",
+  "taskId": "asx-technical-integration",
+  "task": "Review and integrate supported ASX Technical sources",
   "scope": [
-    "coverage-diagnostics",
+    "technical-engine",
     "tests",
     "documentation"
   ],
-  "startedAt": "2026-11-15T02:43:45.283Z",
-  "heartbeatAt": "2026-11-15T03:03:03.575Z",
-  "localChanges": "secured",
-  "branch": null,
-  "publishedCommit": "0edd77f029dd4e5e582352cc35d4fc142fd1c477",
+  "startedAt": "2026-11-15T23:46:14.715Z",
+  "heartbeatAt": "2026-11-15T23:46:14.715Z",
+  "localChanges": "clean",
+  "branch": "codex/asx-technical-integration",
+  "publishedCommit": null,
   "stableIntegration": null,
   "production": {
     "commit": "84a40702f4beaa7f11359772682b36d5831d23c1",
@@ -119,12 +119,9 @@
     }
   ],
   "adoption": "Other developer enrollment and pre-existing local work not yet verified",
-  "baseCommit": "4c17fd8ad76ee47a78b847b82fada95ca16ec1d8",
+  "baseCommit": "0edd77f029dd4e5e582352cc35d4fc142fd1c477",
   "localHead": "cf0f2a75ce81785a4051e0331a3ea2f72d9e693a",
-  "lastJournal": {
-    "path": "journal/000013-technical-coverage-review.json",
-    "commit": "0edd77f029dd4e5e582352cc35d4fc142fd1c477"
-  },
+  "lastJournal": null,
   "releasedAt": "2026-11-15T03:03:03.575Z",
   "lastOwner": "Cody",
   "handoff": null
