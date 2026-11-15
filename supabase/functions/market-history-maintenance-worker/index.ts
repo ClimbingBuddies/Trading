@@ -1,4 +1,5 @@
 import { backfillYahoo } from "./yahoo.mjs";
+import { JobStateUnconfirmed, persistJobState } from "./job-state.mjs";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.0";
 
 const H={"Content-Type":"application/json","Access-Control-Allow-Origin":"*","Access-Control-Allow-Headers":"authorization,apikey,content-type,x-client-info"};
@@ -30,9 +31,9 @@ Deno.serve(async(req)=>{
  const {data:claimed,error:ce}=await db.rpc("claim_market_history_job");
  if(ce)return out({error:ce.message},500);
  const job=claimed?.[0];if(!job)return out({ok:true,status:"idle"});
- const finish=async(status:string,extra:any={})=>{await db.from("market_history_jobs").update({status,updated_at:new Date().toISOString(),finished_at:new Date().toISOString(),...extra}).eq("id",job.id)};
+ const finish=async(status:string,extra:any={})=>{await persistJobState(db,job,{status,updated_at:new Date().toISOString(),finished_at:new Date().toISOString(),...extra})};
  const retry=async(message:string)=>{
-  if(job.attempts<job.max_attempts){const at=new Date(Date.now()+10*60000).toISOString();await db.from("market_history_jobs").update({status:"pending",next_attempt_at:at,last_error:message.slice(0,4000),updated_at:new Date().toISOString()}).eq("id",job.id);return out({ok:false,status:"retry_scheduled",job_id:job.id,retry_at:at,error:message})}
+  if(job.attempts<job.max_attempts){const at=new Date(Date.now()+10*60000).toISOString();await persistJobState(db,job,{status:"pending",next_attempt_at:at,last_error:message.slice(0,4000),updated_at:new Date().toISOString()});return out({ok:false,status:"retry_scheduled",job_id:job.id,retry_at:at,error:message})}
   await finish("failed",{last_error:message.slice(0,4000)});return out({ok:false,status:"failed",job_id:job.id,error:message});
  };
  try{
@@ -91,8 +92,12 @@ Deno.serve(async(req)=>{
    await db.rpc("refresh_market_trends_for_instrument",{p_instrument_id:inst.id});
    await finish("succeeded",{sync_run_id:run.id,requested_start:start,requested_end:end,coverage_end:last,received_count:f.rows.length,inserted_count:rows.length,last_error:null});
    return out({ok:true,status:"succeeded",job_id:job.id,symbol:inst.symbol,received_count:f.rows.length,upserted_count:rows.length});
-  }catch(e){const m=e instanceof Error?e.message:String(e);await db.from("sync_runs").update({finished_at:new Date().toISOString(),status:"failed",error_message:m.slice(0,4000)}).eq("id",run.id);throw e}
- }catch(e){return await retry(e instanceof Error?e.message:String(e))}
+  }catch(e){if(e instanceof JobStateUnconfirmed)throw e;const m=e instanceof Error?e.message:String(e);await db.from("sync_runs").update({finished_at:new Date().toISOString(),status:"failed",error_message:m.slice(0,4000)}).eq("id",run.id);throw e}
+ }catch(e){
+  if(e instanceof JobStateUnconfirmed)return out({ok:false,status:"state_unconfirmed",error:e.message},500);
+  try{return await retry(e instanceof Error?e.message:String(e))}
+  catch(writeError){return out({ok:false,status:"state_unconfirmed",error:writeError instanceof Error?writeError.message:String(writeError)},500)}
+ }
 });
 
 

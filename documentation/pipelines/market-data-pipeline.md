@@ -5,7 +5,7 @@
 Trading now has two deliberately separate market-data paths:
 
 1. **Twelve Data live/current quotes** for operational dashboards.
-2. **Tiingo daily historical backfills** for indicators, research and backtesting.
+2. **Tiingo daily history and Yahoo ASX history** for indicators, research and backtesting.
 
 Both write to `market_observations`, but they use separate providers and interval codes so current-market behaviour and historical analysis do not interfere with one another.
 
@@ -19,6 +19,11 @@ For the complete historical procedure, see:
 
 - `twelvedata` / Twelve Data — current quote provider.
 - `tiingo` / Tiingo — on-demand historical provider.
+- `yahoo` / Yahoo Finance — ASX daily history, with validated provider identity.
+
+The approved operating policy is four-hour quotes, daily closing-price updates,
+and evidence-triggered historical gap repair. See the historical procedure for
+the demand-dispatch gate, overlap/revision handling and coverage limitations.
 
 Provider identity is part of the observation key and must remain accurate. Historical Tiingo data must never be labelled as Twelve Data.
 

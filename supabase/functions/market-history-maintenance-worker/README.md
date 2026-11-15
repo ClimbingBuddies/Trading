@@ -1,5 +1,24 @@
 # ASX Yahoo daily history
 
+## Demand-driven daily source release — 15 November 2026
+
+Daily close requests use recent persisted Yahoo history plus a fourteen-day
+overlap. Wider one-year repairs require missing provider-confirmed dates or
+changed overlap/corporate-action evidence. Historical completeness is unknown
+where prior provider-date evidence is absent; weekdays are not an ASX calendar.
+Unresolved corrections stay visible and unchanged unfillable repair signatures
+are suppressed rather than repeatedly fetching a full year. Existing explicit
+initial-backfill horizons and quarantine validation remain intact.
+
+The paired database dispatch change invokes this worker only when pending work
+is due. The existing atomic claim and retry cadence remain unchanged. Job status
+writes require an acknowledged matching running claim; ambiguous writes return
+`state_unconfirmed` and require durable-state inspection before recovery.
+
+See the historical pipeline procedure and Decision Lab evidence log for exact
+release state, limitations, testing and recovery. Source presence alone is not
+deployment or scheduled-operation evidence.
+
 ## Recovery deployed — 10 November; scheduled processing verified 14 November 2026
 
 Worker version 7 is deployed. The 14 November read-only readiness audit confirms
@@ -55,11 +74,12 @@ Yahoo remains an additional external data source, even though no API key is need
 
 ## Operation
 
-- Existing cron invokes the worker every two minutes, claiming one queue job.
+- The database checks every two minutes; the demand-dispatch release invokes the
+  worker only for pending, due work. Each invocation claims one queue job.
 - Existing daily enqueue runs at 22:30 UTC (06:30 Perth), covering active instruments
   and watchlist instruments. No extra schedule was created.
-- ASX initial jobs fetch five years where available; daily jobs re-fetch one year
-  to fill recent gaps and refresh adjusted closes after corporate actions.
+- ASX initial jobs fetch five years where available; daily jobs fetch recent
+  overlap and missing tail, with evidence-triggered one-year gap/correction work.
 - Excludes the current Sydney session, even after market close, to avoid partial bars.
 - Validates ASX venue, symbol, AUD currency, Sydney timezone and daily interval.
 - Stores Yahoo-native OHLC and separately supplied adjusted close. Never relabels
@@ -79,7 +99,8 @@ values ('yahoo','Yahoo Finance (unofficial)','https://query1.finance.yahoo.com',
 on conflict (provider_code) do nothing;
 ```
 
-Deploy `index.ts`, `yahoo.mjs` and `deno.json` together with JWT verification enabled.
+Deploy `index.ts`, `yahoo.mjs`, `history-window.mjs`, `job-state.mjs` and `deno.json`
+together with JWT verification enabled.
 The existing worker gateway/cron authentication is retained.
 
 ## Verification — 16 September 2026

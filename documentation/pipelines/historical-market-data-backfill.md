@@ -313,6 +313,37 @@ Idempotency rerun:
 
 Sample provenance checks confirmed `raw_payload._backfill.source = 'Tiingo'`.
 
+## Demand-driven maintenance — 15 November 2026 source change
+
+The owner selected four-hour current quotes, daily closing-price updates and
+automatic historical repairs when gaps are evidenced. The daily enqueue remains
+at 22:30 UTC (06:30 Perth). The two-minute database job checks for pending, due
+history work before invoking the existing Edge worker. It does not claim a job;
+the worker's existing atomic claim remains authoritative. A concurrent claim can
+still produce an occasional idle invocation. Empty database checks are not
+provider calls. Four-hour quote windows are unchanged.
+
+Yahoo daily requests use recent persisted history with a fourteen-calendar-day
+overlap. No history uses the existing one-year daily seed; explicitly requested
+initial backfills retain their bounded horizon. A wider one-year fetch is driven
+by missing previously confirmed provider dates, changed overlap values, or
+changed corporate-action evidence. No weekday calendar or other instrument's
+sessions are used to invent an expected price. Older audits without a date
+manifest leave interior coverage unknown. A recent overlap cannot prove that an
+older provider value never changed.
+
+Provider-confirmed dates and correction reasons remain in protected sync-run
+metadata. Unresolved price/event revisions fail before writes and use bounded job
+retries. A pure unfillable gap preserves separately validated daily closes with a
+warning and unresolved metadata. Unchanged unfillable repair evidence must not
+generate endless full-year pulls; newly missing dates must still trigger repair.
+Rejected prices and failed jobs remain preserved. Tiingo's existing incremental
+path and provider entitlement/mapping holds remain unchanged. Successful daily
+ingestion does not certify gap-free historical coverage or shared evaluation.
+
+Deployment and genuine scheduled evidence are recorded separately in the
+[Decision Lab evidence log](../decision-lab-evidence-log.md).
+
 ## Previous NVDA test cleanup
 
 An earlier controlled Yahoo Finance test had inserted 20 January 2026 NVDA daily rows while incorrectly using the Twelve Data provider ID.
