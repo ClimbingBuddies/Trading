@@ -1,0 +1,76 @@
+{
+  "description": "Implemented approved four-hour quotes plus daily closes and evidenced gap repair; PR52/53 integrated and history worker v8 deployed with exact readback. Scheduled demand gate verified on empty queue.",
+  "databaseAndApi": "Existing history cron command now gates HTTP on due pending jobs; same cadence/Vault/claim preserved. History worker v8 with five verified files and JWT retained. No DDL or observation/queue-history deletion.",
+  "decisions": [
+    "Keep quote and daily enqueue schedules unchanged.",
+    "Use provider-confirmed dates and revision evidence, never inferred weekday gaps.",
+    "Retain safe daily closes beside unfillable pure gaps; incomplete revisions and cross-response quarantine conflicts stop writes."
+  ],
+  "risks": [
+    "Real v8 provider processing awaits next eligible job because deployment queue was empty.",
+    "Older unobserved gaps/revisions remain unknown; no comprehensive historical-coverage claim."
+  ],
+  "tests": [
+    {
+      "command": "npm test",
+      "result": "passed",
+      "scope": "Final full repository suite440/440"
+    },
+    {
+      "command": "node --test tests/yahoo-history.test.mjs tests/yahoo-history-window.test.mjs tests/history-job-state.test.mjs",
+      "result": "passed",
+      "scope": "Final40 focused tests; independent review and adversarial probes passed"
+    },
+    {
+      "command": "node scripts/test-market-history-demand-dispatch.mjs",
+      "result": "passed",
+      "scope": "ActualPGlite23 scenarios75 assertions; exact release/rollback"
+    },
+    {
+      "command": "Live deployment and scheduler readback",
+      "result": "passed",
+      "scope": "v8ACTIVEJWTtrue exact5files; othercronhashesunchanged; genuine02:18UTCemptyqueue tick succeeded"
+    }
+  ],
+  "outstanding": [
+    "Verify next real v8 daily provider job and retained gap/correction audit.",
+    "Unattended analytical acceptance, coverage/partial Technical scores, privacy/notification checks remain separate."
+  ],
+  "recovery": "Pause/drain history dispatch; restore complete worker v7 files from8335aba; restore active state; paired demand-dispatch rollback restores exact previous command if needed. Preserve all records.",
+  "sequence": 12,
+  "timestamp": "2026-11-15T02:20:26.855Z",
+  "author": "Cody",
+  "taskId": "gap-triggered-history",
+  "commit": "4c17fd8ad76ee47a78b847b82fada95ca16ec1d8",
+  "baseCommit": "86bf825d02ff2f642655e5fc9403c2d112a0684e",
+  "branch": "codex/gap-triggered-history",
+  "files": [
+    "documentation/decision-lab-evidence-log.md",
+    "documentation/decision-lab-project-plan.md",
+    "documentation/operational-runbook.md",
+    "documentation/pipelines/historical-market-data-backfill.md",
+    "documentation/pipelines/market-data-pipeline.md",
+    "scripts/market-history-demand-dispatch-rollback.sql",
+    "scripts/market-history-demand-dispatch.sql",
+    "scripts/test-market-history-demand-dispatch.mjs",
+    "supabase/functions/market-history-maintenance-worker/README.md",
+    "supabase/functions/market-history-maintenance-worker/history-window.mjs",
+    "supabase/functions/market-history-maintenance-worker/index.ts",
+    "supabase/functions/market-history-maintenance-worker/job-state.mjs",
+    "supabase/functions/market-history-maintenance-worker/yahoo.mjs",
+    "tests/history-job-state.test.mjs",
+    "tests/yahoo-history-window.test.mjs"
+  ],
+  "checkpoints": {
+    "localWorking": "4c17fd8ad76ee47a78b847b82fada95ca16ec1d8",
+    "locallyTested": "4c17fd8ad76ee47a78b847b82fada95ca16ec1d8",
+    "remotelyPublished": "4c17fd8ad76ee47a78b847b82fada95ca16ec1d8",
+    "approvedStableIntegration": null,
+    "production": {
+      "commit": "84a40702f4beaa7f11359772682b36d5831d23c1",
+      "deployment": "dpl_Faea5XSbZDdFqXmhU2E25xfHWdPg",
+      "verification": "observed-ready-not-revalidated"
+    }
+  },
+  "evidenceNote": "Test results are explicit author attestations; stable integration requires separate approval and evidence."
+}

@@ -1,6 +1,6 @@
 {
   "protocol": 1,
-  "revision": 87,
+  "revision": 88,
   "status": "held",
   "owner": "Cody",
   "ownerId": "cody",
@@ -15,7 +15,7 @@
     "documentation"
   ],
   "startedAt": "2026-11-15T01:42:37.745Z",
-  "heartbeatAt": "2026-11-15T02:18:51.291Z",
+  "heartbeatAt": "2026-11-15T02:20:26.855Z",
   "localChanges": "clean",
   "branch": "codex/gap-triggered-history",
   "publishedCommit": "4c17fd8ad76ee47a78b847b82fada95ca16ec1d8",
@@ -103,12 +103,22 @@
       "taskId": "calendar-readiness",
       "commit": "86bf825d02ff2f642655e5fc9403c2d112a0684e",
       "description": "Renewed reviewed Nasdaq calendar trust and reconciled daily-loop readiness; PR51 merged at 8335aba0facb261c90513d04e0d5de8494db5702, tree verified against reviewed feature."
+    },
+    {
+      "sequence": 12,
+      "path": "journal/000012-gap-triggered-history.json",
+      "taskId": "gap-triggered-history",
+      "commit": "4c17fd8ad76ee47a78b847b82fada95ca16ec1d8",
+      "description": "Implemented approved four-hour quotes plus daily closes and evidenced gap repair; PR52/53 integrated and history worker v8 deployed with exact readback. Scheduled demand gate verif"
     }
   ],
   "adoption": "Other developer enrollment and pre-existing local work not yet verified",
   "baseCommit": "86bf825d02ff2f642655e5fc9403c2d112a0684e",
   "localHead": "2d4e9a12b603e0e29e7b717d853024d4a85defef",
-  "lastJournal": null,
+  "lastJournal": {
+    "path": "journal/000012-gap-triggered-history.json",
+    "commit": "4c17fd8ad76ee47a78b847b82fada95ca16ec1d8"
+  },
   "releasedAt": "2026-11-14T07:26:26.912Z",
   "lastOwner": "Cody",
   "handoff": null
