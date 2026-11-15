@@ -1,0 +1,73 @@
+{
+  "description": "Completed Technical coverage review; diagnostic and evidence merged through PR54 at f65307f62ece722cb5b2b08595723fc45446e287 with exact tree equality to reviewed feature 0edd77f029dd4e5e582352cc35d4fc142fd1c477.",
+  "databaseAndApi": "Read-only aggregate diagnostic executed in Trading; no schema, permissions, history, score, scheduler, worker or frontend changes.",
+  "decisions": [
+    "Report active and inactive scopes separately and include missing scores.",
+    "Preserve honest partial status for insufficient listing history and unavailable forex volume.",
+    "Next ASX Technical source/provenance integration review can begin immediately using existing history and synthetic tests; benchmark/session readiness remains separate."
+  ],
+  "risks": [
+    "Provider row presence is not complete, valid, fresh or licensed history.",
+    "Inactive mapping and seed completeness remain unverified; no automatic backfill or activation.",
+    "Full unattended analytical acceptance and next real history provider processing still require eligible scheduled evidence."
+  ],
+  "tests": [
+    {
+      "command": "node scripts/test-technical-coverage-review.mjs with PGLITE_MODULE",
+      "result": "passed",
+      "scope": "Actual diagnostic SQL; 20 local synthetic assertions and independent rerun."
+    },
+    {
+      "command": "Independent inline Node/PGlite adversarial fixture",
+      "result": "passed",
+      "scope": "25 additional assertions including precedence, aggregation, read-only execution and unchanged tables."
+    },
+    {
+      "command": "Independent review at recorded SQL/test SHA256 hashes",
+      "result": "passed",
+      "scope": "No material findings; minor research-subsystem wording clarified."
+    },
+    {
+      "command": "Read-only execution of exact diagnostic SQL in Trading",
+      "result": "passed",
+      "scope": "Reconciled full inventory and separate active/inactive missing-score categories; no readiness inference."
+    },
+    {
+      "command": "git diff --check; git diff --exit-code HEAD FETCH_HEAD",
+      "result": "passed",
+      "scope": "Clean changes and reviewed tree equality with operational merge."
+    }
+  ],
+  "outstanding": [
+    "ASX Technical integration is the next review, ready to start immediately.",
+    "Genuine eligible weekday controller/tracker and history-worker provider evidence; privacy/notification acceptance and observation gates remain.",
+    "No frontend deployment is required for this diagnostic/documentation milestone."
+  ],
+  "recovery": "Revert diagnostic/documentation commits da9e6fc and 0edd77f if necessary; no database rollback. One worktree, no stashes, feature branches verified published, ignored build/dependency/generated assets untouched. Both contributors retain equal input/access.",
+  "sequence": 13,
+  "timestamp": "2026-11-15T03:02:26.159Z",
+  "author": "Cody",
+  "taskId": "technical-coverage-review",
+  "commit": "0edd77f029dd4e5e582352cc35d4fc142fd1c477",
+  "baseCommit": "4c17fd8ad76ee47a78b847b82fada95ca16ec1d8",
+  "branch": "codex/technical-coverage-review",
+  "files": [
+    "documentation/decision-lab-evidence-log.md",
+    "documentation/decision-lab-project-plan.md",
+    "documentation/operational-runbook.md",
+    "scripts/technical-coverage-review.sql",
+    "scripts/test-technical-coverage-review.mjs"
+  ],
+  "checkpoints": {
+    "localWorking": "0edd77f029dd4e5e582352cc35d4fc142fd1c477",
+    "locallyTested": "0edd77f029dd4e5e582352cc35d4fc142fd1c477",
+    "remotelyPublished": "0edd77f029dd4e5e582352cc35d4fc142fd1c477",
+    "approvedStableIntegration": null,
+    "production": {
+      "commit": "84a40702f4beaa7f11359772682b36d5831d23c1",
+      "deployment": "dpl_Faea5XSbZDdFqXmhU2E25xfHWdPg",
+      "verification": "observed-ready-not-revalidated"
+    }
+  },
+  "evidenceNote": "Test results are explicit author attestations; stable integration requires separate approval and evidence."
+}
