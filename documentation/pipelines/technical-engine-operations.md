@@ -19,6 +19,8 @@ The private input-snapshot table preserves exact cutoff envelopes for replay; so
 
 ## Frequency and timezone
 
+The history worker also calls the existing service-only `public.refresh_market_trends_for_instrument(uuid)` after a successful Yahoo audit. The hook routes ASX to the same snapshot-based refresh; other venues retain Tiingo behavior. ASX refresh errors or blocked source admission leave a durable warning on the successful ingestion job, rather than repeating an already persisted provider fetch. The HTTP receipt separately reports `technical_refresh`. The next existing Technical run provides recovery; a concurrent refresh can hold the shared advisory lock, so ingestion success alone does not certify fresh derived results. Check source-match before downstream use. Hook recovery uses `scripts/rollback-asx-history-technical-refresh.sql`; worker recovery redeploys the exact pre-change source from PR #55 with JWT verification retained.
+
 Supabase pg_cron is configured in GMT/UTC. Australia/Perth does not observe daylight saving time.
 
 | Job | Cron expression | UTC | Australia/Perth | Purpose |
