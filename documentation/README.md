@@ -43,6 +43,7 @@ The [canonical project plan](project-plan.md) controls authorised work. The [dev
 - [Market Assessment pipeline](pipelines/market-assessment-pipeline.md)
 - [Daily Market Assessment specification](../automation/daily-market-assessment.md)
 - [Technical calculation specification](specifications/technical-calculation-specification.md)
+- [ASX Technical source and calculation contract](specifications/asx-technical-source-contract.md)
 - [Technical indicator pipeline](pipelines/technical-indicator-pipeline.md)
 - [Technical scoring specification](specifications/technical-market-scoring-specification.md)
 - [Technical scoring pipeline](pipelines/technical-market-scoring-pipeline.md)

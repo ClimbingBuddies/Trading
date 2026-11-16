@@ -61,9 +61,16 @@ try {
   await db.exec(`insert into market_scores(id,instrument_id,score_status,score_details,score_date,calculated_at)
     values (9,1,'partial','{}','2026-01-02','2026-01-03Z')`);
   assert.equal((await db.query(sql)).rows.find(r => r.exchange_code === 'TEST' && r.is_active).score_status, 'partial');
+  await db.exec(`insert into market_scores values
+    (10,3,'partial','{}','2026-01-04','2026-01-04Z','technical-score-asx-v1','technical-engine-asx-v1'),
+    (11,3,'complete','{}','2026-01-05','2026-01-05Z','technical-score-v1','technical-engine-v1')`);
+  const asx = (await db.query(sql)).rows.find(r => r.exchange_code === 'ASX');
+  assert.equal(asx.score_status, 'partial');
+  assert.equal(asx.instruments, 1);
+  assert.equal(asx.expected_methodology, 'technical-score-asx-v1');
   await db.exec('truncate market_scores, market_observations, instruments, data_providers');
   assert.deepEqual((await db.query(sql)).rows, []);
-  console.log('PASS: 20 assertions; actual diagnostic SQL; isolated synthetic database');
+  console.log('PASS: 23 assertions; actual diagnostic SQL; isolated synthetic database');
 } finally {
   await db.close();
 }

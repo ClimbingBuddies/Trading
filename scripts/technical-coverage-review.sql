@@ -1,15 +1,19 @@
 -- Read-only inventory, not a freshness, licensing or gap-free-history certificate.
 -- Run with an authorized database operator connection; do not add public grants.
--- One latest v1 score per instrument, including inactive history-only instruments.
+-- One latest compatible score per instrument, including inactive history support.
+-- ASX expects its separate Yahoo methodology; other venues retain Tiingo v1.
 -- Provider presence means at least one stored daily row, NOT valid/full coverage.
 -- Counts include instruments with no scores; no symbols, owners or notes are output.
 with latest_scores as (
   select distinct on (instrument_id)
-    instrument_id, score_status, score_details, score_date, calculated_at
-  from public.market_scores
-  where methodology_version = 'technical-score-v1'
-    and technical_calculation_version = 'technical-engine-v1'
-  order by instrument_id, score_date desc, calculated_at desc, id desc
+    instrument_id, score_status, score_details, score_date, calculated_at, methodology_version
+  from public.market_scores ms
+  join public.instruments si on si.id=ms.instrument_id
+  where (si.exchange_code='ASX' and methodology_version='technical-score-asx-v1'
+      and technical_calculation_version='technical-engine-asx-v1')
+    or (si.exchange_code is distinct from 'ASX' and methodology_version='technical-score-v1'
+      and technical_calculation_version='technical-engine-v1')
+  order by instrument_id, score_date desc, calculated_at desc, ms.id desc
 ), daily_sources as (
   select mo.instrument_id,
     bool_or(dp.provider_code = 'tiingo') as has_tiingo_daily,
@@ -20,6 +24,7 @@ with latest_scores as (
   group by mo.instrument_id
 )
 select i.is_active, i.exchange_code, i.asset_type,
+  case when i.exchange_code='ASX' then 'technical-score-asx-v1' else 'technical-score-v1' end as expected_methodology,
   coalesce(s.score_status, 'no_score') as score_status,
   s.score_details -> 'availability_weights' as availability_weights,
   count(*)::integer as instruments,

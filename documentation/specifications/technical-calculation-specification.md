@@ -4,6 +4,8 @@
 **Specification version:** `technical-engine-v1`  
 **Status:** Canonical implemented contract — TECH-001 and TECH-002 independently audited
 
+The separate [ASX Yahoo contract](asx-technical-source-contract.md) adds `technical-engine-asx-v1`; it does not change the Tiingo v1 source or formulas documented here.
+
 ## Purpose
 
 This document defines the calculation contract for the Independent Technical Engine. The engine answers:
