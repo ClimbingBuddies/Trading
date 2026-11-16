@@ -1,0 +1,106 @@
+{
+  "decisions": [
+    "Separate ASX versions and immutable bounded verified Yahoo snapshots; no convergence enablement",
+    "Preserve Tiingo definitions, all eight cron fingerprints and four-hour quote windows",
+    "Successful provider ingestion retains warning if derived refresh fails; no redundant provider retry"
+  ],
+  "recovery": "Under coordination lock and idle/exact-definition checks, paired scheduler and history-hook rollback SQL plus full worker-v8 source2228bc1c48c63b66cb8d7c9c131da4169517abed with JWT retained; preserve all history/snapshots/scores. Code rollback is not database data rollback.",
+  "risks": [
+    "One-year verified adjusted history leaves long weekly indicators unavailable",
+    "Later ingestion may invalidate source matches; downstream freshness/session checks remain required"
+  ],
+  "description": "Completed ASX Technical source/calculation integration, scheduled runner and post-ingestion routing; deployed and verified",
+  "databaseAndApi": "Trading migrations add_asx_technical_sources_v1 (20261116001426), add_asx_technical_calculation_v1 (20261116001514), integrate_asx_technical_scheduler_v1 (20261116053436), route_asx_history_technical_refresh_v1 (20261116055450); market-history-maintenance-worker v9 exact readback/JWT retained",
+  "outstanding": [
+    "Genuine worker-v9 post-load and scheduled composite acceptance pending; no observation week",
+    "Next review: Yahoo decimal normalization can start immediately; ASX convergence/calendar/benchmark admission separate",
+    "One worktree, no stashes; all local feature heads verified published; ignored build/dependency/generated-guide/CLI-cache assets are reproducible, no unsecured source"
+  ],
+  "tests": [
+    {
+      "command": "node scripts/test-asx-technical-source.mjs",
+      "result": "passed",
+      "scope": "59 source admission scenarios"
+    },
+    {
+      "command": "node scripts/test-asx-technical-calculation.mjs",
+      "result": "passed",
+      "scope": "25 scenarios/360 assertions"
+    },
+    {
+      "command": "node scripts/test-technical-coverage-review.mjs",
+      "result": "passed",
+      "scope": "23 assertions"
+    },
+    {
+      "command": "node scripts/test-asx-history-technical-refresh.mjs",
+      "result": "passed",
+      "scope": "12 scenarios/74 assertions"
+    },
+    {
+      "command": "npm test (local Git access)",
+      "result": "passed",
+      "scope": "440 existing tests; initial sandbox Git fixture attempt did not pass"
+    },
+    {
+      "command": "node --test tests/asx-history-worker.test.mjs tests/history-job-state.test.mjs",
+      "result": "passed",
+      "scope": "12 new and 6 existing tests"
+    },
+    {
+      "command": "Live service-role hook refresh and readback",
+      "result": "passed",
+      "scope": "15 instruments/240 indicators/15 partial scores/zero blockers;15 source matches/30 retained snapshots;exact deployed source,permissions,cron and Tiingo definitions"
+    },
+    {
+      "command": "Independent review and git diff --check",
+      "result": "passed",
+      "scope": "Final implementation and documentation;PR55/56/57 merged,final operational94b61f59fa2fd6da3fa1524c055782016fc19240 tree equals featureHEAD"
+    }
+  ],
+  "sequence": 14,
+  "timestamp": "2026-11-16T06:01:40.601Z",
+  "author": "Cody",
+  "taskId": "asx-technical-integration",
+  "commit": "82a9fba504ce7e2f5c290a3e0ed6833c43964fb0",
+  "baseCommit": "0edd77f029dd4e5e582352cc35d4fc142fd1c477",
+  "branch": "codex/asx-technical-integration",
+  "files": [
+    "documentation/README.md",
+    "documentation/decision-lab-evidence-log.md",
+    "documentation/decision-lab-project-plan.md",
+    "documentation/operational-runbook.md",
+    "documentation/pipelines/technical-engine-operations.md",
+    "documentation/specifications/asx-technical-source-contract.md",
+    "documentation/specifications/technical-calculation-specification.md",
+    "documentation/specifications/technical-market-scoring-specification.md",
+    "documentation/supabase-data-model.md",
+    "scripts/rollback-asx-history-technical-refresh.sql",
+    "scripts/rollback-asx-technical-scheduler.sql",
+    "scripts/technical-coverage-review.sql",
+    "scripts/test-asx-history-technical-refresh.mjs",
+    "scripts/test-asx-technical-calculation.mjs",
+    "scripts/test-asx-technical-source.mjs",
+    "scripts/test-technical-coverage-review.mjs",
+    "supabase/functions/market-history-maintenance-worker/README.md",
+    "supabase/functions/market-history-maintenance-worker/index.ts",
+    "supabase/functions/market-history-maintenance-worker/technical-refresh.mjs",
+    "supabase/migrations/20261115235043_add_asx_technical_sources_v1.sql",
+    "supabase/migrations/20261115235320_add_asx_technical_calculation_v1.sql",
+    "supabase/migrations/20261115235607_integrate_asx_technical_scheduler_v1.sql",
+    "supabase/migrations/20261116054221_route_asx_history_technical_refresh_v1.sql",
+    "tests/asx-history-worker.test.mjs"
+  ],
+  "checkpoints": {
+    "localWorking": "82a9fba504ce7e2f5c290a3e0ed6833c43964fb0",
+    "locallyTested": "82a9fba504ce7e2f5c290a3e0ed6833c43964fb0",
+    "remotelyPublished": "82a9fba504ce7e2f5c290a3e0ed6833c43964fb0",
+    "approvedStableIntegration": null,
+    "production": {
+      "commit": "84a40702f4beaa7f11359772682b36d5831d23c1",
+      "deployment": "dpl_Faea5XSbZDdFqXmhU2E25xfHWdPg",
+      "verification": "observed-ready-not-revalidated"
+    }
+  },
+  "evidenceNote": "Test results are explicit author attestations; stable integration requires separate approval and evidence."
+}

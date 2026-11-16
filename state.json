@@ -1,6 +1,6 @@
 {
   "protocol": 1,
-  "revision": 109,
+  "revision": 110,
   "status": "held",
   "owner": "Cody",
   "ownerId": "cody",
@@ -15,7 +15,7 @@
     "documentation"
   ],
   "startedAt": "2026-11-15T23:46:14.715Z",
-  "heartbeatAt": "2026-11-16T06:00:02.481Z",
+  "heartbeatAt": "2026-11-16T06:01:40.601Z",
   "localChanges": "clean",
   "branch": "codex/asx-technical-integration",
   "publishedCommit": "82a9fba504ce7e2f5c290a3e0ed6833c43964fb0",
@@ -117,12 +117,22 @@
       "taskId": "technical-coverage-review",
       "commit": "0edd77f029dd4e5e582352cc35d4fc142fd1c477",
       "description": "Completed Technical coverage review; diagnostic and evidence merged through PR54 at f65307f62ece722cb5b2b08595723fc45446e287 with exact tree equality to reviewed feature 0edd77f029"
+    },
+    {
+      "sequence": 14,
+      "path": "journal/000014-asx-technical-integration.json",
+      "taskId": "asx-technical-integration",
+      "commit": "82a9fba504ce7e2f5c290a3e0ed6833c43964fb0",
+      "description": "Completed ASX Technical source/calculation integration, scheduled runner and post-ingestion routing; deployed and verified"
     }
   ],
   "adoption": "Other developer enrollment and pre-existing local work not yet verified",
   "baseCommit": "0edd77f029dd4e5e582352cc35d4fc142fd1c477",
   "localHead": "c2a7d03408f265082e6ebda80e4628f236c800b8",
-  "lastJournal": null,
+  "lastJournal": {
+    "path": "journal/000014-asx-technical-integration.json",
+    "commit": "82a9fba504ce7e2f5c290a3e0ed6833c43964fb0"
+  },
   "releasedAt": "2026-11-15T03:03:03.575Z",
   "lastOwner": "Cody",
   "handoff": null
