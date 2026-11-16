@@ -1,13 +1,13 @@
 {
   "protocol": 1,
-  "revision": 110,
-  "status": "held",
-  "owner": "Cody",
-  "ownerId": "cody",
-  "cloneId": "a70b247a-5a71-4c2c-acf8-986bda831196",
-  "acquisitionId": "14bfb3b3-740e-430c-a5ba-1d0132efdbd5",
-  "taskId": "asx-technical-integration",
-  "task": "Integrate ASX Technical sources and post-ingestion refresh routing",
+  "revision": 111,
+  "status": "free",
+  "owner": null,
+  "ownerId": null,
+  "cloneId": null,
+  "acquisitionId": null,
+  "taskId": null,
+  "task": null,
   "scope": [
     "technical-engine",
     "history-refresh-hook",
@@ -15,9 +15,9 @@
     "documentation"
   ],
   "startedAt": "2026-11-15T23:46:14.715Z",
-  "heartbeatAt": "2026-11-16T06:01:40.601Z",
-  "localChanges": "clean",
-  "branch": "codex/asx-technical-integration",
+  "heartbeatAt": "2026-11-16T06:01:59.081Z",
+  "localChanges": "secured",
+  "branch": null,
   "publishedCommit": "82a9fba504ce7e2f5c290a3e0ed6833c43964fb0",
   "stableIntegration": null,
   "production": {
@@ -133,7 +133,7 @@
     "path": "journal/000014-asx-technical-integration.json",
     "commit": "82a9fba504ce7e2f5c290a3e0ed6833c43964fb0"
   },
-  "releasedAt": "2026-11-15T03:03:03.575Z",
+  "releasedAt": "2026-11-16T06:01:59.081Z",
   "lastOwner": "Cody",
   "handoff": null
 }
