@@ -243,6 +243,8 @@ For partial scores, inspect the persisted availability weights and source indica
 
 ASX release recovery: under the development lock, verify exact Trading project, idle Technical run state and the installed `run_v1` definition against the accepted release before executing [`rollback-asx-technical-scheduler.sql`](../scripts/rollback-asx-technical-scheduler.sql). That restores the prior runner without deleting snapshots, indicators, scores or audits. Restore no observation data and do not replay the whole migration history. New private functions/tables may remain unused. Compare cron schedules and original Tiingo function digests before/after; reverting code is not a data rollback. A recovery operator must also keep the ASX methodology excluded from downstream admission until it is reviewed again.
 
+The ASX post-ingestion path is separate: restore its prior service-only hook with [`rollback-asx-history-technical-refresh.sql`](../scripts/rollback-asx-history-technical-refresh.sql) and redeploy complete worker-v8 source from `2228bc1c48c63b66cb8d7c9c131da4169517abed` with JWT verification retained. Check idle history/Technical work and exact installed definitions first. Restoring only the scheduled runner leaves the new worker hook active. A successful provider job with an ASX Technical warning means ingestion persisted but derived refresh needs diagnosis/recovery; do not repeat the provider fetch solely to clear that warning. Verify current score source matches and preserve prior snapshots.
+
 ### Opportunity Assessment
 
 Do not block or alter Opportunity conclusions merely because live quote data is stale. Opportunity must remain independent of short-term prices and Market/Technical conclusions.
