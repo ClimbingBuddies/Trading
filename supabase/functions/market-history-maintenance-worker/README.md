@@ -1,5 +1,19 @@
 # ASX Yahoo daily history
 
+## ASX Technical refresh follow-up — 16 November 2026
+
+After a successful Yahoo audit, the worker now calls the existing service-only
+Technical hook, routed to the separate ASX snapshot calculation. The returned
+`technical_refresh` status distinguishes succeeded, skipped, blocked and failed.
+A derived failure persists a warning on the successful ingestion job; it does
+not repeat the completed provider load. Scheduled Technical recovery and source
+matching remain required. Exact release version/readback evidence is recorded in
+the Decision Lab evidence log. Recovery: redeploy the complete version-8 source
+from commit `2228bc1c48c63b66cb8d7c9c131da4169517abed`, retaining JWT verification;
+restore the legacy hook with `scripts/rollback-asx-history-technical-refresh.sql`
+only under the coordination lock and reviewed live-definition checks. Preserve
+all observations, audits, snapshots and scores.
+
 ## Demand-driven daily release — version 8 deployed 15 November 2026
 
 Daily close requests use recent persisted Yahoo history plus a fourteen-day

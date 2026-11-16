@@ -1,4 +1,5 @@
 import { backfillYahoo } from "./yahoo.mjs";
+import { refreshAsxTechnical } from "./technical-refresh.mjs";
 import { JobStateUnconfirmed, persistJobState } from "./job-state.mjs";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.0";
 
@@ -46,8 +47,10 @@ Deno.serve(async(req)=>{
 
   if(inst.exchange_code==="ASX"){
    const result=await backfillYahoo(db,inst,job);
+   const technical_refresh=await refreshAsxTechnical(db,inst.id);
+   result.last_error=[result.last_error,technical_refresh.warning].filter(Boolean).join(" ")||null;
    await finish("succeeded",result);
-   return out({ok:true,status:"succeeded",job_id:job.id,symbol:inst.symbol,...result});
+   return out({ok:true,status:"succeeded",job_id:job.id,symbol:inst.symbol,...result,technical_refresh});
   }
 
   if(!token)throw new Error("Tiingo token missing");
