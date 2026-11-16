@@ -11,6 +11,12 @@ The scheduled unit runs two deterministic stages in order:
 
 The job does not fetch external market data. It consumes the latest canonical observations already persisted in Supabase. It does not read GPT Market Assessment, Opportunity Assessment or convergence outputs.
 
+The 16 November ASX extension adds a third stage, `technical_engine.refresh_asx_v1(null)`, under the same lock and transaction. It admits a verified Yahoo ASX/AUD window, computes `technical-engine-asx-v1` indicators and `technical-score-asx-v1` scores from one immutable source/cutoff snapshot, and records separate aggregate counts and blockers in `metadata.asx`. Existing run count/version columns continue to describe Tiingo. See the [ASX contract](../specifications/asx-technical-source-contract.md) and dated release evidence for installed state.
+
+Composite success requires all ASX source admissions to pass. Source blockers produce `failed/asx_source_blocked` with sanitized reason counts while retaining completed calculations; raised errors roll back both branches in the existing exception block. Scheduled deduplication requires the `tiingo-v1+asx-v1` pipeline contract, so an earlier Tiingo-only success cannot suppress ASX adoption. Existing retry limits and both cron expressions remain unchanged. Partial scores caused by unavailable indicator history are successful calculations, distinct from a blocked source.
+
+The private input-snapshot table preserves exact cutoff envelopes for replay; source hashes alone do not identify a weekly calculation cutoff. Trusted consumers must check `asx_score_source_matches_v1(score_id)` before using ASX results, and separately enforce market/session freshness. No ASX convergence/shared-outcome permission is implied. The rolling verified window intentionally excludes older adjustment generations and cannot supply weekly SMA-200.
+
 ## Frequency and timezone
 
 Supabase pg_cron is configured in GMT/UTC. Australia/Perth does not observe daylight saving time.

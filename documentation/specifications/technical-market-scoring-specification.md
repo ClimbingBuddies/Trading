@@ -5,6 +5,8 @@
 **Implementation task:** TECH-003  
 **Canonical indicator formulas:** [Technical Calculation Specification](technical-calculation-specification.md)
 
+The separate [ASX Yahoo contract](asx-technical-source-contract.md) defines `technical-score-asx-v1` using the same component weights with a verified bounded Yahoo input window. It does not substitute Yahoo inputs into this Tiingo v1 methodology or enable ASX convergence/shared outcomes.
+
 ## Purpose and independence boundary
 
 This specification converts the independent Technical Engine's persisted indicators into reproducible 0–100 market scores. It uses only `technical-engine-v1` indicator snapshots and canonical Tiingo daily price/volume observations.
