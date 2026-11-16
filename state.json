@@ -1,6 +1,6 @@
 {
   "protocol": 1,
-  "revision": 104,
+  "revision": 105,
   "status": "held",
   "owner": "Cody",
   "ownerId": "cody",
@@ -15,8 +15,8 @@
     "documentation"
   ],
   "startedAt": "2026-11-15T23:46:14.715Z",
-  "heartbeatAt": "2026-11-16T05:42:06.110Z",
-  "localChanges": "clean",
+  "heartbeatAt": "2026-11-16T05:46:14.823Z",
+  "localChanges": "unknown-editing",
   "branch": "codex/asx-technical-integration",
   "publishedCommit": "2228bc1c48c63b66cb8d7c9c131da4169517abed",
   "stableIntegration": null,
