@@ -355,6 +355,8 @@ If a required evidence layer is unavailable, report that explicitly rather than 
 
 ### History demand dispatch and correction recovery
 
+For ASX downstream diagnosis, run `scripts/asx-admission-review.sql` unchanged through the trusted operator connection. It returns aggregate Technical/AI quality and age screens plus calendar/configuration inventory, never executable SQL or an admission certificate. The controller readiness code `ASX_TECHNICAL_VERSION_UNSUPPORTED` identifies a valid stored ASX-method score that the existing v1 convergence cannot consume; do not relabel it, backfill Tiingo unnecessarily or bypass the blocker. Follow the [ASX downstream review](specifications/asx-downstream-admission-review.md). Independently inspect controller attempts when fresh AI is absent: a Technical success does not establish research, publication, evaluator or provider-entitlement acceptance.
+
 The source release in `scripts/market-history-demand-dispatch.sql` wraps only
 the existing history cron HTTP call with the installed claim's pending/due
 predicate. Apply only after exact command-hash/cadence checks pass. The paired

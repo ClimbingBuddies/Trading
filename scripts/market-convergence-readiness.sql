@@ -6,6 +6,13 @@ with params as materialized (
     (statement_timestamp() at time zone 'America/New_York')::date as logical_date
 ), selected as (
   select i.id as instrument_id, i.symbol, p.cutoff_at, p.logical_date,
+    (i.exchange_code = 'ASX' and exists (
+      select 1 from public.market_scores asx
+      where asx.instrument_id = i.id and asx.methodology_version = 'technical-score-asx-v1'
+        and asx.score_status in ('complete','partial')
+        and asx.overall_score between 0 and 100 and asx.confidence_score between 0 and 100
+        and asx.score_date <= p.logical_date and asx.calculated_at <= p.cutoff_at
+    )) as has_asx_technical_version,
     t.id as technical_score_id, t.score_date as technical_date,
     a.assessment_id as ai_assessment_id, a.assessment_date as ai_date,
     a.run_id as ai_run_id, r.status as ai_run_status, r.completed_at as ai_completed_at
@@ -45,6 +52,7 @@ with params as materialized (
       when exists (select 1 from public.market_convergence_runs running
         where running.status = 'running') then 'CONVERGENCE_RUNNING'
       when done.id is not null and done.fresh_pairs <> 1 then 'SAME_DAY_INCOMPLETE_SUCCESS'
+      when s.technical_score_id is null and s.has_asx_technical_version then 'ASX_TECHNICAL_VERSION_UNSUPPORTED'
       when s.technical_score_id is null then 'TECHNICAL_INPUT_MISSING'
       when s.ai_assessment_id is null then 'AI_INPUT_MISSING'
       when s.ai_run_status is null or s.ai_run_status not in ('succeeded', 'partial')

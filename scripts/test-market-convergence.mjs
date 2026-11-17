@@ -22,7 +22,7 @@ const blocked = async code => { const r = await row(); assert.equal(r.readiness,
 try {
   await db.exec(`
     create role anon; create role authenticated; create role service_role;
-    create table public.instruments(id uuid primary key, symbol text, is_active boolean);
+    create table public.instruments(id uuid primary key, symbol text, is_active boolean, exchange_code text default 'NYSE');
     create table public.market_scores(id bigint primary key, instrument_id uuid references public.instruments,
       score_date date, overall_score numeric, confidence_score numeric, methodology_version text,
       calculated_at timestamptz, score_status text);
@@ -157,6 +157,47 @@ try {
   await scenario('running global scope blocks overlap without producing invocation text', async () => {
     await db.exec(`insert into market_convergence_runs(logical_date,cutoff_at,execution_source,status) values('2026-11-09','${cutoff}','scheduled','running')`)
     await blocked('CONVERGENCE_RUNNING')
+  })
+  await scenario('valid ASX-only technical version is unsupported with no invocation or analytical writes', async () => {
+    await db.exec("update instruments set exchange_code='ASX';update market_scores set methodology_version='technical-score-asx-v1'")
+    await db.exec('set transaction read only')
+    const r=await blocked('ASX_TECHNICAL_VERSION_UNSUPPORTED')
+    assert.equal(r.technical_score_id,null)
+    assert.equal((await db.query('select count(*)::int n from market_convergence_runs')).rows[0].n,0)
+    assert.equal((await db.query('select count(*)::int n from market_convergence_assessments')).rows[0].n,0)
+  })
+  await scenario('ASX with existing canonical v1 stays eligible and retains its canonical lineage',async()=>{
+    await db.exec(`update instruments set exchange_code='ASX';insert into market_scores values
+      (2,'${id(1)}','2026-11-09',99,99,'technical-score-asx-v1','2026-11-09T23:59Z','complete')`)
+    const r=await row();assert.equal(r.readiness,'READY');assert.equal(r.technical_score_id,1)
+  })
+  await scenario('ASX with no technical score remains missing instead of unsupported',async()=>{
+    await db.exec("update instruments set exchange_code='ASX';delete from market_scores")
+    await blocked('TECHNICAL_INPUT_MISSING')
+  })
+  for(const [change,expected] of [
+    ["score_status='partial'",'ASX_TECHNICAL_VERSION_UNSUPPORTED'],
+    ["score_date='2020-01-01'",'ASX_TECHNICAL_VERSION_UNSUPPORTED'],
+    ["calculated_at='2026-11-10T00:00:00Z'",'ASX_TECHNICAL_VERSION_UNSUPPORTED'],
+    ["calculated_at='2026-11-10T00:00:00.000001Z'",'TECHNICAL_INPUT_MISSING'],
+    ["score_date='2026-11-10'",'TECHNICAL_INPUT_MISSING'],
+    ['score_date=null','TECHNICAL_INPUT_MISSING'],['calculated_at=null','TECHNICAL_INPUT_MISSING'],
+    ['overall_score=null','TECHNICAL_INPUT_MISSING'],['confidence_score=null','TECHNICAL_INPUT_MISSING'],
+    ['overall_score=101','TECHNICAL_INPUT_MISSING'],['confidence_score=-1','TECHNICAL_INPUT_MISSING'],
+    ["score_status='insufficient_input'",'TECHNICAL_INPUT_MISSING'],
+    ["methodology_version='technical-score-asx-v2'",'TECHNICAL_INPUT_MISSING']
+  ]) await scenario('ASX-only diagnostic boundary: '+change,async()=>{
+    await db.exec("update instruments set exchange_code='ASX';update market_scores set methodology_version='technical-score-asx-v1'")
+    await db.exec('update market_scores set '+change);await blocked(expected)
+  })
+  for(const venue of ["'NYSE'",'null']) await scenario('ASX-named score does not change non-ASX missing-input behavior: '+venue,async()=>{
+    await db.exec(`update instruments set exchange_code=${venue};update market_scores set methodology_version='technical-score-asx-v1'`)
+    await blocked('TECHNICAL_INPUT_MISSING')
+  })
+  await scenario('inactive and empty instrument inventory produce no invocation',async()=>{
+    await db.exec("update instruments set exchange_code='ASX',is_active=false")
+    assert.deepEqual(await rows(),[])
+    await db.exec('truncate instruments cascade');assert.deepEqual(await rows(),[])
   })
   console.log(`PASS: ${passed} isolated PostgreSQL scenarios; in-memory fixtures only. Concurrent-session advisory locking and hosted controller execution remain unverified.`)
 } finally { await db.close() }

@@ -51,6 +51,7 @@ The [canonical project plan](project-plan.md) controls authorised work. The [dev
 - [Technical Engine independence evidence](pipelines/technical-engine-independence.md)
 - [Market Convergence specification](specifications/market-convergence-specification.md)
 - [Market Convergence pipeline](pipelines/market-convergence-pipeline.md)
+- [ASX downstream admission review and implementation sequence](specifications/asx-downstream-admission-review.md)
 
 ## Long-term Opportunity research
 

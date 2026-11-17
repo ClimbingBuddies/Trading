@@ -180,6 +180,8 @@ CONV-002 established current-state persistence, CONV-003 added deterministic sou
 
 ## Existing-controller continuation — 10 November 2026
 
+The 17 November readiness clarification distinguishes a valid stored ASX Technical version from missing Technical input. `ASX_TECHNICAL_VERSION_UNSUPPORTED` means no eligible v1 Technical row was selected, but a valid `technical-score-asx-v1` row exists by the same logical-date/cutoff screen. It returns no executable SQL; do not retry v1, rename its source version or bypass this gate with a manual run. The v1 population implementation and all existing source/retry rules remain unchanged. Use the aggregate-only `scripts/asx-admission-review.sql` for the separate ASX prerequisite inventory and follow the [downstream admission review](../specifications/asx-downstream-admission-review.md). Shared recommendations do not consume convergence, and measured outcomes have additional calendar/provider/benchmark gates.
+
 Controller specification 1.10 adds a deterministic continuation after terminal Market work, before shared publication. This is source wiring for the existing single daily controller, not proof that its hosted task has loaded this revision. No new scheduler, trigger, schema or analytical methodology is introduced. Preserve the current native function implementation, including the retry-chain correction in `20260822052500_enforce_market_convergence_retry_chain.sql`.
 
 1. Retrieve this document and `scripts/market-convergence-readiness.sql` at the same exact commit as the controller. Confirm the existing controller's production-date and terminal-Market prerequisites; do not manufacture a missed or non-session run.
