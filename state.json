@@ -1,6 +1,6 @@
 {
   "protocol": 1,
-  "revision": 115,
+  "revision": 116,
   "status": "held",
   "owner": "Cody",
   "ownerId": "cody",
@@ -15,7 +15,7 @@
     "release-control"
   ],
   "startedAt": "2026-11-17T01:17:53.122Z",
-  "heartbeatAt": "2026-11-17T01:27:19.233Z",
+  "heartbeatAt": "2026-11-17T01:30:28.305Z",
   "localChanges": "clean",
   "branch": "codex/yahoo-decimal-normalization",
   "publishedCommit": "bd131e3e02fc551f17fb2c427c37e4e4da3b5e06",
@@ -128,7 +128,7 @@
   ],
   "adoption": "Other developer enrollment and pre-existing local work not yet verified",
   "baseCommit": "82a9fba504ce7e2f5c290a3e0ed6833c43964fb0",
-  "localHead": "82a9fba504ce7e2f5c290a3e0ed6833c43964fb0",
+  "localHead": "bd131e3e02fc551f17fb2c427c37e4e4da3b5e06",
   "lastJournal": null,
   "releasedAt": "2026-11-16T06:01:59.081Z",
   "lastOwner": "Cody",
