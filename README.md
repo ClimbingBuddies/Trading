@@ -1,21 +1,21 @@
-# DEVELOPMENT LOCK AVAILABLE
+# ACTIVE DEVELOPMENT — DO NOT MODIFY
 
-Status: free
+Status: held
 
-Owner: none
+Owner: Cody
 
-Task: none
+Task: Record operator-confirmed AI runtime setting and separate provider gates
 
-Started (UTC): 2026-11-17T02:04:43.571Z
+Started (UTC): 2026-11-17T23:53:51.772Z
 
-Heartbeat (UTC): 2026-11-17T02:43:07.591Z
+Heartbeat (UTC): 2026-11-17T23:53:51.772Z
 
-Branch: n/a
+Branch: codex/runtime-confirmation
 
-Local changes at last observation: secured
+Local changes at last observation: clean
 
-Published commit: 9e12813372fe72920a8b15626e285ccf54c70093
+Published commit: none verified
 
-State revision: 138
+State revision: 139
 
 Read state.json before acting. A stale heartbeat is never permission to take over. This branch is authoritative; the issue is a display only. Do not merge this branch into application branches.
