@@ -1,6 +1,6 @@
 {
   "protocol": 1,
-  "revision": 123,
+  "revision": 124,
   "status": "held",
   "owner": "Cody",
   "ownerId": "cody",
@@ -14,10 +14,10 @@
     "documentation"
   ],
   "startedAt": "2026-11-17T01:41:45.285Z",
-  "heartbeatAt": "2026-11-17T01:56:02.185Z",
-  "localChanges": "unpublished",
+  "heartbeatAt": "2026-11-17T01:57:05.023Z",
+  "localChanges": "clean",
   "branch": "codex/asx-convergence-review",
-  "publishedCommit": null,
+  "publishedCommit": "15dd671b5dbb3323bd549acc5709dcfd5adaf651",
   "stableIntegration": null,
   "production": {
     "commit": "84a40702f4beaa7f11359772682b36d5831d23c1",
