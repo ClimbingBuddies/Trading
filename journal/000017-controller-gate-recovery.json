@@ -1,0 +1,79 @@
+{
+  "description": "Repaired shared controller preparation and history queue timing; PR61 merged 6aeb1b10f101d2cda6469b8c76552d373e67e456 and verified deployment receipt PR62 merged d359611a040e88e84685778f827db5fb1b347f2c.",
+  "databaseAndApi": "Trading glvbqcplgjdfgjyknzsa migration align_daily_history_with_controller hosted version20261117023751. Five function hashes/ACLs and nine cron entries verified. ASX22:15 Perth, non-ASX06:30, Technical08:00/08:05. Quote four-hour windows unchanged. No provider fetch or analytical writes.",
+  "decisions": [
+    "Prioritize active open/watched instruments and prepare exact source receipts before a new frozen cutoff",
+    "Preserve failed/quarantined jobs, original history, original run cutoffs and account-specific provider gates"
+  ],
+  "risks": [
+    "Native multi-session contention not exercised by single-backend PGlite",
+    "Scheduled adoption and account-specific Tiingo rights remain unverified"
+  ],
+  "tests": [
+    {
+      "command": "node scripts/test-daily-reviewer-preflight.mjs",
+      "result": "passed",
+      "scope": "actual shared preflight SQL in PGlite; passed:33 scenarios/80 assertions; independent and lead"
+    },
+    {
+      "command": "node scripts/test-controller-history-queue.mjs",
+      "result": "passed",
+      "scope": "actual migration/paired rollback SQL; mocked cron; passed:46 scenarios/221 assertions; independent and lead"
+    },
+    {
+      "command": "Independent implementation and receipt review",
+      "result": "passed",
+      "scope": "accepted SQL hashes and final two-file deployment receipt; passed"
+    },
+    {
+      "command": "Hosted readback",
+      "result": "passed",
+      "scope": "function hashes/grants, schedule hashes, unchanged history status counts, idle queue, unchanged advisor counts; passed"
+    }
+  ],
+  "outstanding": [
+    "Observe first new ASX enqueue17Nov22:15 Perth and next morning controller/publication/evaluation/tracker receipts",
+    "Verify configured Tiingo account plan and inference/sharing scope; public pricing screenshot is not account proof",
+    "ASX Sydney calendar/session, separately versioned convergence and compatible benchmark/evaluator review can start independently",
+    "Full unattended workflow and observation-week acceptance remain open"
+  ],
+  "recovery": "scripts/rollback-controller-history-queue.sql SHA256 A11868E4B1F58C855BA19DA717A96EF95C9719F67E0CD5FF7F1D7DB6D25DB4DC only at its guarded safe UTC cycle boundary with verified idle. Preserves jobs/data; do not infer database rollback from code revert. All local feature heads verified published, one worktree clean, no stashes; ignored files are existing dependencies/build/generated assets and CLI cache.",
+  "sequence": 17,
+  "timestamp": "2026-11-17T02:42:50.815Z",
+  "author": "Cody",
+  "taskId": "controller-gate-recovery",
+  "commit": "9e12813372fe72920a8b15626e285ccf54c70093",
+  "baseCommit": "15dd671b5dbb3323bd549acc5709dcfd5adaf651",
+  "branch": "codex/controller-gate-recovery",
+  "files": [
+    "automation/daily-market-assessment.md",
+    "automation/daily-reviewer-playbook.md",
+    "automation/daily-trading-controller.md",
+    "documentation/decision-lab-evidence-log.md",
+    "documentation/decision-lab-project-plan.md",
+    "documentation/operational-runbook.md",
+    "documentation/pipelines/historical-market-data-backfill.md",
+    "documentation/pipelines/technical-engine-operations.md",
+    "documentation/supabase-data-model.md",
+    "documentation/trading-pipeline-reliability.md",
+    "scripts/daily-reviewer-preflight.sql",
+    "scripts/history-queue-baseline.sql",
+    "scripts/rollback-controller-history-queue.sql",
+    "scripts/test-controller-history-queue.mjs",
+    "scripts/test-daily-reviewer-preflight.mjs",
+    "supabase/functions/market-history-maintenance-worker/README.md",
+    "supabase/migrations/20261117021821_align_daily_history_with_controller.sql"
+  ],
+  "checkpoints": {
+    "localWorking": "9e12813372fe72920a8b15626e285ccf54c70093",
+    "locallyTested": "9e12813372fe72920a8b15626e285ccf54c70093",
+    "remotelyPublished": "9e12813372fe72920a8b15626e285ccf54c70093",
+    "approvedStableIntegration": null,
+    "production": {
+      "commit": "84a40702f4beaa7f11359772682b36d5831d23c1",
+      "deployment": "dpl_Faea5XSbZDdFqXmhU2E25xfHWdPg",
+      "verification": "observed-ready-not-revalidated"
+    }
+  },
+  "evidenceNote": "Test results are explicit author attestations; stable integration requires separate approval and evidence."
+}

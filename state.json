@@ -1,6 +1,6 @@
 {
   "protocol": 1,
-  "revision": 136,
+  "revision": 137,
   "status": "held",
   "owner": "Cody",
   "ownerId": "cody",
@@ -16,7 +16,7 @@
     "documentation"
   ],
   "startedAt": "2026-11-17T02:04:43.571Z",
-  "heartbeatAt": "2026-11-17T02:40:31.796Z",
+  "heartbeatAt": "2026-11-17T02:42:50.815Z",
   "localChanges": "clean",
   "branch": "codex/controller-gate-recovery",
   "publishedCommit": "9e12813372fe72920a8b15626e285ccf54c70093",
@@ -139,12 +139,22 @@
       "taskId": "asx-convergence-review",
       "commit": "15dd671b5dbb3323bd549acc5709dcfd5adaf651",
       "description": "Completed ASX downstream review and merged safe diagnostics in PR60; identified immediate controller entitlement-gate review priority"
+    },
+    {
+      "sequence": 17,
+      "path": "journal/000017-controller-gate-recovery.json",
+      "taskId": "controller-gate-recovery",
+      "commit": "9e12813372fe72920a8b15626e285ccf54c70093",
+      "description": "Repaired shared controller preparation and history queue timing; PR61 merged 6aeb1b10f101d2cda6469b8c76552d373e67e456 and verified deployment receipt PR62 merged d359611a040e88e846"
     }
   ],
   "adoption": "Other developer enrollment and pre-existing local work not yet verified",
   "baseCommit": "15dd671b5dbb3323bd549acc5709dcfd5adaf651",
   "localHead": "347564be4d5e4ef361936df44500eb6b781374e6",
-  "lastJournal": null,
+  "lastJournal": {
+    "path": "journal/000017-controller-gate-recovery.json",
+    "commit": "9e12813372fe72920a8b15626e285ccf54c70093"
+  },
   "releasedAt": "2026-11-17T02:00:13.765Z",
   "lastOwner": "Cody",
   "handoff": null
