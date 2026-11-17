@@ -1,5 +1,17 @@
 # ASX Yahoo daily history
 
+## Decimal comparison follow-up — 17 November 2026
+
+`storage-decimal.mjs` matches PostgreSQL price scale 8 and volume scale 4 using
+decimal integer arithmetic, only when comparing provider values against stored
+history. Rounding alone no longer triggers wider correction requests. Genuine
+stored-value revisions, corporate actions, confirmed gaps, strict cross-response
+conflicts and existing unresolved corrections retain their checks. Raw payloads
+and stored history are not rewritten by the release. New audits carry
+`storage_comparison_version=1`. See the canonical historical pipeline and dated
+evidence log for acceptance/deployment state. Recovery deploys all worker-v9
+runtime files from `94b61f59fa2fd6da3fa1524c055782016fc19240`, retaining JWT checks.
+
 ## ASX Technical refresh follow-up — 16 November 2026
 
 After a successful Yahoo audit, the worker now calls the existing service-only

@@ -377,6 +377,15 @@ daily closes, but retains an explicit warning and unresolved repair metadata.
 Review the provider-confirmed missing/revised dates.
 Never fabricate prices, reopen entitlement holds, or reset all historical failures.
 
+For audits with `storage_comparison_version=1`, overlap comparisons use exact
+price/volume storage scales (8/4 decimal places). Inspect material differences
+at those scales; full provider precision differing from stored rounding is not
+alone evidence of a correction. Provider-to-provider conflicts remain strict.
+Older unresolved corrections are retained, not automatically cleared. Recover
+this worker-only release with the complete v9 runtime at
+`94b61f59fa2fd6da3fa1524c055782016fc19240`; retain JWT verification, observations,
+audit history, queue receipts and the unchanged four-hour quote schedule.
+
 - `documentation/pipelines/market-data-pipeline.md`
 - `documentation/pipelines/market-assessment-pipeline.md`
 - `automation/daily-market-assessment.md`

@@ -1,3 +1,5 @@
+import { storageDecimal } from './storage-decimal.mjs';
+
 const FIELDS = ['open', 'high', 'low', 'close', 'adjusted_close', 'volume'];
 const dateOnly = value => typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value) &&
   Number.isFinite(Date.parse(value + 'T00:00:00Z')) && new Date(value + 'T00:00:00Z').toISOString().slice(0, 10) === value;
@@ -41,7 +43,7 @@ export function assessDailyRevision(window, persisted, response, prior = {}) {
   const stored = new Map(persisted.map(row => [String(row.observed_at ?? row.date).slice(0, 10), row]));
   const changed = response.rows.flatMap(row => {
     const previous = stored.get(row.date);
-    const fields = previous ? FIELDS.filter(field => !Object.is(numeric(row[field]), numeric(previous[field]))) : [];
+    const fields = previous ? FIELDS.filter(field => storageDecimal(row[field], field) !== storageDecimal(previous[field], field)) : [];
     return fields.length ? [{ date: row.date, fields, previous: Object.fromEntries(fields.map(field => [field, numeric(previous[field])])), current: Object.fromEntries(fields.map(field => [field, numeric(row[field])])) }] : [];
   });
   const priorEvents = prior.event_manifest ?? yahooEventManifest(prior.events ?? {}, window.horizonStart, window.end);
