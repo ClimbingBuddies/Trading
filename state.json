@@ -1,6 +1,6 @@
 {
   "protocol": 1,
-  "revision": 135,
+  "revision": 136,
   "status": "held",
   "owner": "Cody",
   "ownerId": "cody",
@@ -16,10 +16,10 @@
     "documentation"
   ],
   "startedAt": "2026-11-17T02:04:43.571Z",
-  "heartbeatAt": "2026-11-17T02:38:30.398Z",
-  "localChanges": "unknown-editing",
+  "heartbeatAt": "2026-11-17T02:40:31.796Z",
+  "localChanges": "clean",
   "branch": "codex/controller-gate-recovery",
-  "publishedCommit": "347564be4d5e4ef361936df44500eb6b781374e6",
+  "publishedCommit": "9e12813372fe72920a8b15626e285ccf54c70093",
   "stableIntegration": null,
   "production": {
     "commit": "84a40702f4beaa7f11359772682b36d5831d23c1",
