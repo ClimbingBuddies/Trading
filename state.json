@@ -1,24 +1,23 @@
 {
   "protocol": 1,
-  "revision": 119,
-  "status": "free",
-  "owner": null,
-  "ownerId": null,
-  "cloneId": null,
-  "acquisitionId": null,
-  "taskId": null,
-  "task": null,
+  "revision": 120,
+  "status": "held",
+  "owner": "Cody",
+  "ownerId": "cody",
+  "cloneId": "a70b247a-5a71-4c2c-acf8-986bda831196",
+  "acquisitionId": "c2b52bb7-9e54-42ff-8d1b-78dbc691bb0a",
+  "taskId": "asx-convergence-review",
+  "task": "Review ASX convergence and measurable-outcome admission",
   "scope": [
-    "history-worker",
+    "convergence-readiness",
     "tests",
-    "documentation",
-    "release-control"
+    "documentation"
   ],
-  "startedAt": "2026-11-17T01:17:53.122Z",
-  "heartbeatAt": "2026-11-17T01:34:56.205Z",
-  "localChanges": "secured",
-  "branch": null,
-  "publishedCommit": "0664b4a1820e1d9fa9bf22dbee6540da8efc2d3b",
+  "startedAt": "2026-11-17T01:41:45.285Z",
+  "heartbeatAt": "2026-11-17T01:41:45.285Z",
+  "localChanges": "clean",
+  "branch": "codex/asx-convergence-review",
+  "publishedCommit": null,
   "stableIntegration": null,
   "production": {
     "commit": "84a40702f4beaa7f11359772682b36d5831d23c1",
@@ -134,12 +133,9 @@
     }
   ],
   "adoption": "Other developer enrollment and pre-existing local work not yet verified",
-  "baseCommit": "82a9fba504ce7e2f5c290a3e0ed6833c43964fb0",
+  "baseCommit": "0664b4a1820e1d9fa9bf22dbee6540da8efc2d3b",
   "localHead": "bd131e3e02fc551f17fb2c427c37e4e4da3b5e06",
-  "lastJournal": {
-    "path": "journal/000015-yahoo-decimal-normalization.json",
-    "commit": "0664b4a1820e1d9fa9bf22dbee6540da8efc2d3b"
-  },
+  "lastJournal": null,
   "releasedAt": "2026-11-17T01:34:56.205Z",
   "lastOwner": "Cody",
   "handoff": null
