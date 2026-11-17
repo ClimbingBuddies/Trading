@@ -1,21 +1,21 @@
 {
   "protocol": 1,
-  "revision": 142,
-  "status": "held",
-  "owner": "Cody",
-  "ownerId": "cody",
-  "cloneId": "a70b247a-5a71-4c2c-acf8-986bda831196",
-  "acquisitionId": "afbb8856-ee78-404a-9593-5a8a24ad2609",
-  "taskId": "runtime-confirmation",
-  "task": "Record operator-confirmed AI runtime setting and separate provider gates",
+  "revision": 143,
+  "status": "free",
+  "owner": null,
+  "ownerId": null,
+  "cloneId": null,
+  "acquisitionId": null,
+  "taskId": null,
+  "task": null,
   "scope": [
     "automation",
     "documentation"
   ],
   "startedAt": "2026-11-17T23:53:51.772Z",
-  "heartbeatAt": "2026-11-17T23:58:42.087Z",
-  "localChanges": "clean",
-  "branch": "codex/runtime-confirmation",
+  "heartbeatAt": "2026-11-17T23:58:57.750Z",
+  "localChanges": "secured",
+  "branch": null,
   "publishedCommit": "54ac8c93574de1bd07c2d34bf4cc940c141e5979",
   "stableIntegration": null,
   "production": {
@@ -159,7 +159,7 @@
     "path": "journal/000018-runtime-confirmation.json",
     "commit": "54ac8c93574de1bd07c2d34bf4cc940c141e5979"
   },
-  "releasedAt": "2026-11-17T02:43:07.591Z",
+  "releasedAt": "2026-11-17T23:58:57.750Z",
   "lastOwner": "Cody",
   "handoff": null
 }
