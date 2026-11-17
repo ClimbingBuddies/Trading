@@ -1,21 +1,21 @@
-# DEVELOPMENT LOCK AVAILABLE
+# ACTIVE DEVELOPMENT — DO NOT MODIFY
 
-Status: free
+Status: held
 
-Owner: none
+Owner: Cody
 
-Task: none
+Task: Normalize Yahoo stored-value comparisons without hiding revisions
 
-Started (UTC): 2026-11-15T23:46:14.715Z
+Started (UTC): 2026-11-17T01:17:53.122Z
 
-Heartbeat (UTC): 2026-11-16T06:01:59.081Z
+Heartbeat (UTC): 2026-11-17T01:17:53.122Z
 
-Branch: n/a
+Branch: codex/yahoo-decimal-normalization
 
-Local changes at last observation: secured
+Local changes at last observation: clean
 
-Published commit: 82a9fba504ce7e2f5c290a3e0ed6833c43964fb0
+Published commit: none verified
 
-State revision: 111
+State revision: 112
 
 Read state.json before acting. A stale heartbeat is never permission to take over. This branch is authoritative; the issue is a display only. Do not merge this branch into application branches.

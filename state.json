@@ -1,24 +1,23 @@
 {
   "protocol": 1,
-  "revision": 111,
-  "status": "free",
-  "owner": null,
-  "ownerId": null,
-  "cloneId": null,
-  "acquisitionId": null,
-  "taskId": null,
-  "task": null,
+  "revision": 112,
+  "status": "held",
+  "owner": "Cody",
+  "ownerId": "cody",
+  "cloneId": "a70b247a-5a71-4c2c-acf8-986bda831196",
+  "acquisitionId": "703b161f-eb99-4d07-b814-d32619687334",
+  "taskId": "yahoo-decimal-normalization",
+  "task": "Normalize Yahoo stored-value comparisons without hiding revisions",
   "scope": [
-    "technical-engine",
-    "history-refresh-hook",
+    "history-worker",
     "tests",
     "documentation"
   ],
-  "startedAt": "2026-11-15T23:46:14.715Z",
-  "heartbeatAt": "2026-11-16T06:01:59.081Z",
-  "localChanges": "secured",
-  "branch": null,
-  "publishedCommit": "82a9fba504ce7e2f5c290a3e0ed6833c43964fb0",
+  "startedAt": "2026-11-17T01:17:53.122Z",
+  "heartbeatAt": "2026-11-17T01:17:53.122Z",
+  "localChanges": "clean",
+  "branch": "codex/yahoo-decimal-normalization",
+  "publishedCommit": null,
   "stableIntegration": null,
   "production": {
     "commit": "84a40702f4beaa7f11359772682b36d5831d23c1",
@@ -127,12 +126,9 @@
     }
   ],
   "adoption": "Other developer enrollment and pre-existing local work not yet verified",
-  "baseCommit": "0edd77f029dd4e5e582352cc35d4fc142fd1c477",
+  "baseCommit": "82a9fba504ce7e2f5c290a3e0ed6833c43964fb0",
   "localHead": "c2a7d03408f265082e6ebda80e4628f236c800b8",
-  "lastJournal": {
-    "path": "journal/000014-asx-technical-integration.json",
-    "commit": "82a9fba504ce7e2f5c290a3e0ed6833c43964fb0"
-  },
+  "lastJournal": null,
   "releasedAt": "2026-11-16T06:01:59.081Z",
   "lastOwner": "Cody",
   "handoff": null
