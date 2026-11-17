@@ -1,13 +1,13 @@
 {
   "protocol": 1,
-  "revision": 137,
-  "status": "held",
-  "owner": "Cody",
-  "ownerId": "cody",
-  "cloneId": "a70b247a-5a71-4c2c-acf8-986bda831196",
-  "acquisitionId": "f2c809a5-8915-43fb-872d-40cd8921f916",
-  "taskId": "controller-gate-recovery",
-  "task": "Repair shared controller preparation and daily history queue timing",
+  "revision": 138,
+  "status": "free",
+  "owner": null,
+  "ownerId": null,
+  "cloneId": null,
+  "acquisitionId": null,
+  "taskId": null,
+  "task": null,
   "scope": [
     "controller",
     "history-queue",
@@ -16,9 +16,9 @@
     "documentation"
   ],
   "startedAt": "2026-11-17T02:04:43.571Z",
-  "heartbeatAt": "2026-11-17T02:42:50.815Z",
-  "localChanges": "clean",
-  "branch": "codex/controller-gate-recovery",
+  "heartbeatAt": "2026-11-17T02:43:07.591Z",
+  "localChanges": "secured",
+  "branch": null,
   "publishedCommit": "9e12813372fe72920a8b15626e285ccf54c70093",
   "stableIntegration": null,
   "production": {
@@ -155,7 +155,7 @@
     "path": "journal/000017-controller-gate-recovery.json",
     "commit": "9e12813372fe72920a8b15626e285ccf54c70093"
   },
-  "releasedAt": "2026-11-17T02:00:13.765Z",
+  "releasedAt": "2026-11-17T02:43:07.591Z",
   "lastOwner": "Cody",
   "handoff": null
 }
