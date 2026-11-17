@@ -1,22 +1,22 @@
 {
   "protocol": 1,
-  "revision": 125,
-  "status": "held",
-  "owner": "Cody",
-  "ownerId": "cody",
-  "cloneId": "a70b247a-5a71-4c2c-acf8-986bda831196",
-  "acquisitionId": "c2b52bb7-9e54-42ff-8d1b-78dbc691bb0a",
-  "taskId": "asx-convergence-review",
-  "task": "Review ASX convergence and measurable-outcome admission",
+  "revision": 126,
+  "status": "free",
+  "owner": null,
+  "ownerId": null,
+  "cloneId": null,
+  "acquisitionId": null,
+  "taskId": null,
+  "task": null,
   "scope": [
     "convergence-readiness",
     "tests",
     "documentation"
   ],
   "startedAt": "2026-11-17T01:41:45.285Z",
-  "heartbeatAt": "2026-11-17T01:59:51.876Z",
-  "localChanges": "clean",
-  "branch": "codex/asx-convergence-review",
+  "heartbeatAt": "2026-11-17T02:00:13.765Z",
+  "localChanges": "secured",
+  "branch": null,
   "publishedCommit": "15dd671b5dbb3323bd549acc5709dcfd5adaf651",
   "stableIntegration": null,
   "production": {
@@ -146,7 +146,7 @@
     "path": "journal/000016-asx-convergence-review.json",
     "commit": "15dd671b5dbb3323bd549acc5709dcfd5adaf651"
   },
-  "releasedAt": "2026-11-17T01:34:56.205Z",
+  "releasedAt": "2026-11-17T02:00:13.765Z",
   "lastOwner": "Cody",
   "handoff": null
 }
