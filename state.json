@@ -1,6 +1,6 @@
 {
   "protocol": 1,
-  "revision": 124,
+  "revision": 125,
   "status": "held",
   "owner": "Cody",
   "ownerId": "cody",
@@ -14,7 +14,7 @@
     "documentation"
   ],
   "startedAt": "2026-11-17T01:41:45.285Z",
-  "heartbeatAt": "2026-11-17T01:57:05.023Z",
+  "heartbeatAt": "2026-11-17T01:59:51.876Z",
   "localChanges": "clean",
   "branch": "codex/asx-convergence-review",
   "publishedCommit": "15dd671b5dbb3323bd549acc5709dcfd5adaf651",
@@ -130,12 +130,22 @@
       "taskId": "yahoo-decimal-normalization",
       "commit": "0664b4a1820e1d9fa9bf22dbee6540da8efc2d3b",
       "description": "Fixed Yahoo false revision detection from decimal storage rounding; merged, deployed and verified worker v10"
+    },
+    {
+      "sequence": 16,
+      "path": "journal/000016-asx-convergence-review.json",
+      "taskId": "asx-convergence-review",
+      "commit": "15dd671b5dbb3323bd549acc5709dcfd5adaf651",
+      "description": "Completed ASX downstream review and merged safe diagnostics in PR60; identified immediate controller entitlement-gate review priority"
     }
   ],
   "adoption": "Other developer enrollment and pre-existing local work not yet verified",
   "baseCommit": "0664b4a1820e1d9fa9bf22dbee6540da8efc2d3b",
   "localHead": "bbe2a085fc4c7d3e70dc41e811463f1b1658ee95",
-  "lastJournal": null,
+  "lastJournal": {
+    "path": "journal/000016-asx-convergence-review.json",
+    "commit": "15dd671b5dbb3323bd549acc5709dcfd5adaf651"
+  },
   "releasedAt": "2026-11-17T01:34:56.205Z",
   "lastOwner": "Cody",
   "handoff": null

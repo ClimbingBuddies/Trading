@@ -1,0 +1,72 @@
+{
+  "description": "Completed ASX downstream review and merged safe diagnostics in PR60; identified immediate controller entitlement-gate review priority",
+  "databaseAndApi": "Read-only aggregate/function inspection only; no schema, data, configuration, schedule or deployed runtime changed",
+  "decisions": [
+    "Preserve immutable convergence v1; ASX source eligibility requires a separate methodology",
+    "Keep shared independent recommendations separate from convergence",
+    "Prioritize recorded 17 November Market 3/59 and publication/evaluation blockers; no contractual prohibition inferred"
+  ],
+  "risks": [
+    "ASX sessions, source attribution, benchmark/evaluator admission and full unattended acceptance remain incomplete",
+    "Aggregate age/source checks are diagnostic, not admission certificates"
+  ],
+  "tests": [
+    {
+      "command": "node scripts/test-market-convergence.mjs",
+      "result": "passed",
+      "scope": "Existing convergence selection/retries plus ASX unsupported-version diagnostics. Evidence: passed: 45 actual-SQL PGlite scenarios, independent tester and lead rerun"
+    },
+    {
+      "command": "node scripts/test-asx-admission-review.mjs",
+      "result": "passed",
+      "scope": "Read-only aggregate SQL, cutoff/quality/independence/terminal guards, synthetic source-matcher boundary. Evidence: passed: 44 scenarios / 64 assertions, independent tester and lead rerun"
+    },
+    {
+      "command": "Independent implementation and final documentation review",
+      "result": "passed",
+      "scope": "Correctness, lineage, privacy, immutable methodology and truthful next priorities. Evidence: PASS on reviewed SQL hashes and final docs"
+    },
+    {
+      "command": "git diff --check; verified remote integration tree",
+      "result": "passed",
+      "scope": "PR60 publication/integration. Evidence: passed; merge baa57dee3e3d8eceeb652266d0ceb39cc0e4369b tree equals reviewed feature 15dd671b5dbb3323bd549acc5709dcfd5adaf651"
+    }
+  ],
+  "outstanding": [
+    "Next review can start immediately: Tiingo entitlement evidence and controller gates",
+    "ASX prospective calendar/attribution, separately versioned convergence, compatible benchmark/evaluator work",
+    "Genuine v10 processing receipt, tracker/full unattended acceptance and observation week remain separate"
+  ],
+  "recovery": "Revert PR60 source commit; no database rollback or data/history deletion. Clean single worktree, no stashes, all eleven local feature branches match remote heads. Ignored assets are pre-existing generated guide images, node_modules, .next and Supabase CLI version cache; untouched by this task. Receipt issue34 comment6935549081.",
+  "sequence": 16,
+  "timestamp": "2026-11-17T01:59:51.876Z",
+  "author": "Cody",
+  "taskId": "asx-convergence-review",
+  "commit": "15dd671b5dbb3323bd549acc5709dcfd5adaf651",
+  "baseCommit": "0664b4a1820e1d9fa9bf22dbee6540da8efc2d3b",
+  "branch": "codex/asx-convergence-review",
+  "files": [
+    "documentation/README.md",
+    "documentation/decision-lab-evidence-log.md",
+    "documentation/decision-lab-project-plan.md",
+    "documentation/operational-runbook.md",
+    "documentation/pipelines/market-convergence-pipeline.md",
+    "documentation/specifications/asx-downstream-admission-review.md",
+    "scripts/asx-admission-review.sql",
+    "scripts/market-convergence-readiness.sql",
+    "scripts/test-asx-admission-review.mjs",
+    "scripts/test-market-convergence.mjs"
+  ],
+  "checkpoints": {
+    "localWorking": "15dd671b5dbb3323bd549acc5709dcfd5adaf651",
+    "locallyTested": "15dd671b5dbb3323bd549acc5709dcfd5adaf651",
+    "remotelyPublished": "15dd671b5dbb3323bd549acc5709dcfd5adaf651",
+    "approvedStableIntegration": null,
+    "production": {
+      "commit": "84a40702f4beaa7f11359772682b36d5831d23c1",
+      "deployment": "dpl_Faea5XSbZDdFqXmhU2E25xfHWdPg",
+      "verification": "observed-ready-not-revalidated"
+    }
+  },
+  "evidenceNote": "Test results are explicit author attestations; stable integration requires separate approval and evidence."
+}
