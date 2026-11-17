@@ -25,8 +25,10 @@ Supabase pg_cron is configured in GMT/UTC. Australia/Perth does not observe dayl
 
 | Job | Cron expression | UTC | Australia/Perth | Purpose |
 |---|---:|---:|---:|---|
-| trading-technical-engine-daily-0715-awst | 15 23 * * * | 23:15 daily | 07:15 next calendar day | Primary full-universe indicator and score refresh |
-| trading-technical-engine-retry-0745-awst | 45 23 * * * | 23:45 daily | 07:45 next calendar day | Retry the latest eligible failed attempt for that Perth operating date |
+| trading-technical-engine-daily-0715-awst | 0 0 * * * | 00:00 daily | 08:00 same calendar day | Primary full-universe indicator and score refresh |
+| trading-technical-engine-retry-0745-awst | 5 0 * * * | 00:05 daily | 08:05 same calendar day | Retry the latest eligible failed attempt for that Perth operating date |
+
+The 17 November queue-alignment migration preserves these historical cron names/IDs and commands while moving their execution later. ASX history is queued after Sydney midnight; non-ASX active jobs receive priority at the existing two-minute dispatch pace. These times do not certify completed ingestion: the controller must still inspect actual source/session readiness and preserve frozen cutoffs. Check the release receipt for installed state and the operational runbook for paired recovery.
 
 The run log stores scheduled_for as the logical Australia/Perth operating date. A second successful scheduled attempt for the same operating date is recorded as skipped rather than recalculated.
 
@@ -63,7 +65,7 @@ Indicator and score work runs in an inner exception block. If either stage fails
 
 ## Retry policy
 
-The 07:45 AWST job calls retry_latest_failed_v1(). It returns without creating a row when no eligible failed attempt exists.
+The 08:05 AWST retry job calls retry_latest_failed_v1(). It returns without creating a row when no eligible failed attempt exists.
 
 A retry:
 

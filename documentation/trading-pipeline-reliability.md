@@ -1,6 +1,6 @@
 # Daily Trading reliability and recovery
 
-Version 2, 7 October 2026. Applies to the single existing local trading controller.
+Version 3, 17 November 2026. Applies to the single existing hosted Trading controller in Cody's account.
 
 ## Independent monitor
 
@@ -22,7 +22,7 @@ If an independent earlier stage exhausts its retry budget, preserve its blocker 
 
 The monitor verifies a successful complete Opportunity receipt; terminal scheduled external research; fresh independent scheduled Market Assessments for the target NY date; assessment usage in the immutable shared publication registry; and successful per-call evaluation receipts from the accepted scheduled evaluator revision after publication. It does not trust the task's active setting or a completion message. WAIT is a valid published call. Zero new BUY calls can be healthy.
 
-Coverage limitations remain PARTIAL, never COMPLETE. Calendar expiry warnings begin 48 hours before expiry. The browser warns if monitor evidence is missing, malformed, from the future or more than 30 minutes old. Local research still depends on the computer/app, tools, quota and correct Trading project folder; the cloud monitor detects resulting silence but does not remove that dependency.
+Coverage limitations remain PARTIAL, never COMPLETE. Calendar expiry warnings begin 48 hours before expiry. The browser warns if monitor evidence is missing, malformed, from the future or more than 30 minutes old. Hosted research depends on its account's tools, permissions, quota and fresh repository sources; the database monitor independently detects silence. It does not require the operator's local computer to remain on.
 
 ## Recovery
 

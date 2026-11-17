@@ -1,7 +1,7 @@
 # Daily Trading Market Assessment
 
-**Specification version:** 1.1  
-**Last updated:** 24 August 2026  
+**Specification version:** 1.2 (shared evidence preparation; analytical methodology unchanged)
+**Last updated:** 17 November 2026
 **System:** Discover Boulders Markets / Trading  
 **Supabase project:** `glvbqcplgjdfgjyknzsa`
 
@@ -111,6 +111,8 @@ If the assessment cannot safely proceed, report the reason clearly and do not fa
 
 ## 4. Prepare or resume today's idempotent run
 
+Before preparing a **new** run, complete the shared controller's source preparation for watched equities that will use research-only publication. Retrieve `automation/daily-shared-decision-lab.md`, verify original direct sources and commit required source receipts before the run freezes its cutoff. Assessment evidence must link to exact matching pre-cutoff receipts. Atomic opinions must meet their own observed/publication cutoffs. Later verification cannot repair an earlier frozen cutoff. The absence of measurable benchmark configuration does not itself prohibit otherwise valid independent research; retain its separate publication limitation.
+
 Use the existing orchestration function:
 
 ```sql
@@ -155,6 +157,8 @@ Query:
 - existing `public.gpt_market_assessments` rows for the current `run_id`.
 
 Process only instruments that do not yet have a valid assessment row for that run.
+
+Process eligible open shared-call instruments first, then watched instruments, then the remaining active universe, with deterministic instrument-ID ordering within each group. Shared scope supplies priority only: never read personal notes, private decisions or existing call conclusions as research evidence. Record one concrete reason and recovery action for every remaining instrument; do not silently drop unsupported venues or stop after an arbitrary small sample. The canonical controller budget still applies.
 
 If the run is interrupted, the next invocation must resume the same daily run and process only the missing instruments.
 
@@ -275,7 +279,7 @@ Multiple URLs do not automatically mean independent evidence: syndicated copies 
 
 On retry, do not blindly append duplicate evidence. Reuse, replace or deduplicate evidence associated with the assessment as appropriate.
 
-Where an external source has materially changed since the earlier partial run, prefer the current verified evidence and make the updated conclusion clear.
+On resume, use only source versions demonstrably available by the original frozen cutoff. A materially changed source verified later belongs to the next legitimate run; do not replace earlier evidence with it, move the cutoff or backdate availability. If no eligible evidence remains, report that instrument as blocked.
 
 ---
 

@@ -104,8 +104,14 @@ Yahoo remains an additional external data source, even though no API key is need
 
 - The database checks every two minutes; the demand-dispatch release invokes the
   worker only for pending, due work. Each invocation claims one queue job.
-- Existing daily enqueue runs at 22:30 UTC (06:30 Perth), covering active instruments
-  and watchlist instruments. No extra schedule was created.
+- The reviewed 17 November queue repair splits the existing active/watchlist/Opportunity
+  support universe: ASX at 14:15 UTC (22:15 Perth), other venues at 22:30 UTC (06:30 Perth).
+  This moves ASX out of the morning backlog without increasing daily job scope or
+  the one-job/two-minute dispatch pace. UTC cycle markers deduplicate wrapper calls;
+  they do not establish target-session completeness. Latest explicit holds persist.
+- Atomic claims prioritize active open calls, active watched shares, remaining active
+  shares, then inactive support. Watch for support backlog starvation. Technical's
+  existing schedules move to 08:00/08:05 Perth; actual source checks remain required.
 - ASX initial jobs fetch five years where available; daily jobs fetch recent
   overlap and missing tail, with evidence-triggered one-year gap/correction work.
 - Excludes the current Sydney session, even after market close, to avoid partial bars.
