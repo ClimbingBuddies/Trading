@@ -1,13 +1,13 @@
 {
   "protocol": 1,
-  "revision": 118,
-  "status": "held",
-  "owner": "Cody",
-  "ownerId": "cody",
-  "cloneId": "a70b247a-5a71-4c2c-acf8-986bda831196",
-  "acquisitionId": "703b161f-eb99-4d07-b814-d32619687334",
-  "taskId": "yahoo-decimal-normalization",
-  "task": "Normalize Yahoo stored-value comparisons and release reviewed worker",
+  "revision": 119,
+  "status": "free",
+  "owner": null,
+  "ownerId": null,
+  "cloneId": null,
+  "acquisitionId": null,
+  "taskId": null,
+  "task": null,
   "scope": [
     "history-worker",
     "tests",
@@ -15,9 +15,9 @@
     "release-control"
   ],
   "startedAt": "2026-11-17T01:17:53.122Z",
-  "heartbeatAt": "2026-11-17T01:34:39.631Z",
-  "localChanges": "clean",
-  "branch": "codex/yahoo-decimal-normalization",
+  "heartbeatAt": "2026-11-17T01:34:56.205Z",
+  "localChanges": "secured",
+  "branch": null,
   "publishedCommit": "0664b4a1820e1d9fa9bf22dbee6540da8efc2d3b",
   "stableIntegration": null,
   "production": {
@@ -140,7 +140,7 @@
     "path": "journal/000015-yahoo-decimal-normalization.json",
     "commit": "0664b4a1820e1d9fa9bf22dbee6540da8efc2d3b"
   },
-  "releasedAt": "2026-11-16T06:01:59.081Z",
+  "releasedAt": "2026-11-17T01:34:56.205Z",
   "lastOwner": "Cody",
   "handoff": null
 }
