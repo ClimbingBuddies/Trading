@@ -315,6 +315,10 @@ Sample provenance checks confirmed `raw_payload._backfill.source = 'Tiingo'`.
 
 ## Demand-driven maintenance — 15 November 2026 source change
 
+The 17 November decimal-comparison follow-up compares provider values with persisted values at their declared PostgreSQL storage precision: prices `numeric(20,8)`, volume `numeric(24,4)`. Decimal parsing and integer arithmetic implement ties away from zero, including scientific notation; binary multiplication, epsilon comparisons and `toFixed()` are not used. This follows [PostgreSQL numeric semantics](https://www.postgresql.org/docs/current/datatype-numeric.html). Null remains distinct from zero; malformed/nonfinite or overflowing compared values fail rather than being certified equal. Inputs remain the JSON values available to the worker; precision already lost before that boundary cannot be recovered.
+
+Only provider-versus-storage revision detection uses this normalization. Raw provider payloads, normalized ingestion values, provider-versus-provider conflict checks, corporate-action changes, confirmed gaps and unresolved-correction handling remain unchanged. A difference below storage precision alone no longer triggers a wider fetch; a change at the stored precision still does. Audits identify the adapter with `storage_comparison_version=1`. Do not clear older unresolved corrections merely because this version is installed. Release and real scheduled evidence are recorded in the Decision Lab evidence log. Recovery redeploys the complete worker-v9 source at `94b61f59fa2fd6da3fa1524c055782016fc19240` with JWT verification retained; no schema/data rollback is involved.
+
 The owner selected four-hour current quotes, daily closing-price updates and
 automatic historical repairs when gaps are evidenced. The daily enqueue remains
 at 22:30 UTC (06:30 Perth). The two-minute database job checks for pending, due

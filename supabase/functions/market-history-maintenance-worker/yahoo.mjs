@@ -97,7 +97,7 @@ export async function backfillYahoo(db, inst, job) {
   const metadata = { function: 'asx-yahoo-market-history', provider: 'yahoo', instrument_id: inst.id,
     symbol: inst.symbol, provider_symbol: symbol, exchange: 'ASX', job_type: job.job_type ?? 'initial_backfill',
     requested_start_date: start, requested_end_date: end, price_basis: 'Yahoo native OHLC plus separately supplied adjusted close',
-    history_window_version: 1, accepted_provider_dates: window.confirmedDates, previous_audit_id: priorAuditId,
+    history_window_version: 1, storage_comparison_version: 1, accepted_provider_dates: window.confirmedDates, previous_audit_id: priorAuditId,
     history_coverage_claim: 'Only provider-confirmed dates within the rolling one-year horizon; older/internal completeness is not asserted',
     ...(daily ? { daily_window_reason: window.reason, known_missing_provider_dates: window.missingDates, correction: prior.correction ?? null,
       event_manifest: prior.event_manifest ?? yahooEventManifest(prior.events ?? {}, window.horizonStart, end) } : {}) };

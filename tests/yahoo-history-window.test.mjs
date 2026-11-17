@@ -57,6 +57,79 @@ function mockProvider(t, responses) {
   return windows;
 }
 
+test('storage rounding alone uses one overlap fetch and preserves native audit and observation values',async t=>{
+  const canonical={open:'10.12345679',high:'12.12345679',low:'9.12345679',close:'11.12345679',adjusted_close:'10.50000001',volume:'100.0001'};
+  const native={open:10.123456789,high:12.123456789,low:9.123456789,close:11.123456789,adjusted_close:10.500000009,volume:100.00005};
+  const db=fakeDb({rows:[bar(latest,canonical)]});
+  const windows=mockProvider(t,[payload([bar(latest,native),bar(end)])]);
+  await backfillYahoo(db,instrument,dailyJob);
+  assert.deepEqual(windows,[addDays(latest,-14)]);
+  const audit=db.updates.at(-1);assert.equal(audit.status,'succeeded');
+  assert.equal(audit.metadata.storage_comparison_version,1);assert.equal(db.inserts[0].metadata.storage_comparison_version,1);
+  assert.equal(audit.metadata.fetch_attempts.length,1);assert.equal(audit.metadata.correction,null);
+  const row=db.writes.find(r=>r.observed_at.startsWith(latest));
+  for(const [field,value] of Object.entries(native)){assert.equal(row[field],value);assert.equal(row.raw_payload[field],value);}
+});
+
+test('one actual stored price unit still triggers one wider bounded correction',async t=>{
+  const db=fakeDb({rows:[bar(old),bar(latest,{adjusted_close:'10.50000001'})]});
+  const revised=bar(latest,{adjusted_close:10.50000002});
+  const windows=mockProvider(t,[payload([revised]),payload([bar(old),revised,bar(end)])]);
+  await backfillYahoo(db,instrument,dailyJob);
+  assert.deepEqual(windows,[addDays(latest,-14),historyWindow(end).horizonStart]);
+  const audit=db.updates.at(-1);assert.equal(audit.status,'succeeded');assert.equal(audit.metadata.correction.state,'resolved');
+  assert.deepEqual(audit.metadata.correction.reasons,['OVERLAP_VALUES_REVISED']);
+  assert.equal(audit.metadata.storage_comparison_version,1);assert.equal(audit.metadata.fetch_attempts.length,2);
+  assert.equal(db.writes.find(r=>r.observed_at.startsWith(latest)).raw_payload.adjusted_close,10.50000002);
+});
+
+test('corporate action changes still widen a rounding-only price overlap',async t=>{
+  const timestamp=Date.parse(latest+'T00:00:00Z')/1000;
+  const events={dividends:{[timestamp]:{date:timestamp,amount:1}}};
+  const rounded=bar(latest,{close:11.000000001});
+  const db=fakeDb({rows:[bar(old),bar(latest)]});
+  const windows=mockProvider(t,[payload([rounded],events),payload([bar(old),rounded,bar(end)],events)]);
+  await backfillYahoo(db,instrument,dailyJob);
+  assert.equal(windows.length,2);assert.deepEqual(db.updates.at(-1).metadata.correction.reasons,['CORPORATE_ACTION_EVIDENCE_CHANGED']);
+  assert.equal(db.updates.at(-1).metadata.correction.state,'resolved');
+});
+
+test('provider-confirmed gaps still widen a rounding-only overlap',async t=>{
+  const prior={history_window_version:1,accepted_provider_dates:[old,latest]};
+  const db=fakeDb({prior});const rounded=bar(latest,{close:11.000000001});
+  const windows=mockProvider(t,[payload([rounded]),payload([bar(old),rounded,bar(end)])]);
+  await backfillYahoo(db,instrument,dailyJob);
+  assert.equal(windows.length,2);assert.deepEqual(db.updates.at(-1).metadata.correction.reasons,['PROVIDER_CONFIRMED_DATES_MISSING_FROM_STORAGE']);
+  assert.equal(db.updates.at(-1).metadata.correction.state,'resolved');
+});
+
+test('sub-storage-unit duplicate conflict remains quarantined with exact native values',async t=>{
+  const a=bar(latest,{close:11.000000001}),b=bar(latest,{close:11.000000002});
+  const db=fakeDb();const windows=mockProvider(t,[payload([a,b,bar(end)])]);
+  await backfillYahoo(db,instrument,dailyJob);
+  assert.equal(windows.length,1);assert.equal(db.writes.some(r=>r.observed_at.startsWith(latest)),false);
+  const audit=db.updates.at(-1);assert.equal(audit.metadata.coverage_has_rejected_bars,true);
+  assert.equal(audit.metadata.rejected_bars[0].source_bars[0].close,a.close);
+  assert.equal(audit.metadata.rejected_bars[0].source_bars[1].close,b.close);
+});
+
+test('sub-storage-unit cross-response conflicts fail before writes during unresolved gap correction',async t=>{
+  const prior={history_window_version:1,accepted_provider_dates:[old,latest]};
+  const db=fakeDb({prior});const a=bar(latest,{close:11.000000001}),b=bar(latest,{close:11.000000002});
+  const windows=mockProvider(t,[payload([a,bar(end)]),payload([b,bar(end)])]);
+  await assert.rejects(backfillYahoo(db,instrument,dailyJob),/responses disagree/);
+  assert.equal(windows.length,2);assert.equal(db.writes.length,0);assert.equal(db.updates.at(-1).status,'failed');
+  assert.deepEqual(db.updates.at(-1).metadata.correction.conflicting_dates,[latest]);
+});
+
+test('invalid persisted comparison value fails closed before observations are written',async t=>{
+  const db=fakeDb({rows:[bar(latest,{adjusted_close:'1000000000000'})]});
+  const windows=mockProvider(t,[payload([bar(latest),bar(end)])]);
+  await assert.rejects(backfillYahoo(db,instrument,dailyJob),/column precision/);
+  assert.equal(windows.length,1);assert.equal(db.writes.length,0);assert.equal(db.updates.at(-1).status,'failed');
+  assert.equal(db.updates.at(-1).metadata.storage_comparison_version,1);
+});
+
 test('window uses latest minus fourteen days, seeds one year, and never infers calendar gaps', () => {
   const window = historyWindow(end, stored([bar(old), bar(latest)]));
   assert.equal(window.start, addDays(latest, -14));
