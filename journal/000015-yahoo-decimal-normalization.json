@@ -1,0 +1,82 @@
+{
+  "decisions": [
+    "Exact JSON-decimal integer rounding matches PostgreSQL price20,8 and volume24,4 only for provider-versus-storage comparisons",
+    "Strict provider conflicts, raw payloads, events, gaps and old unresolved corrections preserved",
+    "New audits carry storage_comparison_version1; existing four-hour quotes unchanged"
+  ],
+  "recovery": "Under project lock pause/drain existing history dispatcher, redeploy complete worker-v9 source at94b61f59fa2fd6da3fa1524c055782016fc19240 with JWT retained, restore exact dispatcher state. Preserve observations,audits,queue receipts,scores and snapshots; no DB rollback.",
+  "risks": [
+    "Input precision lost before JSON boundary cannot be recovered",
+    "First genuine v10 Yahoo decimal-path receipt is pending; normal v10 invocation HTTP200 observed"
+  ],
+  "outstanding": [
+    "Next review ASX convergence/session/currency/benchmark admission can start immediately",
+    "Real v10 Yahoo audit marker/terminal processing remains pending; full AI workflow/tracker and observation week remain separate gates"
+  ],
+  "description": "Fixed Yahoo false revision detection from decimal storage rounding; merged, deployed and verified worker v10",
+  "tests": [
+    {
+      "result": "passed",
+      "command": "npm test",
+      "scope": "465 tests,0 failures/skips"
+    },
+    {
+      "result": "passed",
+      "command": "node scripts/test-yahoo-storage-decimal.mjs",
+      "scope": "1416 PostgreSQL parity cases including347 matching overflow rejections"
+    },
+    {
+      "result": "passed",
+      "command": "Focused Yahoo tests",
+      "scope": "47 tests, actual backfill one-fetch rounding and real correction/conflict regressions"
+    },
+    {
+      "result": "passed",
+      "command": "Independent review",
+      "scope": "328 additional PostgreSQL cases,52 existing tests; implementation and final docs accepted"
+    },
+    {
+      "result": "passed",
+      "command": "Live readback",
+      "scope": "Exact seven worker files,v10 JWTtrue,all eight cron fingerprints; v10 normal invocation HTTP200; genuine ASX scheduled15/240/15zero blockers and13 post-load snapshots"
+    },
+    {
+      "result": "passed",
+      "command": "git diff --check and publication verification",
+      "scope": "PR58/59 merged, final operationalbbe2a085fc4c7d3e70dc41e811463f1b1658ee95 tree equals featureHEAD; clean single worktree/no stashes/all local feature heads published; ignored dependencies/build/generated-guide/CLI cache reproducible"
+    }
+  ],
+  "databaseAndApi": "No schema/migration/data rewrite. Trading market-history-maintenance-worker v10; seven exact source files and JWT verification read back. History dispatcher briefly paused then restored; all eight cron fingerprints unchanged.",
+  "sequence": 15,
+  "timestamp": "2026-11-17T01:34:39.631Z",
+  "author": "Cody",
+  "taskId": "yahoo-decimal-normalization",
+  "commit": "0664b4a1820e1d9fa9bf22dbee6540da8efc2d3b",
+  "baseCommit": "82a9fba504ce7e2f5c290a3e0ed6833c43964fb0",
+  "branch": "codex/yahoo-decimal-normalization",
+  "files": [
+    "documentation/decision-lab-evidence-log.md",
+    "documentation/decision-lab-project-plan.md",
+    "documentation/operational-runbook.md",
+    "documentation/pipelines/historical-market-data-backfill.md",
+    "scripts/test-yahoo-storage-decimal.mjs",
+    "supabase/functions/market-history-maintenance-worker/README.md",
+    "supabase/functions/market-history-maintenance-worker/history-window.mjs",
+    "supabase/functions/market-history-maintenance-worker/storage-decimal.mjs",
+    "supabase/functions/market-history-maintenance-worker/yahoo.mjs",
+    "tests/yahoo-history-window.test.mjs",
+    "tests/yahoo-storage-decimal.test.mjs"
+  ],
+  "checkpoints": {
+    "localWorking": "0664b4a1820e1d9fa9bf22dbee6540da8efc2d3b",
+    "locallyTested": "0664b4a1820e1d9fa9bf22dbee6540da8efc2d3b",
+    "remotelyPublished": "0664b4a1820e1d9fa9bf22dbee6540da8efc2d3b",
+    "approvedStableIntegration": null,
+    "production": {
+      "commit": "84a40702f4beaa7f11359772682b36d5831d23c1",
+      "deployment": "dpl_Faea5XSbZDdFqXmhU2E25xfHWdPg",
+      "verification": "observed-ready-not-revalidated"
+    }
+  },
+  "evidenceNote": "Test results are explicit author attestations; stable integration requires separate approval and evidence."
+}
