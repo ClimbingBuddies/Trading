@@ -1,7 +1,7 @@
 # Daily Trading Controller
 
-**Specification version:** 1.11 (shared preflight and evidence preparation)
-**Last updated:** 17 November 2026
+**Specification version:** 1.12 (scoped runtime confirmation)
+**Last updated:** 18 November 2026
 **System:** Discover Boulders Markets / Trading  
 **Supabase project:** `glvbqcplgjdfgjyknzsa`
 
@@ -56,6 +56,8 @@ Before freezing a research cutoff, verify the required raw prices have arrived f
 Load the shared publication specification **before preparing Market research**, not only after it. For unconfigured watched equities, its direct-source receipts must be verified before the run cutoff. Prepare those receipts first, then freeze the cutoff and link the resulting assessment evidence. Prioritize active instruments with open shared calls, then watched shares, then the rest of the active universe; this changes processing order, not scope or scoring. A completed un-watched assessment does not count as watched-share recovery. If an existing cutoff lacks source proof, preserve it and record the exact blocker; do not add backdated receipts or invent another same-date run.
 
 Provider restrictions are operation-specific: distinguish new persistent ingestion, AI reference analysis, saved outputs and sharing. Verify applicable account evidence rather than treating a working API key as entitlement or treating one provider's uncertainty as a global stop. Preserve genuine holds and independently eligible paths. Record the exact missing fact and affected operations; a broad `provider gate` message is not enough for recovery. See the runbook's controller recovery procedure.
+
+Read [the current runtime confirmation](../documentation/operational-runbook.md#operator-confirmed-runtime-setting-18-november-2026) from the same resolved source commit. The designated hosted controller operator confirmed on 18 November that ChatGPT's "Improve the model for everyone" setting is off. Treat that specific fact as operator-confirmed, not connector-verified; do not report the training setting as unknown again solely because a connector cannot inspect it. Reconfirm if the runtime account, workspace, provider or setting changes, or contrary evidence appears. This confirmation does not establish permission for persistent provider data, saved derived outputs or sharing. Keep remaining operation-specific blockers explicit and do not infer permission from successful ingestion. Never bypass source freshness, source-proof, publication or evaluation checks.
 
 Preserve the existing subsystem date/lifecycle rules. Record exchange session dates separately from wall-clock execution. Do not reinterpret a later New York date as permission to create a duplicate historical run. Recovery that cannot fit the existing lifecycle remains explicitly blocked until the next legitimate run. Never move a frozen cutoff or backdate decisions to admit later-loaded prices.
 
