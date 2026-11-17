@@ -320,8 +320,13 @@ The 17 November decimal-comparison follow-up compares provider values with persi
 Only provider-versus-storage revision detection uses this normalization. Raw provider payloads, normalized ingestion values, provider-versus-provider conflict checks, corporate-action changes, confirmed gaps and unresolved-correction handling remain unchanged. A difference below storage precision alone no longer triggers a wider fetch; a change at the stored precision still does. Audits identify the adapter with `storage_comparison_version=1`. Do not clear older unresolved corrections merely because this version is installed. Release and real scheduled evidence are recorded in the Decision Lab evidence log. Recovery redeploys the complete worker-v9 source at `94b61f59fa2fd6da3fa1524c055782016fc19240` with JWT verification retained; no schema/data rollback is involved.
 
 The owner selected four-hour current quotes, daily closing-price updates and
-automatic historical repairs when gaps are evidenced. The daily enqueue remains
-at 22:30 UTC (06:30 Perth). The two-minute database job checks for pending, due
+automatic historical repairs when gaps are evidenced. The 17 November queue repair
+splits the existing eligible universe into ASX at 14:15 UTC (22:15 Perth, after
+Sydney midnight in both DST states) and other venues at 22:30 UTC (06:30 Perth).
+Per-UTC-cycle markers prevent repeated wrappers creating another completed/failed
+daily job; they do not certify session completeness. Active open-call instruments,
+then active watched instruments, then remaining active instruments precede inactive
+support jobs. Existing due times and retry/hold states are preserved. The two-minute database job checks for pending, due
 history work before invoking the existing Edge worker. It does not claim a job;
 the worker's existing atomic claim remains authoritative. A concurrent claim can
 still produce an occasional idle invocation. Empty database checks are not
