@@ -1,0 +1,58 @@
+{
+  "description": "Recorded scoped operator confirmation for hosted AI training setting; PR63 merged at 2db26e9b88962376d3d7fd5fb33100804b664243 with exact tree parity.",
+  "databaseAndApi": "No database, API, worker, schedule, credential or analytical result changes.",
+  "decisions": [
+    "Operator-confirmed training-disabled setting is reusable for the existing hosted account; revalidate on runtime or setting change or contrary evidence",
+    "Persistence, saved outputs and sharing remain separate unresolved gates"
+  ],
+  "risks": [
+    "Hosted adoption requires a genuine source-revision receipt; publication is not workflow completion"
+  ],
+  "tests": [
+    {
+      "command": "git diff --check d359611..54ac8c9",
+      "result": "passed",
+      "scope": "Four Markdown files only"
+    },
+    {
+      "command": "Independent documentation review and static verification",
+      "result": "passed",
+      "scope": "Scoped attestation, link/anchor, retained permission/freshness gates and secret scan at 54ac8c93574de1bd07c2d34bf4cc940c141e5979"
+    },
+    {
+      "command": "git diff --exit-code HEAD origin/project/decision-lab-completion",
+      "result": "passed",
+      "scope": "Merged tree equals reviewed feature"
+    }
+  ],
+  "outstanding": [
+    "Verify actual hosted controller adoption and research/publication/evaluation receipts",
+    "Resolve persistent-data, saved-output and sharing rights separately"
+  ],
+  "recovery": "Revert documentation commit54ac8c93574de1bd07c2d34bf4cc940c141e5979 if needed; no database rollback. One clean worktree, no stashes, all local feature heads published; ignored dependencies/build/generated guide assets and CLI cache unchanged.",
+  "sequence": 18,
+  "timestamp": "2026-11-17T23:58:42.087Z",
+  "author": "Cody",
+  "taskId": "runtime-confirmation",
+  "commit": "54ac8c93574de1bd07c2d34bf4cc940c141e5979",
+  "baseCommit": "9e12813372fe72920a8b15626e285ccf54c70093",
+  "branch": "codex/runtime-confirmation",
+  "files": [
+    "automation/daily-trading-controller.md",
+    "documentation/decision-lab-evidence-log.md",
+    "documentation/decision-lab-project-plan.md",
+    "documentation/operational-runbook.md"
+  ],
+  "checkpoints": {
+    "localWorking": "54ac8c93574de1bd07c2d34bf4cc940c141e5979",
+    "locallyTested": "54ac8c93574de1bd07c2d34bf4cc940c141e5979",
+    "remotelyPublished": "54ac8c93574de1bd07c2d34bf4cc940c141e5979",
+    "approvedStableIntegration": null,
+    "production": {
+      "commit": "84a40702f4beaa7f11359772682b36d5831d23c1",
+      "deployment": "dpl_Faea5XSbZDdFqXmhU2E25xfHWdPg",
+      "verification": "observed-ready-not-revalidated"
+    }
+  },
+  "evidenceNote": "Test results are explicit author attestations; stable integration requires separate approval and evidence."
+}
