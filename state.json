@@ -1,20 +1,21 @@
 {
   "protocol": 1,
-  "revision": 113,
+  "revision": 114,
   "status": "held",
   "owner": "Cody",
   "ownerId": "cody",
   "cloneId": "a70b247a-5a71-4c2c-acf8-986bda831196",
   "acquisitionId": "703b161f-eb99-4d07-b814-d32619687334",
   "taskId": "yahoo-decimal-normalization",
-  "task": "Normalize Yahoo stored-value comparisons without hiding revisions",
+  "task": "Normalize Yahoo stored-value comparisons and release reviewed worker",
   "scope": [
     "history-worker",
     "tests",
-    "documentation"
+    "documentation",
+    "release-control"
   ],
   "startedAt": "2026-11-17T01:17:53.122Z",
-  "heartbeatAt": "2026-11-17T01:18:22.524Z",
+  "heartbeatAt": "2026-11-17T01:24:35.802Z",
   "localChanges": "unknown-editing",
   "branch": "codex/yahoo-decimal-normalization",
   "publishedCommit": null,
