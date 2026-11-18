@@ -452,6 +452,7 @@ try {
       requested_count int,received_count int,inserted_count int,metadata jsonb);
     drop function technical_engine.asx_source_snapshot_v1(uuid,timestamptz);`);
   await db.exec(sourceSql);
+  await db.exec(await readFile('supabase/migrations/20261118030255_repair_asx_late_session_admission.sql','utf8'));
   const basis='Yahoo native OHLC plus separately supplied adjusted close';
   await db.query(`insert into market_observations(id,instrument_id,provider_id,interval_code,observed_at,loaded_at,
       open,high,low,close,adjusted_close,volume,currency_code,raw_payload)

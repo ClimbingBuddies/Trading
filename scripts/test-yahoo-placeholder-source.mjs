@@ -111,6 +111,7 @@ try{
     insert into instruments values('${inst.id}',true,'TEST','ASX','equity','AUD');
     insert into data_providers values('${provider}','yahoo',true);`);
   await pg.exec(admissionSql);
+  await pg.exec(await readFile('supabase/migrations/20261118030255_repair_asx_late_session_admission.sql','utf8'));
   for(const order of ['clean','reverse'])await scenario('generated full revalidation with matching placeholder is admitted ('+order+')',async()=>{
     mode=order;eq((await admitted()).status,'blocked');const result=await load();const audit=await latestAudit();const source=await admitted();
     eq(fetches,[start]);eq(audit.status,'succeeded');eq(audit.metadata.normalization_version,2);eq(audit.metadata.history_window_version,1);
