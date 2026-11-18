@@ -57,6 +57,45 @@ function mockProvider(t, responses) {
   return windows;
 }
 
+test('legacy quarantine gets one full v2 revalidation then returns to overlap', async t => {
+  const prior = { rejected_bars: [{ date: latest }], history_window_version: 1, accepted_provider_dates: [latest] };
+  const db = fakeDb({ prior });
+  const windows = mockProvider(t, [payload([bar(latest), bar(end)]), payload([bar(latest), bar(end)])]);
+  await backfillYahoo(db, instrument, dailyJob);
+  const audit = db.updates.at(-1).metadata;
+  assert.equal(audit.normalization_version, 2);
+  assert.equal(audit.history_window_version, 1);
+  assert.equal(audit.daily_window_reason, 'NORMALIZER_V2_QUARANTINE_REVALIDATION');
+  assert.equal(windows[0], historyWindow(end).horizonStart);
+  const retry = fakeDb({ rows: [bar(latest), bar(end)], prior: audit });
+  await backfillYahoo(retry, instrument, dailyJob);
+  assert.equal(windows[1], addDays(end, -14));
+});
+
+test('transport failure retains pending revalidation for the existing bounded retry', async t => {
+  const db = fakeDb({ prior: { rejected_bars: [{ date: latest }] } });
+  const windows = mockProvider(t, [new Error('provider unavailable'), payload([bar(latest), bar(end)])]);
+  await assert.rejects(backfillYahoo(db, instrument, dailyJob), /provider unavailable/);
+  const failed = db.updates.at(-1);
+  assert.equal(failed.status, 'failed');
+  assert.equal(failed.metadata.normalization_version, 2);
+  await backfillYahoo(fakeDb({ prior: failed.metadata }), instrument, dailyJob);
+  assert.equal(failed.metadata.normalization_revalidation.state, 'pending');
+  assert.deepEqual(windows, [historyWindow(end).horizonStart, historyWindow(end).horizonStart]);
+});
+
+test('omitted quarantined date blocks full re-anchor and suppresses unchanged full-fetch retries', async t => {
+  const db = fakeDb({ prior: { rejected_bars: [{ date: old }] } });
+  const windows = mockProvider(t, [payload([bar(latest), bar(end)])]);
+  await assert.rejects(backfillYahoo(db, instrument, dailyJob), /omitted or rejected/);
+  assert.deepEqual(db.writes, []);
+  const failed = db.updates.at(-1).metadata;
+  assert.equal(failed.normalization_revalidation.state, 'unresolved');
+  assert.deepEqual(failed.normalization_revalidation.missing_dates, [old]);
+  await assert.rejects(backfillYahoo(fakeDb({ prior: failed }), instrument, dailyJob), /reviewed recovery required/);
+  assert.equal(windows.length, 1);
+});
+
 test('storage rounding alone uses one overlap fetch and preserves native audit and observation values',async t=>{
   const canonical={open:'10.12345679',high:'12.12345679',low:'9.12345679',close:'11.12345679',adjusted_close:'10.50000001',volume:'100.0001'};
   const native={open:10.123456789,high:12.123456789,low:9.123456789,close:11.123456789,adjusted_close:10.500000009,volume:100.00005};

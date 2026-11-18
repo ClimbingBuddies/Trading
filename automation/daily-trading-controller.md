@@ -1,6 +1,6 @@
 # Daily Trading Controller
 
-**Specification version:** 1.12 (scoped runtime confirmation)
+**Specification version:** 1.13 (per-instrument source admission)
 **Last updated:** 18 November 2026
 **System:** Discover Boulders Markets / Trading  
 **Supabase project:** `glvbqcplgjdfgjyknzsa`
@@ -62,6 +62,14 @@ Read [the current runtime confirmation](../documentation/operational-runbook.md#
 Preserve the existing subsystem date/lifecycle rules. Record exchange session dates separately from wall-clock execution. Do not reinterpret a later New York date as permission to create a duplicate historical run. Recovery that cannot fit the existing lifecycle remains explicitly blocked until the next legitimate run. Never move a frozen cutoff or backdate decisions to admit later-loaded prices.
 
 Before reporting completion, run all eight evidence checks in the playbook. Store PASS, FAIL or UNVERIFIED with evidence for each. A terminal partial assessment permits downstream processing of eligible instruments but does not mean the daily pipeline is complete.
+
+#### Per-instrument admission ledger
+
+Before deciding to block Market, record for every active instrument: provider, target completed exchange session, latest admitted daily session, audit identity, intended operation, eligibility and exact blocker. Reconcile eligible + blocked = expected with disjoint sets. Use the normal prepare/finalize lifecycle for the eligible subset and finalize truthfully partial. Block the whole stage only when no instrument is eligible or a genuine stage-wide prerequisite fails. A combined reason such as `ASX_SESSION_CONFLICT_AND_TIINGO_SAVED_OUTPUT_RIGHTS_UNVERIFIED` is a summary, not a replacement for this ledger. Recheck each downstream operation against its own inputs.
+
+For ASX use Sydney session labels and Yahoo audit provenance. The legacy equity classifier behind `latest_market_status` uses US hours; `market_closed`, especially with a null quote timestamp, does not establish ASX daily-price readiness or a holiday. Inspect preflight `history_requested_end`, `history_coverage_end`, `history_audit_id`, `yahoo_rejected_sessions` and `yahoo_revalidation_state`. A succeeded history job with rejected sessions remains quarantined. Requested end is a range boundary, not a verified trading session. Missing verified exchange-session evidence remains a per-instrument blocker; this repair does not install an ASX calendar or enable measured ASX outcomes.
+
+Tiingo saved-output restrictions apply to outputs derived from Tiingo inputs, not automatically to independently sourced Yahoo/issuer research. Do not relabel provider data, omit lineage, or call a result independent if Tiingo contributed to it. Record the affected operation and applicable section/effective-date evidence. Training-disabled reference use alone does not authorize persistence. No subscription upgrade, history deletion, provider migration or scheduler change is implicit in admission.
 
 ### A. Daily Opportunity Assessment
 

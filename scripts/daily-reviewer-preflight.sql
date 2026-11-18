@@ -22,7 +22,12 @@ select i.id instrument_id,i.symbol,i.exchange_code,i.currency_code,i.is_active,
   p.provider_code, coalesce(prices.daily_rows,0) daily_rows,
   prices.first_date,prices.last_date,prices.last_loaded_at,
   coalesce(mappings.mapping_count,0) active_mapping_count,
-  jobs.status history_status,
+  jobs.status history_status,jobs.requested_end history_requested_end,
+  jobs.coverage_end history_coverage_end,
+  audit.id history_audit_id,audit.status history_audit_status,
+  coalesce(audit.id=jobs.sync_run_id,false) history_audit_job_linked,
+  case when p.provider_code='yahoo' then audit.rejected_count end yahoo_rejected_sessions,
+  case when p.provider_code='yahoo' then audit.revalidation_state end yahoo_revalidation_state,
   a.assessment_id,a.assessment_date,a.created_at assessment_created_at,
   coalesce(cfg.enabled,false) measurable_config_enabled,
   case when not (i.is_watched or i.has_open_shared_call) then 'not_in_shared_publication_scope'
@@ -35,6 +40,8 @@ select i.id instrument_id,i.symbol,i.exchange_code,i.currency_code,i.is_active,
     when i.is_active is not true then 'inactive_instrument'
     when p.id is null then 'provider_missing'
     when coalesce(prices.daily_rows,0)<20 then 'history_insufficient'
+    when p.provider_code='yahoo' and (audit.rejected_count>0 or audit.revalidation_state='unresolved')
+      then 'yahoo_quarantined_sessions_require_recovery'
     -- Yahoo's reviewed adapter validates canonical .AX identity in response/audit
     -- lineage; it does not depend on a provider_instruments mapping row.
     when p.provider_code='yahoo' then 'requires_yahoo_identity_session_and_cutoff_validation'
@@ -60,10 +67,28 @@ left join lateral (
   where pi.instrument_id=i.id and pi.provider_id=p.id and pi.is_active
 ) mappings on true
 left join lateral (
-  select status from public.market_history_jobs j
+  select status,requested_end,coverage_end,sync_run_id from public.market_history_jobs j
   -- Jobs are instrument-scoped; the worker routes by venue, not a provider_id column.
-  where j.instrument_id=i.id order by created_at desc,id desc limit 1
+  where j.instrument_id=i.id and j.created_at<=statement_timestamp()
+  order by created_at desc,id desc limit 1
 ) jobs on true
+left join lateral (
+  select s.id,s.status,
+    case when jsonb_typeof(s.metadata->'rejected_bars')='array'
+      then jsonb_array_length(s.metadata->'rejected_bars') end rejected_count,
+    case when s.metadata->'normalization_revalidation'->>'state' in ('pending','completed','unresolved')
+      then s.metadata->'normalization_revalidation'->>'state'
+      when s.metadata->'normalization_revalidation'->>'state' is not null then 'UNKNOWN'
+      else null end revalidation_state
+  from public.sync_runs s
+  where s.provider_id=p.id
+    and s.metadata->>'instrument_id'=i.id::text
+    and s.started_at<=statement_timestamp()
+    and (p.provider_code<>'yahoo' and s.id=jobs.sync_run_id
+      or p.provider_code='yahoo' and s.metadata->>'function'='asx-yahoo-market-history'
+        and s.metadata->>'provider_symbol'=case when right(i.symbol,3)='.AX' then i.symbol else i.symbol||'.AX' end)
+  order by s.started_at desc,s.id desc limit 1
+) audit on true
 left join lateral (
   select a.assessment_id,a.assessment_date,a.created_at
   from public.gpt_market_assessments a join public.gpt_market_runs r on r.run_id=a.run_id
