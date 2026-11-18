@@ -112,3 +112,5 @@ Personal recommendations timing: [Daily Personal Recommendations](../automation/
 ## Decision history and outcome tracking — v3
 
 Decision journal implementation: [migration source](../scripts/decision-journal-v3.sql), [controller specification](../automation/daily-personal-recommendations.md), [focused database tests](../scripts/test-decision-journal.mjs).
+
+- [ASX Market Convergence v1](specifications/asx-convergence-v1.md): separate adapter, frozen inputs, calendar admission, bounded retries and acceptance.

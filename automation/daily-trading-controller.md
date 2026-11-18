@@ -1,6 +1,6 @@
 # Daily Trading Controller
 
-**Specification version:** 1.14 (ASX research session admission)
+**Specification version:** 1.15 (separate ASX convergence adapter)
 **Last updated:** 18 November 2026
 **System:** Discover Boulders Markets / Trading  
 **Supabase project:** `glvbqcplgjdfgjyknzsa`
@@ -117,9 +117,11 @@ Preserve Market Assessment independence from Opportunity, Technical Engine and M
 
 After C is truthfully terminal for the applicable production date, including when C was already completed and skipped, retrieve `documentation/pipelines/market-convergence-pipeline.md` and `scripts/market-convergence-readiness.sql` at this invocation's exact GitHub commit. Follow the pipeline's controller continuation procedure. Do not run before due Market work is terminal or manufacture a weekend/missed-date run.
 
-The readiness query is read-only and freezes a new current convergence cutoff after independent source writes have committed. Execute only its non-null `invocation_sql` for READY instruments, sequentially, once per instrument in this invocation. This uses the existing private `market_convergence.run_v1` with per-instrument scheduled scope. Do not use a whole-universe call: a zero-fresh successful run would consume that scope's day. Preserve the canonical four-calendar-day freshness rule; never backdate or move a saved cutoff to admit later inputs.
+For active ASX instruments also retrieve `documentation/specifications/asx-convergence-v1.md` and `scripts/asx-convergence-readiness.sql` at that same commit. Route ASX exclusively through the latter diagnostic and `market_convergence.run_asx_v1`; discard any ASX invocation from the original v1 diagnostic. Verify current official ASX status alerts under the existing research-calendar procedure before dispatch. The date-only calendar is not a halt/disruption feed. Use the separate private `market_convergence.asx_runs_v1` receipt, requiring `succeeded` plus its linked immutable public `market-convergence-asx-v1` result and matching frozen source dates/IDs/values. No raw private envelope may be placed in reports. New admission cutoffs expire after five minutes; discard unexecuted SQL and recheck instead of replaying it later. Same-day identical inputs return the existing successful receipt. Changed inputs or immutable-result conflicts require diagnosis, never overwriting or a second methodology.
 
-Use the native `public.market_convergence_runs` ID as the durable receipt. The private controller claim API does not support a `convergence` stage: do not invent that claim or mislabel convergence as Market research. Follow the pipeline's receipt, uncertainty and bounded-retry instructions; report skipped/missing/stale inputs explicitly. A zero-write result is healthy only when a fresh, matching lineage-backed result already exists. A zero-fresh result is not completion.
+Both readiness queries are read-only and freeze a new current convergence cutoff after independent source writes have committed. Execute only non-null `invocation_sql` for READY instruments, sequentially, once per instrument in this invocation. The original non-ASX path uses private `market_convergence.run_v1` with per-instrument scheduled scope. Do not use a whole-universe call: a zero-fresh successful run would consume that scope's day. Preserve each method's date/freshness rules; never backdate or move a saved cutoff to admit later inputs.
+
+For the original non-ASX path, use the native `public.market_convergence_runs` ID as the durable receipt; ASX uses the separate receipt described above. The private controller claim API does not support a `convergence` stage: do not invent that claim or mislabel convergence as Market research. Follow the pipeline's receipt, uncertainty and bounded-retry instructions; report skipped/missing/stale inputs explicitly. A zero-write result is healthy only when a fresh, matching lineage-backed result already exists. A zero-fresh result is not completion.
 
 Convergence remains downstream of the two independent branches. It cannot modify them or become an input to Market research. Its blocker must not starve independently eligible shared publication/evaluation or history cleanup. Do not add a cron, trigger, follow-up invocation or extra research stage. The same 90-minute controller budget applies.
 

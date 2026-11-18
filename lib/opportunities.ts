@@ -1,4 +1,5 @@
 import { getSupabase } from './supabase'
+import { supportsConvergence } from './convergence-method'
 
 export type OpportunityTheme = {
   id: string
@@ -278,7 +279,7 @@ export async function getOpportunityOverview() {
   if (trackedInstrumentIds.length) {
     const currentMarketRes = await supabase
       .from('market_convergence_assessments')
-      .select('id,instrument_id,assessment_date,technical_score,technical_signal,technical_confidence,ai_score,ai_signal,ai_confidence,convergence_score,convergence_confidence,convergence_label,methodology_version,created_at')
+      .select('id,instrument_id,assessment_date,technical_score,technical_signal,technical_confidence,ai_score,ai_signal,ai_confidence,convergence_score,convergence_confidence,convergence_label,methodology_version,created_at,instruments!inner(exchange_code)')
       .in('instrument_id', trackedInstrumentIds)
       .order('assessment_date', { ascending: false })
       .order('created_at', { ascending: false })
@@ -287,7 +288,8 @@ export async function getOpportunityOverview() {
 
     if (currentMarketRes.error) throw currentMarketRes.error
 
-    for (const row of (currentMarketRes.data ?? []) as CurrentMarketResult[]) {
+    for (const row of (currentMarketRes.data ?? []) as unknown as (CurrentMarketResult & { instruments: { exchange_code: string } })[]) {
+      if (!supportsConvergence(row.methodology_version, row.instruments.exchange_code)) continue
       if (!currentMarketMap.has(row.instrument_id)) currentMarketMap.set(row.instrument_id, row)
     }
   }

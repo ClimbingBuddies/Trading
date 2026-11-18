@@ -194,3 +194,7 @@ Controller specification 1.10 adds a deterministic continuation after terminal M
 8. Report fresh, already-completed, blocked and uncertain instrument counts separately, with native run IDs and sanitized reason codes. Native receipts are this step's persistence contract; `private.claim_trading_stage_v1` has no convergence stage. The watchdog currently does not certify convergence. Do not stall independently eligible shared work over a convergence blocker, add a follow-up schedule, or exceed the single controller's 90-minute budget.
 
 The readiness query is not a transaction fence against source edits between inspection and invocation. The fixed cutoff excludes later-created/calculated rows; the receipt and source-snapshot reconciliation detects changed lineage/payload. Diagnose a mismatch without backdating or rewriting the saved source history.
+
+## ASX adapter — controller 1.15
+
+ASX exclusively uses [market-convergence-asx-v1](../specifications/asx-convergence-v1.md), `scripts/asx-convergence-readiness.sql` and private `market_convergence.asx_runs_v1` receipts. Preserve original v1 for non-ASX; do not execute v1 ASX invocations or mix retry ledgers. Follow the separate specification for immutable inputs, Sydney session target, NY AI freshness, calendar trust, five-minute admission and bounded retries. Existing original-ledger success alerts do not cover ASX. No new schedule; unattended acceptance requires a genuine eligible controller run.

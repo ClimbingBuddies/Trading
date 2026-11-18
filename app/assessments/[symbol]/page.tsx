@@ -65,8 +65,8 @@ export default async function AssessmentDetailPage({ params }: { params: Promise
               <article className="signalResultCard technicalResult">
                 <span className="sourceBadge technicalBadge">Technical Engine</span>
                 <h2>{convergence ? `${fmtLabel(convergence.technical_signal)} · ${fmtScore(convergence.technical_score)}` : 'Not available'}</h2>
-                <p>Immutable Technical source snapshot recorded before the combined result was calculated.</p>
-                <dl><div><dt>Confidence</dt><dd>{convergence ? `${fmtScore(convergence.technical_confidence)}%` : '—'}</dd></div><div><dt>Snapshot date</dt><dd>{fmtDate(convergence?.assessment_date ?? null)}</dd></div><div><dt>Source record</dt><dd>{convergence ? `market_scores #${convergence.technical_score_id}` : '—'}</dd></div><div><dt>Input boundary</dt><dd>AI result not used</dd></div></dl>
+                <p>Technical values saved with this combined result. Source dates are shown when preserved by its methodology.</p>
+                <dl><div><dt>Confidence</dt><dd>{convergence ? `${fmtScore(convergence.technical_confidence)}%` : '—'}</dd></div><div><dt>Technical source date</dt><dd>{fmtDate(convergence?.technical_source_date ?? null)}</dd></div><div><dt>Source record</dt><dd>{convergence ? `market_scores #${convergence.technical_score_id}` : '—'}</dd></div><div><dt>Input boundary</dt><dd>AI result not used</dd></div></dl>
               </article>
 
               <article className="signalResultCard aiResult">

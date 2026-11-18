@@ -62,3 +62,7 @@ My Dashboard Recommendations and /watchlists display matching assessment/horizon
 ## Decision history and outcome tracking — v3
 
 Decision Lab now uses a compact call/update/result table and a share-click detail drawer. It reads all owner pages of plans, events, outcomes and legacy results. Personal decision notes append through the constrained RPC. Recommendations reads the owner-secured event view and preserves exact assessment matching.
+
+### Convergence source dates and venues
+
+Assessment detail displays the saved Technical source date when available; legacy results show no invented date. Dashboard and Opportunity context readers accept `market-convergence-asx-v1` for ASX and original v1 elsewhere, ordered by date/time/ID. Private envelopes are never queried by the browser. The overview remains scoped to the latest production AI run; direct detail can show a saved convergence result outside that run.
