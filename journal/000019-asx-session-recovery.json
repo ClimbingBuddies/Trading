@@ -1,0 +1,78 @@
+{
+  "description": "PR64/65 merged; history worker v11 deployed with exact file parity. Pilot recovered a missing ASX session and passed actual source/Technical admission; 13 remaining recovery jobs queued.",
+  "databaseAndApi": "No schema/auth/scheduler change. Existing JWT-protected history worker updated; bounded reviewed recovery jobs inserted through existing enqueue function.",
+  "decisions": [
+    "Native complete-plus-close-null placeholders reconcile only when all other fields match exactly",
+    "Full revalidation must recover quarantined dates; actual conflicts remain blocked",
+    "Controller v1.13 requires per-instrument provider/operation admission"
+  ],
+  "risks": [
+    "Remaining queued recovery not yet complete",
+    "Calendar/session admission and Tiingo-dependent saved outputs remain separate"
+  ],
+  "tests": [
+    {
+      "result": "passed",
+      "command": "npm test",
+      "scope": "470 local tests; Git subprocess access required"
+    },
+    {
+      "result": "passed",
+      "command": "node scripts/test-yahoo-placeholder-source.mjs",
+      "scope": "12 scenarios / 181 assertions actual worker and PostgreSQL source admission"
+    },
+    {
+      "result": "passed",
+      "command": "node scripts/test-daily-reviewer-preflight.mjs",
+      "scope": "36 scenarios / 92 assertions"
+    },
+    {
+      "result": "passed",
+      "command": "node scripts/test-yahoo-placeholder-canary.mjs and node scripts/test-yahoo-placeholder-remaining.mjs",
+      "scope": "25/90 and 48/222 isolated SQL checks; independent review accepted"
+    }
+  ],
+  "outstanding": [
+    "Verify remaining 13 operational recovery jobs",
+    "Proceed with newly authorized ASX calendar/session review",
+    "Verify next legitimate hosted v1.13 invocation"
+  ],
+  "recovery": "Redeploy previous worker from 2db26e9 with JWT verification; preserve all observations, jobs, audits and snapshots. No database rollback. One clean worktree, no stashes, local heads verified remotely; ignored dependencies/build/assets/cache unchanged.",
+  "sequence": 19,
+  "timestamp": "2026-11-18T02:31:54.195Z",
+  "author": "Cody",
+  "taskId": "asx-session-recovery",
+  "commit": "e25bd80ff679afec2d4526eb2fd622219b158940",
+  "baseCommit": "54ac8c93574de1bd07c2d34bf4cc940c141e5979",
+  "branch": "codex/asx-session-recovery",
+  "files": [
+    "automation/daily-reviewer-playbook.md",
+    "automation/daily-trading-controller.md",
+    "documentation/decision-lab-evidence-log.md",
+    "documentation/decision-lab-project-plan.md",
+    "documentation/operational-runbook.md",
+    "documentation/specifications/asx-technical-source-contract.md",
+    "scripts/daily-reviewer-preflight.sql",
+    "scripts/recover-yahoo-placeholder-canary.sql",
+    "scripts/recover-yahoo-placeholder-remaining.sql",
+    "scripts/test-daily-reviewer-preflight.mjs",
+    "scripts/test-yahoo-placeholder-canary.mjs",
+    "scripts/test-yahoo-placeholder-remaining.mjs",
+    "scripts/test-yahoo-placeholder-source.mjs",
+    "supabase/functions/market-history-maintenance-worker/yahoo.mjs",
+    "tests/yahoo-history-window.test.mjs",
+    "tests/yahoo-placeholder.test.mjs"
+  ],
+  "checkpoints": {
+    "localWorking": "e25bd80ff679afec2d4526eb2fd622219b158940",
+    "locallyTested": "e25bd80ff679afec2d4526eb2fd622219b158940",
+    "remotelyPublished": "e25bd80ff679afec2d4526eb2fd622219b158940",
+    "approvedStableIntegration": null,
+    "production": {
+      "commit": "84a40702f4beaa7f11359772682b36d5831d23c1",
+      "deployment": "dpl_Faea5XSbZDdFqXmhU2E25xfHWdPg",
+      "verification": "observed-ready-not-revalidated"
+    }
+  },
+  "evidenceNote": "Test results are explicit author attestations; stable integration requires separate approval and evidence."
+}
