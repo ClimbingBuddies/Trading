@@ -1,13 +1,13 @@
 {
   "protocol": 1,
-  "revision": 179,
-  "status": "held",
-  "owner": "Cody",
-  "ownerId": "cody",
-  "cloneId": "a70b247a-5a71-4c2c-acf8-986bda831196",
-  "acquisitionId": "946dd115-775e-460a-ada8-e8437823718c",
-  "taskId": "asx-alert-monitoring",
-  "task": "Integrate ASX convergence alerts and truthful monitoring",
+  "revision": 180,
+  "status": "free",
+  "owner": null,
+  "ownerId": null,
+  "cloneId": null,
+  "acquisitionId": null,
+  "taskId": null,
+  "task": null,
   "scope": [
     "alerts",
     "monitoring",
@@ -17,9 +17,9 @@
     "documentation"
   ],
   "startedAt": "2026-11-18T05:36:38.025Z",
-  "heartbeatAt": "2026-11-18T06:08:35.234Z",
-  "localChanges": "clean",
-  "branch": "codex/asx-alert-monitoring",
+  "heartbeatAt": "2026-11-18T06:08:56.453Z",
+  "localChanges": "secured",
+  "branch": null,
   "publishedCommit": "44c587dc2fa4988d5f2b53937a308c6f153f771a",
   "stableIntegration": null,
   "production": {
@@ -177,7 +177,7 @@
     "path": "journal/000022-asx-alert-monitoring.json",
     "commit": "44c587dc2fa4988d5f2b53937a308c6f153f771a"
   },
-  "releasedAt": "2026-11-18T04:03:00.795Z",
+  "releasedAt": "2026-11-18T06:08:56.453Z",
   "lastOwner": "Cody",
   "handoff": null
 }
