@@ -1,6 +1,6 @@
 {
   "protocol": 1,
-  "revision": 170,
+  "revision": 171,
   "status": "held",
   "owner": "Cody",
   "ownerId": "cody",
@@ -16,7 +16,7 @@
     "documentation"
   ],
   "startedAt": "2026-11-18T03:31:50.403Z",
-  "heartbeatAt": "2026-11-18T03:56:59.614Z",
+  "heartbeatAt": "2026-11-18T04:02:07.061Z",
   "localChanges": "clean",
   "branch": "codex/asx-convergence-adapter",
   "publishedCommit": "67ffce0155eb41a0e35a752487d3e6acd217af9e",
@@ -28,13 +28,6 @@
   },
   "warningIssue": 39,
   "journal": [
-    {
-      "sequence": 1,
-      "path": "journal/000001-coordination-rollout.json",
-      "taskId": "coordination-rollout",
-      "commit": "4a5131c7e77accd673f632062dcaf120e85272ca",
-      "description": "Rolled out atomic shared development coordination to the operational branch; default-branch PR awaits explicit merge approval."
-    },
     {
       "sequence": 2,
       "path": "journal/000002-coordination-main-integration.json",
@@ -167,12 +160,22 @@
       "taskId": "asx-session-recovery",
       "commit": "85da0f007616f4edc7ec0a29fe53c6f25ecc24ef",
       "description": "PR66/67 merged: ASX research calendar and late-session source repair verified; all 15 ASX target-session and Technical source checks pass."
+    },
+    {
+      "sequence": 21,
+      "path": "journal/000021-asx-convergence-adapter.json",
+      "taskId": "asx-convergence-adapter",
+      "commit": "67ffce0155eb41a0e35a752487d3e6acd217af9e",
+      "description": "Reviewed, integrated and deployed separate ASX convergence adapter with frozen inputs; three eligible live continuations persisted and rendered correctly."
     }
   ],
   "adoption": "Other developer enrollment and pre-existing local work not yet verified",
   "baseCommit": "85da0f007616f4edc7ec0a29fe53c6f25ecc24ef",
   "localHead": "67ffce0155eb41a0e35a752487d3e6acd217af9e",
-  "lastJournal": null,
+  "lastJournal": {
+    "path": "journal/000021-asx-convergence-adapter.json",
+    "commit": "67ffce0155eb41a0e35a752487d3e6acd217af9e"
+  },
   "releasedAt": "2026-11-18T03:13:36.120Z",
   "lastOwner": "Cody",
   "handoff": null

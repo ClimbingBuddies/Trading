@@ -1,0 +1,104 @@
+{
+  "description": "Reviewed, integrated and deployed separate ASX convergence adapter with frozen inputs; three eligible live continuations persisted and rendered correctly.",
+  "databaseAndApi": "Trading glvbqcplgjdfgjyknzsa migration 20261118035151 add_asx_convergence_adapter_v1 from reviewed 20261118033709 SQL SHA256 CC7325B61324A65FBB8E62A3E98B5D0258211C983B5712120F56C752D4CDB451. Adds private calendar/run ledger, service-only admission/calculation/runner, public source-date columns and immutable ASX history guards. Vercel dpl_3eZDBBpWxcDtaGmMw9ZSyt8BUtwN READY at operational merge 3bf1e533a263e31ac28a13471e19092fd1f2ca36 (PR68).",
+  "decisions": [
+    "Separate market-convergence-asx-v1 preserves original v1 function definitions and 30 historical payloads; source/AI/terminal-run/calendar envelopes remain private and immutable.",
+    "ASX uses Sydney prior OPEN Technical target and New York independent-AI freshness; formula unchanged; separate max-three linear retries share original overlap lock.",
+    "Controller1.15 routes ASX explicitly; no schedule changes. Both contributors retain equal input; Cody remains AI execution operator.",
+    "All three eligible continuations were operator-dispatched using canonical scheduled scope; this is not unattended acceptance."
+  ],
+  "risks": [
+    "Missing/stale independent AI remains: 9 missing and 3 stale/invalid; 3 ALREADY_SUCCEEDED.",
+    "ASX automatic convergence alert delivery is not wired to new private ledger; next review can start immediately.",
+    "Calendar trust expires 25 November2026 02:34:21UTC; renewal requires fresh official evidence and reviewed installation.",
+    "Native multi-session contention not exercised in single-backend local fixtures; hosted unattended adoption remains pending.",
+    "Local Next compiled/typechecked but Windows page-data worker failed lstat C:\\; exact merged hosted production build subsequently succeeded."
+  ],
+  "tests": [
+    {
+      "command": "npm test (elevated Windows Git environment)",
+      "result": "passed",
+      "scope": "passed 482/482; repository regressions; initial sandbox Git MSYS permission failures resolved by running the authorized local suite outside sandbox"
+    },
+    {
+      "command": "node scripts/test-asx-convergence.mjs with PGLITE_MODULE",
+      "result": "passed",
+      "scope": "passed 80 scenarios /331 assertions; independent actual PostgreSQL source, calculation, immutable persistence, originalv1 preservation, formula oracle, retry/failure and privilege boundaries"
+    },
+    {
+      "command": "npx tsc --noEmit; node --test tests/convergence-method.test.mjs",
+      "result": "passed",
+      "scope": "passed; TypeScript and venue/null compatibility"
+    },
+    {
+      "command": "Independent frozen-code review",
+      "result": "passed",
+      "scope": "passed; final controller/reader findings resolved; migration hash, exact67-date calendar seed, private permissions, diagnostics, controller and reader contracts"
+    },
+    {
+      "command": "Live service-role admission and three separate per-instrument continuations",
+      "result": "passed",
+      "scope": "3 succeeded,3 saved results,3 matching source/date/formula records; final readiness3 ALREADY_SUCCEEDED,3 AI_INVALID_OR_STALE,9 AI_INPUT_MISSING; zero running; genuine eligible current production data; no synthetic live writes or duplicate AI research"
+    },
+    {
+      "command": "Vercel exact merge-SHA deployment and production detail HTTP checks",
+      "result": "passed",
+      "scope": "READY; all3 routes200 with correct ASX method and17Nov Technical source date, no private envelope; server-rendered data-to-page path; no cursor/browser control"
+    },
+    {
+      "command": "Post-release Supabase advisors and old-history hash",
+      "result": "passed",
+      "scope": "health0; no new security warnings; expected2 privateRLS informational findings and1 unused-index informational finding; old result/function hashes unchanged; schema safety and original history preservation"
+    },
+    {
+      "command": "npm run build (local Windows, synthetic configuration)",
+      "result": "failed",
+      "scope": "Compiled and TypeScript passed; page-data worker failed lstat C:\\. Exact merged hosted Vercel build passed afterwards."
+    }
+  ],
+  "outstanding": [
+    "Next eligible19November2026 08:00 Australia/Perth controller run must prove1.15 adoption, freshAI coverage and unattended convergence.",
+    "Review ASX convergence alert delivery and monitoring now; measured benchmark/outcome integration remains a separate later release.",
+    "All15 feature branches verified exactremote/inoperationalhistory; main is separately preserved remotehistory; one clean worktree,no stashes; ignored assets are rebuildable dependencies/build/generated assets."
+  ],
+  "recovery": "Stop ASX controller C.1 dispatch and revoke service_role execute on market_convergence.run_asx_v1(uuid,text,uuid,timestamptz). Preserve all new data/receipts/columns; no destructive down migration. Originalv1 remains unchanged. Prior UI deployment dpl_64hzC2ibgnGCWjozL6nfFyfNjByM is schema-compatible but lacks corrected venue/date presentation. PR68 records complete release evidence.",
+  "sequence": 21,
+  "timestamp": "2026-11-18T04:02:07.061Z",
+  "author": "Cody",
+  "taskId": "asx-convergence-adapter",
+  "commit": "67ffce0155eb41a0e35a752487d3e6acd217af9e",
+  "baseCommit": "85da0f007616f4edc7ec0a29fe53c6f25ecc24ef",
+  "branch": "codex/asx-convergence-adapter",
+  "files": [
+    "app/assessments/[symbol]/page.tsx",
+    "automation/daily-trading-controller.md",
+    "documentation/README.md",
+    "documentation/assessment-system-overview.md",
+    "documentation/frontend-route-map.md",
+    "documentation/operational-runbook.md",
+    "documentation/pipelines/market-convergence-pipeline.md",
+    "documentation/platform-architecture.md",
+    "documentation/security-and-operational-notes.md",
+    "documentation/specifications/asx-convergence-v1.md",
+    "documentation/supabase-data-model.md",
+    "lib/convergence-method.ts",
+    "lib/dashboard.ts",
+    "lib/opportunities.ts",
+    "scripts/asx-convergence-readiness.sql",
+    "scripts/test-asx-convergence.mjs",
+    "supabase/migrations/20261118033709_add_asx_convergence_adapter_v1.sql",
+    "tests/convergence-method.test.mjs"
+  ],
+  "checkpoints": {
+    "localWorking": "67ffce0155eb41a0e35a752487d3e6acd217af9e",
+    "locallyTested": null,
+    "remotelyPublished": "67ffce0155eb41a0e35a752487d3e6acd217af9e",
+    "approvedStableIntegration": null,
+    "production": {
+      "commit": "84a40702f4beaa7f11359772682b36d5831d23c1",
+      "deployment": "dpl_Faea5XSbZDdFqXmhU2E25xfHWdPg",
+      "verification": "observed-ready-not-revalidated"
+    }
+  },
+  "evidenceNote": "Test results are explicit author attestations; stable integration requires separate approval and evidence."
+}
