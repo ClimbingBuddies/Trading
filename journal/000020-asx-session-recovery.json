@@ -1,0 +1,117 @@
+{
+  "description": "PR66/67 merged: ASX research calendar and late-session source repair verified; all 15 ASX target-session and Technical source checks pass.",
+  "databaseAndApi": "Trading migration 20261118030932 repair_asx_late_session_admission replaces the private read-only source validator. Body MD5 1ec5492fa95af89fa7e85fc1a3312b00; invoker ACL/settings unchanged. One reviewed gap job and scoped existing Technical refresh completed. No scheduler/frontend/price-history rewrite.",
+  "decisions": [
+    "Date-only ASX research calendar remains separate from fill/evaluator calendars",
+    "Audit counts reconcile against each immutable cumulative manifest intersected with its own requested window",
+    "Every current price still requires exact admitted-audit provenance; legacy counts and quarantine rules remain enforced"
+  ],
+  "risks": [
+    "Raw-price readiness is not issuer research, provider rights, publication or measured-return permission",
+    "ASX review expires 25 November 2026 02:34:21 UTC; Nasdaq review expires 21 November 07:13 UTC",
+    "Native concurrent-source fencing remains outside acceptance"
+  ],
+  "tests": [
+    {
+      "command": "npm test",
+      "result": "passed",
+      "scope": "481 tests before SQL follow-up; Node suite unchanged by follow-up"
+    },
+    {
+      "command": "node scripts/test-asx-research-readiness.mjs",
+      "result": "passed",
+      "scope": "36 actual SQL/source scenarios and 90 assertions, rerun against repaired validator"
+    },
+    {
+      "command": "node scripts/test-asx-late-session-source.mjs",
+      "result": "passed",
+      "scope": "31 scenarios and 86 assertions; actual source/Technical refresh, ACLs, rollback/reapplication"
+    },
+    {
+      "command": "node scripts/test-asx-technical-source.mjs",
+      "result": "passed",
+      "scope": "59 source regression scenarios"
+    },
+    {
+      "command": "node scripts/test-asx-technical-calculation.mjs",
+      "result": "passed",
+      "scope": "25 scenarios and 360 assertions including unchanged Tiingo formulas and actual source currentness"
+    },
+    {
+      "command": "node scripts/test-yahoo-placeholder-source.mjs",
+      "result": "passed",
+      "scope": "12 actual worker/source scenarios and 181 assertions"
+    },
+    {
+      "command": "node scripts/test-asx-missing-session-recovery.mjs",
+      "result": "passed",
+      "scope": "44 queue scenarios and 109 assertions; actual enqueue, source receipt stubs"
+    },
+    {
+      "command": "Live read-only source/session/Technical verification",
+      "result": "passed",
+      "scope": "15 succeeded jobs, 15 target-session clean audits, 15 source-matched latest Technical scores, 15 RAW_PRICE_SESSION_READY, minimum24 reviewed OPEN observations; original job warning preserved. Existing14 source fingerprints and observation counts unchanged by validator migration. No new advisor findings."
+    }
+  ],
+  "outstanding": [
+    "Next legitimate 19 November 08:00 Perth controller run must prove v1.14 adoption, fresh independent research and publication",
+    "Tiingo-derived saved-output restrictions remain a separate gate",
+    "ASX convergence adapter review can start immediately; live acceptance needs fresh AI results",
+    "Measured ASX outcomes still require benchmark/provider/fill support"
+  ],
+  "recovery": "Guarded scripts/rollback-asx-late-session-admission.sql restores prior source validator and blocker without deleting data/snapshots. Revert calendar/controller references separately. PR66 merge8682a3d and PR67 merge6930650 verified exact trees. Public receipts issue38 comment6967879887 and issue37 comment6967880986. One clean worktree, no stashes, 14 feature heads verified remotely, main ancestor of remote; ignored dependencies/build/assets/cache unchanged. All work secured.",
+  "sequence": 20,
+  "timestamp": "2026-11-18T03:13:20.705Z",
+  "author": "Cody",
+  "taskId": "asx-session-recovery",
+  "commit": "85da0f007616f4edc7ec0a29fe53c6f25ecc24ef",
+  "baseCommit": "54ac8c93574de1bd07c2d34bf4cc940c141e5979",
+  "branch": "codex/asx-session-recovery",
+  "files": [
+    "automation/daily-reviewer-playbook.md",
+    "automation/daily-trading-controller.md",
+    "data/shared-market-calendars/asx-research-2026-20261118.json",
+    "data/shared-market-calendars/asx-research-2026-20261118.trust.json",
+    "documentation/asx-research-calendar.md",
+    "documentation/decision-lab-evidence-log.md",
+    "documentation/decision-lab-project-plan.md",
+    "documentation/operational-runbook.md",
+    "documentation/shared-market-calendar.md",
+    "documentation/specifications/asx-technical-source-contract.md",
+    "lib/asx-research-calendar.mjs",
+    "scripts/asx-research-readiness.sql",
+    "scripts/asx-research-readiness.template.sql",
+    "scripts/daily-reviewer-preflight.sql",
+    "scripts/prepare-asx-research-readiness.mjs",
+    "scripts/recover-asx-missing-session.sql",
+    "scripts/recover-yahoo-placeholder-canary.sql",
+    "scripts/recover-yahoo-placeholder-remaining.sql",
+    "scripts/rollback-asx-late-session-admission.sql",
+    "scripts/test-asx-late-session-source.mjs",
+    "scripts/test-asx-missing-session-recovery.mjs",
+    "scripts/test-asx-research-readiness.mjs",
+    "scripts/test-asx-technical-calculation.mjs",
+    "scripts/test-asx-technical-source.mjs",
+    "scripts/test-daily-reviewer-preflight.mjs",
+    "scripts/test-yahoo-placeholder-canary.mjs",
+    "scripts/test-yahoo-placeholder-remaining.mjs",
+    "scripts/test-yahoo-placeholder-source.mjs",
+    "supabase/functions/market-history-maintenance-worker/yahoo.mjs",
+    "supabase/migrations/20261118030255_repair_asx_late_session_admission.sql",
+    "tests/asx-research-calendar.test.mjs",
+    "tests/yahoo-history-window.test.mjs",
+    "tests/yahoo-placeholder.test.mjs"
+  ],
+  "checkpoints": {
+    "localWorking": "85da0f007616f4edc7ec0a29fe53c6f25ecc24ef",
+    "locallyTested": "85da0f007616f4edc7ec0a29fe53c6f25ecc24ef",
+    "remotelyPublished": "85da0f007616f4edc7ec0a29fe53c6f25ecc24ef",
+    "approvedStableIntegration": null,
+    "production": {
+      "commit": "84a40702f4beaa7f11359772682b36d5831d23c1",
+      "deployment": "dpl_Faea5XSbZDdFqXmhU2E25xfHWdPg",
+      "verification": "observed-ready-not-revalidated"
+    }
+  },
+  "evidenceNote": "Test results are explicit author attestations; stable integration requires separate approval and evidence."
+}
