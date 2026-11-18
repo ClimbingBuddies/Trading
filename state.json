@@ -1,13 +1,13 @@
 {
   "protocol": 1,
-  "revision": 171,
-  "status": "held",
-  "owner": "Cody",
-  "ownerId": "cody",
-  "cloneId": "a70b247a-5a71-4c2c-acf8-986bda831196",
-  "acquisitionId": "274aa1d0-e9e2-4682-afba-9af2fe6d550e",
-  "taskId": "asx-convergence-adapter",
-  "task": "Review and implement independent ASX convergence adapter",
+  "revision": 172,
+  "status": "free",
+  "owner": null,
+  "ownerId": null,
+  "cloneId": null,
+  "acquisitionId": null,
+  "taskId": null,
+  "task": null,
   "scope": [
     "convergence",
     "SQL",
@@ -16,9 +16,9 @@
     "documentation"
   ],
   "startedAt": "2026-11-18T03:31:50.403Z",
-  "heartbeatAt": "2026-11-18T04:02:07.061Z",
-  "localChanges": "clean",
-  "branch": "codex/asx-convergence-adapter",
+  "heartbeatAt": "2026-11-18T04:03:00.795Z",
+  "localChanges": "secured",
+  "branch": null,
   "publishedCommit": "67ffce0155eb41a0e35a752487d3e6acd217af9e",
   "stableIntegration": null,
   "production": {
@@ -176,7 +176,7 @@
     "path": "journal/000021-asx-convergence-adapter.json",
     "commit": "67ffce0155eb41a0e35a752487d3e6acd217af9e"
   },
-  "releasedAt": "2026-11-18T03:13:36.120Z",
+  "releasedAt": "2026-11-18T04:03:00.795Z",
   "lastOwner": "Cody",
   "handoff": null
 }
