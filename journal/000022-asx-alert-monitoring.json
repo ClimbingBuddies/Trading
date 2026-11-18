@@ -1,0 +1,86 @@
+{
+  "description": "Merged PR69 and deployed ASX in-app alert queue plus separate current coverage monitoring. Operational merge 8554a0b76ecdf7a2ee98058e6cc3a1f134b8aa99; Vercel dpl_FjzuvwSxXozLjAW6utA4kF7HswHU READY at exact merge with production aliases.",
+  "databaseAndApi": "Trading glvbqcplgjdfgjyknzsa migration 20261118060352 integrate_asx_alerts_and_monitoring (source 20261118054201). Private assessment queue, current monitor singleton, scoped evaluator, ordered legacy runner and watchdog integration; authenticated saved summary only. Existing schedules preserved.",
+  "decisions": [
+    "Existing ASX results baseline without retrospective events; up to10 queue rows and50 rules per row,3 execution attempts15min apart, lock contention deferred without consuming attempts.",
+    "Current ASX source/result health is separate from historical morning completion; overnight alert failures warn independently.",
+    "No automatic alert rules or external notifications. Client helper/table access denied, RLS enabled.",
+    "All16 local feature branches exactly published and contained in operational history; main preserved in origin/main. One clean worktree, no stashes; ignored files are dependencies/build/generated-guide assets."
+  ],
+  "risks": [
+    "Native concurrent multi-session timing and authenticated visual browser replay were not exercised; contention fault path and ownerRLS were tested locally.",
+    "No configured rules, so genuine production crossing remains unverified. Scheduled controller acceptance is separate."
+  ],
+  "tests": [
+    {
+      "command": "npm test",
+      "result": "passed",
+      "scope": "488 tests, zero failures."
+    },
+    {
+      "command": "npx tsc --noEmit --incremental false",
+      "result": "passed",
+      "scope": "Application TypeScript."
+    },
+    {
+      "command": "node scripts/test-asx-alert-monitoring.mjs",
+      "result": "passed",
+      "scope": "31 actualSQL scenarios/211 assertions; scoped evaluator,ownerRLS,rawclock,retry/atomicfailure,rule/queuecaps,lockcontention,guardedrollback. Controlled admission fixtures."
+    },
+    {
+      "command": "Independent source and recovery review",
+      "result": "passed",
+      "scope": "Runtime clock,locking,actualrulecap,overnightwarning,incidentfallback findings resolved; frozen SQL function bodies match deployed hashes."
+    },
+    {
+      "command": "Native watchdog and hosted verification",
+      "result": "passed",
+      "scope": "15activeASX:3current,9AI missing,3invalid/stale;queue3baseline0attempts,0rules/events;33 assessment payloadhashunchanged. HTTP page/all10scripts200/newUIbundle; exactSHA VercelREADY. No new warning classes, private helper grants denied, schedules preserved."
+    }
+  ],
+  "outstanding": [
+    "Next review can start immediately: missing/stale ASX AI research and controller universe/eligibility.",
+    "Next eligible unattended controller run19Nov2026 08:00 Australia/Perth needs genuine runtime acceptance.",
+    "Real user-configured ASX alert crossing unverified while zero rules enabled; email/push not configured or verified."
+  ],
+  "recovery": "Under current lock, freshly review definitions then use scripts/rollback-asx-alert-monitoring.sql. It quiesces watchdog/dispatcher, checks five entrypoints/trigger and restores four exact predecessor functions while retaining all queue/event/result/history. Frontend rollback to prior deployment dpl_3eZDBBpWxcDtaGmMw9ZSyt8BUtwN is separate; no destructive database rollback.",
+  "sequence": 22,
+  "timestamp": "2026-11-18T06:08:35.233Z",
+  "author": "Cody",
+  "taskId": "asx-alert-monitoring",
+  "commit": "44c587dc2fa4988d5f2b53937a308c6f153f771a",
+  "baseCommit": "67ffce0155eb41a0e35a752487d3e6acd217af9e",
+  "branch": "codex/asx-alert-monitoring",
+  "files": [
+    "automation/daily-trading-controller.md",
+    "components/TradingPipelineStatus.tsx",
+    "documentation/README.md",
+    "documentation/asx-alert-monitoring.md",
+    "documentation/frontend-route-map.md",
+    "documentation/operational-runbook.md",
+    "documentation/pipelines/market-convergence-pipeline.md",
+    "documentation/platform-architecture.md",
+    "documentation/security-and-operational-notes.md",
+    "documentation/specifications/asx-convergence-v1.md",
+    "documentation/supabase-data-model.md",
+    "documentation/trading-pipeline-reliability.md",
+    "lib/trading-pipeline-status.d.mts",
+    "lib/trading-pipeline-status.mjs",
+    "scripts/rollback-asx-alert-monitoring.sql",
+    "scripts/test-asx-alert-monitoring.mjs",
+    "supabase/migrations/20261118054201_integrate_asx_alerts_and_monitoring.sql",
+    "tests/trading-pipeline-status.test.mjs"
+  ],
+  "checkpoints": {
+    "localWorking": "44c587dc2fa4988d5f2b53937a308c6f153f771a",
+    "locallyTested": "44c587dc2fa4988d5f2b53937a308c6f153f771a",
+    "remotelyPublished": "44c587dc2fa4988d5f2b53937a308c6f153f771a",
+    "approvedStableIntegration": null,
+    "production": {
+      "commit": "84a40702f4beaa7f11359772682b36d5831d23c1",
+      "deployment": "dpl_Faea5XSbZDdFqXmhU2E25xfHWdPg",
+      "verification": "observed-ready-not-revalidated"
+    }
+  },
+  "evidenceNote": "Test results are explicit author attestations; stable integration requires separate approval and evidence."
+}

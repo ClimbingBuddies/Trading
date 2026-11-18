@@ -1,6 +1,6 @@
 {
   "protocol": 1,
-  "revision": 178,
+  "revision": 179,
   "status": "held",
   "owner": "Cody",
   "ownerId": "cody",
@@ -17,7 +17,7 @@
     "documentation"
   ],
   "startedAt": "2026-11-18T05:36:38.025Z",
-  "heartbeatAt": "2026-11-18T06:03:01.384Z",
+  "heartbeatAt": "2026-11-18T06:08:35.234Z",
   "localChanges": "clean",
   "branch": "codex/asx-alert-monitoring",
   "publishedCommit": "44c587dc2fa4988d5f2b53937a308c6f153f771a",
@@ -29,13 +29,6 @@
   },
   "warningIssue": 39,
   "journal": [
-    {
-      "sequence": 2,
-      "path": "journal/000002-coordination-main-integration.json",
-      "taskId": "coordination-main-integration",
-      "commit": "4a5131c7e77accd673f632062dcaf120e85272ca",
-      "description": "Completed explicitly approved PR #41 merge to main; coordination protocol is now on both default and operational branches."
-    },
     {
       "sequence": 3,
       "path": "journal/000003-daily-loop-recovery.json",
@@ -168,12 +161,22 @@
       "taskId": "asx-convergence-adapter",
       "commit": "67ffce0155eb41a0e35a752487d3e6acd217af9e",
       "description": "Reviewed, integrated and deployed separate ASX convergence adapter with frozen inputs; three eligible live continuations persisted and rendered correctly."
+    },
+    {
+      "sequence": 22,
+      "path": "journal/000022-asx-alert-monitoring.json",
+      "taskId": "asx-alert-monitoring",
+      "commit": "44c587dc2fa4988d5f2b53937a308c6f153f771a",
+      "description": "Merged PR69 and deployed ASX in-app alert queue plus separate current coverage monitoring. Operational merge 8554a0b76ecdf7a2ee98058e6cc3a1f134b8aa99; Vercel dpl_FjzuvwSxXozLjAW6ut"
     }
   ],
   "adoption": "Other developer enrollment and pre-existing local work not yet verified",
   "baseCommit": "67ffce0155eb41a0e35a752487d3e6acd217af9e",
   "localHead": "44c587dc2fa4988d5f2b53937a308c6f153f771a",
-  "lastJournal": null,
+  "lastJournal": {
+    "path": "journal/000022-asx-alert-monitoring.json",
+    "commit": "44c587dc2fa4988d5f2b53937a308c6f153f771a"
+  },
   "releasedAt": "2026-11-18T04:03:00.795Z",
   "lastOwner": "Cody",
   "handoff": null
