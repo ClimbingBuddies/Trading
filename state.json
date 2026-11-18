@@ -1,21 +1,21 @@
 {
   "protocol": 1,
-  "revision": 188,
-  "status": "held",
-  "owner": "Cody",
-  "ownerId": "cody",
-  "cloneId": "a70b247a-5a71-4c2c-acf8-986bda831196",
-  "acquisitionId": "a9c955ea-5a97-4a67-beb3-3b3003949ec0",
-  "taskId": "asx-research-coverage",
-  "task": "Verify scheduled ASX research readiness and recover one late provider session",
+  "revision": 189,
+  "status": "free",
+  "owner": null,
+  "ownerId": null,
+  "cloneId": null,
+  "acquisitionId": null,
+  "taskId": null,
+  "task": null,
   "scope": [
     "research readiness",
     "documentation"
   ],
   "startedAt": "2026-11-18T23:33:46.885Z",
-  "heartbeatAt": "2026-11-18T23:52:26.092Z",
-  "localChanges": "clean",
-  "branch": "codex/asx-research-coverage",
+  "heartbeatAt": "2026-11-18T23:52:47.485Z",
+  "localChanges": "secured",
+  "branch": null,
   "publishedCommit": "f311593b410501d4e091586f1f6cd5461dd2658e",
   "stableIntegration": null,
   "production": {
@@ -173,7 +173,7 @@
     "path": "journal/000023-asx-research-coverage.json",
     "commit": "f311593b410501d4e091586f1f6cd5461dd2658e"
   },
-  "releasedAt": "2026-11-18T06:08:56.453Z",
+  "releasedAt": "2026-11-18T23:52:47.485Z",
   "lastOwner": "Cody",
   "handoff": null
 }
