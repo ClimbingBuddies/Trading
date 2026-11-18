@@ -1,6 +1,6 @@
 {
   "protocol": 1,
-  "revision": 159,
+  "revision": 160,
   "status": "held",
   "owner": "Cody",
   "ownerId": "cody",
@@ -15,8 +15,8 @@
     "documentation"
   ],
   "startedAt": "2026-11-18T02:03:13.707Z",
-  "heartbeatAt": "2026-11-18T03:01:11.982Z",
-  "localChanges": "clean",
+  "heartbeatAt": "2026-11-18T03:01:22.571Z",
+  "localChanges": "unknown-editing",
   "branch": "codex/asx-session-recovery",
   "publishedCommit": "5f0cb887be2062e531c8961d33b9532410e2342f",
   "stableIntegration": null,
