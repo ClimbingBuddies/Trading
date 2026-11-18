@@ -1,0 +1,58 @@
+{
+  "description": "Reviewed ASX research coverage and documented late-session recovery in merged PR70; queued one reviewed source-clean session recovery through the existing dispatcher.",
+  "databaseAndApi": "No schema, grants, functions or schedules changed. Existing guarded recovery SQL created one idempotent incremental history job. Operational branch merge defcab4044ccbc8c34bf22198b6c9fe6ef47e015; no application deployment required.",
+  "decisions": [
+    "Installed queue priority already favors active research; do not replace it or increase provider request frequency based on total queue length.",
+    "Missing independent AI research must be verified through the genuine 08:00 controller; no competing or backdated analytical run.",
+    "Public review records only aggregate coverage; exact chosen instruments and production receipts remain protected."
+  ],
+  "risks": [
+    "12 of 15 ASX instruments still lack current independent AI research.",
+    "The recovery was fifth in the due queue at 07:51 Perth and is not yet verified complete.",
+    "No configured ASX alert crossing was tested."
+  ],
+  "tests": [
+    {
+      "command": "node scripts/test-asx-missing-session-recovery.mjs",
+      "result": "passed",
+      "scope": "44 synthetic SQL scenarios and 109 assertions for the unchanged guarded recovery"
+    },
+    {
+      "command": "node scripts/test-asx-research-readiness.mjs",
+      "result": "passed",
+      "scope": "36 actual SQL scenarios and 90 assertions"
+    },
+    {
+      "command": "git diff --check",
+      "result": "passed",
+      "scope": "Documentation-only diff; independently reviewed and verified after merge"
+    }
+  ],
+  "outstanding": [
+    "Verify the queued recovery terminal job, source audit, admitted target and matching Technical refresh before declaring all 15 raw-price-ready.",
+    "Observe the actual 19 November 08:00 Perth controller source SHA, eligibility ledger, saved assessments, convergence and publication receipts. It was not yet due at review time."
+  ],
+  "recovery": "Revert documentation commit f311593b410501d4e091586f1f6cd5461dd2658e if necessary. This does not undo an operational history job; preserve its immutable receipts and never reset/replay the key blindly. One clean worktree, no stashes, local branch tips secured on remote; ignored files are generated assets, dependencies and CLI state.",
+  "sequence": 23,
+  "timestamp": "2026-11-18T23:52:26.092Z",
+  "author": "Cody",
+  "taskId": "asx-research-coverage",
+  "commit": "f311593b410501d4e091586f1f6cd5461dd2658e",
+  "baseCommit": "44c587dc2fa4988d5f2b53937a308c6f153f771a",
+  "branch": "codex/asx-research-coverage",
+  "files": [
+    "documentation/asx-research-calendar.md"
+  ],
+  "checkpoints": {
+    "localWorking": "f311593b410501d4e091586f1f6cd5461dd2658e",
+    "locallyTested": "f311593b410501d4e091586f1f6cd5461dd2658e",
+    "remotelyPublished": "f311593b410501d4e091586f1f6cd5461dd2658e",
+    "approvedStableIntegration": null,
+    "production": {
+      "commit": "84a40702f4beaa7f11359772682b36d5831d23c1",
+      "deployment": "dpl_Faea5XSbZDdFqXmhU2E25xfHWdPg",
+      "verification": "observed-ready-not-revalidated"
+    }
+  },
+  "evidenceNote": "Test results are explicit author attestations; stable integration requires separate approval and evidence."
+}

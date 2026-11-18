@@ -1,6 +1,6 @@
 {
   "protocol": 1,
-  "revision": 187,
+  "revision": 188,
   "status": "held",
   "owner": "Cody",
   "ownerId": "cody",
@@ -13,7 +13,7 @@
     "documentation"
   ],
   "startedAt": "2026-11-18T23:33:46.885Z",
-  "heartbeatAt": "2026-11-18T23:51:12.737Z",
+  "heartbeatAt": "2026-11-18T23:52:26.092Z",
   "localChanges": "clean",
   "branch": "codex/asx-research-coverage",
   "publishedCommit": "f311593b410501d4e091586f1f6cd5461dd2658e",
@@ -25,13 +25,6 @@
   },
   "warningIssue": 39,
   "journal": [
-    {
-      "sequence": 3,
-      "path": "journal/000003-daily-loop-recovery.json",
-      "taskId": "daily-loop-recovery",
-      "commit": "6cec5cbd3265979d2aa4bc1c826b75fdf0278fdc",
-      "description": "Published independently reviewed reproducible-baseline repair, Yahoo duplicate-session quarantine and immutable calendar renewal candidate in draft PR42. Daily-loop recovery remain"
-    },
     {
       "sequence": 4,
       "path": "journal/000004-daily-loop-recovery.json",
@@ -164,12 +157,22 @@
       "taskId": "asx-alert-monitoring",
       "commit": "44c587dc2fa4988d5f2b53937a308c6f153f771a",
       "description": "Merged PR69 and deployed ASX in-app alert queue plus separate current coverage monitoring. Operational merge 8554a0b76ecdf7a2ee98058e6cc3a1f134b8aa99; Vercel dpl_FjzuvwSxXozLjAW6ut"
+    },
+    {
+      "sequence": 23,
+      "path": "journal/000023-asx-research-coverage.json",
+      "taskId": "asx-research-coverage",
+      "commit": "f311593b410501d4e091586f1f6cd5461dd2658e",
+      "description": "Reviewed ASX research coverage and documented late-session recovery in merged PR70; queued one reviewed source-clean session recovery through the existing dispatcher."
     }
   ],
   "adoption": "Other developer enrollment and pre-existing local work not yet verified",
   "baseCommit": "44c587dc2fa4988d5f2b53937a308c6f153f771a",
   "localHead": "f311593b410501d4e091586f1f6cd5461dd2658e",
-  "lastJournal": null,
+  "lastJournal": {
+    "path": "journal/000023-asx-research-coverage.json",
+    "commit": "f311593b410501d4e091586f1f6cd5461dd2658e"
+  },
   "releasedAt": "2026-11-18T06:08:56.453Z",
   "lastOwner": "Cody",
   "handoff": null
