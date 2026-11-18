@@ -79,3 +79,7 @@ Decision v3 tables enable RLS and permit permanent owners SELECT only. Triggers 
 ### ASX convergence evidence
 
 The [ASX adapter](specifications/asx-convergence-v1.md) keeps full source/AI snapshots in private tables with RLS and no client policies. anon/authenticated have no private-table or execution grants. Trusted service_role may read calendars and insert/read runs, updating only terminal fields. Calendar writes remain owner-only. Public results expose only scores, dates and cutoff. Never publish private envelopes in journals. Recovery disables dispatch/execute while preserving history.
+
+## ASX alert and monitoring access
+
+The [ASX integration](asx-alert-monitoring.md) keeps queue rows, raw input envelopes and evaluator state inaccessible to browser roles. New tables have RLS with no client policies/grants. Internal helpers have explicit execute revocations; enqueue and scoped evaluation use SECURITY DEFINER with an empty search path. Existing authenticated monitoring returns only saved aggregate counts and symbol/reason pairs, never owner rule identities or private envelopes. Existing alert-event owner policies remain unchanged. No email/push transport or alert-rule auto-enablement is introduced.

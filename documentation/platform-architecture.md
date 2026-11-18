@@ -93,3 +93,7 @@ New recommendations are permanent decision journals: original root, linked AI up
 ### Independent ASX convergence
 
 [ASX convergence v1](specifications/asx-convergence-v1.md) combines admitted Yahoo ASX Technical snapshots with terminal independent AI downstream. Its immutable private ledger is isolated from v1 retries; both share the overlap lock. Public results are presentation/context only, never inputs to Market research, shared recommendations or measured performance. No new scheduler.
+
+## ASX alerts and current monitoring
+
+The separate [ASX alert and monitoring contract](asx-alert-monitoring.md) adds a private assessment-keyed queue and saved current-health singleton. The existing watchdog processes up to 10 queued assessments with up to 50 rules each, retrying failed batches at 15-minute intervals up to three times. Existing results are baselined without replay. In-app events preserve owner-scoped visibility; email/push and automatic rule creation are outside this change. Current ASX coverage never overwrites historical morning completion.
