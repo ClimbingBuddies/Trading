@@ -1,21 +1,21 @@
-# DEVELOPMENT LOCK AVAILABLE
+# ACTIVE DEVELOPMENT — DO NOT MODIFY
 
-Status: free
+Status: held
 
-Owner: none
+Owner: Cody
 
-Task: none
+Task: Repair exchange-session readiness and bounded controller admission
 
-Started (UTC): 2026-11-17T23:53:51.772Z
+Started (UTC): 2026-11-18T02:03:13.707Z
 
-Heartbeat (UTC): 2026-11-17T23:58:57.750Z
+Heartbeat (UTC): 2026-11-18T02:03:13.707Z
 
-Branch: n/a
+Branch: codex/asx-session-recovery
 
-Local changes at last observation: secured
+Local changes at last observation: clean
 
-Published commit: 54ac8c93574de1bd07c2d34bf4cc940c141e5979
+Published commit: none verified
 
-State revision: 143
+State revision: 144
 
 Read state.json before acting. A stale heartbeat is never permission to take over. This branch is authoritative; the issue is a display only. Do not merge this branch into application branches.

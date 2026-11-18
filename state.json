@@ -1,22 +1,24 @@
 {
   "protocol": 1,
-  "revision": 143,
-  "status": "free",
-  "owner": null,
-  "ownerId": null,
-  "cloneId": null,
-  "acquisitionId": null,
-  "taskId": null,
-  "task": null,
+  "revision": 144,
+  "status": "held",
+  "owner": "Cody",
+  "ownerId": "cody",
+  "cloneId": "a70b247a-5a71-4c2c-acf8-986bda831196",
+  "acquisitionId": "ef9de4d4-358b-4e96-95b1-75fc92c3522c",
+  "taskId": "asx-session-recovery",
+  "task": "Repair exchange-session readiness and bounded controller admission",
   "scope": [
-    "automation",
+    "history adapter",
+    "controller preflight",
+    "tests",
     "documentation"
   ],
-  "startedAt": "2026-11-17T23:53:51.772Z",
-  "heartbeatAt": "2026-11-17T23:58:57.750Z",
-  "localChanges": "secured",
-  "branch": null,
-  "publishedCommit": "54ac8c93574de1bd07c2d34bf4cc940c141e5979",
+  "startedAt": "2026-11-18T02:03:13.707Z",
+  "heartbeatAt": "2026-11-18T02:03:13.707Z",
+  "localChanges": "clean",
+  "branch": "codex/asx-session-recovery",
+  "publishedCommit": null,
   "stableIntegration": null,
   "production": {
     "commit": "84a40702f4beaa7f11359772682b36d5831d23c1",
@@ -153,12 +155,9 @@
     }
   ],
   "adoption": "Other developer enrollment and pre-existing local work not yet verified",
-  "baseCommit": "9e12813372fe72920a8b15626e285ccf54c70093",
+  "baseCommit": "54ac8c93574de1bd07c2d34bf4cc940c141e5979",
   "localHead": "9e12813372fe72920a8b15626e285ccf54c70093",
-  "lastJournal": {
-    "path": "journal/000018-runtime-confirmation.json",
-    "commit": "54ac8c93574de1bd07c2d34bf4cc940c141e5979"
-  },
+  "lastJournal": null,
   "releasedAt": "2026-11-17T23:58:57.750Z",
   "lastOwner": "Cody",
   "handoff": null
