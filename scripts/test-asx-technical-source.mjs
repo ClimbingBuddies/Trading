@@ -54,6 +54,7 @@ try {
     insert into instruments values ('${instrument}',true,'TEST','ASX','equity','AUD');
     insert into data_providers values ('${provider}','yahoo',true);`);
   await db.exec(sql);
+  await db.exec(await readFile('supabase/migrations/20261118030255_repair_asx_late_session_admission.sql','utf8'));
   await db.query(`insert into market_observations select row_number() over(order by d),$1::uuid,$2::uuid,'1day',d,
     10,12,9,11,10.5,100,'AUD','2025-11-15T00:01Z',
     jsonb_build_object('date',to_char(d at time zone 'UTC','YYYY-MM-DD'),'open',10,'high',12,'low',9,'close',11,'adjusted_close',10.5,'volume',100,

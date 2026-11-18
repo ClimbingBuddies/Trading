@@ -72,7 +72,10 @@ try{
     grant select(instrument_id) on watchlist_items to service_role;
     insert into personal_portfolios values('private-sentinel',12345);insert into market_scores values(1,12345);`);
   // Permit deterministic future fixture dates without changing any other source logic.
-  await pg.exec(files.source.replaceAll('clock_timestamp()',"'2027-01-01T00:00:00Z'::timestamptz"));
+  await pg.exec(files.source);
+  await pg.exec(await readFile('supabase/migrations/20261118030255_repair_asx_late_session_admission.sql','utf8'));
+  const installedSource=(await pg.query("select pg_get_functiondef('technical_engine.asx_source_snapshot_v1(uuid,timestamptz)'::regprocedure) definition")).rows[0].definition;
+  await pg.exec(installedSource.replaceAll('clock_timestamp()',"'2027-01-01T00:00:00Z'::timestamptz"));
   eq(files.query.replaceAll('\r\n','\n'),prepareAsxResearchReadiness(manifest,trust,files.template).replaceAll('\r\n','\n'));
   await scenario('real clean source admits raw prices and session target under read-only restricted role',async()=>{
     const s=await source();eq(s.status,'ready');const r=await expect('RAW_PRICE_SESSION_READY');
