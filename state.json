@@ -1,6 +1,6 @@
 {
   "protocol": 1,
-  "revision": 166,
+  "revision": 167,
   "status": "held",
   "owner": "Cody",
   "ownerId": "cody",
@@ -16,8 +16,8 @@
     "documentation"
   ],
   "startedAt": "2026-11-18T03:31:50.403Z",
-  "heartbeatAt": "2026-11-18T03:32:01.685Z",
-  "localChanges": "unknown-editing",
+  "heartbeatAt": "2026-11-18T03:40:03.226Z",
+  "localChanges": "unpublished",
   "branch": "codex/asx-convergence-adapter",
   "publishedCommit": null,
   "stableIntegration": null,
