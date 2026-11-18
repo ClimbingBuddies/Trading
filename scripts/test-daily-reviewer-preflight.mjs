@@ -33,6 +33,7 @@ try{
       observed_at timestamptz,loaded_at timestamptz,close numeric,adjusted_close numeric,currency_code text,raw_payload jsonb);
     create table provider_instruments(instrument_id uuid,provider_id uuid,is_active boolean);
     create table market_history_jobs(id bigint primary key,instrument_id uuid,status text,created_at timestamptz,private_error text);
+    create table sync_runs(id uuid primary key,provider_id uuid,status text,started_at timestamptz,metadata jsonb);
     create table gpt_market_runs(run_id uuid primary key,analysis_mode text,status text,completed_at timestamptz);
     create table gpt_market_assessments(assessment_id uuid primary key,instrument_id uuid,run_id uuid,assessment_date date,
       created_at timestamptz,technical_engine_input_used boolean,methodology_version text,score numeric,confidence numeric,rating text,raw_text text);
@@ -70,6 +71,8 @@ try{
     insert into gpt_market_runs values('${id(200)}','scheduled','succeeded','2026-11-16T23:30Z');
     insert into gpt_market_assessments values('${id(300)}','${id(2)}','${id(200)}','2026-11-16','2026-11-16T23:00Z',false,
       'independent-market-ai-v1',70,80,'Buy','PRIVATE_ASSESSMENT_RAW');
+    alter table market_history_jobs add requested_end date,add coverage_end timestamptz,add sync_run_id uuid;
+    grant select on sync_runs to preflight_reader;
     grant usage on schema private to preflight_reader;
     grant select on instruments,watchlist_items,shared_decision_calls,shared_decision_outcomes,data_providers,market_observations,
       provider_instruments,market_history_jobs,gpt_market_runs,gpt_market_assessments,private.shared_decision_config to preflight_reader;`);
@@ -93,7 +96,26 @@ try{
     const asx=rows.find(r=>r.instrument_id===id(8));eq(asx.provider_code,'yahoo');eq(asx.history_status,'failed');
     eq(Number(asx.active_mapping_count),1);eq(Number(asx.daily_rows),0);
   });
-  await check('equal instrument job timestamps use descending job ID',()=>db.exec(`insert into market_history_jobs values(6,'${id(2)}','running','2026-11-16T21:00Z','PRIVATE_JOB_ERROR')`),(_,r)=>eq(r.history_status,'running'));
+  await check('equal instrument job timestamps use descending job ID',()=>db.exec(`insert into market_history_jobs(id,instrument_id,status,created_at,private_error) values(6,'${id(2)}','running','2026-11-16T21:00Z','PRIVATE_JOB_ERROR')`),(_,r)=>eq(r.history_status,'running'));
+  await check('future jobs cannot replace the preflight history receipt',()=>db.exec(`insert into market_history_jobs(id,instrument_id,status,created_at) values(6,'${id(2)}','running','2026-11-18T00:00Z')`),(_,r)=>eq(r.history_status,'succeeded'));
+  await check('succeeded job exposes quarantined Yahoo session without leaking raw prices',async()=>{
+    await db.exec(`insert into market_observations(instrument_id,provider_id,interval_code,observed_at,loaded_at,close,adjusted_close,currency_code)
+      select '${id(8)}','${id(102)}','1day','${cutoff}'::timestamptz-n*interval '1 day','2026-11-16T23:00Z',11,10.5,'AUD' from generate_series(1,20)n;
+      update market_history_jobs set status='succeeded',requested_end='2026-11-16',coverage_end='2026-11-15T00:00Z',sync_run_id='${id(400)}' where id=4;
+      insert into sync_runs values('${id(400)}','${id(102)}','succeeded','2026-11-16T23:00Z','{"instrument_id":"${id(8)}","function":"asx-yahoo-market-history","provider_symbol":"C_ACTIVE_OPEN.AX","rejected_bars":[{"private_raw":"DO_NOT_EXPOSE"}],"normalization_revalidation":{"state":"unresolved"}}');`);
+  },rows=>{
+    const r=rows.find(r=>r.instrument_id===id(8));
+    eq(r.history_status,'succeeded');eq(r.yahoo_rejected_sessions,1);
+    eq(r.yahoo_revalidation_state,'unresolved');eq(r.data_status,'yahoo_quarantined_sessions_require_recovery');
+    eq(r.history_audit_id,id(400));eq(/DO_NOT_EXPOSE/.test(JSON.stringify(rows)),false);
+    eq(rows.find(r=>r.instrument_id===id(2)).data_status,'requires_session_and_cutoff_validation');
+  });
+  await check('failed Yahoo revalidation is visible without a job-linked sync receipt',()=>db.exec(`
+    insert into sync_runs values('${id(401)}','${id(102)}','failed','2026-11-16T23:30Z',
+      '{"instrument_id":"${id(8)}","function":"asx-yahoo-market-history","provider_symbol":"C_ACTIVE_OPEN.AX","rejected_bars":[],"normalization_revalidation":{"state":"unresolved"}}');`),rows=>{
+    const r=rows.find(r=>r.instrument_id===id(8));eq(r.history_audit_id,id(401));
+    eq(r.history_audit_status,'failed');eq(r.history_audit_job_linked,false);eq(r.yahoo_revalidation_state,'unresolved');
+  });
   await check('twenty finite matching-currency rows are only a conditional history count',noop,(_,r)=>{
     eq(Number(r.daily_rows),20);eq(new Date(r.first_date).toISOString().slice(0,10),'2026-10-28');
     eq(new Date(r.last_date).toISOString().slice(0,10),'2026-11-16');
@@ -164,7 +186,8 @@ try{
   await check('private raw values never appear and reader has no personal-table permissions',noop,async rows=>{
     eq(/PRIVATE_|DO_NOT_|owner_id|raw_payload|raw_text/.test(JSON.stringify(rows)),false);
     eq(Object.keys(rows[0]).sort(),['instrument_id','symbol','exchange_code','currency_code','is_active','is_watched','has_open_shared_call','research_priority',
-      'provider_code','daily_rows','first_date','last_date','last_loaded_at','active_mapping_count','history_status','assessment_id','assessment_date',
+      'provider_code','daily_rows','first_date','last_date','last_loaded_at','active_mapping_count','history_status','history_requested_end','history_coverage_end',
+      'history_audit_id','history_audit_status','history_audit_job_linked','yahoo_rejected_sessions','yahoo_revalidation_state','assessment_id','assessment_date',
       'assessment_created_at','measurable_config_enabled','publication_path','data_status'].sort());
     for(const table of ['private.personal_candidates','private.personal_notes'])eq((await query('select has_table_privilege(current_user,$1,\'SELECT\') allowed',[table]))[0].allowed,false);
   });

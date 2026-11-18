@@ -1,6 +1,6 @@
 # Daily reviewer: verified completion
 
-Version 3, 17 November 2026. This playbook supplements the shared controller and analytical specifications. It does not authorize bypassing their database validation.
+Version 4, 18 November 2026. This playbook supplements the shared controller and analytical specifications. It does not authorize bypassing their database validation.
 
 ## Purpose
 
@@ -18,6 +18,8 @@ Turn every in-scope share into current evidence-backed research and, for the dis
 8. In the same eligible sequential controller invocation, inspect `private.shared_decision_candidates_v1()` after research finalizes. Publish measurable candidates only through `private.publish_shared_decision_v1`. Separately inspect the supported unconfigured watched equities through `private.shared_research_input_v1` and publish eligible research-only results through `private.publish_shared_research_v1`. Use the actual model identity and exact database input hash. Preserve immutable originals and append reviews. Never fall back to personal publication. WAIT is a researched call, not a substitute for missing inputs.
 9. Independently check the accepted shared evaluator release/provider/session gates and evaluate existing calls through the SERIALIZABLE procedure in `automation/daily-shared-decision-lab.md`. Missing new research/publication does not by itself block eligible existing calls. Verify fills and checkpoints from later observed sessions, matched benchmark and costs; weekly/monthly checkpoints do not automatically close positions.
 10. Reconcile all counts and save a completion report. Report partial work honestly and carry recovery items into the next invocation. Notify only meaningful changes.
+
+Use the controller's per-instrument admission ledger before any whole-stage block. The preflight exposes audit identity, rejected-session count and revalidation state alongside job status. Successful ingestion with rejected sessions is not admitted daily coverage. The legacy US-hours quote status is not ASX session evidence. A Tiingo-dependent operation's blocker must not suppress an independently eligible Yahoo/issuer operation.
 
 ## Ownership and recovery
 

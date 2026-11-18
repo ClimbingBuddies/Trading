@@ -35,14 +35,24 @@ export function normalizeYahoo(payload, symbol, currency, start, end) {
     byDate.set(date, group);
   }
   for (const [date, bars] of byDate) {
-    const first = bars[0];
-    // Never pick the first/last price or fill a missing value from another bar.
-    // One ambiguous session must not prevent unrelated valid history loading.
-    if (bars.some(bar => fields.some(key => !Object.is(bar[key], first[key])))) {
+    // Yahoo can append a complete close alongside a same-session placeholder
+    // whose close AND adjusted close are null. Select an entire complete bar
+    // only when every other populated field agrees exactly. Never merge fields,
+    // round provider comparisons, or select between competing complete values.
+    const complete = bars.find(bar => Number.isFinite(bar.close) && bar.close > 0
+      && Number.isFinite(bar.adjusted_close) && bar.adjusted_close > 0);
+    const placeholder = bar => bar.close === null && bar.adjusted_close === null;
+    const reconciled = bars.length > 1 && complete && Number.isFinite(complete.volume) && complete.volume >= 0 && bars.some(placeholder)
+      && bars.every(bar => fields.every(key => Object.is(bar[key], complete[key])
+        || (placeholder(bar) && (key === 'close' || key === 'adjusted_close'))));
+    const first = reconciled ? complete : bars[0];
+    if (!reconciled && bars.some(bar => fields.some(key => !Object.is(bar[key], first[key])))) {
       rejected.push({ date, reason: 'Conflicting duplicate daily bars; entire session excluded', source_bars: bars });
       continue;
     }
-    if (bars.length > 1) duplicates.push({ date, count: bars.length, source_bars: bars, reason: 'Identical daily values collapsed' });
+    if (bars.length > 1) duplicates.push({ date, count: bars.length, source_bars: bars,
+      reason: reconciled ? 'Complete bar with exactly matching close-null placeholder' : 'Identical daily values collapsed',
+      ...(reconciled ? { selected_source_timestamp: first.source_timestamp, normalization_version: 2 } : {}) });
     const { open, high, low, close, volume, adjusted_close } = first;
     const values = [open, high, low, close];
     if (values.every(v => v == null)) { skipped += bars.length; continue; }
@@ -76,7 +86,7 @@ export async function backfillYahoo(db, inst, job) {
   const years = Math.min(10, Math.max(1, Number(job.years) || 5));
   const since = new Date(end + 'T00:00:00Z');
   since.setUTCFullYear(since.getUTCFullYear() - years);
-  let start = since.toISOString().slice(0, 10), persisted = [], prior = {}, priorAuditId = null;
+  let start = since.toISOString().slice(0, 10), persisted = [], prior = {}, priorAuditId = null, revalidation = null;
   const daily = job.job_type === 'daily_incremental';
   let window = historyWindow(end);
   if (daily) {
@@ -93,11 +103,27 @@ export async function backfillYahoo(db, inst, job) {
     if (auditError) throw new Error('Could not verify Yahoo provider-date audit');
     prior = audit?.metadata ?? {}; priorAuditId = audit?.id ?? null;
     window = historyWindow(end, persisted, prior); start = window.start;
+    // One bounded revalidation after upgrading a quarantined legacy audit.
+    // A clean full fetch is required by the Technical source contract; an
+    // overlap cannot erase the earlier rejected audit from its lineage.
+    // Transport/write failures retain pending state for the existing bounded
+    // retry policy. A completed but incomplete response is quarantined rather
+    // than repeatedly downloading a year with no new recovery authorization.
+    const rejectedDates = [...new Set([...(prior.rejected_bars ?? []),
+      ...(prior.fetch_attempts ?? []).flatMap(attempt => attempt.rejected_bars ?? [])]
+      .map(bar => bar.date).filter(date => typeof date === 'string' && date >= window.horizonStart && date <= end))].sort();
+    revalidation = prior.normalization_revalidation ?? null;
+    if ((prior.normalization_version !== 2 && rejectedDates.length) || revalidation?.state === 'pending') {
+      revalidation = { version: 2, state: 'pending', required_dates: [...new Set([...(revalidation?.required_dates ?? []), ...rejectedDates])].sort() };
+      start = window.horizonStart;
+      window = { ...window, start, reason: 'NORMALIZER_V2_QUARANTINE_REVALIDATION' };
+    }
   }
   const metadata = { function: 'asx-yahoo-market-history', provider: 'yahoo', instrument_id: inst.id,
     symbol: inst.symbol, provider_symbol: symbol, exchange: 'ASX', job_type: job.job_type ?? 'initial_backfill',
     requested_start_date: start, requested_end_date: end, price_basis: 'Yahoo native OHLC plus separately supplied adjusted close',
-    history_window_version: 1, storage_comparison_version: 1, accepted_provider_dates: window.confirmedDates, previous_audit_id: priorAuditId,
+    history_window_version: 1, storage_comparison_version: 1, normalization_version: 2, normalization_revalidation: revalidation,
+    accepted_provider_dates: window.confirmedDates, previous_audit_id: priorAuditId,
     history_coverage_claim: 'Only provider-confirmed dates within the rolling one-year horizon; older/internal completeness is not asserted',
     ...(daily ? { daily_window_reason: window.reason, known_missing_provider_dates: window.missingDates, correction: prior.correction ?? null,
       event_manifest: prior.event_manifest ?? yahooEventManifest(prior.events ?? {}, window.horizonStart, end) } : {}) };
@@ -120,6 +146,7 @@ export async function backfillYahoo(db, inst, job) {
     }
   };
   try {
+    if (revalidation?.state === 'unresolved') throw new Error('Yahoo normalization revalidation remains unresolved; reviewed recovery required. No repeated full fetch.');
     const responses = [], attempts = [];
     const fetchWindow = async requestedStart => {
       const response = await fetchYahoo(symbol, inst.currency_code.trim(), requestedStart, end);
@@ -134,6 +161,14 @@ export async function backfillYahoo(db, inst, job) {
       return response;
     };
     let result = await fetchWindow(start), decision = null, correctionAttempted = false, unresolvedDates = [];
+    if (revalidation?.state === 'pending') {
+      const returned = new Set(result.rows.map(row => row.date));
+      const missing = revalidation.required_dates.filter(date => !returned.has(date));
+      if (missing.length) {
+        auditMetadata = { ...auditMetadata, normalization_revalidation: { ...revalidation, state: 'unresolved', missing_dates: missing } };
+        throw new Error('Yahoo normalization revalidation omitted or rejected quarantined sessions; no observations written');
+      }
+    }
     const recentResult = result, recentStart = start;
     let unresolvedError = null, nextEventManifest;
     if (!result.rows.length) throw new Error('Yahoo returned no usable daily bars');
@@ -217,6 +252,7 @@ export async function backfillYahoo(db, inst, job) {
     const coverage_start = result.rows[0].date + 'T00:00:00Z';
     const coverage_end = result.rows.at(-1).date + 'T00:00:00Z';
     auditMetadata = { ...auditMetadata, coverage_start, coverage_end };
+    if (revalidation?.state === 'pending') auditMetadata.normalization_revalidation = { ...revalidation, state: 'completed' };
     if (!unresolvedError) auditMetadata = { ...auditMetadata, event_manifest: nextEventManifest };
     if (correctionAttempted && !unresolvedError) {
       auditMetadata = { ...auditMetadata, correction: { ...auditMetadata.correction, state: 'resolved' } };
