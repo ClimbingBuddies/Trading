@@ -35,3 +35,32 @@ node scripts/prepare-asx-research-readiness.mjs data/shared-market-calendars/asx
 The offline compiler validates purpose, explicit dates, hash, identity and a maximum seven-day trust window. It executes no SQL. Commit the generated SQL with reviewed inputs; hosted controllers can execute that file without a shell. Never extend trust without fresh evidence or convert this artifact into a fill calendar.
 
 Rollback reverts the repository controller/query reference and restores the explicit calendar blocker. No database rollback or history deletion is involved.
+
+### Late provider session recovery
+
+A completed download can truthfully omit a session when Yahoo returns an empty bar. Keep `TARGET_SESSION_MISSING` separate from a failed worker and from missing AI research. Do not copy the preceding close into the gap, assume a holiday, or treat `requested_end` as admitted coverage.
+
+If a fresh read through the existing `fetchYahoo` normalizer now returns the missing completed session with matching symbol, ASX, AUD and Sydney daily identity, use the already reviewed `scripts/recover-asx-missing-session.sql` under the development lock. Bind its four session parameters to the reviewed instrument, symbol, current clean terminal audit and yesterday's Sydney target. The script rejects changed enqueue definitions, conflicting identity/keys, existing active work and an already present target; it creates one idempotent ordinary incremental job. Existing demand-driven dispatch performs ingestion and the existing Technical refresh follows. No schedule or analytical run is created by this recovery.
+
+Verify the actual terminal job and linked audit, retained rejected-bar evidence, admitted target date and matching Technical source before declaring recovery. A queued job alone is not recovery. A zero-volume provider bar can be retained under the existing source contract; it is not proof of an executed trade, continuous liquidity or an eligible paper fill. Preserve all prior job/audit records. Do not reset or replay an existing recovery key after failure without a new review.
+
+### Research coverage review — 19 November 2026, before 08:00 Perth
+
+The first overnight verification after PR69 found 70 scheduled watchdog executions succeeded from 18 November 14:15 through 19 November 07:30 Perth. ASX failures are isolated from ordinary monitoring, so these cron receipts alone do not prove 70 healthy ASX snapshots. The latest saved ASX snapshot was independently readable and classified its actual blockers. No ASX alert rules were configured; a real configured crossing and daily AI controller acceptance remain separate checks.
+
+The active universe still includes all 15 ASX instruments. The assessment inventory explains the 12 research gaps:
+
+| Saved independent AI research | Instrument count | Required work |
+| --- | --- | --- |
+| Never saved | 9 | First current evidence-backed assessment |
+| Last dated 21 October | 2 | Fresh research; retain old rows |
+| Last dated 6 October | 1 | Fresh research; retain old row |
+| Last dated 16 November | 3 | Reassess in the next legitimate daily run; existing rows remain within the adapter's separate four-day admission window |
+
+The 17 November scheduled Market run saved three assessments and finalized partial. The 18 November Market stage recorded a combined ASX session/Tiingo saved-output blocker before that day's session/calendar repairs, and saved no new Market run. This is an upstream research-production gap, not a display filter hiding completed assessments. The current controller already requires a disjoint per-instrument eligible/blocked ledger; an unrelated Tiingo restriction cannot block independently eligible Yahoo/issuer research. Existing issuer proof, frozen cutoff, rights and publication gates still apply.
+
+The 19 November 07:31 raw-session check admitted 18 November prices for 14 instruments. One instrument was source-clean but lacked that target: its 18 November 22:22 download skipped one empty provider bar. A fresh provider check at 19 November 07:33 returned the complete target bar without rejects/duplicates, with zero volume. One reviewed recovery was queued at 07:36 through the unchanged script; its terminal outcome must be checked before claiming all 15 are price-ready. Exact instrument/job/audit identities stay in protected operational evidence.
+
+Queue size alone is not queue position. The live claim function matches the 17 November alignment migration: active open calls first, then active watched instruments, then the rest of the active universe, then background history. It retains initial-backfill priority within each class and atomic `FOR UPDATE OF j SKIP LOCKED` claiming. At 07:44 the recovery was eighth among due pending jobs, not behind all background jobs. Preserve the existing two-minute dispatch and provider allowances; neither a larger total queue nor one delayed provider bar justifies increasing request frequency or replacing the installed ordering.
+
+Today's 08:00 controller was not yet due at this review cutoff. Its adoption must be established from its actual source SHA, stage receipts, saved assessment/evidence rows and native convergence receipts. Price readiness does not certify current issuer research or successful publication. Do not launch a competing manual Market run or backfill an earlier cutoff to make this review appear complete.
