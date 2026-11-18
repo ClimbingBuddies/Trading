@@ -1,6 +1,6 @@
 {
   "protocol": 1,
-  "revision": 185,
+  "revision": 186,
   "status": "held",
   "owner": "Cody",
   "ownerId": "cody",
@@ -13,10 +13,10 @@
     "documentation"
   ],
   "startedAt": "2026-11-18T23:33:46.885Z",
-  "heartbeatAt": "2026-11-18T23:44:09.981Z",
-  "localChanges": "unpublished",
+  "heartbeatAt": "2026-11-18T23:46:58.099Z",
+  "localChanges": "clean",
   "branch": "codex/asx-research-coverage",
-  "publishedCommit": null,
+  "publishedCommit": "f311593b410501d4e091586f1f6cd5461dd2658e",
   "stableIntegration": null,
   "production": {
     "commit": "84a40702f4beaa7f11359772682b36d5831d23c1",
