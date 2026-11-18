@@ -2,11 +2,12 @@
 
 import { useEffect, useState, type ReactNode } from 'react'
 import { getBrowserSupabase } from '@/lib/supabase-browser'
-import { describePipelineStatus } from '@/lib/trading-pipeline-status.mjs'
+import { describeAsxConvergence, describePipelineStatus } from '@/lib/trading-pipeline-status.mjs'
 import styles from './TradingPipelineStatus.module.css'
 
 type Problem = { code: string; message: string; nextAction: string }
-type Status = { contractVersion: number; lastCompletedMorningAt: string | null; incidents: (Problem & {id:string;date:string})[]; snapshot: {checkedAt:string;deadline:string;nextExpectedAt:string;marketSession:string;lastResearchAt:string|null;controllerLastSeenAt:string|null;calendarExpiresAt:string|null;problems:Problem[];instruments:{symbol:string;reason:string|null}[]} | null }
+type AsxStatus = {checkedAt:string;calendarExpiresAt:string|null;historicalSuccesses:number;incidentOpenedAt:string|null;incidentResolvedAt:string|null;instruments:{symbol:string;reason:string}[]}
+type Status = { contractVersion: number; lastCompletedMorningAt: string | null; incidents: (Problem & {id:string;date:string})[]; snapshot: {checkedAt:string;deadline:string;nextExpectedAt:string;marketSession:string;lastResearchAt:string|null;controllerLastSeenAt:string|null;calendarExpiresAt:string|null;problems:Problem[];instruments:{symbol:string;reason:string|null}[];asxConvergence?:AsxStatus|null} | null }
 const when=(s?:string|null)=>s&&Number.isFinite(Date.parse(s))?new Intl.DateTimeFormat('en-AU',{timeZone:'Australia/Perth',dateStyle:'medium',timeStyle:'short'}).format(new Date(s)):'Not verified'
 const nextAction=(p:Problem)=>p.code==='CONTROLLER_NOT_SEEN'?'Check the cloud Scheduled task, its latest run, connected plugins and usage limits.':p.nextAction
 
@@ -36,6 +37,8 @@ export default function TradingPipelineStatus({ compact = false, attentionCount 
  const view=describePipelineStatus(failed?null:status,now)
  useEffect(() => { onStatusChange?.({ warning: view.warning, title: view.title }) }, [onStatusChange, view.warning, view.title])
  const snapshot=status?.snapshot
+ const asx=snapshot?.asxConvergence
+ const asxView=describeAsxConvergence(failed?null:asx,now)
  const Wrapper = embedded ? 'div' : 'details'
  return <Wrapper id={panelId} hidden={hidden} className={`${styles.status} ${view.warning?styles.warning:''}`}>
   {!embedded && <summary><strong>{compact ? 'Review status' : view.title}</strong><span>{compact ? `${attentionCount === null ? 'Record status unverified' : `${attentionCount} items need attention`} · ${view.title}` : view.detail}</span><span className={styles.more}>{compact ? 'View issues' : 'Run details'}</span></summary>}
@@ -46,6 +49,16 @@ export default function TradingPipelineStatus({ compact = false, attentionCount 
    {snapshot?.problems.map(p=><p key={p.code}><strong>{p.message}</strong><br/>{nextAction(p)}</p>)}
    {!!status?.incidents.length&&<><h3>Unresolved run alerts</h3><ul>{status.incidents.map(i=><li key={i.id}><strong>{i.date}: {i.message}</strong><br/>{nextAction(i)}</li>)}</ul></>}
    {!!snapshot?.instruments.some(i=>i.reason)&&<><h3>Share coverage</h3><ul>{snapshot.instruments.filter(i=>i.reason).map(i=><li key={i.symbol}>{i.symbol}: {i.reason?.toLowerCase().replaceAll('_',' ')}</li>)}</ul></>}
+   <section aria-label="Current ASX coverage">
+    <h3>{asxView.title}</h3><p>{asxView.detail}</p>
+    {asxView.verified&&asx&&<>
+     <p>Current readiness is checked separately from completed morning records. Previous saved results remain historical evidence.</p>
+     <dl><div><dt>ASX checked</dt><dd>{when(asx.checkedAt)}</dd></div><div><dt>ASX calendar verification expires</dt><dd>{when(asx.calendarExpiresAt)}</dd></div></dl>
+     {!!asx.incidentOpenedAt&&!asx.incidentResolvedAt&&<p>ASX coverage needs follow-up since {when(asx.incidentOpenedAt)}. This clears after a healthy check during the next due window.</p>}
+     {!!asx.instruments.some(i=>i.reason!=='CURRENT')&&<ul>{asx.instruments.filter(i=>i.reason!=='CURRENT').map(i=><li key={i.symbol}>{i.symbol}: {i.reason.toLowerCase().replaceAll('_',' ')}</li>)}</ul>}
+    </>}
+    <p>ASX alert rules create in-app events when their conditions change. Email and push delivery are not verified. <a href="/alerts">Configure alerts</a></p>
+   </section>
    <p>Zero new Buy calls can be valid. Missing research or an unevaluated published call cannot count as a completed morning.</p>
    {children}
   </div>

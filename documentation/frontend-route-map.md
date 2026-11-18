@@ -66,3 +66,7 @@ Decision Lab now uses a compact call/update/result table and a share-click detai
 ### Convergence source dates and venues
 
 Assessment detail displays the saved Technical source date when available; legacy results show no invented date. Dashboard and Opportunity context readers accept `market-convergence-asx-v1` for ASX and original v1 elsewhere, ordered by date/time/ID. Private envelopes are never queried by the browser. The overview remains scoped to the latest production AI run; direct detail can show a saved convergence result outside that run.
+
+## Current ASX status
+
+The existing dashboard/Decision Lab `TradingPipelineStatus` panel now reads the safe `asxConvergence` field from the authenticated `trading_pipeline_status_v1` RPC. It separately shows current input/result coverage, blockers, queue failures, calendar trust and unresolved current incidents; old morning completion remains historical. Missing, stale, future and contradictory evidence cannot appear healthy. Alert failures warn outside the research due window. `/alerts` remains the existing owner-scoped configuration/event route; no new route or external notification promise is added. See [ASX monitoring](asx-alert-monitoring.md).

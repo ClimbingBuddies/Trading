@@ -1,6 +1,6 @@
 # Daily Trading Controller
 
-**Specification version:** 1.15 (separate ASX convergence adapter)
+**Specification version:** 1.16 (ASX alerts and current-health monitoring)
 **Last updated:** 18 November 2026
 **System:** Discover Boulders Markets / Trading  
 **Supabase project:** `glvbqcplgjdfgjyknzsa`
@@ -247,7 +247,7 @@ Retrieve documentation/trading-pipeline-reliability.md at the same exact commit 
 
 Before work commit private.claim_trading_stage_v1(stage, exact_commit_sha) and retain the attempt UUID. Commit the start separately from research or evaluation. Stage names are opportunity, external, market, publication, evaluation, or preflight when no analytical stage is eligible. Finish using private.finish_trading_stage_v1(attempt_uuid, terminal_state, sanitized_reason_code) after checking the subsystem receipt. A completed attempt is not proof of business completion. Refresh private.run_trading_watchdog_v1() after finalization and report its per-share counts/blockers.
 
-Exception for the deterministic C.1 continuation: use its existing native convergence run receipts, not the unsupported controller claim stage. The current watchdog does not verify convergence; report its saved evidence separately and never infer convergence success from a healthy watchdog.
+Exception for the deterministic C.1 continuation: use its native convergence run receipts, not the unsupported controller claim stage. The watchdog now reports separate current ASX convergence health and processes queued in-app alert checks. Retrieve `documentation/asx-alert-monitoring.md` at the same commit. Report its current, blocked, ready, failed/running and alert queue counts separately from historical morning completion. A returned UUID or a historical successful receipt does not prove current eligibility or notification delivery. Never change alert rules, create retroactive crossings or send external notifications as part of this continuation. Original non-ASX convergence still uses its native receipt reconciliation.
 
 At most two attempts per analytical stage per Perth morning; at most six preflight receipts. Exhausting an independent earlier stage must not starve a later independently eligible stage. Preserve the failed prerequisite and do not bypass actual research dependencies. Supported shares may progress from a truthful terminal partial assessment. Do not race a recent running attempt. After 45 minutes inspect actual task/subsystem activity before recording interruption or attempting safe resume. Never change a frozen cutoff or backdate a missed decision.
 

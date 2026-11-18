@@ -50,3 +50,7 @@ The first eight checks can be tested now using local or rollback-only fixtures. 
 ## Single daily unattended run
 
 Run once daily at 08:00 Australia/Perth, scoped only to Trading. Execute eligible stages sequentially, each with a separate claim and terminal receipt; the database's two-attempt budget is a safety ceiling, not an instruction to schedule retries. Inspect overlap before any work and do not race an active worker. Do not wait indefinitely for approval, prices or a failed tool. Stop new work after 90 minutes, finalize safe receipts and report partial/blocked outcomes. An unreturned write requires durable-state inspection before replay. Permission failures do not authorize bypassing access controls. The 10:15 watchdog deadline and cloud monitor frequency remain unchanged.
+
+## Independent current ASX health
+
+Controller 1.16 uses the existing watchdog to dispatch bounded ASX alert checks and persist an independent current coverage summary. Current source/result matching is due from 10:15 Perth until Sydney date rollover, regardless of the US market-due flag. Unresolved current incidents resolve only during a healthy due check; alert failures warn at all times. Historical morning completion and prior incidents retain their original semantics. See [ASX alert and monitoring contract](asx-alert-monitoring.md) for queue states, permissions, recovery and acceptance limits.
