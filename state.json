@@ -1,6 +1,6 @@
 {
   "protocol": 1,
-  "revision": 144,
+  "revision": 145,
   "status": "held",
   "owner": "Cody",
   "ownerId": "cody",
@@ -15,8 +15,8 @@
     "documentation"
   ],
   "startedAt": "2026-11-18T02:03:13.707Z",
-  "heartbeatAt": "2026-11-18T02:03:13.707Z",
-  "localChanges": "clean",
+  "heartbeatAt": "2026-11-18T02:03:39.890Z",
+  "localChanges": "unknown-editing",
   "branch": "codex/asx-session-recovery",
   "publishedCommit": null,
   "stableIntegration": null,
@@ -156,7 +156,7 @@
   ],
   "adoption": "Other developer enrollment and pre-existing local work not yet verified",
   "baseCommit": "54ac8c93574de1bd07c2d34bf4cc940c141e5979",
-  "localHead": "9e12813372fe72920a8b15626e285ccf54c70093",
+  "localHead": "2db26e9b88962376d3d7fd5fb33100804b664243",
   "lastJournal": null,
   "releasedAt": "2026-11-17T23:58:57.750Z",
   "lastOwner": "Cody",
