@@ -1,13 +1,13 @@
 {
   "protocol": 1,
-  "revision": 163,
-  "status": "held",
-  "owner": "Cody",
-  "ownerId": "cody",
-  "cloneId": "a70b247a-5a71-4c2c-acf8-986bda831196",
-  "acquisitionId": "ef9de4d4-358b-4e96-95b1-75fc92c3522c",
-  "taskId": "asx-session-recovery",
-  "task": "Repair late-session ASX audit admission after verified calendar recovery",
+  "revision": 164,
+  "status": "free",
+  "owner": null,
+  "ownerId": null,
+  "cloneId": null,
+  "acquisitionId": null,
+  "taskId": null,
+  "task": null,
   "scope": [
     "ASX source admission",
     "calendar",
@@ -15,9 +15,9 @@
     "documentation"
   ],
   "startedAt": "2026-11-18T02:03:13.707Z",
-  "heartbeatAt": "2026-11-18T03:13:20.705Z",
-  "localChanges": "clean",
-  "branch": "codex/asx-session-recovery",
+  "heartbeatAt": "2026-11-18T03:13:36.120Z",
+  "localChanges": "secured",
+  "branch": null,
   "publishedCommit": "85da0f007616f4edc7ec0a29fe53c6f25ecc24ef",
   "stableIntegration": null,
   "production": {
@@ -175,7 +175,7 @@
     "path": "journal/000020-asx-session-recovery.json",
     "commit": "85da0f007616f4edc7ec0a29fe53c6f25ecc24ef"
   },
-  "releasedAt": "2026-11-17T23:58:57.750Z",
+  "releasedAt": "2026-11-18T03:13:36.120Z",
   "lastOwner": "Cody",
   "handoff": null
 }
