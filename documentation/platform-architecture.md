@@ -89,3 +89,7 @@ The Daily Trading Controller now runs the Personal Recommendations stage after M
 ## Decision history and outcome tracking — v3
 
 New recommendations are permanent decision journals: original root, linked AI updates and separately labelled personal notes, then append-only observations. The controller uses publish_decision_v3; the 15-minute job evaluates v3 alongside unchanged legacy records. Session forecasts v2 are retired for new publication, not deleted.
+
+### Independent ASX convergence
+
+[ASX convergence v1](specifications/asx-convergence-v1.md) combines admitted Yahoo ASX Technical snapshots with terminal independent AI downstream. Its immutable private ledger is isolated from v1 retries; both share the overlap lock. Public results are presentation/context only, never inputs to Market research, shared recommendations or measured performance. No new scheduler.

@@ -1,4 +1,5 @@
 import { getSupabase } from './supabase'
+import { supportsConvergence } from './convergence-method'
 
 export type SyncRun = {
   id: string
@@ -60,6 +61,9 @@ export type ConvergenceSignal = {
   id: string
   instrument_id: string
   assessment_date: string
+  technical_source_date: string | null
+  ai_source_date: string | null
+  source_cutoff_at: string | null
   technical_score_id: number
   ai_assessment_id: string
   technical_score: number
@@ -242,14 +246,16 @@ async function getLatestConvergenceMap(instrumentIds: string[]) {
   const supabase = getSupabase()
   const convergenceRes = await supabase
     .from('market_convergence_assessments')
-    .select('id,instrument_id,assessment_date,technical_score_id,ai_assessment_id,technical_score,technical_signal,technical_confidence,ai_score,ai_signal,ai_confidence,convergence_score,convergence_confidence,convergence_label,summary,methodology_version,created_at')
+    .select('id,instrument_id,assessment_date,technical_source_date,ai_source_date,source_cutoff_at,technical_score_id,ai_assessment_id,technical_score,technical_signal,technical_confidence,ai_score,ai_signal,ai_confidence,convergence_score,convergence_confidence,convergence_label,summary,methodology_version,created_at,instruments!inner(exchange_code)')
     .in('instrument_id', instrumentIds)
     .order('assessment_date', { ascending: false })
     .order('created_at', { ascending: false })
+    .order('id', { ascending: false })
 
   if (convergenceRes.error) throw convergenceRes.error
 
-  for (const row of (convergenceRes.data ?? []) as ConvergenceSignal[]) {
+  for (const row of (convergenceRes.data ?? []) as unknown as (ConvergenceSignal & { instruments: { exchange_code: string } })[]) {
+    if (!supportsConvergence(row.methodology_version, row.instruments.exchange_code)) continue
     if (!convergence.has(row.instrument_id)) convergence.set(row.instrument_id, row)
   }
 

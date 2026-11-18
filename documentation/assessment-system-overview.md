@@ -523,3 +523,7 @@ Personal AI timing consumes completed independent Market Assessment and cutoff-b
 ## Decision history and outcome tracking — v3
 
 Decision Journal v3 turns fresh independent research into current calls with linked dated updates. No predetermined sell timing for new records: only a later Sell event closes the paper position. Model statements, personal notes and measured outcomes remain distinct.
+
+### ASX convergence boundary
+
+ASX `technical-score-asx-v1` combines with independent AI only through [market-convergence-asx-v1](specifications/asx-convergence-v1.md). Source integrity, calendar trust, freshness and terminal independent research remain required. Original v1 eligibility/history are unchanged. Missing AI research cannot be manufactured by convergence; recommendations and measured outcomes retain their own gates.

@@ -75,3 +75,7 @@ AI timing publication is private, SECURITY DEFINER with a fixed pg_catalog searc
 ## Decision history and outcome tracking — v3
 
 Decision v3 tables enable RLS and permit permanent owners SELECT only. Triggers reject UPDATE/DELETE. Internal publication/evaluation functions have fixed search paths and no client grants. The note RPC validates auth.uid, anonymous status, parent ownership, bounded text and request idempotency. Personal notes cannot drive AI trade results. The recommendation view uses security_invoker=true.
+
+### ASX convergence evidence
+
+The [ASX adapter](specifications/asx-convergence-v1.md) keeps full source/AI snapshots in private tables with RLS and no client policies. anon/authenticated have no private-table or execution grants. Trusted service_role may read calendars and insert/read runs, updating only terminal fields. Calendar writes remain owner-only. Public results expose only scores, dates and cutoff. Never publish private envelopes in journals. Recovery disables dispatch/execute while preserving history.
