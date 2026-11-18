@@ -1,0 +1,9 @@
+{
+  "purpose": "ASX_RESEARCH_SESSION_DATES_ONLY",
+  "exchange": "ASX",
+  "revision": "asx-research-2026-20261118",
+  "manifestHash": "0880fe1d9a18236844eb6bf788d2dfb8e1f54ef316975d26b6478710194aeb1a",
+  "verifiedAt": "2026-11-18T02:34:21Z",
+  "validUntil": "2026-11-25T02:34:21Z",
+  "reference": "Official ASX calendar notice 0922.25.08 and current cash-market status reviewed independently on 18 November 2026. See documentation/asx-research-calendar.md."
+}

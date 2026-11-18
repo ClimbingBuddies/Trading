@@ -26,7 +26,7 @@ This is the published 2026 schedule, not an assertion that all past emergency ev
 [ASX 2026 cash calendar](https://www.asx.com.au/markets/market-resources/trading-hours-calendar/cash-market-trading-hours/trading-calendar) lists holidays and 24/31 December early trading cessation at 14:10 Sydney.
 [ASX cash phases](https://www.asx.com.au/markets/market-resources/trading-hours-calendar/cash-market-trading-hours.) currently shows opening auction from 09:59 and the closing auction finishing at 16:11 Sydney. Continuous trading ending at 16:00 is not the final daily auction close.
 
-No ASX calendar is promoted here: historical phase applicability, early-day auction completion and the exact provider daily-close semantics require verification. Tests verify Sydney timezone conversion only. ASX price availability and benchmark mapping are separate blockers. Do not reuse Nasdaq or presume 10:00/16:00 ASX timing.
+No ASX fill calendar is promoted here: historical phase applicability, early-day auction completion and exact provider daily-close semantics require verification. The separate [ASX research calendar](asx-research-calendar.md) verifies bounded date labels for raw-price research readiness only. It contains no session instants and is not imported into the shared evaluator calendar store. ASX provider-aware evaluation and benchmark mapping remain separate blockers. Do not reuse Nasdaq or presume 10:00/16:00 ASX timing.
 
 ## Verification
 

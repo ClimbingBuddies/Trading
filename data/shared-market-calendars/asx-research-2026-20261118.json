@@ -1,0 +1,312 @@
+{
+  "version": 1,
+  "purpose": "ASX_RESEARCH_SESSION_DATES_ONLY",
+  "exchange": "ASX",
+  "revision": "asx-research-2026-20261118",
+  "timeZone": "Australia/Sydney",
+  "startDate": "2026-10-15",
+  "endDate": "2026-12-20",
+  "sources": [
+    "https://asxonline.com/content/asxonline/public/notices/2025/august/0922.25.08.html",
+    "https://asxonline.com/content/dam/asxonline/public/notices/2025/august/asxtrade2026.pdf",
+    "https://www.asx.com.au/markets/market-resources/trading-hours-calendar/cash-market-trading-hours",
+    "https://www.asx.com.au/markets/market-resources/system-status"
+  ],
+  "limitations": [
+    "Date-only published cash trading calendar; no opening/closing instants, provider finality, hypothetical fills, benchmark mapping or evaluator permission.",
+    "Bounded after the Sydney DST transition and before Christmas shortened days. Every date is explicit; outside coverage fails closed.",
+    "Official calendar notice last updated 20 March 2026. Reviewed official status feed at 2026-11-18T02:34:21Z; no scheduled closure identified within coverage.",
+    "Status history since 1 November showed informational Outlook issues and normal-operation update. This is not an exhaustive historical disruption or instrument-halt audit. Check fresh official alerts at each invocation.",
+    "Always exclude the current Sydney date. Twenty admitted OPEN observations is not a consecutive-session or complete-history certificate."
+  ],
+  "days": [
+    {
+      "date": "2026-10-15",
+      "status": "OPEN"
+    },
+    {
+      "date": "2026-10-16",
+      "status": "OPEN"
+    },
+    {
+      "date": "2026-10-17",
+      "status": "CLOSED",
+      "reason": "Weekend"
+    },
+    {
+      "date": "2026-10-18",
+      "status": "CLOSED",
+      "reason": "Weekend"
+    },
+    {
+      "date": "2026-10-19",
+      "status": "OPEN"
+    },
+    {
+      "date": "2026-10-20",
+      "status": "OPEN"
+    },
+    {
+      "date": "2026-10-21",
+      "status": "OPEN"
+    },
+    {
+      "date": "2026-10-22",
+      "status": "OPEN"
+    },
+    {
+      "date": "2026-10-23",
+      "status": "OPEN"
+    },
+    {
+      "date": "2026-10-24",
+      "status": "CLOSED",
+      "reason": "Weekend"
+    },
+    {
+      "date": "2026-10-25",
+      "status": "CLOSED",
+      "reason": "Weekend"
+    },
+    {
+      "date": "2026-10-26",
+      "status": "OPEN"
+    },
+    {
+      "date": "2026-10-27",
+      "status": "OPEN"
+    },
+    {
+      "date": "2026-10-28",
+      "status": "OPEN"
+    },
+    {
+      "date": "2026-10-29",
+      "status": "OPEN"
+    },
+    {
+      "date": "2026-10-30",
+      "status": "OPEN"
+    },
+    {
+      "date": "2026-10-31",
+      "status": "CLOSED",
+      "reason": "Weekend"
+    },
+    {
+      "date": "2026-11-01",
+      "status": "CLOSED",
+      "reason": "Weekend"
+    },
+    {
+      "date": "2026-11-02",
+      "status": "OPEN"
+    },
+    {
+      "date": "2026-11-03",
+      "status": "OPEN"
+    },
+    {
+      "date": "2026-11-04",
+      "status": "OPEN"
+    },
+    {
+      "date": "2026-11-05",
+      "status": "OPEN"
+    },
+    {
+      "date": "2026-11-06",
+      "status": "OPEN"
+    },
+    {
+      "date": "2026-11-07",
+      "status": "CLOSED",
+      "reason": "Weekend"
+    },
+    {
+      "date": "2026-11-08",
+      "status": "CLOSED",
+      "reason": "Weekend"
+    },
+    {
+      "date": "2026-11-09",
+      "status": "OPEN"
+    },
+    {
+      "date": "2026-11-10",
+      "status": "OPEN"
+    },
+    {
+      "date": "2026-11-11",
+      "status": "OPEN"
+    },
+    {
+      "date": "2026-11-12",
+      "status": "OPEN"
+    },
+    {
+      "date": "2026-11-13",
+      "status": "OPEN"
+    },
+    {
+      "date": "2026-11-14",
+      "status": "CLOSED",
+      "reason": "Weekend"
+    },
+    {
+      "date": "2026-11-15",
+      "status": "CLOSED",
+      "reason": "Weekend"
+    },
+    {
+      "date": "2026-11-16",
+      "status": "OPEN"
+    },
+    {
+      "date": "2026-11-17",
+      "status": "OPEN"
+    },
+    {
+      "date": "2026-11-18",
+      "status": "OPEN"
+    },
+    {
+      "date": "2026-11-19",
+      "status": "OPEN"
+    },
+    {
+      "date": "2026-11-20",
+      "status": "OPEN"
+    },
+    {
+      "date": "2026-11-21",
+      "status": "CLOSED",
+      "reason": "Weekend"
+    },
+    {
+      "date": "2026-11-22",
+      "status": "CLOSED",
+      "reason": "Weekend"
+    },
+    {
+      "date": "2026-11-23",
+      "status": "OPEN"
+    },
+    {
+      "date": "2026-11-24",
+      "status": "OPEN"
+    },
+    {
+      "date": "2026-11-25",
+      "status": "OPEN"
+    },
+    {
+      "date": "2026-11-26",
+      "status": "OPEN"
+    },
+    {
+      "date": "2026-11-27",
+      "status": "OPEN"
+    },
+    {
+      "date": "2026-11-28",
+      "status": "CLOSED",
+      "reason": "Weekend"
+    },
+    {
+      "date": "2026-11-29",
+      "status": "CLOSED",
+      "reason": "Weekend"
+    },
+    {
+      "date": "2026-11-30",
+      "status": "OPEN"
+    },
+    {
+      "date": "2026-12-01",
+      "status": "OPEN"
+    },
+    {
+      "date": "2026-12-02",
+      "status": "OPEN"
+    },
+    {
+      "date": "2026-12-03",
+      "status": "OPEN"
+    },
+    {
+      "date": "2026-12-04",
+      "status": "OPEN"
+    },
+    {
+      "date": "2026-12-05",
+      "status": "CLOSED",
+      "reason": "Weekend"
+    },
+    {
+      "date": "2026-12-06",
+      "status": "CLOSED",
+      "reason": "Weekend"
+    },
+    {
+      "date": "2026-12-07",
+      "status": "OPEN"
+    },
+    {
+      "date": "2026-12-08",
+      "status": "OPEN"
+    },
+    {
+      "date": "2026-12-09",
+      "status": "OPEN"
+    },
+    {
+      "date": "2026-12-10",
+      "status": "OPEN"
+    },
+    {
+      "date": "2026-12-11",
+      "status": "OPEN"
+    },
+    {
+      "date": "2026-12-12",
+      "status": "CLOSED",
+      "reason": "Weekend"
+    },
+    {
+      "date": "2026-12-13",
+      "status": "CLOSED",
+      "reason": "Weekend"
+    },
+    {
+      "date": "2026-12-14",
+      "status": "OPEN"
+    },
+    {
+      "date": "2026-12-15",
+      "status": "OPEN"
+    },
+    {
+      "date": "2026-12-16",
+      "status": "OPEN"
+    },
+    {
+      "date": "2026-12-17",
+      "status": "OPEN"
+    },
+    {
+      "date": "2026-12-18",
+      "status": "OPEN"
+    },
+    {
+      "date": "2026-12-19",
+      "status": "CLOSED",
+      "reason": "Weekend"
+    },
+    {
+      "date": "2026-12-20",
+      "status": "CLOSED",
+      "reason": "Weekend"
+    }
+  ]
+}
