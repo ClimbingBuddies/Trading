@@ -53,4 +53,6 @@ Run once daily at 08:00 Australia/Perth, scoped only to Trading. Execute eligibl
 
 ## Independent current ASX health
 
+For unexplained `CURRENT_ADMISSION_CHANGED`, retrieve `scripts/asx-convergence-lineage-diff.sql` at the same source SHA and execute its table-only SELECT. It returns aggregate categories without application-function calls or generated analytical invocations. It distinguishes notes from analytical/lifecycle row changes, but does not certify raw-session admission, arithmetic or dispatch permission. Use the saved watchdog for current health. A rejected application-function diagnostic is not permission to bypass safety review; use this distinct table-only path or report the remaining check unverified.
+
 Controller 1.16 uses the existing watchdog to dispatch bounded ASX alert checks and persist an independent current coverage summary. Current source/result matching is due from 10:15 Perth until Sydney date rollover, regardless of the US market-due flag. Unresolved current incidents resolve only during a healthy due check; alert failures warn at all times. Historical morning completion and prior incidents retain their original semantics. See [ASX alert and monitoring contract](asx-alert-monitoring.md) for queue states, permissions, recovery and acceptance limits.

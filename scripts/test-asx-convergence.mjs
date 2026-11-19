@@ -102,6 +102,12 @@ try{
   await db.exec(clock(await readFile('supabase/migrations/20261115235320_add_asx_technical_calculation_v1.sql','utf8'),technicalAt));
   await seedSource();
   await db.exec(clock(sql));
+  // The current diagnostic uses the additive identity helper. Keep this suite's
+  // original adapter coverage; the admission-identity suite tests the full repair.
+  const identityMigration=await readFile('supabase/migrations/20261119051916_fix_asx_admission_note_identity.sql','utf8');
+  const identityStart=identityMigration.indexOf('create function market_convergence.asx_input_identity_v1');
+  assert(identityStart>=0);
+  await db.exec(identityMigration.slice(identityStart,identityMigration.indexOf('CREATE OR REPLACE FUNCTION',identityStart)));
   await db.exec('grant select on instruments,data_providers,sync_runs,market_observations,market_scores,gpt_market_runs,gpt_market_assessments to service_role');
   const score=(await query('select * from market_scores where instrument_id=$1',[inst]))[0];
   await check('exact reviewed calendar seed and unchanged original v1 function definitions',async()=>{

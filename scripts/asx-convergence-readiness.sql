@@ -21,14 +21,14 @@ inputs as materialized (
 ), decisions as (
   select *,case when overlap then 'CONVERGENCE_RUNNING'
     when envelope->>'readiness'<>'READY' then envelope->>'readiness'
-    when existing_success_id is not null then case when (prior_envelope-array['cutoff_at','logical_date'])=
-      (envelope-array['cutoff_at','logical_date']) then 'ALREADY_SUCCEEDED' else 'SAME_DAY_INPUT_CHANGED' end
+    when existing_success_id is not null then case when (market_convergence.asx_input_identity_v1(prior_envelope)-array['cutoff_at','logical_date'])=
+      (market_convergence.asx_input_identity_v1(envelope)-array['cutoff_at','logical_date']) then 'ALREADY_SUCCEEDED' else 'SAME_DAY_INPUT_CHANGED' end
     when failed_leaf_id is not null then case when attempt_number>=3 then 'RETRY_EXHAUSTED' else 'FAILED_CHAIN_REVIEW_REQUIRED' end
     when exists(select 1 from public.market_convergence_assessments a where a.instrument_id=checked.instrument_id
       and a.methodology_version='market-convergence-asx-v1'
       and a.assessment_date=greatest((envelope#>>'{technical,score_date}')::date,(envelope#>>'{ai,assessment_date}')::date)
       and not exists(select 1 from market_convergence.asx_runs_v1 r where r.assessment_id=a.id and r.status='succeeded'
-        and (r.input_envelope-array['cutoff_at','logical_date'])=(envelope-array['cutoff_at','logical_date'])))
+        and (market_convergence.asx_input_identity_v1(r.input_envelope)-array['cutoff_at','logical_date'])=(market_convergence.asx_input_identity_v1(envelope)-array['cutoff_at','logical_date'])))
       then 'IMMUTABLE_ASSESSMENT_CONFLICT'
     else 'READY' end readiness from checked
 )

@@ -1,6 +1,6 @@
 # Research source collection and recovery
 
-**Execution contract:** 1.0, 19 November 2026. This changes collection and failure evidence, not analytical methodology, source approval or schedules.
+**Execution contract:** 1.1, 19 November 2026. This changes collection and failure evidence, not analytical methodology, source approval or schedules.
 
 The daily controller, External Opinion and independent Market research must read this file at the same resolved GitHub commit before collection. Use only tools actually available in that invocation. A local operator's successful fetch does not prove the hosted task can fetch the same document.
 
@@ -30,6 +30,8 @@ For PDFs, retain a hash of the complete fetched content when the existing receip
 
 Recovering one current document does not establish comprehensive current-news coverage. An unread material newer document must remain a disclosed gap and can still block an assessment under the existing methodology. Do not turn incomplete information into a bullish/neutral opinion merely to obtain a green run.
 
+For paginated indexes, inspect returned page/count/total metadata; a requested page size is not proof that the server honoured it. Follow public next-page links within the collection budget and applicable lookback. Record any pages/scope left unread. A homepage's "latest" label is not a publication date; verify the actual document date and compare with the current index. Never substitute an older presentation as current merely because it is easier to open.
+
 ## Source-specific collection
 
 - **Official company:** follow the issuer's current announcement/financial-report page and its actual document links. Some issuer sites use a linked WebLink feed and return a PDF after an ASPX redirect. Treat discovery, document fetch and evidence validation as separate steps. Do not guess headline IDs or globally approve WebLink domains.
@@ -41,6 +43,8 @@ Recovering one current document does not establish comprehensive current-news co
 ## Durable failure evidence
 
 Use existing `external_opinion.record_source_result_v1` metadata; no schema change is needed. For each active source family record `collection_contract: research-source-recovery-v1`, `source_sha`, `checked_at`, and a disjoint per-instrument `coverage_ledger`. Each row has:
+
+Also record `reader_capabilities` from this invocation: actual tool identifiers, whether original HTTP response status was observed, whether a full document body/hash was obtained, and any byte/page/extraction limits observed. Mark untested capabilities `unverified`; an available tool name or a desktop diagnostic does not prove hosted PDF support. These fields describe observations and do not authorize new tools, permissions or infrastructure.
 
 - `instrument_id` and `outcome`: `verified_material`, `checked_no_material`, `not_applicable`, `blocked`, or `not_checked`;
 - a concrete `reason`, with `not_checked` explaining time/capability limits;

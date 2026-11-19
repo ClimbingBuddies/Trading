@@ -14,6 +14,10 @@ Events remain `notification_status=not_requested`. This release implements in-ap
 
 ## Current health is separate from morning history
 
+The 19 November note-identity repair excludes only `ai_run.notes` from envelope comparison. Operational notes do not feed admission or convergence arithmetic. Source rows, AI assessment content, run identity/status/completion/cutoff and calendar fields still compare exactly. Pinned rechecks retain both clocks; cross-cutoff comparisons keep their existing clock exclusions. Historical envelopes retain original notes and no result is rewritten. The adapter, readiness diagnostic and monitor use the same immutable identity helper, executable by the existing service-role invoker but not anonymous/authenticated clients.
+
+The [table-only lineage diagnostic](../scripts/asx-convergence-lineage-diff.sql) can diagnose row differences without calling admission functions. Matching rows is not full source admission. Recovery is [rollback-asx-admission-note-identity.sql](../scripts/rollback-asx-admission-note-identity.sql): check exact installed definitions, restore both prior functions and preserve data. Coordinate the readiness-source revert. The unused helper may remain with its service-only permission.
+
 `private.asx_convergence_health_v1` checks all active ASX instruments using the adapter's authoritative admission, selected inputs and immutable result/receipt lineage. It reports current matches, missing/stale/source/calendar blockers, ready-but-unprocessed pairs, changed current admission, and failed/running processing. Counts and sanitized symbol/reason pairs are returned; raw private envelopes and owner-specific rule/event details are excluded.
 
 The original morning snapshot implementation is preserved as `private.trading_pipeline_core_snapshot_v1`. Its morning state, completion history and incident policy are unchanged. The wrapper adds separately timestamped `asxConvergence` evidence. Three historical successes cannot certify current coverage, and later input/calendar changes do not retroactively invalidate an earlier completed morning.
