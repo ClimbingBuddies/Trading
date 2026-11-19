@@ -1,0 +1,67 @@
+{
+  "description": "PR71 merged and production UI repair verified: expose saved research cutoffs/age and preserve specific blockers; scheduled controller adopted repaired sources and finalized 13 independent ASX assessments.",
+  "databaseAndApi": "No database, scheduler or provider mutation in this batch. Merge81f1a39af25d351228982199d2cb25188dfc22b1 deployed as dpl_7i91syFLhZrzpDfS8e2bHmS64vtN to the existing production aliases. Prior one-session recovery is now verified through raw admission and matching Technical output.",
+  "decisions": [
+    "Suppress only generic SHARED_CALL_PENDING for a verified research-only record; other blockers remain visible.",
+    "72-hour source-cutoff warning is presentation only, not methodology eligibility.",
+    "Do not replay provider ingestion to clear a historical Technical-hook warning when a later current source-matched calculation exists."
+  ],
+  "risks": [
+    "The genuine controller remains partial:44 instruments blocked by its Tiingo saved-output-rights gate;2 ASX issuer-document retrieval gaps. These are recorded runtime blockers, not a new legal determination.",
+    "Current SQL only returns the generic no-call fallback; specific-code retention is defensive correctness."
+  ],
+  "tests": [
+    {
+      "command": "npm test (host permissions)",
+      "result": "passed",
+      "scope": "508 tests including20 actual React rendering regressions; first sandboxed attempt failed MSYS permissions"
+    },
+    {
+      "command": "npx --no-install next build --webpack",
+      "result": "passed",
+      "scope": "Production build, all routes and TypeScript; default local Turbopack failed Windows C-drive lstat after compile"
+    },
+    {
+      "command": "independent final source review and git diff --check",
+      "result": "passed",
+      "scope": "Two UI components, synthetic tests and affected canonical documentation"
+    },
+    {
+      "command": "Production deployment and public asset verification",
+      "result": "passed",
+      "scope": "READY exact merge, production aliases, route HTTP200 and10 scripts HTTP200 including changed bundle; post-release server error query empty"
+    }
+  ],
+  "outstanding": [
+    "Observe remaining scheduled convergence/publication/evaluation receipts before closing workflow acceptance.",
+    "Authenticated production browser rendering not exercised; real component markup and deployed assets verified without user cursor/account access."
+  ],
+  "recovery": "Revert UI featureee9d4563aabac376eeb828478bcb50f3b0bcdcaf and redeploy prior compatible production8554a0b76ecdf7a2ee98058e6cc3a1f134b8aa99. No database rollback or history reset. Worktree clean, source published, no stashes; generated build artifact removed.",
+  "sequence": 24,
+  "timestamp": "2026-11-19T00:33:24.723Z",
+  "author": "Cody",
+  "taskId": "daily-workflow-delivery-recovery",
+  "commit": "ee9d4563aabac376eeb828478bcb50f3b0bcdcaf",
+  "baseCommit": "f311593b410501d4e091586f1f6cd5461dd2658e",
+  "branch": "codex/daily-workflow-delivery-recovery",
+  "files": [
+    "components/SharedDecisionWorkspace.tsx",
+    "components/SharedResearchRecommendations.tsx",
+    "documentation/asx-research-calendar.md",
+    "documentation/frontend-route-map.md",
+    "documentation/pipelines/technical-engine-operations.md",
+    "tests/decision-research-delivery.test.mjs"
+  ],
+  "checkpoints": {
+    "localWorking": "ee9d4563aabac376eeb828478bcb50f3b0bcdcaf",
+    "locallyTested": "ee9d4563aabac376eeb828478bcb50f3b0bcdcaf",
+    "remotelyPublished": "ee9d4563aabac376eeb828478bcb50f3b0bcdcaf",
+    "approvedStableIntegration": null,
+    "production": {
+      "commit": "84a40702f4beaa7f11359772682b36d5831d23c1",
+      "deployment": "dpl_Faea5XSbZDdFqXmhU2E25xfHWdPg",
+      "verification": "observed-ready-not-revalidated"
+    }
+  },
+  "evidenceNote": "Test results are explicit author attestations; stable integration requires separate approval and evidence."
+}

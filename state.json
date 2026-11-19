@@ -1,6 +1,6 @@
 {
   "protocol": 1,
-  "revision": 195,
+  "revision": 196,
   "status": "held",
   "owner": "Cody",
   "ownerId": "cody",
@@ -16,7 +16,7 @@
     "documentation"
   ],
   "startedAt": "2026-11-19T00:08:16.605Z",
-  "heartbeatAt": "2026-11-19T00:30:04.562Z",
+  "heartbeatAt": "2026-11-19T00:33:24.723Z",
   "localChanges": "clean",
   "branch": "codex/daily-workflow-delivery-recovery",
   "publishedCommit": "ee9d4563aabac376eeb828478bcb50f3b0bcdcaf",
@@ -28,13 +28,6 @@
   },
   "warningIssue": 39,
   "journal": [
-    {
-      "sequence": 4,
-      "path": "journal/000004-daily-loop-recovery.json",
-      "taskId": "daily-loop-recovery",
-      "commit": "479d30181dcf1eaa1a2635714090f113e96cd64b",
-      "description": "Approved PR42 integrated, reviewed worker7 deployed and immutable calendar renewal verified. Published scheduler-owner handover and exact remaining gates."
-    },
     {
       "sequence": 5,
       "path": "journal/000005-daily-loop-completion.json",
@@ -167,12 +160,22 @@
       "taskId": "asx-research-coverage",
       "commit": "f311593b410501d4e091586f1f6cd5461dd2658e",
       "description": "Reviewed ASX research coverage and documented late-session recovery in merged PR70; queued one reviewed source-clean session recovery through the existing dispatcher."
+    },
+    {
+      "sequence": 24,
+      "path": "journal/000024-daily-workflow-delivery-recovery.json",
+      "taskId": "daily-workflow-delivery-recovery",
+      "commit": "ee9d4563aabac376eeb828478bcb50f3b0bcdcaf",
+      "description": "PR71 merged and production UI repair verified: expose saved research cutoffs/age and preserve specific blockers; scheduled controller adopted repaired sources and finalized 13 inde"
     }
   ],
   "adoption": "Other developer enrollment and pre-existing local work not yet verified",
   "baseCommit": "f311593b410501d4e091586f1f6cd5461dd2658e",
   "localHead": "ee9d4563aabac376eeb828478bcb50f3b0bcdcaf",
-  "lastJournal": null,
+  "lastJournal": {
+    "path": "journal/000024-daily-workflow-delivery-recovery.json",
+    "commit": "ee9d4563aabac376eeb828478bcb50f3b0bcdcaf"
+  },
   "releasedAt": "2026-11-18T23:52:47.485Z",
   "lastOwner": "Cody",
   "handoff": null
