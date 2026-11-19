@@ -1,13 +1,13 @@
 {
   "protocol": 1,
-  "revision": 214,
+  "revision": 215,
   "status": "held",
   "owner": "Cody",
   "ownerId": "cody",
   "cloneId": "a70b247a-5a71-4c2c-acf8-986bda831196",
   "acquisitionId": "726da2eb-b5e5-4846-8455-284ad1b89665",
   "taskId": "platform-readiness-batch",
-  "task": "Review readiness and fix ASX admission comparison of mutable run notes",
+  "task": "Repair ASX note identity and evaluator receipt provenance; review platform readiness",
   "scope": [
     "automation",
     "documentation",
@@ -16,7 +16,7 @@
     "supabase/migrations"
   ],
   "startedAt": "2026-11-19T05:15:03.025Z",
-  "heartbeatAt": "2026-11-19T05:33:12.149Z",
+  "heartbeatAt": "2026-11-19T05:34:06.459Z",
   "localChanges": "unknown-editing",
   "branch": "codex/platform-readiness-batch",
   "publishedCommit": "8559ba77408126eb7504bd47b35c79ac5f3d00eb",
