@@ -1,6 +1,6 @@
 {
   "protocol": 1,
-  "revision": 204,
+  "revision": 205,
   "status": "held",
   "owner": "Cody",
   "ownerId": "cody",
@@ -15,10 +15,10 @@
     "tests"
   ],
   "startedAt": "2026-11-19T01:19:55.736Z",
-  "heartbeatAt": "2026-11-19T01:29:26.627Z",
-  "localChanges": "unpublished",
+  "heartbeatAt": "2026-11-19T01:32:16.027Z",
+  "localChanges": "clean",
   "branch": "codex/provider-gate-source-recovery",
-  "publishedCommit": null,
+  "publishedCommit": "fb37fd578f39cb0fca4986d56909d894c9216167",
   "stableIntegration": null,
   "production": {
     "commit": "84a40702f4beaa7f11359772682b36d5831d23c1",
