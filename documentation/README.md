@@ -59,6 +59,7 @@ The [canonical project plan](project-plan.md) controls authorised work. The [dev
 - [Daily Opportunity Assessment specification](../automation/daily-opportunity-assessment.md)
 - [External opinion model](specifications/external-opinion-model.md)
 - [External opinion pipeline](pipelines/external-opinion-pipeline.md)
+- [Research source collection and bounded recovery](pipelines/research-source-recovery.md)
 
 ## Monitoring and private workspaces
 

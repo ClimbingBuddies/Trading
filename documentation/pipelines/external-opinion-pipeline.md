@@ -2,7 +2,7 @@
 
 **Task:** RES-002 — Operationalise approved opinion sources  
 **Contract:** `documentation/specifications/external-opinion-model.md` (`external-opinion-v1`)  
-**Scheduled runner:** `automation/daily-external-opinion-review.md` v1.0  
+**Scheduled runner:** `automation/daily-external-opinion-review.md` v1.1
 **Supabase project:** `glvbqcplgjdfgjyknzsa`  
 **Date implemented:** 24 August 2026
 
@@ -14,7 +14,7 @@ It does **not** produce the Trading Market rating, does not feed the Technical E
 
 ## Scheduling and ownership
 
-The recurring task **External Opinion Review** is enabled Monday–Friday at **5:00 pm America/New_York**. It runs before the existing evening Daily Trading Market Assessment so current external-opinion context is available to that independent AI branch.
+The single **Daily Trading Controller** runs at **08:00 Australia/Perth** and invokes External Opinion before independent Market research under its timezone-aware stage gates. The former standalone External Opinion schedule remains disabled; do not create another task from this document.
 
 The scheduled task is a thin runner. On every execution it retrieves `automation/daily-external-opinion-review.md` fresh from GitHub and follows the current `external-opinion-v1` contract.
 
@@ -142,6 +142,8 @@ This makes the RES-001 non-double-counting rule machine-verifiable at the assess
 `opinion_reviews` persists run totals including instruments checked, sources checked/failures, opinions seen/inserted, duplicate skips, consensus rows and current/stale/none coverage.
 
 `opinion_source_review_results` persists source-family monitoring and errors.
+
+Collection v1.1 follows [bounded source recovery](research-source-recovery.md). Existing metadata carries per-instrument checked, not-applicable, blocked and unvisited scope plus exact fetch evidence. The [read-only diagnostic](../../scripts/research-source-failures.sql) separates saved partial output from missing collection telemetry. Historical generic failures do not prove every endpoint was inaccessible, and a later local fetch does not repair the historical review. No schema or source-registry changes accompany this contract.
 
 ## Builder verification — 24 August 2026
 
