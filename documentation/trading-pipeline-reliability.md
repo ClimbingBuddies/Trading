@@ -22,6 +22,8 @@ If an independent earlier stage exhausts its retry budget, preserve its blocker 
 
 The monitor verifies a successful complete Opportunity receipt; terminal scheduled external research; fresh independent scheduled Market Assessments for the target NY date; assessment usage in the immutable shared publication registry; and successful per-call evaluation receipts from the accepted scheduled evaluator revision after publication. It does not trust the task's active setting or a completion message. WAIT is a valid published call. Zero new BUY calls can be healthy.
 
+Evaluator receipts distinguish actual invocation source (`spec_revision`) from the database-captured approved release (`evaluator_revision`). The core monitor compares the latter to the enabled accepted release, retaining scheduled origin, same-day completion and post-publication ordering requirements. A legacy receipt with null evaluator identity retains only the former exact source-to-accepted-revision comparison; no historical identity is inferred or backfilled. New failed or blocked evaluations do not become successes through this change. Recovery uses [the guarded rollback](../scripts/rollback-evaluator-receipt-provenance.sql), preserving the additive column and all recorded history.
+
 Coverage limitations remain PARTIAL, never COMPLETE. Calendar expiry warnings begin 48 hours before expiry. The browser warns if monitor evidence is missing, malformed, from the future or more than 30 minutes old. Hosted research depends on its account's tools, permissions, quota and fresh repository sources; the database monitor independently detects silence. It does not require the operator's local computer to remain on.
 
 ## Recovery

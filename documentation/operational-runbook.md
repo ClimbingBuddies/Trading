@@ -456,3 +456,13 @@ Run `scripts/asx-convergence-readiness.sql` using trusted Trading SQL after due 
 ### ASX alert/monitor recovery
 
 Follow [ASX alert and current monitoring](asx-alert-monitoring.md). Inspect exact queue states and `alert_evaluator_runs` receipts; a returned UUID is not success. Failed batches retry after 15 minutes, stopping after three attempts. Diagnose exhausted rows before any reviewed manual requeue; never replay baseline/superseded rows. The existing watchdog remains every 15 minutes. Rollback with `scripts/rollback-asx-alert-monitoring.sql` only after fresh definition review under the lock; it restores prior functions and disables enqueue while retaining queue/events/analytical history. New frontend then reports ASX monitoring unverified. Zero enabled rules means there is no real user-configured crossing to certify.
+
+The subsequent note-identity repair has its own guarded [rollback](../scripts/rollback-asx-admission-note-identity.sql). It restores the exact prior ASX runner and health definitions without rewriting envelopes/results, and retains the service-only helper. Coordinate the readiness diagnostic source revert. Do not apply an older monitoring rollback over newer function definitions without a reviewed compatibility plan.
+
+### Shared evaluation receipt identity recovery
+
+The invocation source SHA and approved evaluator revision are separate identities. For a new request, the runner captures the enabled valid release under `FOR SHARE` in the existing SERIALIZABLE transaction. Exact retries return the original receipt. Missing approval blocks execution; this change does not resolve provider, price, calendar or benchmark requirements.
+
+Apply only `20261119053418_fix_evaluator_receipt_provenance.sql` after live function/schema review and no unresolved evaluation. The migration takes the existing evaluator and watchdog advisory locks and rejects definition drift. Verify new definitions, unchanged permissions and approval, null provenance for untouched legacy receipts, and preserved outcome history. Do not manufacture a scheduled evaluation as a deployment test.
+
+The paired [rollback](../scripts/rollback-evaluator-receipt-provenance.sql) requires the exact patched state and idle locks, restores both predecessor functions, and retains the additive provenance column and its values. A subsequent reapplication requires an explicitly reviewed retained-column path; do not blindly replay the original migration. Recovery may restore the former monitoring mismatch, so report it truthfully. Follow-up validation requires an independently eligible genuine scheduled receipt and ordinary watchdog reconciliation.
