@@ -1,5 +1,9 @@
 # Supabase Data Model
 
+## ASX admission identity repair (19 November 2026)
+
+`20261119051916_fix_asx_admission_note_identity.sql` adds the immutable SQL helper `market_convergence.asx_input_identity_v1(jsonb)` and repairs identity comparisons in the existing ASX runner and health function. It omits only nested `ai_run.notes`; all analytical and lifecycle evidence remains compared. The helper is SECURITY INVOKER, pure JSON processing and service-role executable, with no anonymous/authenticated grants. No tables, policies, source data or saved results change. Existing full envelopes retain original notes. See [ASX monitoring](asx-alert-monitoring.md) for guarded recovery and verification.
+
 ## Four-hour quote cycles (11 November 2026)
 
 `scripts/market-quotes-cycle-claim.sql` adds the service-role-only `public.claim_twelve_data_cycle_batch_v1` RPC. It serializes batch selection and the initial `sync_runs` receipt in one advisory-locked transaction, retaining the existing observations/run tables and history. Receipts identify the cycle and selected instrument IDs; unfinished cycle-aware work blocks subsequent claims until reviewed recovery. `scripts/market-quotes-four-hour.sql` changes job 1's schedule and the existing operational freshness classifier to 255/285 minutes without changing its grants or session rules. See the quote pipeline/runbook and deployment evidence for actual installation state.

@@ -60,6 +60,7 @@ The [canonical project plan](project-plan.md) controls authorised work. The [dev
 - [External opinion model](specifications/external-opinion-model.md)
 - [External opinion pipeline](pipelines/external-opinion-pipeline.md)
 - [Research source collection and bounded recovery](pipelines/research-source-recovery.md)
+- [Provider, reader, evaluation and scheduled readiness review](operations/platform-readiness-review-20261119.md)
 
 ## Monitoring and private workspaces
 
