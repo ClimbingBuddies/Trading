@@ -1,6 +1,6 @@
 {
   "protocol": 1,
-  "revision": 215,
+  "revision": 216,
   "status": "held",
   "owner": "Cody",
   "ownerId": "cody",
@@ -16,8 +16,8 @@
     "supabase/migrations"
   ],
   "startedAt": "2026-11-19T05:15:03.025Z",
-  "heartbeatAt": "2026-11-19T05:34:06.459Z",
-  "localChanges": "unknown-editing",
+  "heartbeatAt": "2026-11-19T05:36:52.057Z",
+  "localChanges": "unpublished",
   "branch": "codex/platform-readiness-batch",
   "publishedCommit": "8559ba77408126eb7504bd47b35c79ac5f3d00eb",
   "stableIntegration": null,
@@ -171,7 +171,7 @@
   ],
   "adoption": "Other developer enrollment and pre-existing local work not yet verified",
   "baseCommit": "fb37fd578f39cb0fca4986d56909d894c9216167",
-  "localHead": "8559ba77408126eb7504bd47b35c79ac5f3d00eb",
+  "localHead": "f343d97d1480b5bd1a1bb201158e6d4201a16fdf",
   "lastJournal": null,
   "releasedAt": "2026-11-19T01:35:19.836Z",
   "lastOwner": "Cody",
