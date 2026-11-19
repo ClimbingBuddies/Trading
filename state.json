@@ -1,13 +1,13 @@
 {
   "protocol": 1,
-  "revision": 206,
-  "status": "held",
-  "owner": "Cody",
-  "ownerId": "cody",
-  "cloneId": "a70b247a-5a71-4c2c-acf8-986bda831196",
-  "acquisitionId": "42951cc1-a06b-44d1-9225-e6852a729a30",
-  "taskId": "provider-gate-source-recovery",
-  "task": "Review Tiingo saved-output gate and repair issuer and external source recovery",
+  "revision": 207,
+  "status": "free",
+  "owner": null,
+  "ownerId": null,
+  "cloneId": null,
+  "acquisitionId": null,
+  "taskId": null,
+  "task": null,
   "scope": [
     "automation",
     "documentation",
@@ -15,9 +15,9 @@
     "tests"
   ],
   "startedAt": "2026-11-19T01:19:55.736Z",
-  "heartbeatAt": "2026-11-19T01:34:44.211Z",
-  "localChanges": "clean",
-  "branch": "codex/provider-gate-source-recovery",
+  "heartbeatAt": "2026-11-19T01:35:19.836Z",
+  "localChanges": "secured",
+  "branch": null,
   "publishedCommit": "fb37fd578f39cb0fca4986d56909d894c9216167",
   "stableIntegration": null,
   "production": {
@@ -175,7 +175,7 @@
     "path": "journal/000026-provider-gate-source-recovery.json",
     "commit": "fb37fd578f39cb0fca4986d56909d894c9216167"
   },
-  "releasedAt": "2026-11-19T00:48:19.064Z",
+  "releasedAt": "2026-11-19T01:35:19.836Z",
   "lastOwner": "Cody",
   "handoff": null
 }
