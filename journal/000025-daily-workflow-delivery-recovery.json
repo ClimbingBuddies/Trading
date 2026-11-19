@@ -1,0 +1,80 @@
+{
+  "description": "Completed the three-review batch: verified the genuine scheduled workflow through terminal stages, deployed PR #71 research-age/blocker UI repairs, and verified bounded ASX Technical recovery. Full business acceptance remains partial.",
+  "databaseAndApi": "No database, worker, provider or scheduler configuration changed in this batch. Production merge 81f1a39af25d351228982199d2cb25188dfc22b1 is READY as deployment dpl_7i91syFLhZrzpDfS8e2bHmS64vtN. Automatic Git deployment remains disabled.",
+  "decisions": [
+    "Observed the genuine scheduled controller rather than creating a duplicate run. Controller 1.16 used source defcab4044ccbc8c34bf22198b6c9fe6ef47e015.",
+    "Opportunity completed all 10 themes. Market saved 13 independent ASX assessments with a reconciled 59-instrument ledger: 13 assessed and 46 blocked.",
+    "Verified 14 successful ASX convergence results: 13 from fresh research and one from a still-eligible earlier assessment. Two new immutable research-only recommendations were published and remain active under the shared reader logic.",
+    "External Opinion persisted a partial review with four new opinions and five source failures; its review_date is 18 November while execution occurred on 19 November UTC.",
+    "All 15 ASX target-session prices were admitted with source-matched Technical output. A previously queued targeted late-session recovery succeeded, and the scheduled Technical refresh repaired its historical hook failure without replaying provider ingestion.",
+    "UI suppresses only generic SHARED_CALL_PENDING when verified research exists; preserves other blockers and scope totals. Research cutoff warnings are presentation only."
+  ],
+  "risks": [
+    "Controller evaluation remains blocked by TIINGO_SAVED_DERIVED_OUTPUT_RIGHTS_UNVERIFIED, which also excluded 44 instruments from Market. This records a runtime gate, not an independent legal determination, API failure, quota shortage or upgrade recommendation.",
+    "Two ASX issuer-document retrieval gaps remain. One has no usable AI input; the other has an eligible older assessment. No cutoff backdating or same-day duplicate research was performed.",
+    "Watchdog remained PENDING before its morning deadline; zero controller stages were running at final inspection. PENDING is not full unattended acceptance.",
+    "Authenticated production browser rendering was not exercised. Actual component rendering and deployed public assets were verified.",
+    "Historical gap recovery is bounded and demand-driven; this observation does not prove all late missing bars recover promptly."
+  ],
+  "tests": [
+    {
+      "command": "npm test (host permissions)",
+      "result": "passed",
+      "scope": "508 tests, including 20 actual React rendering regressions. Four new regressions fail against previous components."
+    },
+    {
+      "command": "npx --no-install next build --webpack",
+      "result": "passed",
+      "scope": "All routes and TypeScript. Default local Turbopack compiled but failed Windows page collection with C-drive lstat; sandbox-only MSYS fixture failures passed on host rerun."
+    },
+    {
+      "command": "Independent final review, focused regression tests and palette checks",
+      "result": "passed",
+      "scope": "Two components, affected canonical documentation, 20 new and 73 existing focused tests."
+    },
+    {
+      "command": "Production deployment, public route/assets and error-log inspection",
+      "result": "passed",
+      "scope": "Exact merged SHA and production aliases verified; route and ten scripts HTTP 200; changed bundle present; immediate postdeploy error/fatal logs empty."
+    },
+    {
+      "command": "Read-only scheduled run and saved-output verification",
+      "result": "passed",
+      "scope": "Opportunity audit, External Opinion partial audit, Market admission/evidence, 14 immutable convergence results, two published research-only records, terminal controller states and ASX source-matched recovery."
+    }
+  ],
+  "outstanding": [
+    "Full unattended business acceptance remains incomplete because measured coverage/evaluation is blocked.",
+    "Next priority: review factual basis and configuration of the Tiingo saved-output gate; can start immediately without waiting for another daily run.",
+    "Review issuer-document retrieval and External Opinion source failures; these are distinct from API quota and UI delivery.",
+    "Later morning watchdog/tracker evidence remains time-dependent and was not claimed complete."
+  ],
+  "recovery": "Revert feature ee9d4563aabac376eeb828478bcb50f3b0bcdcaf and redeploy prior compatible production 8554a0b76ecdf7a2ee98058e6cc3a1f134b8aa99 if needed. No database rollback or history reset. Feature branch is remotely published and merged via PR #71; one clean worktree, no stashes, previous local branches checked secured, generated build output excluded.",
+  "sequence": 25,
+  "timestamp": "2026-11-19T00:47:57.965Z",
+  "author": "Cody",
+  "taskId": "daily-workflow-delivery-recovery",
+  "commit": "ee9d4563aabac376eeb828478bcb50f3b0bcdcaf",
+  "baseCommit": "f311593b410501d4e091586f1f6cd5461dd2658e",
+  "branch": "codex/daily-workflow-delivery-recovery",
+  "files": [
+    "components/SharedDecisionWorkspace.tsx",
+    "components/SharedResearchRecommendations.tsx",
+    "documentation/asx-research-calendar.md",
+    "documentation/frontend-route-map.md",
+    "documentation/pipelines/technical-engine-operations.md",
+    "tests/decision-research-delivery.test.mjs"
+  ],
+  "checkpoints": {
+    "localWorking": "ee9d4563aabac376eeb828478bcb50f3b0bcdcaf",
+    "locallyTested": "ee9d4563aabac376eeb828478bcb50f3b0bcdcaf",
+    "remotelyPublished": "ee9d4563aabac376eeb828478bcb50f3b0bcdcaf",
+    "approvedStableIntegration": null,
+    "production": {
+      "commit": "84a40702f4beaa7f11359772682b36d5831d23c1",
+      "deployment": "dpl_Faea5XSbZDdFqXmhU2E25xfHWdPg",
+      "verification": "observed-ready-not-revalidated"
+    }
+  },
+  "evidenceNote": "Test results are explicit author attestations; stable integration requires separate approval and evidence."
+}
