@@ -1,21 +1,22 @@
 {
   "protocol": 1,
-  "revision": 209,
+  "revision": 210,
   "status": "held",
   "owner": "Cody",
   "ownerId": "cody",
   "cloneId": "a70b247a-5a71-4c2c-acf8-986bda831196",
   "acquisitionId": "726da2eb-b5e5-4846-8455-284ad1b89665",
   "taskId": "platform-readiness-batch",
-  "task": "Review provider fit, research access, evaluation readiness and scheduled acceptance",
+  "task": "Review readiness and fix ASX admission comparison of mutable run notes",
   "scope": [
     "automation",
     "documentation",
     "scripts",
-    "tests"
+    "tests",
+    "supabase/migrations"
   ],
   "startedAt": "2026-11-19T05:15:03.025Z",
-  "heartbeatAt": "2026-11-19T05:15:46.338Z",
+  "heartbeatAt": "2026-11-19T05:17:52.562Z",
   "localChanges": "unknown-editing",
   "branch": "codex/platform-readiness-batch",
   "publishedCommit": null,
