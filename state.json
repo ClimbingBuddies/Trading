@@ -1,6 +1,6 @@
 {
   "protocol": 1,
-  "revision": 191,
+  "revision": 192,
   "status": "held",
   "owner": "Cody",
   "ownerId": "cody",
@@ -16,8 +16,8 @@
     "documentation"
   ],
   "startedAt": "2026-11-19T00:08:16.605Z",
-  "heartbeatAt": "2026-11-19T00:08:40.242Z",
-  "localChanges": "unknown-editing",
+  "heartbeatAt": "2026-11-19T00:16:25.548Z",
+  "localChanges": "unpublished",
   "branch": "codex/daily-workflow-delivery-recovery",
   "publishedCommit": null,
   "stableIntegration": null,
