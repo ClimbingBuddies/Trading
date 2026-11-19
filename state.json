@@ -1,25 +1,24 @@
 {
   "protocol": 1,
-  "revision": 200,
-  "status": "free",
-  "owner": null,
-  "ownerId": null,
-  "cloneId": null,
-  "acquisitionId": null,
-  "taskId": null,
-  "task": null,
+  "revision": 201,
+  "status": "held",
+  "owner": "Cody",
+  "ownerId": "cody",
+  "cloneId": "a70b247a-5a71-4c2c-acf8-986bda831196",
+  "acquisitionId": "42951cc1-a06b-44d1-9225-e6852a729a30",
+  "taskId": "provider-gate-source-recovery",
+  "task": "Review Tiingo saved-output gate and repair issuer and external source recovery",
   "scope": [
-    "controller receipts",
-    "dashboard",
-    "recovery",
-    "tests",
-    "documentation"
+    "automation",
+    "documentation",
+    "scripts",
+    "tests"
   ],
-  "startedAt": "2026-11-19T00:08:16.605Z",
-  "heartbeatAt": "2026-11-19T00:48:19.064Z",
-  "localChanges": "secured",
-  "branch": null,
-  "publishedCommit": "ee9d4563aabac376eeb828478bcb50f3b0bcdcaf",
+  "startedAt": "2026-11-19T01:19:55.736Z",
+  "heartbeatAt": "2026-11-19T01:19:55.736Z",
+  "localChanges": "clean",
+  "branch": "codex/provider-gate-source-recovery",
+  "publishedCommit": null,
   "stableIntegration": null,
   "production": {
     "commit": "84a40702f4beaa7f11359772682b36d5831d23c1",
@@ -170,12 +169,9 @@
     }
   ],
   "adoption": "Other developer enrollment and pre-existing local work not yet verified",
-  "baseCommit": "f311593b410501d4e091586f1f6cd5461dd2658e",
+  "baseCommit": "ee9d4563aabac376eeb828478bcb50f3b0bcdcaf",
   "localHead": "ee9d4563aabac376eeb828478bcb50f3b0bcdcaf",
-  "lastJournal": {
-    "path": "journal/000025-daily-workflow-delivery-recovery.json",
-    "commit": "ee9d4563aabac376eeb828478bcb50f3b0bcdcaf"
-  },
+  "lastJournal": null,
   "releasedAt": "2026-11-19T00:48:19.064Z",
   "lastOwner": "Cody",
   "handoff": null
