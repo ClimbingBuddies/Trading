@@ -1,6 +1,6 @@
 {
   "protocol": 1,
-  "revision": 211,
+  "revision": 212,
   "status": "held",
   "owner": "Cody",
   "ownerId": "cody",
@@ -16,7 +16,7 @@
     "supabase/migrations"
   ],
   "startedAt": "2026-11-19T05:15:03.025Z",
-  "heartbeatAt": "2026-11-19T05:21:27.260Z",
+  "heartbeatAt": "2026-11-19T05:28:49.834Z",
   "localChanges": "unpublished",
   "branch": "codex/platform-readiness-batch",
   "publishedCommit": null,
