@@ -1,0 +1,86 @@
+{
+  "description": "Completed platform readiness batch; repaired mutable ASX note identity and evaluator receipt provenance, with genuine watchdog confirmation.",
+  "databaseAndApi": "Operational PR73 merge f343d97d1480b5bd1a1bb201158e6d4201a16fdf; fix_asx_admission_note_identity migration20261119053200. PR74 merge f7a73f2cdef71fb9db158b86085194e27357b2e9; fix_evaluator_receipt_provenance migration20261119054402. Exact deployed definitions verified. Pure service-only identity helper; additive private evaluator_revision column; no approval, calculator, frontend or scheduler change.",
+  "decisions": [
+    "Exclude only ai_run.notes from ASX envelope identity, retaining analytical/lifecycle/pinned-clock checks and full historical envelopes.",
+    "Keep actual invocation spec_revision distinct from database-captured approved evaluator_revision; retain explicit legacy-null compatibility without backfill.",
+    "Record actual hosted reader capability and pagination/date evidence; prepare provider and ASX measurement decisions without purchasing or migrating."
+  ],
+  "risks": [
+    "Native competing-session advisory/row-lock contention is not proven by single-backend PGlite tests.",
+    "Evaluator receipt tests deliberately use a synthetic inner calculator; they do not establish price eligibility or arithmetic.",
+    "Provider saved-output/sharing/AI evaluation rights and complete hosted source capability remain unresolved; no full unattended acceptance claim."
+  ],
+  "tests": [
+    {
+      "command": "PGLITE_MODULE=<existing local module> node scripts/test-asx-admission-identity.mjs",
+      "result": "passed",
+      "scope": "passed:29 scenarios/197 assertions. Actual source/calculation/admission/runner/monitor chain, notes-only false block, real change rejection, permissions, history and guarded recovery."
+    },
+    {
+      "command": "PGLITE_MODULE=<existing local module> node scripts/test-asx-convergence.mjs",
+      "result": "passed",
+      "scope": "passed:80 scenarios/331 assertions. Existing ASX adapter regression."
+    },
+    {
+      "command": "PGLITE_MODULE=<existing local module> node scripts/test-evaluator-receipt-provenance.mjs",
+      "result": "passed",
+      "scope": "passed:13 scenarios/107 assertions. Actual runner/core monitor and migration/recovery; synthetic inner calculator; provenance, release/legacy/timing/origin/retry/permission/history/CRLF guards."
+    },
+    {
+      "command": "Independent frozen-artifact review; git diff --check; local Markdown target validation",
+      "result": "passed",
+      "scope": "Reviewed migration/rollback/test hashes and affected documentation; all checked local links resolve."
+    },
+    {
+      "command": "Protected hosted definition/schema/ACL/history/advisor readback and genuine13:45 Perth watchdog",
+      "result": "passed",
+      "scope": "Deployed exact reviewed functions; histories/approval/permissions preserved; security advisory counts unchanged; notes-only current-admission blockers cleared and missing AI research remains."
+    }
+  ],
+  "outstanding": [
+    "Observe genuine20November08:00Perth controller adoption and10:30tracker; do not substitute manual invocation for unattended acceptance.",
+    "Provider suitability needs a concrete licence/cost decision before enabling persistent AI measured outputs; no external enquiry or purchase made.",
+    "ASX measured outcomes still need approved AUD benchmark, timestamped session calendar and provider-aware adapter acceptance.",
+    "Full document reader capability remains unverified until hosted invocation records actual evidence; remaining research and historical failures stay open."
+  ],
+  "recovery": "ASX scripts/rollback-asx-admission-note-identity.sql and evaluator scripts/rollback-evaluator-receipt-provenance.sql require exact installed definitions and idle locks. Restore source compatibly; preserve all historical data and retain additive evaluator provenance column. No automatic data rollback. PR receipts and issues34/38 record sanitized deployment evidence.",
+  "sequence": 27,
+  "timestamp": "2026-11-19T05:47:22.458Z",
+  "author": "Cody",
+  "taskId": "platform-readiness-batch",
+  "commit": "da7afbc210aa1c3ceaef9d3e2e00e46976079fb0",
+  "baseCommit": "fb37fd578f39cb0fca4986d56909d894c9216167",
+  "branch": "codex/platform-readiness-batch",
+  "files": [
+    "automation/daily-shared-decision-lab.md",
+    "documentation/README.md",
+    "documentation/asx-alert-monitoring.md",
+    "documentation/operational-runbook.md",
+    "documentation/operations/platform-readiness-review-20261119.md",
+    "documentation/pipelines/research-source-recovery.md",
+    "documentation/supabase-data-model.md",
+    "documentation/trading-pipeline-reliability.md",
+    "scripts/asx-convergence-lineage-diff.sql",
+    "scripts/asx-convergence-readiness.sql",
+    "scripts/rollback-asx-admission-note-identity.sql",
+    "scripts/rollback-evaluator-receipt-provenance.sql",
+    "scripts/test-asx-admission-identity.mjs",
+    "scripts/test-asx-convergence.mjs",
+    "scripts/test-evaluator-receipt-provenance.mjs",
+    "supabase/migrations/20261119051916_fix_asx_admission_note_identity.sql",
+    "supabase/migrations/20261119053418_fix_evaluator_receipt_provenance.sql"
+  ],
+  "checkpoints": {
+    "localWorking": "da7afbc210aa1c3ceaef9d3e2e00e46976079fb0",
+    "locallyTested": "da7afbc210aa1c3ceaef9d3e2e00e46976079fb0",
+    "remotelyPublished": "da7afbc210aa1c3ceaef9d3e2e00e46976079fb0",
+    "approvedStableIntegration": null,
+    "production": {
+      "commit": "84a40702f4beaa7f11359772682b36d5831d23c1",
+      "deployment": "dpl_Faea5XSbZDdFqXmhU2E25xfHWdPg",
+      "verification": "observed-ready-not-revalidated"
+    }
+  },
+  "evidenceNote": "Test results are explicit author attestations; stable integration requires separate approval and evidence."
+}
