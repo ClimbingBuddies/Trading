@@ -1,13 +1,13 @@
 {
   "protocol": 1,
-  "revision": 218,
-  "status": "held",
-  "owner": "Cody",
-  "ownerId": "cody",
-  "cloneId": "a70b247a-5a71-4c2c-acf8-986bda831196",
-  "acquisitionId": "726da2eb-b5e5-4846-8455-284ad1b89665",
-  "taskId": "platform-readiness-batch",
-  "task": "Repair ASX note identity and evaluator receipt provenance; review platform readiness",
+  "revision": 219,
+  "status": "free",
+  "owner": null,
+  "ownerId": null,
+  "cloneId": null,
+  "acquisitionId": null,
+  "taskId": null,
+  "task": null,
   "scope": [
     "automation",
     "documentation",
@@ -16,9 +16,9 @@
     "supabase/migrations"
   ],
   "startedAt": "2026-11-19T05:15:03.025Z",
-  "heartbeatAt": "2026-11-19T05:47:22.458Z",
-  "localChanges": "clean",
-  "branch": "codex/platform-readiness-batch",
+  "heartbeatAt": "2026-11-19T05:47:37.831Z",
+  "localChanges": "secured",
+  "branch": null,
   "publishedCommit": "da7afbc210aa1c3ceaef9d3e2e00e46976079fb0",
   "stableIntegration": null,
   "production": {
@@ -176,7 +176,7 @@
     "path": "journal/000027-platform-readiness-batch.json",
     "commit": "da7afbc210aa1c3ceaef9d3e2e00e46976079fb0"
   },
-  "releasedAt": "2026-11-19T01:35:19.836Z",
+  "releasedAt": "2026-11-19T05:47:37.831Z",
   "lastOwner": "Cody",
   "handoff": null
 }
