@@ -32,6 +32,8 @@ The 17 November queue-alignment migration preserves these historical cron names/
 
 The run log stores scheduled_for as the logical Australia/Perth operating date. A second successful scheduled attempt for the same operating date is recorded as skipped rather than recalculated.
 
+When a succeeded history job retains a Technical-refresh warning, compare its admitted source with the latest score snapshot and the subsequent Technical run. A later source-matched calculation can resolve the current dependency without rewriting that historical warning or repeating the provider download. The 19 November ASX recovery exercised this path: the immediate hook warned during the scheduled run, then the scheduled run completed with all 15 current ASX sources matched. A cron success or run UUID alone is insufficient; unchanged source-match and session-readiness checks still apply.
+
 ## Ownership and access
 
 - Both cron jobs are owned by the Supabase database role postgres.
