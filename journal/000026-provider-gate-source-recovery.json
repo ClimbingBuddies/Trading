@@ -1,0 +1,85 @@
+{
+  "description": "Reviewed Tiingo saved-output gate, issuer document gaps and External Opinion failures. Merged bounded collection recovery and precise private failure telemetry as PR #72; scheduled recovery acceptance remains pending.",
+  "databaseAndApi": "Read-only queries only; no schema, grants, provider, worker, source-registry, scheduler or analytical-record writes. Operational branch merge cc9a206158e13ace78da0e7e922c798b73a2a0fb verified identical to reviewed feature fb37fd578f39cb0fca4986d56909d894c9216167. Controller 1.17, External Opinion execution 1.1 and Market execution 1.3 consume this release from GitHub. No Vercel deployment required or performed.",
+  "decisions": [
+    "Keep the existing Tiingo-derived saved-output gate. Published terms were checked against current official source and account/effective-date uncertainty remains separate. Successful API calls/quota do not establish persistence permission.",
+    "Distinguish reader size/access limitations, actual upstream denial, dynamic indexes and incomplete collection. Use at most two distinct allowed alternatives per failed item within the existing invocation budget; preserve source approval, analytical independence and frozen cutoffs.",
+    "Record per-instrument collection outcomes and actual fetch evidence in existing protected source-result metadata; never turn a saved partial opinion into complete family collection.",
+    "Retain immutable historical outputs and disclose unread material-document limitations. No same-date analytical replay or backdating.",
+    "Correct obsolete External Opinion standalone schedule documentation to the existing single daily controller."
+  ],
+  "risks": [
+    "Public HTTP and web-reader capabilities differ; a locally reachable issuer feed/PDF is not evidence of hosted task access.",
+    "An oversized issuer document remained unread through the web reader; another current issuer document and official HTML macro source were readable. Reuters original retrieval remained unavailable.",
+    "Historical source failures lack item-level fetch ledgers. Their missing evidence cannot be reconstructed as successful checks.",
+    "Full coverage and measured evaluation remain blocked by the existing Tiingo saved-output gate. No upgrade, account confirmation, provider migration or retention cleanup was performed."
+  ],
+  "tests": [
+    {
+      "command": "node scripts/test-research-source-failures.mjs (existing PGlite via PGLITE_MODULE)",
+      "result": "passed",
+      "scope": "Eight synthetic scenarios execute actual SELECT in read-only transactions, covering empty history, missing receipts, partial output, private legacy-error redaction, SHA validation, empty/duplicate ledgers, malformed metadata and latest execution ordering."
+    },
+    {
+      "command": "node --test tests/asx-research-calendar.test.mjs tests/shared-research-recommendations.test.mjs",
+      "result": "passed",
+      "scope": "43 existing calendar/research contract tests; not a live collection acceptance test."
+    },
+    {
+      "command": "Independent final contract, diagnostic and fixture review",
+      "result": "passed",
+      "scope": "Accepted final contract and diagnostic with privacy fix; subsequent test-file addition reviewed without further findings."
+    },
+    {
+      "command": "Local Markdown target and runner-reference check; git diff --check",
+      "result": "passed",
+      "scope": "92 local targets, all three execution references, clean diff."
+    },
+    {
+      "command": "Execute scripts/research-source-failures.sql through authorized Trading connector",
+      "result": "passed",
+      "scope": "Five historical failed-family results, four saved opinions and absent-ledger telemetry correctly distinguished; no hosted fixtures or writes."
+    },
+    {
+      "command": "Post-merge Git fetch and exact tree comparison",
+      "result": "passed",
+      "scope": "Operational branch cc9a206 matches reviewed feature; controller version 1.17 verified."
+    }
+  ],
+  "outstanding": [
+    "Verify genuine next eligible scheduled invocation adopts cc9a206 or a descendant and persists new collection ledgers plus eligible results; source merge alone is not unattended recovery.",
+    "Resolve a suitable persistent-data path for Tiingo-dependent research and evaluation. A provider-fit review can start immediately; paid purchases or material methodology/provider changes require a concrete reviewed decision.",
+    "Hosted reader limitations and genuinely unavailable source documents may still leave partial coverage; no full-coverage claim."
+  ],
+  "recovery": "Revert feature fb37fd578f39cb0fca4986d56909d894c9216167 on the operational branch to restore prior execution prompts and diagnostic. No database rollback or history reset. Feature branch published, PR #72 merged and remote tree verified; one clean worktree, no stashes, zero local branch commits absent from origin refs. Ignored build/dependency assets excluded.",
+  "sequence": 26,
+  "timestamp": "2026-11-19T01:34:44.211Z",
+  "author": "Cody",
+  "taskId": "provider-gate-source-recovery",
+  "commit": "fb37fd578f39cb0fca4986d56909d894c9216167",
+  "baseCommit": "ee9d4563aabac376eeb828478bcb50f3b0bcdcaf",
+  "branch": "codex/provider-gate-source-recovery",
+  "files": [
+    "automation/daily-external-opinion-review.md",
+    "automation/daily-market-assessment.md",
+    "automation/daily-trading-controller.md",
+    "documentation/README.md",
+    "documentation/operational-runbook.md",
+    "documentation/pipelines/external-opinion-pipeline.md",
+    "documentation/pipelines/research-source-recovery.md",
+    "scripts/research-source-failures.sql",
+    "scripts/test-research-source-failures.mjs"
+  ],
+  "checkpoints": {
+    "localWorking": "fb37fd578f39cb0fca4986d56909d894c9216167",
+    "locallyTested": "fb37fd578f39cb0fca4986d56909d894c9216167",
+    "remotelyPublished": "fb37fd578f39cb0fca4986d56909d894c9216167",
+    "approvedStableIntegration": null,
+    "production": {
+      "commit": "84a40702f4beaa7f11359772682b36d5831d23c1",
+      "deployment": "dpl_Faea5XSbZDdFqXmhU2E25xfHWdPg",
+      "verification": "observed-ready-not-revalidated"
+    }
+  },
+  "evidenceNote": "Test results are explicit author attestations; stable integration requires separate approval and evidence."
+}

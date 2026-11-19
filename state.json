@@ -1,6 +1,6 @@
 {
   "protocol": 1,
-  "revision": 205,
+  "revision": 206,
   "status": "held",
   "owner": "Cody",
   "ownerId": "cody",
@@ -15,7 +15,7 @@
     "tests"
   ],
   "startedAt": "2026-11-19T01:19:55.736Z",
-  "heartbeatAt": "2026-11-19T01:32:16.027Z",
+  "heartbeatAt": "2026-11-19T01:34:44.211Z",
   "localChanges": "clean",
   "branch": "codex/provider-gate-source-recovery",
   "publishedCommit": "fb37fd578f39cb0fca4986d56909d894c9216167",
@@ -27,13 +27,6 @@
   },
   "warningIssue": 39,
   "journal": [
-    {
-      "sequence": 6,
-      "path": "journal/000006-ai-control-transfer.json",
-      "taskId": "ai-control-transfer",
-      "commit": "20c38064eb02ba807236301a46db887eb3018506",
-      "description": "Released four-hour quote cycles and AI execution handover preserving equal contributor input; PRs46/47 integrated and exact production source verified."
-    },
     {
       "sequence": 7,
       "path": "journal/000007-github-ai-handover.json",
@@ -166,12 +159,22 @@
       "taskId": "daily-workflow-delivery-recovery",
       "commit": "ee9d4563aabac376eeb828478bcb50f3b0bcdcaf",
       "description": "Completed the three-review batch: verified the genuine scheduled workflow through terminal stages, deployed PR #71 research-age/blocker UI repairs, and verified bounded ASX Technic"
+    },
+    {
+      "sequence": 26,
+      "path": "journal/000026-provider-gate-source-recovery.json",
+      "taskId": "provider-gate-source-recovery",
+      "commit": "fb37fd578f39cb0fca4986d56909d894c9216167",
+      "description": "Reviewed Tiingo saved-output gate, issuer document gaps and External Opinion failures. Merged bounded collection recovery and precise private failure telemetry as PR #72; scheduled"
     }
   ],
   "adoption": "Other developer enrollment and pre-existing local work not yet verified",
   "baseCommit": "ee9d4563aabac376eeb828478bcb50f3b0bcdcaf",
   "localHead": "81f1a39af25d351228982199d2cb25188dfc22b1",
-  "lastJournal": null,
+  "lastJournal": {
+    "path": "journal/000026-provider-gate-source-recovery.json",
+    "commit": "fb37fd578f39cb0fca4986d56909d894c9216167"
+  },
   "releasedAt": "2026-11-19T00:48:19.064Z",
   "lastOwner": "Cody",
   "handoff": null
