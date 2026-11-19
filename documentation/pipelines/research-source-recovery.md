@@ -42,9 +42,11 @@ For paginated indexes, inspect returned page/count/total metadata; a requested p
 
 ## Durable failure evidence
 
-Use existing `external_opinion.record_source_result_v1` metadata; no schema change is needed. For each active source family record `collection_contract: research-source-recovery-v1`, `source_sha`, `checked_at`, and a disjoint per-instrument `coverage_ledger`. Each row has:
+Use existing `external_opinion.record_source_result_v1` metadata; no schema change is needed. For each active source family record `collection_contract: research-source-recovery-v1`, `source_sha`, `checked_at`, and a disjoint per-instrument `coverage_ledger`.
 
 Also record `reader_capabilities` from this invocation: actual tool identifiers, whether original HTTP response status was observed, whether a full document body/hash was obtained, and any byte/page/extraction limits observed. Mark untested capabilities `unverified`; an available tool name or a desktop diagnostic does not prove hosted PDF support. These fields describe observations and do not authorize new tools, permissions or infrastructure.
+
+Each `coverage_ledger` row has:
 
 - `instrument_id` and `outcome`: `verified_material`, `checked_no_material`, `not_applicable`, `blocked`, or `not_checked`;
 - a concrete `reason`, with `not_checked` explaining time/capability limits;
