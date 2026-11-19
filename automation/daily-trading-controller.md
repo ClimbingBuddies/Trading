@@ -1,7 +1,7 @@
 # Daily Trading Controller
 
-**Specification version:** 1.16 (ASX alerts and current-health monitoring)
-**Last updated:** 18 November 2026
+**Specification version:** 1.17 (bounded source recovery and precise failure evidence)
+**Last updated:** 19 November 2026
 **System:** Discover Boulders Markets / Trading  
 **Supabase project:** `glvbqcplgjdfgjyknzsa`
 
@@ -38,6 +38,8 @@ The three former dedicated task schedules are not part of the operating model. T
 At the beginning of every invocation retrieve this controller file fresh from `ClimbingBuddies/Trading` and record its source identity.
 
 Before executing a downstream stage, retrieve that stage's specification fresh. If a required specification cannot be retrieved, do not execute that stage from memory.
+
+Before External Opinion or Market source collection, also retrieve `documentation/pipelines/research-source-recovery.md` at this same resolved commit. Execute its bounded fallback and private collection-ledger rules with the tools actually available. Reader failures, upstream access denials, unvisited scope and provider entitlement are separate reasons. Verify required direct-source receipts before freezing the Market cutoff; never clear an old run with later evidence.
 
 ## Systems of record
 

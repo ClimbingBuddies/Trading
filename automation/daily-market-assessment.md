@@ -1,7 +1,7 @@
 # Daily Trading Market Assessment
 
-**Specification version:** 1.2 (shared evidence preparation; analytical methodology unchanged)
-**Last updated:** 17 November 2026
+**Specification version:** 1.3 (bounded primary-source recovery; analytical methodology unchanged)
+**Last updated:** 19 November 2026
 **System:** Discover Boulders Markets / Trading  
 **Supabase project:** `glvbqcplgjdfgjyknzsa`
 
@@ -112,6 +112,8 @@ If the assessment cannot safely proceed, report the reason clearly and do not fa
 ## 4. Prepare or resume today's idempotent run
 
 Before preparing a **new** run, complete the shared controller's source preparation for watched equities that will use research-only publication. Retrieve `automation/daily-shared-decision-lab.md`, verify original direct sources and commit required source receipts before the run freezes its cutoff. Assessment evidence must link to exact matching pre-cutoff receipts. Atomic opinions must meet their own observed/publication cutoffs. Later verification cannot repair an earlier frozen cutoff. The absence of measurable benchmark configuration does not itself prohibit otherwise valid independent research; retain its separate publication limitation.
+
+Retrieve and follow `documentation/pipelines/research-source-recovery.md` at the same resolved source commit. Before classifying an issuer as unavailable, use its bounded discovery/document fallback with available tools. Retain unread material-document limitations even if another document succeeds. Record exact failure class and attempted-source provenance in the private admission/run evidence. The collection repair does not authorize replacing Tiingo, relaxing freshness or bypassing source receipts.
 
 Use the existing orchestration function:
 

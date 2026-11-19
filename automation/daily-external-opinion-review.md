@@ -1,7 +1,7 @@
 # Daily External Opinion Review
 
-**Specification version:** 1.0  
-**Last updated:** 27 August 2026  
+**Specification version:** 1.1 (bounded collection recovery; methodology unchanged)
+**Last updated:** 19 November 2026
 **System:** Discover Boulders Markets / Trading  
 **Repository:** `ClimbingBuddies/Trading`  
 **Supabase project:** `glvbqcplgjdfgjyknzsa`  
@@ -12,6 +12,8 @@
 This is the canonical execution specification for the scheduled external-opinion research workflow.
 
 At the beginning of every run, retrieve this file and `documentation/specifications/external-opinion-model.md` fresh from GitHub. Do not rely on a remembered or cached copy. If either file cannot be retrieved, stop without writing opinion data.
+
+Also retrieve `documentation/pipelines/research-source-recovery.md` at the same resolved commit before collection. Follow its bounded source fallback, identity checks and per-instrument collection ledger; if it is unavailable, stop collection rather than executing a remembered recovery policy.
 
 The workflow collects current, attributable external opinion and material research for the active Trading universe, normalises it into `public.instrument_opinions`, builds a deduplicated derived consensus, and persists review/coverage telemetry. It is an evidence pipeline for the independent AI Market Assessment. It is not a Trading rating engine, Technical Engine input, Market Convergence branch or Opportunity Assessment input.
 
@@ -159,6 +161,8 @@ Use:
 - `failed` when research could not be completed reliably.
 
 Do not leave a source result `pending` merely because it produced no opinion.
+
+Persist the recovery contract's `coverage_ledger` in `truthful_metadata_json`. Distinguish verified no-material-item checks from unvisited scope. Reconcile every family to the active scope; a successful document or inserted opinion does not establish complete family collection. Do not call a reader's size/URL failure an upstream 403 without an observed HTTP response. Keep public incident reporting aggregate and sanitized.
 
 ## 7. Finalisation, consensus and monitoring
 
