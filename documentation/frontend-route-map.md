@@ -70,3 +70,9 @@ Assessment detail displays the saved Technical source date when available; legac
 ## Current ASX status
 
 The existing dashboard/Decision Lab `TradingPipelineStatus` panel now reads the safe `asxConvergence` field from the authenticated `trading_pipeline_status_v1` RPC. It separately shows current input/result coverage, blockers, queue failures, calendar trust and unresolved current incidents; old morning completion remains historical. Missing, stale, future and contradictory evidence cannot appear healthy. Alert failures warn outside the research due window. `/alerts` remains the existing owner-scoped configuration/event route; no new route or external notification promise is added. See [ASX monitoring](asx-alert-monitoring.md).
+
+## Saved research age and publication blockers
+
+Decision Lab research-only rows and the latest-recommendation drawer show the frozen research cutoff separately from publication time. Cutoffs older than 72 hours carry the same presentation warning as Watchlists; future or invalid dates are unverified. A recent publication does not make older research current. This age label neither changes an immutable action nor certifies methodology/session eligibility or measurable performance.
+
+A verified research-only record suppresses only the generic `SHARED_CALL_PENDING` fallback for its instrument. Other returned publication blockers and all call-level blockers remain visible. While research is loading or unavailable, the fallback remains. Full-scope attention counts retain their database meaning; they are not reduced using only the currently loaded blocker page.

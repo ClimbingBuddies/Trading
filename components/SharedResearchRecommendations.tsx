@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useRef, useState } from 'react'
 import { getBrowserSupabase } from '@/lib/supabase-browser'
+import { olderAssessment } from '@/lib/watchlist-recommendations.mjs'
 import styles from './SharedResearchRecommendations.module.css'
 
 type Decision = { id: string; action: string; thesis: string; risks: string; modelIdentity: string; publishedAt: string; sourceCutoff: string; assessmentId: string }
@@ -32,8 +33,14 @@ function safeHref(value: string | null) {
 }
 const date = (value: string) => new Date(value).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })
 
-function DecisionEvidence({ decision, title }: { decision: Decision; title: string }) {
-  return <section className={styles.decision}><h4>{title} · {decision.action}</h4><p className={styles.timestamps}>Published <time dateTime={decision.publishedAt}>{date(decision.publishedAt)}</time><br />Research cutoff <time dateTime={decision.sourceCutoff}>{date(decision.sourceCutoff)}</time> · Model: {decision.modelIdentity}</p><p><strong>Thesis:</strong> {decision.thesis}</p><p><strong>Risks:</strong> {decision.risks}</p><p className={styles.identity}>Saved recommendation {decision.id} · Assessment {decision.assessmentId}</p></section>
+export function ResearchRecency({ cutoff, now = Date.now() }: { cutoff: string; now?: number }) {
+  const instant = Date.parse(cutoff)
+  if (!Number.isFinite(instant) || !Number.isFinite(now) || instant > now) return <small className={styles.blocker}>Research date unverified</small>
+  return <small className={styles.timestamps}>Research cutoff <time dateTime={cutoff}>{date(cutoff)}</time>{olderAssessment(cutoff, now) && <strong> · Older assessment</strong>}</small>
+}
+
+function DecisionEvidence({ decision, title, showRecency = false }: { decision: Decision; title: string; showRecency?: boolean }) {
+  return <section className={styles.decision}><h4>{title} · {decision.action}</h4><p className={styles.timestamps}>Published <time dateTime={decision.publishedAt}>{date(decision.publishedAt)}</time><br />{showRecency ? <ResearchRecency cutoff={decision.sourceCutoff} /> : <>Research cutoff <time dateTime={decision.sourceCutoff}>{date(decision.sourceCutoff)}</time></>} · Model: {decision.modelIdentity}</p><p><strong>Thesis:</strong> {decision.thesis}</p><p><strong>Risks:</strong> {decision.risks}</p><p className={styles.identity}>Saved recommendation {decision.id} · Assessment {decision.assessmentId}</p></section>
 }
 
 export function useSharedResearchRecommendations(scope: 'all' | 'watched', revision = 0) {
@@ -69,7 +76,7 @@ export default function ResearchDecisionDrawer({ item, onClose }: { item: Resear
   }
   return <dialog ref={dialog} className={styles.drawer} aria-labelledby={`${id}-title`} onCancel={event => { event.preventDefault(); closeDrawer() }}>
         <header className={styles.heading}><div><h2 id={`${id}-title`}>{item.instrument.symbol} · Decision history</h2><p>{item.instrument.name} · {item.instrument.exchange} · {item.instrument.currency}</p></div><button onClick={closeDrawer} aria-label="Close research decision history">Close</button></header><p className={styles.notice}>Research only · Not measurable · Excluded from performance. No paper trial or private-note journal exists for this research record.</p>
-        <DecisionEvidence decision={item.latest} title="Latest saved recommendation" />
+        <DecisionEvidence decision={item.latest} title="Latest saved recommendation" showRecency />
         <p className={styles.blocker}><strong>Measurement blocker:</strong> {item.measurementBlocker}</p>
         <details><summary>Original recommendation, history and sources</summary>
           <details open><summary>Read original reasoning</summary><DecisionEvidence decision={item.original} title="Original saved recommendation · Locked" /></details>
