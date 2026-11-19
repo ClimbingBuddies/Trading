@@ -1,24 +1,24 @@
 {
   "protocol": 1,
-  "revision": 207,
-  "status": "free",
-  "owner": null,
-  "ownerId": null,
-  "cloneId": null,
-  "acquisitionId": null,
-  "taskId": null,
-  "task": null,
+  "revision": 208,
+  "status": "held",
+  "owner": "Cody",
+  "ownerId": "cody",
+  "cloneId": "a70b247a-5a71-4c2c-acf8-986bda831196",
+  "acquisitionId": "726da2eb-b5e5-4846-8455-284ad1b89665",
+  "taskId": "platform-readiness-batch",
+  "task": "Review provider fit, research access, evaluation readiness and scheduled acceptance",
   "scope": [
     "automation",
     "documentation",
     "scripts",
     "tests"
   ],
-  "startedAt": "2026-11-19T01:19:55.736Z",
-  "heartbeatAt": "2026-11-19T01:35:19.836Z",
-  "localChanges": "secured",
-  "branch": null,
-  "publishedCommit": "fb37fd578f39cb0fca4986d56909d894c9216167",
+  "startedAt": "2026-11-19T05:15:03.025Z",
+  "heartbeatAt": "2026-11-19T05:15:03.025Z",
+  "localChanges": "clean",
+  "branch": "codex/platform-readiness-batch",
+  "publishedCommit": null,
   "stableIntegration": null,
   "production": {
     "commit": "84a40702f4beaa7f11359772682b36d5831d23c1",
@@ -169,12 +169,9 @@
     }
   ],
   "adoption": "Other developer enrollment and pre-existing local work not yet verified",
-  "baseCommit": "ee9d4563aabac376eeb828478bcb50f3b0bcdcaf",
+  "baseCommit": "fb37fd578f39cb0fca4986d56909d894c9216167",
   "localHead": "81f1a39af25d351228982199d2cb25188dfc22b1",
-  "lastJournal": {
-    "path": "journal/000026-provider-gate-source-recovery.json",
-    "commit": "fb37fd578f39cb0fca4986d56909d894c9216167"
-  },
+  "lastJournal": null,
   "releasedAt": "2026-11-19T01:35:19.836Z",
   "lastOwner": "Cody",
   "handoff": null
